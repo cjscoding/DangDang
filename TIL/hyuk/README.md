@@ -8,5 +8,9 @@
 ### 2022-01-11
 * JPA
 1. [연관관계 매핑](https://skdltm117.tistory.com/64)
-2. [양방향 매핑]()
-3. [JPA 내부 구조]()
+2. [양방향 매핑](https://skdltm117.tistory.com/65)
+3. [JPA 내부 구조](https://skdltm117.tistory.com/66)
+
+* 알고리즘
+1. [BOJ - A와B 2](https://www.acmicpc.net/problem/12919)
+
