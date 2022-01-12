@@ -245,3 +245,100 @@ public class Main {
 엔티티 매니저는 쓰레드간에 공유하면 안된다. (사용하고 버려야 함)
 
 JPA의 모든 데이터 변경은 트랜잭션 안에서 실행
+
+------------
+### 2022.01.12
+## 5강 양방향 매핑
+
+[[토크ON세미나] JPA 프로그래밍 기본기 다지기 5강 - 양방향 매핑 | T아카데미](https://youtu.be/0zTtkIYMOIw)
+
+### mappedBy
+
+왜 써야하는걸까? 
+
+객체와 테이블간의 연관관계를 맺는 차이에 대해 이해해보자
+
+Member 테이블에서는 Team team으로 연결 될 수 있고,
+
+Team 테이블에서는 List member로 연결될 수 있는 두가지 방향이 있다.
+
+테이블은 teamId 하나만 쓴다.
+
+### 객체 연관관계
+
+회원 → 팀 연관관계 1개
+
+팀 → 회원 연관관계 1개 
+
+### 테이블 연관관계
+
+회원 ↔ 팀의 연관관계 1개 (양방향)
+
+이 차이의 극복을 어떻게 하냐~
+
+**객체의 양방향 관계는 사실 양방향 관계가 아니라 서로 다른 단방향 관계 2개이다.** 
+
+객체를 양방향으로 참조하려면 단방향 연관관계 2개를 만들어야 한다.
+
+테이블은 외래키 하나로 두 테이블의 연관관계를 관리
+
+Member.setTeam 이나 Team.setMembers를 하던 둘다 가능해야한다. 
+
+둘중에 하나만 해도 Member, Team 둘다 값이 업데이트 되어야 함
+
+둘 중에 한놈을 주인으로 만들고, 한놈은 읽기만 가능하게 만들자!
+
+Team team or List member 둘중에 하나만 값을 업데이트 할 수 있다.
+
+### 연관관계의 주인(Owner)
+
+mappedBy를 사용하는 곳은 주인이 아님
+
+주인이 아닌 쪽은 읽기만 가능
+
+그래서 둘중에 누가 주인이 되어야함?
+
+외래 키가 있는 곳을 주인으로 정해라.
+
+![Untitled](5%E1%84%80%E1%85%A1%E1%86%BC%20%E1%84%8B%E1%85%A3%E1%86%BC%E1%84%87%E1%85%A1%E1%86%BC%E1%84%92%E1%85%A3%E1%86%BC%20%E1%84%86%E1%85%A2%E1%84%91%E1%85%B5%E1%86%BC%2025e31edbc23641aa973a04b284adb02a/Untitled.png)
+
+주인에 값을 넣지 않을 경우 null 값이 들어감 
+
+```java
+//			member.setTeam(team); //team 객체 Member에 넣기주석
+			team.getMembers().add(member);
+```
+
+Member에 team을 넣지 않고, team에 setMembers를 했을 경우 null이 들어감. (주인에 값 넣지 않음)
+
+그냥 두군데 다 값을 넣어버려라 
+
+양방향 매핑의 장점
+
+- 단방향 매핑만으로도 이미 연관관계 매핑은 완료됨
+- 반대 반향으로의 조회 기능이 추가된 것 뿐
+- 현업에서 많이 씀
+- JPQL에서 역방향으로 탐색할 일이 많아서
+- 단방향 매핑을 잘 하고, 양방향은 필요할 때만 추가해도 됨~
+
+### 연관관계 매핑 어노테이션
+
+- @ManyToOne (현업에서는 잘 안씀)
+- @OneToMany
+- @OneToOne
+- @ManyToMany
+- @JoinColumn, @JoinTable
+
+### 상속 관계 매핑 어노테이션
+
+- Inheritance
+- DiscriminatorColumn
+- DiscriminatorValue
+- MappedSuperclass (매핑 속성만 상속)
+
+### 복합 키 어노테이션
+
+- IdClass
+- Embeddedld
+- Embeddable
+- Mapsld
