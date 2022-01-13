@@ -1,5 +1,7 @@
 # [Next.js](https://nomadcoders.co/nextjs-fundamentals/lobby)
 
+---
+
 ## 💻 SET UP
 
 ---
@@ -10,7 +12,13 @@
     with TS     > npx create-next-app@latest --typescript
 ```
 
+---
+
+---
+
 ## 👀 OVERVIEW
+
+---
 
 ### ✧ Framework vs Library
 
@@ -34,11 +42,11 @@
 
 - 과정
 
-  1. server로부터 HTML 파일을 넘겨받음
-  2. 고정된 HTML에 사용자가 상호작용할 수 있도록 JS event-listner를 붙임 => **Hydration**<br />
+  1. server로부터 HTML 파일을 넘겨받음(SSR, Server Side Rendering)
+  2. 고정된 HTML에 사용자가 상호작용할 수 있도록 JS event-listner를 붙임<br /> => **Hydration**<br />
      -> 이 과정(_Hydration_)에서 component render 함수가 client-side(_하단 추가 설명_)에서 실행됨
 
-> Client-side Render
+> CSR(Client Side Rendering)
 
 - browser가 user가 보는 UI를 만드는 모든 것을 하는 것
   1. browser가 JS 가져옴
@@ -104,7 +112,7 @@ export default function NavBar() {
         router.pathname === "/" ? style.active : "" }`}
   >
     Google
-  </a>;
+  </a>
   ```
 
 - 또는
@@ -147,11 +155,11 @@ export default function NavBar() {
           Google
         </a>
       </Link>
-      <style jsx>
+      <style jsx>{`
         .hello{
             color: red;
         }
-      </style>
+      `}</style>
     </nav>
   );
   }
@@ -179,8 +187,105 @@ export default function NavBar() {
       | < style jsx > | < style scoped > |
 
 > Global Styles (CSS 전역으로 적용 시)
-- < style jsx global >
-- Next.js의 렌더링 순서  
-  1. __app.js
-  2. index.js
-  3. others...
+
+- < style jsx global > 형식
+- But, 전역 적용을 위해서는 \_app.js 활용 권장
+
+### ✧ Custom App
+
+> Next.js의 렌더링 순서
+
+1. \_app.js
+2. index.js
+3. others...
+
+> \_app.js
+
+- 서버로 요청이 들어왔을 때 가장 먼저 실행되는 컴포넌트
+- 주 사용 목적?  
+   모든 컴포넌트에 공통으로 적용할 속성 관리
+
+  ```javascript
+  import NavBar from "../components/NavBar";
+  import "../styles/globals.css";
+
+  export default function MyApp({ Component, pageProps }) {
+    return (
+      <>
+        <NavBar />
+        <Component {...pageProps} />
+      </>
+    );
+  }
+  ```
+
+  - Component를 Props 형태로 내려받는 형식
+  - 위 코드에서는 globals.css와 NavBar 컴포넌트 공통 적용
+    - **즉, 페이지들이 변화해도 layout이 유지됨**
+  - 서버에 요청한 페이지가 Component의 속성값
+    - ex) http://localhost:3000/hello -> Component : hello
+
+---
+
+---
+
+## ⭐️ ADDITIONAL CONCEPTS
+
+---
+
+### ✧ Patterns
+
+> html > head > title 변경 시
+
+```javascript
+import Head from "next/head";
+
+export default function Home() {
+  return (
+    <div>
+      <Head>
+        <title>Home | Next.js</title>
+      </Head>
+    </div>
+  );
+}
+```
+
+- 또는
+
+  ```javascript
+  //title.js
+  import Head from "next/head";
+
+  export default function Title({ title }){
+      return(
+          <Head>
+            <title>{title} | Next.js</title>
+          </Head>
+      );
+  }
+
+  //home.js
+  import Title from "../components/title";
+
+  export default function Home(){
+      return(
+          <Title title="Home"></Title>
+      )
+  }
+
+  //about.js
+  import Title from "../components/title";
+
+  export default function About(){
+      return(
+          <Title title="About"></Title>
+      )
+  }
+  ```
+
+  => page 별로 props를 내려 head title을 다르게 설정
+
+  ### ✧ Fetching Data
+
+  > 
