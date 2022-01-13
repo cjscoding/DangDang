@@ -1,9 +1,12 @@
 # Today I Learned
-### 2022-01-10
+
+### 2022-01-12
 * JPA
-1. [JPA 사용 이유](https://skdltm117.tistory.com/61)
-2. [JPA 기본과 매핑](https://skdltm117.tistory.com/62)
-3. [필드와 컬럼 매핑](https://skdltm117.tistory.com/63)
+1. [객체 지향 쿼리](https://skdltm117.tistory.com/69)
+2. [Spring Data JPA와 QueryDSL 이해](https://skdltm117.tistory.com/70)
+
+* 알고리즘
+1. [BOJ-11000_강의실 배정](https://skdltm117.tistory.com/68)
 
 ### 2022-01-11
 * JPA
@@ -13,4 +16,11 @@
 
 * 알고리즘
 1. [BOJ - A와B 2](https://www.acmicpc.net/problem/12919)
+
+### 2022-01-10
+* JPA
+1. [JPA 사용 이유](https://skdltm117.tistory.com/61)
+2. [JPA 기본과 매핑](https://skdltm117.tistory.com/62)
+3. [필드와 컬럼 매핑](https://skdltm117.tistory.com/63)
+
 
