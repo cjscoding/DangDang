@@ -106,3 +106,40 @@ SecurityContextHolder.clearContext()
 
 - AuthenticationProvider 목록 중에서 인증 처리 요건에 맞는 AuthenticationProvider 를 찾아 인증처리를 위임한다
 - 부모 ProviderManager 를 설정하여 AuthenticationProvider 를 계속 탐색 할 수 있다
+
+## 7. FilterSecurityInterceptor
+
+- 마지막에 위치한 필터로써 인증된 사용자에 대하여 특정 요청의 승인 거부 여부를 최종적으로 결정
+- 인증객체 없이 보호자원에 접근을 시도할 경우 AuthenticationException 을 발생
+- 인증 후 자원에 접근 가능한 권한이 존재하지 않을 경우 AccessDeniedException 을 발생
+- 권한 제어 방식 중 HTTP 자원의 보안을 처리하는 필터
+- 권한 처리를 AccessDecisionManager 에게 맡김
+
+# 8. AccessDecisionManager
+
+- 인증 정보 , 요청정보 , 권한정보를 이용해서 사용자의 자원접근을 허용할 것인지 거부할 것인지를 최종 결정하는 주체
+- 여러 개의 Voter 들을 가질 수있으며 Voter 들로부터 접근허용 , 거부 , 보류에 해당하는 각각의 값을 리턴받고 판단 및 결정
+- 최종 접근 거부 시 예외 발생
+- 접근결정의 세가지 유형
+    - AffirmativeBased :
+        - 여러개의 Voter 클래스 중 하나라도 접근 허가로 결론을 내면 접근 허가로 판단한다
+    - ConsensusBased :
+        - 다수표 승인 및 거부 에 의해 최종 결정을 판단한다
+        - 동수일경우 기본은 접근허가이나 allowIfEqualGrantedDeniedDecisions 을 false 로
+        설정할 경우 접근거부로 결정된다
+    - UnanimousBased :
+        - 모든 보터가 만장일치로 접근을 승인해야 하며 그렇지 않은 경우 접근을 거부한다
+        
+
+### Access DecisionVoter
+
+- 판단을 심사하는 것 위원
+- Voter 가 권한 부여 과정에서 판단하는 자료
+    - Authentication 인증 정보 (user)
+    - FilterInvocation 요청 정보 (antMatcher("/user”))
+    - ConfigAttributes 권한 정보 (hasRole("USER”)
+- 결정 방식
+    - ACCESS_GRANTED : 접근허용 (1)
+    - ACCESS_DENIED : 접근 거부 (0)
+    - ACCESS_ABSTAIN : 접근 보류 (-1)
+        - Voter 가 해당 타입의 요청에 대해 결정을 내릴 수 없는 경우
