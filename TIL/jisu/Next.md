@@ -288,4 +288,4 @@ export default function Home() {
 
   ### ✧ Fetching Data
 
-  > 
+  > e
