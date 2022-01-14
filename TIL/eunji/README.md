@@ -300,7 +300,6 @@ mappedBy를 사용하는 곳은 주인이 아님
 
 외래 키가 있는 곳을 주인으로 정해라.
 
-![Untitled](5%E1%84%80%E1%85%A1%E1%86%BC%20%E1%84%8B%E1%85%A3%E1%86%BC%E1%84%87%E1%85%A1%E1%86%BC%E1%84%92%E1%85%A3%E1%86%BC%20%E1%84%86%E1%85%A2%E1%84%91%E1%85%B5%E1%86%BC%2025e31edbc23641aa973a04b284adb02a/Untitled.png)
 
 주인에 값을 넣지 않을 경우 null 값이 들어감 
 
@@ -342,3 +341,273 @@ Member에 team을 넣지 않고, team에 setMembers를 했을 경우 null이 들
 - Embeddedld
 - Embeddable
 - Mapsld
+
+------------
+### 2022.01.13
+## 6강 JPA 내부구조
+
+[[토크ON세미나] JPA 프로그래밍 기본기 다지기 6강 - JPA 내부구조 | T아카데미](https://youtu.be/PMNSeD25Qko)
+
+## JPA에서 가장 중요한 2가지
+
+1. 영속성
+2. 컨텍스트
+
+유저의 요청이 올 때마다 EntityManager를 별도로 생성해야 함 
+
+### 영속성 컨텍스트
+
+엔티티를 영구 저장하는 환경 이라는 뜻
+
+`EntityManager.persist(entity);`
+
+영속성 컨텍스트는 논리적인 개념
+
+눈에 보이지 않는다
+
+엔티티 매니저를 통해 영속성 컨텍스트에 접근
+
+엔티티 매니저 == 영속성 컨텍스트 라고 이해하자
+
+캐시같은 친구구나~ 라고 이해라 그냥
+
+### 엔티티의 생명주기
+
+- 비영속
+- 영속
+- 준영속
+- 삭제
+
+### 비영속
+
+멤버 객체 생성만 함 → 비영속 상태 
+
+### 영속(managed)
+
+멤버 객체를 생성하고, 
+
+```java
+EntityManager em=emf.createEntityManager();
+em.persist(member)
+```
+
+→ 영속 상태가 됨
+
+### 준영속
+
+관리를 포기해버리는 상태
+
+### 삭제
+
+지우고, db에서도 날려버리는 상태
+
+### 영속성 컨텍스트의 이점
+
+- 1차 캐시
+- 동일성 보장
+- 트랜잭션을 지원하는 쓰기 지연
+- 변경 감지
+- 지연 로딩
+
+### 1차 캐시
+
+캐시라는 것이 내부에 있음. 
+
+잠깐 존재하는 메모리 공간 
+
+em.persist(member)를 하는 순간 key,value로 1차 캐시가 생성됨
+
+**1차 캐시에서의 조회**
+
+`em.find(Membe.class,”member1”)`
+
+id가 member1인 멤버를 조회하면 DB로 먼저 가는 것이 아니라, 1차 캐시에서 조회를 시작함.
+
+DB를 가지 않고, 바로 값을 반환할 수 있음.
+
+`em.find(Membe.class,”member2”)`
+
+1차 캐시에서 찾지만, member2가 없음 → DB에서 member2를 찾아서 1차 캐시에 저장 → 1차 캐시에서 값 반환
+
+### 동일성 보장
+
+```java
+Member a=em.find(Member.class, "member1");
+Member b=em.find(Member.class, "member1");
+
+System.out.println(a==b); // 동일성 비교 true -> 1차 캐시에 저장되기 때문에 같은 ref로 나옴
+```
+
+ 
+
+### 트랜잭션을 지원하는 쓰기 지연
+
+버퍼 기능을 해서 쿼리를 모으고, commit을 날리면 해당 쿼리들이 한번에 flush됨 
+
+### 변경 감지
+
+```java
+...생략
+Member memberA=em.find(Member.class,"memberA");
+
+memberA.setUsername("hi");
+memberA.setAge(10);
+
+// em.update(member); 이런 코드가 있어야 하지 않을까? 
+
+transaction.commit();
+```
+
+`em.update()`를 하지 않아도 됨. commit 하면 자동으로 update query가 나간다.
+
+사실 1차 캐시가 생성될 때, 옆에 스냅샷이 생김. 
+
+commit을 할 때 스냅샷과 1차 캐시에 저장된 값을 비교함 → 바뀐게 있으면 자동으로 update query문 날림 (메모리를 두배 쓰게됨)
+
+마치 자바 컬렉션에 list에서 데이터 가져오고, 그냥 바꾸면 list에 값이 바뀌는 것 처럼~ 
+
+플러시 발생
+
+- 변경 감지
+- 수정된 엔티티 쓰기 지연 SQL 저장소 등록
+- 쓰기 지연 SQL 저장소의 쿼리를 DB에 전송
+
+영속성 컨텍스트를 플러시하는 방법
+
+- em.flush()
+- 트랜잭션 커밋
+- JPQL 쿼리 실행
+
+플러시는...
+
+- 영속성 컨테스트를 비우지 않음
+- 영속성 컨텍스트의 변경 내용을 DB에 동기화
+- 트랜잭션이라는 작업 단위가 중요 → 커밋 직전에만 동기화 하면 됨
+
+준영속 상태
+
+- 영속 → 준영속 상태
+- 영속 상태의 엔티티가 영속성 컨텍스트에서 분리
+
+준영속 상태로 만드는 방법
+
+- em.detach(entity)
+- em.clear()
+- em.close()
+
+### 지연 로딩
+
+Member를 조회할 때 Team도 함께 조회해야 할까? 
+
+지연로딩 LAZY를 사용해서 프록시로 조회
+
+LAZY를 사용하면 프록시 객체라는 가짜 객체가 들어가게 됨
+
+조회를 자주 하게 된다면? EAGER를 사용해서 함께 조회
+
+프록시와 즉시로딩 주의
+
+- 가급적 지연 로딩을 사용
+- 즉시 로딩을 적용하면 예상하지 못한 SQL이 발생할 수도 있음. 연쇄작용이 나타날 수 있다.
+
+------
+## 7강 JPA 객체지향쿼리
+
+[[토크ON세미나] JPA 프로그래밍 기본기 다지기 7강 - JPA 객체지향쿼리 | T아카데미](https://youtu.be/wt_BEqxjaj8)
+
+JPQL 
+
+- 가장 단순한 조회 방법
+- EntityManager.find()
+- 객체 그래프 탐색(a.getB().getC())
+- 표준 SQL 문법과 비슷
+
+JPA를 사용하면 엔티티 객체를 중심으로 개발
+
+문제는 검색 쿼리
+
+검색을 할 때도 테이블이 아닌 엔티티 개체를 대상으로 검색
+
+모든 DB 데이터를 객체로 변환해서 검색하는 것은 불가능
+
+애플리케이션이 필요한 데이터만 DB에서 불러오려면 결국 검색 조건이 포함된 SQL문이 필요함
+
+ JPA는 SQL을 추상화한 JPQL 이라는 개체 지향 쿼리 언어 제공
+
+```java
+String jpql="select m from Member m where m.name like '%hello%'";
+List<Member> result=em.createQuery(jpql,Member.class).getResultList();
+```
+
+테이블이 아닌 객체를 대상으로 검색하는 객체 지향 쿼리
+
+SQL을 추상화해서 특정 DB SQL에 의존 X
+
+from절에 들어가는 것이 객체이다.
+
+대소문자 구분을 한다!
+
+별칭은 필수
+
+결과 조회 API
+
+- query.getResultList() : 결과가  하나 이상, 리스트 반환
+- query.getSingleResult() : 결과가 정확히 하나,  단일 객체 반환 (정확히 하나가 아니면 예외 발생)
+
+파라미터 바인딩 - 이름 기준, 위치 기준 (이름으로 바인딩 해라~)
+
+```java
+SELECT m FROM Member m where m.username=:username
+query.setParameter("username",usernameParam);
+
+SELECT m FROM Member m where m.username=?1
+query.setParameter(1,usernameParam); 
+```
+
+프로젝션
+
+- SELECT m FROM Member m → 엔티티 프로젝션
+- SELECT [m.team](http://m.team) FROM Member m → 엔티티 프로젝션
+- SELECT username,age FROM Member m → 단순 값을 반환함!
+    - 값을 바로 DTO에 넣고 싶을 것임
+    - SELECT new jpabook.jpql.UserDTO(m.username,m.age) FROM Member m
+    - 해당 쿼리처럼 쓰면 UserDTO로 바로 받을 수 있음
+    
+
+페이징 API
+
+- setFirstResult(int startPosition) : 조회 시작 위치
+- setMaxResults(int maxResult) : 조회할 데이터 수
+
+```java
+String jpql="select m from Member m order by m.name desc";
+List<Member> resultList=em.createQuery(jpql,Member.class)
+.setFirstResult(10)
+.setMaxResults(20)
+.getResultList();
+```
+
+집합과 정렬
+
+조인
+
+- 문법이 약간 다름
+- `SELECT m FROM Member m [INNER] JOIN [m.team](http://m.team) t`
+
+페치 조인 (현업에서 많이 씀)
+
+- 엔티티 객체 그래프를 한번에 조회하는 방법
+- 별칭 사용 X
+- JPQL : `select m from Member m join fetch m.team`
+- SLQ : `select m.*, t.* from member t inner join team t on m.team_id=t.id;`
+- 지연 로딩 발생 X
+
+CASE문 가능
+
+사용자 정의 함수 호출 가능
+
+Named 쿼리 - 어노테이션
+
+@NamedQuery → 미리 쿼리문을 작성해 놓는 거
+
+쿼리에 에러를 찾을 수 있다?
