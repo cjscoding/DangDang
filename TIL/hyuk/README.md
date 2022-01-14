@@ -1,5 +1,13 @@
 # Today I Learned
 
+### 2022-01-13
+* [WebRTC](./WebRTC기본.md)
+1. 기본 개념
+2. 상호 운용성
+3. 개념 및 사용법
+
+
+
 ### 2022-01-12
 * JPA
 1. [객체 지향 쿼리](https://skdltm117.tistory.com/69)
@@ -15,7 +23,7 @@
 3. [JPA 내부 구조](https://skdltm117.tistory.com/66)
 
 * 알고리즘
-1. [BOJ - A와B 2](https://www.acmicpc.net/problem/12919)
+1. [BOJ - A와B 2](https://skdltm117.tistory.com/67)
 
 ### 2022-01-10
 * JPA
