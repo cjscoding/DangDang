@@ -23,7 +23,7 @@
 3. [JPA 내부 구조](https://skdltm117.tistory.com/66)
 
 * 알고리즘
-1. [BOJ - A와B 2](https://www.acmicpc.net/problem/12919)
+1. [BOJ - A와B 2](https://skdltm117.tistory.com/67)
 
 ### 2022-01-10
 * JPA
