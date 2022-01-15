@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+    username: ssafy
+    password: ssafy
+
+  jpa :
+    hibernate :
+      ddl-auto : create
+    generate-ddl : false
+    properties :
+      hibernate :
+        format_sql : true
+
+  session:
+    store-type: REDIS
+  redis:
+    host: localhost
+    port: 6379
+  # JWT Secret Key
+  jwt:
+    secret: eae6d34010d4fea74bcafeeef81c1f8685e4793dfe98701d30e568118b31e4e0
