@@ -1,25 +1,16 @@
 package com.ssafy.dangdang.config.security.jwt;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
-import com.ssafy.dangdang.config.security.auth.PrincipalDetailsService;
 import com.ssafy.dangdang.domain.User;
+import com.ssafy.dangdang.domain.dto.LoginRequest;
 import com.ssafy.dangdang.domain.dto.UserDto;
-import com.ssafy.dangdang.repository.UserRepository;
 import com.ssafy.dangdang.util.JwtUtil;
 import com.ssafy.dangdang.util.RedisUtil;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
@@ -27,11 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.Date;
-import java.util.Objects;
-
 
 
 @Slf4j
@@ -57,21 +43,21 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 
 		// request에 있는 username과 password를 파싱해서 자바 Object로 받기
 		ObjectMapper om = new ObjectMapper();
-		UserDto userDto = null;
+		LoginRequest loginRequest = null;
 		try {
-			userDto = om.readValue(request.getInputStream(), UserDto.class);
+			loginRequest = om.readValue(request.getInputStream(), LoginRequest.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		log.info("JwtAuthenticationFilter : "+userDto);
+		log.info("JwtAuthenticationFilter : "+loginRequest);
 
 
 			// 유저네임패스워드 토큰 생성
 		JwtAuthenticationToken authenticationToken =
 					new JwtAuthenticationToken(
-							userDto.getUsername(),
-							userDto.getPassword()
+							loginRequest.getUsername(),
+							loginRequest.getPassword()
 							);
 			log.info("JwtAuthenticationFilter : 토큰생성완료");
 
@@ -98,14 +84,14 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 			Authentication authResult) throws IOException, ServletException {
 		
 		PrincipalDetails principalDetailis = new PrincipalDetails((User) authResult.getPrincipal());
-
+		log.info("Login 성공");
 		String jwtToken = jwtUtil.generateToken(principalDetailis.getUsername());
 
 		String refreshJwtToken = jwtUtil.generateRefreshToken(principalDetailis.getUsername());
 		redisUtil.setDataExpire(refreshJwtToken, principalDetailis.getUsername(), JwtUtil.REFRESH_EXPIRATION_TIME);
 		
 		response.addHeader(JwtUtil.HEADER_STRING, JwtUtil.TOKEN_PREFIX+jwtToken);
-		response.addHeader(JwtUtil.REFRESH_HEADER, JwtUtil.REFRESH_TOKEN_PREFIX+refreshJwtToken);
+		response.addHeader(JwtUtil.REFRESH_HEADER_STRING, JwtUtil.REFRESH_TOKEN_PREFIX+refreshJwtToken);
 	}
 
 //	private Boolean containsAuthorizationToken(HttpServletRequest request) {

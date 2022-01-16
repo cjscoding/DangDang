@@ -2,6 +2,7 @@ package com.ssafy.dangdang.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.dangdang.util.ApiUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -14,12 +15,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @Component
+@Slf4j
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        ObjectMapper objectMapper = new ObjectMapper();
+        log.error("Responding with unauthorized error. Message - {}", e.getMessage());
 
+        ObjectMapper objectMapper = new ObjectMapper();
         httpServletResponse.setStatus(401);
         httpServletResponse.setContentType("application/json;charset=utf-8");
 
