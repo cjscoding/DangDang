@@ -33,13 +33,18 @@ public class User{
     @NotNull
     private Email email;
 
-    @NotBlank
+    //@NotBlank OAuth의 경우에는 비밀번호가 필요없음
     private String password;
+
+    private String imageUrl;
 
     @OneToOne
     @JoinColumn(name = "salt_id")
-    @NotNull
     private Salt salt;
+
+    //OAouth용
+    private String provider;
+    private String providerId;
 
     @Override
     public String toString() {

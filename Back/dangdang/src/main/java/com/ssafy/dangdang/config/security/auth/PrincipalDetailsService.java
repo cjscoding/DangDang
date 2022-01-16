@@ -2,6 +2,7 @@ package com.ssafy.dangdang.config.security.auth;
 
 import com.ssafy.dangdang.domain.Salt;
 import com.ssafy.dangdang.domain.User;
+import com.ssafy.dangdang.domain.dto.LoginRequest;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.domain.types.Email;
 import com.ssafy.dangdang.domain.types.UserRoleType;
@@ -43,7 +44,7 @@ public class PrincipalDetailsService implements UserDetailsService {
 
         // TODO: EXCEPTION 상세화
         try {
-            int count = this.idCheck(userDto);
+            long count = this.idCheck(userDto);
             if(count>0) throw new Exception();
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,7 +72,7 @@ public class PrincipalDetailsService implements UserDetailsService {
     }
 
 
-    public UserDto loginUser(String email, String password) throws Exception {
+    public LoginRequest loginUser(String email, String password) throws Exception {
 
         User user = userRepository.findUserByEmail(Email.of(email)).orElseThrow( () -> new EntityNotFoundException("없는 유저 입니다"));
 
@@ -87,11 +88,11 @@ public class PrincipalDetailsService implements UserDetailsService {
             throw new Exception ("비밀번호가 틀립니다.");
 //        if(user.getSocial()!=null) //나중에 추가 예정
 //            throw new Exception ("소셜 계정으로 로그인 해주세요.");
-        return new UserDto(user);
+        return new LoginRequest(email, password);
     }
 
 
-    public int idCheck(UserDto userDto) {
+    public long idCheck(UserDto userDto) {
         return userRepository.countUserByEmail(Email.of(userDto.getEmail()));
     }
 }
