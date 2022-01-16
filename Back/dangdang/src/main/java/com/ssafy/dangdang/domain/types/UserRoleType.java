@@ -4,16 +4,14 @@ import lombok.Getter;
 
 @Getter
 public enum UserRoleType {
-    USER("일반", 100),
-    ADMIN("관리자", 200);
+    USER("일반"),
+    ADMIN("관리자");
 
     private final String name;
 
-    private final int code;
 
-    UserRoleType(String name, int code) {
+    UserRoleType(String name) {
         this.name = name;
-        this.code = code;
     }
 
     public static class ROLES {

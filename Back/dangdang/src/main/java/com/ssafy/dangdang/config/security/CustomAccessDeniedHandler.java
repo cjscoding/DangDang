@@ -25,6 +25,7 @@ import java.util.Collection;
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
+        log.error("Responding with unauthorized error. Message - {}", e.getMessage());
         ObjectMapper objectMapper = new ObjectMapper();
 
         httpServletResponse.setStatus(200);

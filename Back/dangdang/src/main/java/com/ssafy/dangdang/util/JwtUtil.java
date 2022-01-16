@@ -1,12 +1,10 @@
 package com.ssafy.dangdang.util;
 
-import com.ssafy.dangdang.domain.dto.UserDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +28,7 @@ public class JwtUtil {
     public final static String TOKEN_PREFIX = "Bearer ";
     public final static String REFRESH_TOKEN_PREFIX = "Refresh Bearer ";
     public final static String HEADER_STRING = "Authorization";
-    public final static String REFRESH_HEADER = "RefreshToken";
+    public final static String REFRESH_HEADER_STRING = "refreshtoken";
 
 
     private Key getSigningKey(String secretKey) {

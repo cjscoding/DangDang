@@ -1,21 +1,13 @@
 package com.ssafy.dangdang.config.security.jwt;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-
 import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetailsService;
-import com.ssafy.dangdang.domain.User;
-import com.ssafy.dangdang.domain.types.Email;
-import com.ssafy.dangdang.repository.UserRepository;
 import com.ssafy.dangdang.util.JwtUtil;
 import com.ssafy.dangdang.util.RedisUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -43,23 +35,24 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 
-		String header = request.getHeader(jwtUtil.HEADER_STRING);
+		String header = request.getHeader(JwtUtil.HEADER_STRING);
 		System.out.println("header Authorization : " + header);
-		String refreshHeader = request.getHeader(jwtUtil.REFRESH_HEADER);
+		String refreshHeader = request.getHeader(JwtUtil.REFRESH_HEADER_STRING);
 		System.out.println("refreshHeader Authorization : " + refreshHeader);
 		String refreshToken = null;
 		String refreshUsername;
 		Boolean jwtExpired = false;
-		if (header == null || !header.startsWith(jwtUtil.TOKEN_PREFIX)) {
+		if (header == null || !header.startsWith(JwtUtil.TOKEN_PREFIX)) {
 			//Refresh토큰 코드
 
 			chain.doFilter(request, response);
 			return;
 		}
 		try {
-		String token = request.getHeader(jwtUtil.HEADER_STRING).replace(jwtUtil.TOKEN_PREFIX, "");
+		String token = request.getHeader(JwtUtil.HEADER_STRING).replace(JwtUtil.TOKEN_PREFIX, "");
 			//만료되었다면 ExpiredJwtException을 던진다.
 		String username = jwtUtil.getUsername(token);
+		System.out.println("userNAME"+username);
 			// 토큰 검증 (이게 인증이기 때문에 AuthenticationManager도 필요 없음)
 			if(username != null) {
 				PrincipalDetails userDetails = principalDetailsService.loadUserByUsername(username);
@@ -73,9 +66,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 				}
 			}
 		} catch (ExpiredJwtException e){
-			if(refreshHeader !=null && refreshHeader.startsWith(jwtUtil.REFRESH_TOKEN_PREFIX)){
+			if(refreshHeader !=null && refreshHeader.startsWith(JwtUtil.REFRESH_TOKEN_PREFIX)){
 
-			refreshToken = request.getHeader(jwtUtil.REFRESH_HEADER).replace(jwtUtil.REFRESH_TOKEN_PREFIX, "");
+			refreshToken = request.getHeader(JwtUtil.REFRESH_HEADER_STRING).replace(JwtUtil.REFRESH_TOKEN_PREFIX, "");
 			jwtExpired = true;
 
 		}

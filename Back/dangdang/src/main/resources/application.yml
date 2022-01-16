@@ -21,3 +21,64 @@ spring:
   # JWT Secret Key
   jwt:
     secret: eae6d34010d4fea74bcafeeef81c1f8685e4793dfe98701d30e568118b31e4e0
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 778294656538-2aqiatern99l4vfpn2ea0h345g3tfhfa.apps.googleusercontent.com
+            clientSecret: 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
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+          kakao:
+            clientId: d0e1d1d6605d4b3d337a63aaec0f97b8
+            clientSecret: 5YEnwcnW8HrVfvHBjH4VMFVTkd6h3zFY
+            clientAuthenticationMethod: get
+            authorizationGrantType: authorization_code
+            redirectUri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
+            clientName: Kakao
+        provider:
+          kakao:
+            authorizationUri: https://kauth.kakao.com/oauth/authorize
+            tokenUri: https://kauth.kakao.com/oauth/token
+            userInfoUri: https://kapi.kakao.com/v2/user/me
+            userNameAttribute: id
+
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            clientId: 5014057553-8gm9um6vnli3cle5rgigcdjpdrid14m9.apps.googleusercontent.com
+#            clientSecret: tWZKVLxaD_ARWsriiiUFYoIk
+#            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+#            scope:
+#              - email
+#              - profile
+#          facebook:
+#            clientId: 121189305185277
+#            clientSecret: 42ffe5aa7379e8326387e0fe16f34132
+#            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+#            scope:
+#              - email
+#              - public_profile
+#          github:
+#            clientId: d3e47fc2ddd966fa4352
+#            clientSecret: 3bc0f6b8332f93076354c2a5bada2f5a05aea60d
+#            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+#            scope:
+#              - user:email
+#              - read:user
+#        provider:
+#          facebook:
+#            authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
+#            tokenUri: https://graph.facebook.com/v3.0/oauth/access_token
+#            userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
+#
