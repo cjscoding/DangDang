@@ -4,6 +4,8 @@ import com.ssafy.dangdang.config.security.CurrentUser;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetailsService;
 import com.ssafy.dangdang.domain.User;
+import com.ssafy.dangdang.domain.dto.UserDto;
+import com.ssafy.dangdang.util.ApiUtils;
 import com.ssafy.dangdang.util.JwtUtil;
 import com.ssafy.dangdang.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +28,11 @@ public class UserController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public User getCurrentUser(@CurrentUser PrincipalDetails userPrincipal) {
-        System.out.println("UserPincipal"+ userPrincipal.getUser().toString());
-        return userPrincipal.getUser();
+    public ApiUtils.ApiResult<UserDto> getCurrentUser(@CurrentUser PrincipalDetails userPrincipal) {
+        User user =  userPrincipal.getUser();
+        System.out.println("UserPincipal"+ user.toString());
+        return ApiUtils.success(UserDto.of(user));
+
 //        return userRepository.findById(userPrincipal.getId())
 //                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
     }
