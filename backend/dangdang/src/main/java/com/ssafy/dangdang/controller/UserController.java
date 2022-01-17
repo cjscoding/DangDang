@@ -62,10 +62,9 @@ public class UserController {
     @PatchMapping()
     public ApiResult<UserDto> updateUser(@RequestBody @Valid UserDto userDto) {
 
-
-        log.info("user SignUp {}", userDto.toString());
+        log.info("user Update {}", userDto.toString());
         try {
-            userService.signUpUser(userDto);
+            userService.updateUser(userDto);
             return success(userDto);
         }catch (ExtantUserException e){
             e.printStackTrace();
@@ -74,11 +73,18 @@ public class UserController {
 
     }
 
+
+    @DeleteMapping()
+    public ApiResult<String> deleteUser(@RequestBody UserDto userDto) {
+
+        log.info("user delete {}", userDto.toString());
+        if(userService.deleteUser(userDto)) return success("유저 삭제 성공");
+        return (ApiResult<String>) error("올바른 유저 정보를 입력해주세요", HttpStatus.BAD_REQUEST);
+    }
+
     @PostMapping("/test")
     public ApiResult<UserDto> test(@RequestBody @Valid UserDto userDto) {
         throw new BadRequestException("dd");
-
-
     }
 }
 

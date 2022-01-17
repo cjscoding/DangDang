@@ -2,7 +2,6 @@ package com.ssafy.dangdang.service;
 
 import com.ssafy.dangdang.domain.Salt;
 import com.ssafy.dangdang.domain.User;
-import com.ssafy.dangdang.domain.dto.LoginRequest;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.domain.types.Email;
 import com.ssafy.dangdang.domain.types.UserRoleType;
@@ -14,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -33,13 +32,10 @@ public class UserServiceImpl implements UserService{
 
 
         if(this.idCheck(userDto)) throw new ExtantUserException("이미 존재하는 유저 입니다");
-
         String saltValue = saltUtil.genSalt();
         Salt salt = Salt.builder()
                 .salt(saltValue)
                 .build();
-
-
         String EncryptedPassword = saltUtil.encodePassword(saltValue, password);
 
         saltRepository.save(salt);
@@ -53,25 +49,22 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
 
     }
-
+    @Override
     public void updateUser(UserDto userDto) {
         String password = userDto.getPassword();
 
         // TODO: EXCEPTION 상세화
 
 
-        if(this.idCheck(userDto)) throw new ExtantUserException("이미 존재하는 유저 입니다");
-
-        String saltValue = saltUtil.genSalt();
-        Salt salt = Salt.builder()
-                .salt(saltValue)
-                .build();
+        if(!this.idCheck(userDto)) throw new ExtantUserException("존재하지 않는 유저 입니다");
 
 
-        String EncryptedPassword = saltUtil.encodePassword(saltValue, password);
+        User user = userRepository.findUserByEmail(Email.of(userDto.getEmail())).get();
+        Salt salt = saltRepository.findSaltById(user.getSalt().getId());
+        String EncryptedPassword = saltUtil.encodePassword(salt.getSalt(), password);
 
         saltRepository.save(salt);
-        User user = User.builder()
+        user = User.builder()
                 .email(Email.of(userDto.getEmail()))
                 .nickname(userDto.getNickName())
                 .password(EncryptedPassword)
@@ -83,30 +76,29 @@ public class UserServiceImpl implements UserService{
     }
 
 
-    public LoginRequest loginUser(String email, String password) throws Exception {
-
-        User user = userRepository.findUserByEmail(Email.of(email)).orElseThrow( () -> new EntityNotFoundException("없는 유저 입니다"));
-
-        Salt salt = saltRepository.findSaltById(user.getSalt().getId());
-
-
-
-        log.info("salt:"+salt);
-        password = saltUtil.encodePassword(salt.getSalt(), password);
-        log.info("pwd:"+password);
-        log.info("user:"+user.getPassword());
-        if(!user.getPassword().equals(password))
-            throw new Exception ("비밀번호가 틀립니다.");
-//        if(user.getSocial()!=null) //나중에 추가 예정
-//            throw new Exception ("소셜 계정으로 로그인 해주세요.");
-        return new LoginRequest(email, password);
-    }
 
     @Override
     public boolean idCheck(UserDto userDto) {
         return userRepository.existsByEmail(Email.of(userDto.getEmail()));
     }
 
+    @Override
+    public boolean deleteUser(UserDto userDto) {
+        Optional<User> userByEmail = userRepository.findUserByEmail(Email.of(userDto.getEmail()));
+
+        if (userByEmail.isPresent()){
+            User user = userByEmail.get();
+            Salt salt = saltRepository.findSaltById(user.getSalt().getId());
+            String EncryptedPassword = saltUtil.encodePassword(salt.getSalt(), userDto.getPassword());
+            if (user.getPassword().equals(EncryptedPassword)){
+                userRepository.delete(user);
+                return true;
+            }
+            return false;
+
+        } else return false;
+
+    }
 
 
 }
