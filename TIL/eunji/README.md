@@ -611,3 +611,515 @@ Named 쿼리 - 어노테이션
 @NamedQuery → 미리 쿼리문을 작성해 놓는 거
 
 쿼리에 에러를 찾을 수 있다?
+
+------------
+### 2022.01.17
+## React 2강
+
+## 1. Before React
+
+```html
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <span>Total clicks: 0</span>
+    <button id="btn">Click me</button>
+</body>
+<script>
+    const button=document.getElementById("btn");
+    let counter=0;
+    const span=document.querySelector("span");
+    function handleClick(){
+        console.log("clicked");
+        counter++;
+        span.innerHTML='Total clicks: '+counter;
+    }
+    button.addEventListener("click",handleClick);
+</script>
+</html>
+```
+
+react를 사용하기 위해 설치해야 하는 것 
+
+react, react-dom
+
+```html
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></scrip
+```
+
+## **2. Our First React Element**
+
+React는 엔진이다
+
+React-dom은 React element를 HTML에 두는 역할을 하는 것
+
+render = 사용자에게 보여준다.
+
+```html
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script>
+    const root=document.getElementById("root");
+    const span=React.createElement("span"); 
+    ReactDOM.render(span,root); //render = 사용자에게 보여준다.
+</script>
+</html>
+```
+
+![Untitled](#2%2091248c63872144f5a35d8aad73912cbd/Untitled.png)
+
+아이디 이름 정하기
+
+```jsx
+const span=React.createElement("span",{id:"cute-span"})
+```
+
+![Untitled](#2%2091248c63872144f5a35d8aad73912cbd/Untitled%201.png)
+
+```jsx
+const span=React.createElement("span",{id:"cute-span"},"Hello, I'm a span"); 
+```
+
+![Untitled](#2%2091248c63872144f5a35d8aad73912cbd/Untitled%202.png)
+
+```jsx
+const span=React.createElement("span",{id:"cute-span",style:{color:"blue"}},"Hello, I'm a span"); 
+```
+
+![Untitled](#2%2091248c63872144f5a35d8aad73912cbd/Untitled%203.png)
+
+→ 이런 코드 한번만 쓸거임, 다른 간단한 방법이 있음.
+
+바닐라JS는 Html부터 만들고, 그것을 JS가 가져오는 방식
+
+ReactJS는 모든 것이 JS임 → 유저에게 보여질 내용을 컨트롤 할 수 있다.
+
+## 3. **Events in React**
+
+```jsx
+
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script>
+    const root=document.getElementById("root");
+    const span=React.createElement("span",{id:"cute-span",style:{color:"blue"}},"Hello, I'm a span"); 
+    const btn=React.createElement("button",{id:"btn"},"버튼이다");
+    const container=React.createElement("div",null,[span,btn]);
+    ReactDOM.render(container,root); //render = 사용자에게 보여준다.
+</script>
+```
+
+div tag, btn tag 둘다 render 하고 싶으면 container 하나 만들어서 그안에 배열형태로 집어넣어주고, container를 render 해줌
+
+button에 eventListner 달기
+
+```jsx
+const btn=React.createElement("button",{
+        onClick:()=>console.log("i'm clicked"),
+    },"버튼이다");
+```
+
+다른 evnetListner
+
+```jsx
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script>
+    const root=document.getElementById("root");
+    const h3=React.createElement("h3",{onMouseEnter: ()=>console.log("enter"),},"Hi");
+    const span=React.createElement("span",{id:"cute-span",style:{color:"blue"}},"Hello, I'm a span"); 
+    const btn=React.createElement("button",{
+        onClick:()=>console.log("i'm clicked"),
+    },"버튼이다");
+    const container=React.createElement("div",null,[h3,span,btn]);
+    ReactDOM.render(container,root); //render = 사용자에게 보여준다.
+</script>
+```
+
+## 4. Recap
+
+앞으로 `React.createElement`는 안쓸거임 
+
+이전 시간 복습임 
+
+## 5. JSX
+
+createElement를 대체할 수 있는 JSX
+
+왜? 더 편리해서 
+
+- JSX는 JS를 확장한 문법
+- Html과 생긴게 비슷해서 JSX로 React 요소를 만드는게 편하다
+
+```jsx
+const h3 = React.createElement("h3", { onMouseEnter: () => console.log("enter"), }, "Hi");
+const Title=<h3 id="title" onMouseEnter={() => console.log("enter")}>Hi</h3> // JSX
+```
+
+```jsx
+<script>
+    const root = document.getElementById("root");
+    const Title=<h3 
+    id="title" onMouseEnter={() => console.log("Enter")}>
+    Hi</h3> // JSX
+    const Button=<button 
+    id="btn" style={{color :
+    'red'}} onClick={()=>console.log("Click me")}>
+    button</button>
+    const span = React.createElement("span", { id: "cute-span", style: { color: "blue" } }, "Hello, I'm a span");
+    const container = React.createElement("div", null, [Title, span, Button]);
+    ReactDOM.render(container, root); //render = 사용자에게 보여준다.
+</script>
+```
+
+브라우저가 JSX를 알아들을 수 있도록 설정해주어야 함. 이때, Babel 사용함.
+
+변환기 설치, script type 지정해줌
+
+```jsx
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+```
+
+## 6. JSX part Two
+
+해당 부분을 JSX를 통해 바꿔보자!
+
+```jsx
+const container = React.createElement("div", null, [Title, Button]);
+ReactDOM.render(container, root); //render = 사용자에게 보여준다.
+```
+
+Title과 Button을 div 안에 넣어주기 위해서는 함수로 만들어줘야 한다. 
+
+```jsx
+const Title= () => (<h3 
+    id="title" onMouseEnter={() => console.log("Enter")}>
+    Hi</h3>) // JSX
+    const Button=() => (<button 
+    id="btn" style={{color :
+    'red'}} onClick={()=>console.log("Click me")}>
+    button</button>)
+```
+
+우리가 만든 요소들은 모두 대문자로 시작해야 한다!
+
+코드를 분리, 렌더링 가능 
+
+**직접 만든 컨포넌트를 렌더링해서 다른곳에서 사용할 때에는 무조건 대문자로 시작해야 한다! 아니면 그냥 html 코드가 되어버림**
+
+```jsx
+const Container = <div>
+        <Title />
+        <Button />
+    </div> //컴포넌트라고 생각하면 됨, 우리가 만든 요소들은 대문자로 작성하기
+```
+
+## React 3강
+## 0. Understanding State
+
+state = 데이터가 저장되는 곳
+
+바뀌는 데이터를 state에 저장함 
+
+값이 바뀔 데이터를 state에 담는 법
+
+잠깐 JSX 복습 
+
+함수 안에 React Element를 담으면 컴포넌트처럼 사용이 가능하다!
+
+```jsx
+const Button = () => (<button
+        id="btn" style={{
+            color:
+                'red'
+        }} onClick={() => console.log("Click me")}>
+        button</button>);
+```
+
+2강에서 배웠던 js로 total clicks 만들었던거 react로 바꾸기
+
+```jsx
+<script type="text/babel">
+    const root = document.getElementById("root");
+    const Container = () => (<div>
+        <h3>Total clicks: 0</h3>
+        <button>Click me</button>
+    </div>) //컴포넌트라고 생각하면 됨, 우리가 만든 요소들은 대문자로 작성하기 
+    // const container = React.createElement("div", null, [Title, Button]);
+    ReactDOM.render(<Container />, root); //render = 사용자에게 보여준다.
+</script>
+```
+
+변수 연결해주기 → 중괄호 사용 { }
+
+```jsx
+<script type="text/babel">
+    let counter = 10;
+    const root = document.getElementById("root");
+    const Container = () => (
+        <div>
+            <h3>Total clicks: {counter}</h3>
+            <button>Click me</button>
+        </div>); //컴포넌트라고 생각하면 됨, 우리가 만든 요소들은 대문자로 작성하기 
+    // const container = React.createElement("div", null, [Title, Button]);
+    ReactDOM.render(<Container />, root); //render = 사용자에게 보여준다.
+</script>
+```
+
+카운터 변경 함수 만들고, button에 연결해주기
+
+```jsx
+<script type="text/babel">
+    let counter = 0;
+    function countUp(){
+        counter=counter+1;
+    }
+    const root = document.getElementById("root");
+    const Container = () => (
+        <div>
+            <h3>Total clicks: {counter}</h3>
+            <button onClick={countUp}>Click me</button>
+        </div>); //컴포넌트라고 생각하면 됨, 우리가 만든 요소들은 대문자로 작성하기 
+    // const container = React.createElement("div", null, [Title, Button]);
+    ReactDOM.render(<Container />, root); //render = 사용자에게 보여준다.
+</script>
+```
+
+counter 변수는 바뀌지만, 바뀐 값이 UI에서는 그대로임!
+
+container를 변수 값이 바뀔 때마다 render 해주어야 함
+
+```jsx
+function countUp(){
+        counter=counter+1;
+        render();
+    }
+function render(){
+    ReactDOM.render(<Container />, root);
+}
+```
+
+근데 이렇게 하면 코드가 많아질 때 일일히 다 렌더링 다시를 해주어야 하나..??
+
+→ 더 쉬운 방법이 당연히 있음! 다음 강의에서..
+
+## 1. **setState part One**
+
+UI를 업데이트 하는 더 간단한 방법
+
+React는 container를 새로 렌더링 하더라도 모든 것을 다시 렌더링 하지 않음. 바뀐 부분만 알아서 렌더링 해줌!
+
+react 어플 내 데이터를 보관하고, 자동으로 리렌더링을 일으킬 수 있는 방법
+
+```jsx
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App(){
+        const data=React.useState();
+        console.log(data);
+        return(
+            <div>
+            <h3>Total clicks: {data[0]}</h3>
+            <button>Click me</button>
+        </div>
+        );
+    }
+   ReactDOM.render(<App />, root); //render = 사용자에게 보여준다.
+</script>
+```
+
+![Untitled](#3%2071c7dde6510245c1934dea7ca8969a22/Untitled.png)
+
+undefined 부분이 data, f 부분이 data를 바꿀 때 사용하는 함수
+
+```jsx
+//원래 코드
+let counter=0;
+function countUp(){
+	//code
+}
+
+//React state 사용 코드 
+const data=React.useState(); 
+```
+
+둘 다는 같은 코드임!
+
+```jsx
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App(){
+        const data=React.useState(0);
+        const[counter,modifier] = data;
+        return(
+            <div>
+            <h3>Total clicks: {counter}</h3>
+            <button>Click me</button>
+        </div>
+        );
+    }
+   ReactDOM.render(<App />, root); //render = 사용자에게 보여준다.
+</script>
+```
+
+## **2. setState part Two**
+
+modifier 작성법
+
+```jsx
+const data=React.useState(0);
+const [counter,modifier] = data;
+```
+
+이렇게 새로운 배열을 하나 더 선언해주면 data[0]. data[1] 이렇게 쓰지 않고도 counter, modifier의 값으로 사용할 수 있다.
+
+카운트 올리기 코드 
+
+modifier 함수 이름을 setCounter라고 바꾸고, 함수의 인자값을 하고싶은 계산식으로 만들어줌 
+
+```jsx
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App(){
+        const data=React.useState(0);
+        const [counter,setCounter] = data;
+        const onClick = () => {
+            setCounter(counter+1);
+        }
+        return(
+            <div>
+            <h3>Total clicks: {counter}</h3>
+            <button onClick={onClick}>Click me</button>
+        </div>
+        );
+    }
+   ReactDOM.render(<App />, root); //render = 사용자에게 보여준다.
+</script>
+```
+
+## 3. Recap
+
+앞에꺼 복습 
+
+## 4. **State Functions**
+
+state를 바꾸는 2가지 방법
+
+- setCounter를 이용해 우리가 원하는 값을 넣어주는 것
+- 이전 값을 이용해 현재 값을 계산하는 것
+    - **setCounter의 인자 부분에 함수를 넣음** → 더 안전한 방법
+        
+        current가 현재 값이라는 완벽한 보장을 할 수 있어서...?
+        
+        ```jsx
+        setCounter((current)=>current+1)
+        ```
+        
+
+---
+
+## 5. **Inputs and State**
+
+단위 변환 페이지 만들기
+
+```jsx
+function App(){
+        return(
+            <div>
+            <h1>Super Converter</h1>
+            <label for="minutes">Minutes</label>
+            <input type="number" id="minutes" placeholder="Minutes" />
+            <label for="hours">Hours</label>
+            <input type="number" id="hours" placeholder="Hours" />
+        </div>
+        );
+    }
+```
+
+jsx는 html과 유사하지만 다른 점 몇가지가 있음.
+
+- class와 for를 사용하면 안된다.
+
+```jsx
+function App(){
+        const [minutes,setMinutes]=React.useState();
+        const onChange=(event)=>{
+            console.log(event.target.value);
+            setMinutes(event.target.value);
+        }
+        return(
+            <div>
+            <h1>Super Converter</h1>
+            <label for="minutes">Minutes</label>
+            <input value={minutes} 
+            type="number" 
+            id="minutes" 
+            placeholder="Minutes" 
+            onChange={onChange}/>
+            <h4>You want to convert {minutes}</h4>
+            <label for="hours">Hours</label>
+            <input type="number" id="hours" placeholder="Hours" />
+        </div>
+        );
+    }
+```
+
+![Untitled](#3%2071c7dde6510245c1934dea7ca8969a22/Untitled%201.png)
+
+## **6. State Practice part One**
+
+- state 만들기
+    - state의 결과는 배열
+        - 첫번째 요소는 value
+        - 두번째 요소는 value를 업데이트 하는 함수
+- input의 value를 state로 연결
+- onChange 함수를 만들어서 input에 연결
+    - 해당 함수는 데이터를 업데이트 해주는 역할
+
+```jsx
+function App(){
+        const [minutes,setMinutes]=React.useState(0);
+        const onChange=(event)=>{
+            console.log(event.target.value);
+            setMinutes(event.target.value);
+        }
+        const reset=()=>{
+            setMinutes(0);
+        }
+        return(
+            <div>
+            <h1>Super Converter</h1>
+            <div>
+                <label htmlFor="minutes">Minutes</label>
+                <input value={minutes} 
+                type="number" 
+                id="minutes" 
+                placeholder="Minutes" 
+                onChange={onChange}/>
+            </div>
+            <div>
+                <label htmlFor="hours">Hours</label>
+                <input value={minutes/60} type="number" id="hours" placeholder="Hours"/>
+            </div>
+            <button onClick={reset}>Reset</button>
+        </div>
+        );
+    }
+```
