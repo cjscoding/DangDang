@@ -1,11 +1,11 @@
 package com.ssafy.dangdang.user;
 
-import com.ssafy.dangdang.config.security.auth.PrincipalDetailsService;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.domain.types.Email;
 import com.ssafy.dangdang.repository.SaltRepository;
 import com.ssafy.dangdang.repository.UserRepository;
+import com.ssafy.dangdang.service.UserService;
 import com.ssafy.dangdang.util.SaltUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class UserServiceTest {
 
     @Autowired
-    private PrincipalDetailsService principalDetailsService;
+    private UserService userService;
     @Autowired
     private SaltRepository saltRepository;
     @Autowired
@@ -32,7 +32,7 @@ public class UserServiceTest {
         userDto.setNickName("Bori");
         userDto.setPassword("test@ssafy.com");
 
-        principalDetailsService.signUpUser(userDto);
+        userService.signUpUser(userDto);
 
         User user = userRepository.findUserByEmail(Email.of(userDto.getEmail())).get();
 

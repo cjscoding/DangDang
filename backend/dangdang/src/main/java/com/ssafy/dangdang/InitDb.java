@@ -1,10 +1,6 @@
 package com.ssafy.dangdang;
 
-import com.ssafy.dangdang.config.security.auth.PrincipalDetailsService;
-import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.UserDto;
-import com.ssafy.dangdang.domain.types.Email;
-import com.ssafy.dangdang.repository.UserRepository;
 import com.ssafy.dangdang.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -31,8 +27,7 @@ public class InitDb {
     @Transactional
     @RequiredArgsConstructor
     static class InitService{
-        private final PrincipalDetailsService principalDetailsService;
-        private final UserRepository userRepository;
+        private final UserService userRepository;
 
         public void signUpUsers(){
             UserDto userDto = new UserDto();
@@ -41,14 +36,14 @@ public class InitDb {
             userDto.setNickName("Bori");
             userDto.setPassword("test@ssafy.com");
 
-            principalDetailsService.signUpUser(userDto);
+            userRepository.signUpUser(userDto);
             for (int i=0;i<20;i++){
                 userDto = new UserDto();
                 userDto.setEmail("test"+i+"@ssafy.com");
                 userDto.setNickName("Bori"+i);
                 userDto.setPassword("test"+i+"@ssafy.com");
 
-                principalDetailsService.signUpUser(userDto);
+                userRepository.signUpUser(userDto);
             }
 
             //User user = userRepository.findUserByEmail(Email.of(userDto.getEmail())).get();

@@ -7,7 +7,7 @@ import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.exception.BadRequestException;
 import com.ssafy.dangdang.exception.ExtantUserException;
-import com.ssafy.dangdang.exception.validator.UserValidator;
+import com.ssafy.dangdang.service.UserService;
 import com.ssafy.dangdang.util.JwtUtil;
 import com.ssafy.dangdang.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +28,10 @@ import static com.ssafy.dangdang.util.ApiUtils.*;
 public class UserController {
 
     private final PrincipalDetailsService principalDetailsService;
+    private final UserService userService;
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
 
-    private final UserValidator userValidator;
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
@@ -50,7 +50,22 @@ public class UserController {
 
         log.info("user SignUp {}", userDto.toString());
         try {
-            principalDetailsService.signUpUser(userDto);
+            userService.signUpUser(userDto);
+            return success(userDto);
+        }catch (ExtantUserException e){
+            e.printStackTrace();
+            return (ApiResult<UserDto>) error(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @PatchMapping()
+    public ApiResult<UserDto> updateUser(@RequestBody @Valid UserDto userDto) {
+
+
+        log.info("user SignUp {}", userDto.toString());
+        try {
+            userService.signUpUser(userDto);
             return success(userDto);
         }catch (ExtantUserException e){
             e.printStackTrace();
