@@ -70,9 +70,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticationEntryPoint(customAuthenticationEntryPoint)
                     .and()
                 .authorizeRequests()
-    //                .antMatchers("/**").permitAll()//테스트용으로 모든 권한 열기
+                    .antMatchers("/**").permitAll()//테스트용으로 모든 권한 열기
                     .antMatchers("/v3/**", "/swagger-ui.html","/swagger-ui/**").permitAll()
-                    .antMatchers("/user/login").permitAll()
+                    .antMatchers("/user/login", "/user").permitAll()
                     .antMatchers("/auth/**", "/oauth2/**").permitAll()
                     //.antMatchers("/login/oauth2/code/**").permitAll()
                     .anyRequest().authenticated()

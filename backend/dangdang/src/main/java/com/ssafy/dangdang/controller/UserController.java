@@ -5,15 +5,20 @@ import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetailsService;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.UserDto;
-import com.ssafy.dangdang.util.ApiUtils;
+import com.ssafy.dangdang.exception.BadRequestException;
+import com.ssafy.dangdang.exception.ExtantUserException;
+import com.ssafy.dangdang.exception.validator.UserValidator;
 import com.ssafy.dangdang.util.JwtUtil;
 import com.ssafy.dangdang.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 
+import static com.ssafy.dangdang.util.ApiUtils.*;
 
 @RestController
 @RequestMapping("/user")
@@ -26,14 +31,39 @@ public class UserController {
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
 
+    private final UserValidator userValidator;
+
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public ApiUtils.ApiResult<UserDto> getCurrentUser(@CurrentUser PrincipalDetails userPrincipal) {
+    public ApiResult<UserDto> getCurrentUser(@CurrentUser PrincipalDetails userPrincipal) {
         User user =  userPrincipal.getUser();
         System.out.println("UserPincipal"+ user.toString());
-        return ApiUtils.success(UserDto.of(user));
+        return success(UserDto.of(user));
 
 //        return userRepository.findById(userPrincipal.getId())
 //                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
     }
+
+    @PostMapping()
+    public ApiResult<UserDto> signUp(@RequestBody @Valid UserDto userDto) {
+
+
+        log.info("user SignUp {}", userDto.toString());
+        try {
+            principalDetailsService.signUpUser(userDto);
+            return success(userDto);
+        }catch (ExtantUserException e){
+            e.printStackTrace();
+            return (ApiResult<UserDto>) error(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @PostMapping("/test")
+    public ApiResult<UserDto> test(@RequestBody @Valid UserDto userDto) {
+        throw new BadRequestException("dd");
+
+
+    }
 }
+

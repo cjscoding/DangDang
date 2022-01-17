@@ -6,12 +6,12 @@ import com.ssafy.dangdang.domain.dto.LoginRequest;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.domain.types.Email;
 import com.ssafy.dangdang.domain.types.UserRoleType;
+import com.ssafy.dangdang.exception.ExtantUserException;
 import com.ssafy.dangdang.repository.SaltRepository;
 import com.ssafy.dangdang.repository.UserRepository;
 import com.ssafy.dangdang.util.SaltUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -43,14 +43,10 @@ public class PrincipalDetailsService implements UserDetailsService {
         String password = userDto.getPassword();
 
         // TODO: EXCEPTION 상세화
-        try {
+
             long count = this.idCheck(userDto);
-            if(count>0) throw new Exception();
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("이미 존재하는 ID입니다.");
-            return;
-        }
+            if(count>0) throw new ExtantUserException("이미 존재하는 유저 입니다");
+
         String saltValue = saltUtil.genSalt();
         Salt salt = Salt.builder()
                 .salt(saltValue)

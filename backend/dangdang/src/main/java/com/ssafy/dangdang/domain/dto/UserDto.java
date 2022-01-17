@@ -3,6 +3,11 @@ package com.ssafy.dangdang.domain.dto;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.types.UserRoleType;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -11,9 +16,18 @@ import lombok.*;
 @NoArgsConstructor
 public class UserDto {
 
+    @NotBlank
+    @Email
     private String email;
+    @NotBlank
+    @NotNull
     private String nickName;
+
+    @NonNull
+    @NotBlank
+    @Length(min=8, max=50)
     private String password;
+
     private UserRoleType role;
 
 
