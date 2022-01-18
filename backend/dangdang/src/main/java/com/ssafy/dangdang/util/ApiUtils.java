@@ -46,9 +46,7 @@ public class ApiUtils {
   public static class ApiResult<T> {
 
     private final boolean success;
-
     private final T response;
-
     private final ApiError error;
 
     private ApiResult(boolean success, T response, ApiError error) {
@@ -60,11 +58,9 @@ public class ApiUtils {
     public boolean isSuccess() {
       return success;
     }
-
     public ApiError getError() {
       return error;
     }
-
     public T getResponse() {
       return response;
     }

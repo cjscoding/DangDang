@@ -12,6 +12,7 @@ import com.ssafy.dangdang.util.SaltUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -25,11 +26,9 @@ public class UserServiceImpl implements UserService{
     private final SaltUtil saltUtil;
 
     @Override
+    @Transactional
     public void signUpUser(UserDto userDto) {
         String password = userDto.getPassword();
-
-        // TODO: EXCEPTION 상세화
-
 
         if(this.idCheck(userDto)) throw new ExtantUserException("이미 존재하는 유저 입니다");
         String saltValue = saltUtil.genSalt();
@@ -49,6 +48,9 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
 
     }
+
+
+
     @Override
     public void updateUser(UserDto userDto) {
         String password = userDto.getPassword();
@@ -63,7 +65,6 @@ public class UserServiceImpl implements UserService{
         Salt salt = saltRepository.findSaltById(user.getSalt().getId());
         String EncryptedPassword = saltUtil.encodePassword(salt.getSalt(), password);
 
-        saltRepository.save(salt);
         user = User.builder()
                 .email(Email.of(userDto.getEmail()))
                 .nickname(userDto.getNickName())
@@ -98,6 +99,11 @@ public class UserServiceImpl implements UserService{
 
         } else return false;
 
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return userRepository.findUserByEmail(Email.of(email)).get();
     }
 
 

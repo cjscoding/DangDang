@@ -38,10 +38,9 @@ public class UserController {
     public ApiResult<UserDto> getCurrentUser(@CurrentUser PrincipalDetails userPrincipal) {
         User user =  userPrincipal.getUser();
         System.out.println("UserPincipal"+ user.toString());
+
         return success(UserDto.of(user));
 
-//        return userRepository.findById(userPrincipal.getId())
-//                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
     }
 
     @PostMapping()
