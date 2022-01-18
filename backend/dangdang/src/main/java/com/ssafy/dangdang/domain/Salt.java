@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -25,7 +24,7 @@ public class Salt {
     @NotNull()
     private String salt;
 
-    @OneToOne(mappedBy = "salt")
+    @OneToOne(mappedBy = "salt", fetch = FetchType.LAZY)
     @JsonIgnore
     private User user;
 

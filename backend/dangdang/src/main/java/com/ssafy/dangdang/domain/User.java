@@ -10,8 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -47,6 +48,12 @@ public class User{
     //OAouth용
     private String provider;
     private String providerId;
+
+    @OneToMany(mappedBy = "user")
+    private List<Enter> enters = new ArrayList<>();
+
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
+    private List<Post> posts = new ArrayList<>();
 
     @Override
     public String toString() {
