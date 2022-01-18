@@ -1123,3 +1123,51 @@ function App(){
         );
     }
 ```
+
+------------
+### 2022.01.18
+## Kurento
+
+[Kurento](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-kurento) 는 [WebRTC](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-webrtc) 미디어 서버이자 웹 및 스마트폰 플랫폼용 고급 비디오 애플리케이션 개발을 단순화하는 클라이언트 API 세트입니다. 그 기능에는 그룹 커뮤니케이션, 트랜스코딩, 녹음, 믹싱, 방송 및 시청각 흐름 라우팅이 포함됩니다.
+
+## kurento와 같은 미디어 서버를 사용하는 이유
+
+[WebRTC](https://webrtc.org/) 는 브라우저와 모바일 애플리케이션에 피어 투 피어 연결을 통해 실시간 통신(RTC) 기능을 제공하는 일련의 프로토콜, 메커니즘 및 API입니다. 어떤 종류의 인프라도 중재하지 않고 브라우저가 직접 통신할 수 있도록 하는 기술로 인식되었습니다. 그러나 이 모델은 기본 웹 애플리케이션을 만드는 데만 충분합니다. **그룹 통신, 미디어 스트림 녹음, 미디어 방송 또는 미디어 트랜스코딩과 같은 기능은 그 위에 구현하기 어렵습니다.** 이러한 이유로 많은 응용 프로그램에 중간 미디어 서버가 필요합니다.
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0a93837a-329b-4172-8c5c-998ba4912d43/Untitled.png)
+
+### WebRTC Media Server가 제공하는 기능들
+
+- 그룹 통신: 한 피어가 생성하는 미디어 스트림을 여러 수신기에 배포하는 것, 즉 다중 회의 장치("MCU") 역할을 합니다.
+- 혼합: 여러 수신 스트림을 하나의 단일 복합 스트림으로 변환합니다.
+- 트랜스코딩: 호환되지 않는 클라이언트 간에 코덱 및 형식을 즉시 적용합니다.
+- 녹음: 피어 간에 교환되는 미디어를 지속적으로 저장합니다.
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b946aa7a-efd5-41ce-a310-8b12c557edac/Untitled.png)
+
+Kurento의 주요 구성 요소는 미디어 전송, 처리, 녹음 및 재생을 담당하는 KMS( **Kurento Media Server )입니다.**
+
+### KMS가 제공하는 주요 기능들
+
+- [HTTP,](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-http)[RTP 및](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-rtp) [WebRTC](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-webrtc)를 포함한 네트워크 스트리밍 프로토콜
+- 미디어 믹싱과 미디어 라우팅/디스패칭을 모두 지원하는 그룹 통신(MCU 및 SFU 기능)
+- Computer Vision 및 Augmented Reality 알고리즘을 구현하는 필터에 대한 일반 지원
+- [WebM 및](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-webm)  [MP4](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-mp4) **에 대한 쓰기 작업과 GStreamer 에서 지원하는 모든 형식의 재생 을 지원하는 미디어 저장소입니다.
+- VP8, H.264, H.263, AMR, OPUS, Speex, G.711 등을 포함하여 GStreamer에서 지원하는 모든 코덱 간의 자동 미디어 트랜스코딩
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7ab98bf4-1f88-433f-a676-8be44eee2331/Untitled.png)
+
+## 쿠렌토 설치 방법 3가지
+
+- [Amazon Web Services](https://aws.amazon.com/)
+
+  (AWS) 클라우드 서비스 에서 EC2 인스턴스 사용 . 제공된 설정이 이 모든 작업을 자동으로 수행하기 때문에 서버와 모든 소프트웨어 패키지를 올바르게 구성하는 것에 대해 걱정하지 않으려는 사용자에게 AWS를 사용하는 것이 좋습니다.
+
+- Kurento 팀에서 제공한 Docker 이미지 사용. Docker 이미지를 사용하면 모든 호스트 컴퓨터에서 Kurento를 실행할 수 있으므로 예를 들어 Fedora 또는 CentOS 시스템 위에서 KMS를 실행할 수 있습니다. 이론상으로는 Windows에서도 실행할 수 있지만 지금까지 그 가능성은 탐색되지 않았으므로 사용자가 위험을 감수해야 합니다.
+
+- 모든 Ubuntu 시스템에서 ,를 사용한 로컬 설치 . 이 방법을 사용하면 설치 프로세스를 완전히 제어할 수 있습니다. KMS를 설치하는 것 외에도 , 특히 KMS 또는 해당 클라이언트가 [NAT](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-nat) 방화벽 뒤에 있는 경우에는 [STUN](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-stun) 또는 [TURN 서버도 설치해야 합니다.](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-turn)`apt-get install`
+
+## 쿠렌토 서버 실행시키기
+[[Kurento\] 쿠렌토 서버 Docker로 실행시켜보기 (feat. 윈도우)](https://gh402.tistory.com/44)
+[Windows 10에서 WSL2를 이용하여 Ubuntu 설치하는 방법](https://wylee-developer.tistory.com/57)
+
