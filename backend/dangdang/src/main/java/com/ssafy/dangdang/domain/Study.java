@@ -27,6 +27,7 @@ public class Study {
     @Lob //스터디 소개글
     private String introduction;
 
+
     private LocalDateTime createdAt;
 
     private Integer number;
@@ -58,7 +59,21 @@ public class Study {
 
     }
 
-    public void setHost(User host) {
-        this.host = host;
+
+
+    @Override
+    public String toString() {
+        return "Study{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", introduction='" + introduction + '\'' +
+                ", createdAt=" + createdAt +
+                ", number=" + number +
+                //   ", host=" + host +
+                //   ", enters=" + enters +
+                ", target='" + target + '\'' +
+                ", totalTime=" + totalTime +
+                ", lastAccessTime=" + lastAccessTime +
+                '}';
     }
 }

@@ -21,9 +21,7 @@ public class StudyServiceImpl implements StudyService{
     public StudyDto createStudy(User user, StudyDto studyDto) {
 
         Study study = Study.of(user, studyDto);
-        study.setHost(user);
-//        user.getStudies().add(study);
-//        userRepository.save(user);
+
         log.info(user.toString());
         studyRepository.save(study);
 

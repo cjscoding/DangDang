@@ -3,6 +3,7 @@ package com.ssafy.dangdang.service;
 import com.ssafy.dangdang.domain.Enter;
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
+import com.ssafy.dangdang.domain.dto.StudyDto;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.domain.types.Email;
 import com.ssafy.dangdang.repository.EnterRepository;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -39,4 +42,15 @@ public class EnterServiceImpl implements EnterService{
 
         return enter.getId();
     }
+
+    @Override
+    public void oustStudy(UserDto userDto, Long studyId) {
+
+    }
+
+    private List<StudyDto> getStudies(User user){
+        List<Enter> entersByUser = enterRepository.findEntersByUser(user);
+
+        return null;
+       }
 }

@@ -1,6 +1,5 @@
 package com.ssafy.dangdang.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.dangdang.domain.types.Email;
 import com.ssafy.dangdang.domain.types.UserRoleType;
 import com.ssafy.dangdang.domain.types.converter.EmailAttrConverter;
@@ -38,15 +37,10 @@ public class User{
     private Email email;
 
     //@NotBlank OAuth의 경우에는 비밀번호가 필요없음
-    @Column(length = 100)
     private String password;
 
     private String imageUrl;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    @JoinColumn(name = "salt_id")
-    private Salt salt;
 
     //OAuth용
     private String provider;

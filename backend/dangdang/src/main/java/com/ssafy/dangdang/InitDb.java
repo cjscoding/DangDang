@@ -81,8 +81,10 @@ public class InitDb {
         public void enter(){
             User user = userService.findByEmail("test@ssafy.com");
             Study study = studyRepository.findById(1L).get();
-            enterService.enterStudy(UserDto.of(user), 1L);
 
+            enterService.enterStudy(UserDto.of(user), 1L);
+            study = studyRepository.findById(2L).get();
+            enterService.enterStudy(UserDto.of(user), 2L);
         }
 
     }
