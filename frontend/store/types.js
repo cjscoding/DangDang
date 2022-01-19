@@ -1,4 +1,14 @@
-export const GET_POSTS = "GET_POSTS";
-export const GET_ROOMS = "GET_ROOMS";
-export const GET_MY_ROOMS = "GET_MY_ROOMS";
-export const SET_TEAM_NO = "SET_TEAM_NO";
+const post = {
+  GET_POSTS: "GET_POSTS",
+  GET_ROOMS: "GET_ROOMS",
+  GET_MY_ROOMS: "GET_MY_ROOMS",
+  SET_TEAM_NO: "SET_TEAM_NO",
+}
+
+
+
+
+const types = {
+  ...post,
+}
+export default types;

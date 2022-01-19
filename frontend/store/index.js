@@ -3,7 +3,7 @@ import { createWrapper} from "next-redux-wrapper";
 import { createLogger } from "redux-logger";
 import { composeWithDevTools } from "redux-devtools-extension"
 
-import reducer from "./reducer";
+import reducer from "./reducers";
 
 const makeStore = () => {
   const logger = createLogger();
