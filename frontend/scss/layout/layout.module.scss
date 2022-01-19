@@ -1,0 +1,10 @@
+@import "../common/variables.scss";
+
+.navbar,
+.footer{
+    color: white;
+    background-color: $main-color;
+    font-size: 50px;
+    text-align: center;
+    padding: 20px;
+}

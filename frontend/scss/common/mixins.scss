@@ -1,0 +1,11 @@
+@mixin back {
+  background-color: blue;
+}
+
+@mixin what($word) {
+  @if $word == "odd" {
+    background-color: purple;
+  } @else {
+    background-color: yellow;
+  }
+}
