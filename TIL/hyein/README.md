@@ -9,3 +9,5 @@
 ## Git
 
 - [git flow 이해하기](git-flow-이해하기.md)
+
+- 지라 연동테스트!
