@@ -1,0 +1,13 @@
+.container {
+  padding: 1rem;
+  border-radius: 5px;
+  width: 200px;
+  height: 80vh;
+  background-color: coral;
+  margin-right: 2rem;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  &:hover {
+    transform: translateY(-0.5rem);
+    transition: 0.4s ease;
+  }
+}
