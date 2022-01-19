@@ -57,7 +57,7 @@ export default function CheckDevices() {
           ...cameraId?cameraConstraints:{},
         });
         video.current.srcObject = stream;
-        if(speakerId) video.setSinkId(speakerId);
+        if(speakerId) video.current.setSinkId(speakerId);
         if(!cameraId && !micId && !speakerId) await getDevices();
       }catch(err) {
         console.log(err);
