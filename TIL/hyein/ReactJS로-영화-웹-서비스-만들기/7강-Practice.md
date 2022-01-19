@@ -143,3 +143,35 @@ import { useCallback } from "react";
 ```
 
 - `useCallback`을 사용하려면 import를 먼저 해 줘야 한다!
+
+## Github Page로 배포하기
+
+- github에서 제공하는 페이지로, HTML, CSS, JavaScript를 올리면 웹사이트로 만들어 준다.
+- 설치
+
+```bash
+npm i gh-pages
+```
+
+- `package.json`을 다음과 같이 수정해 준다.
+
+```json
+// JSON 맨 하단에
+  "homepage": "https://HyeIn-Kim.github.io/{repository-name}"
+
+// scripts에 deploy, predeploy 추가
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d build",
+    "predeploy": "npm run build"
+  },
+```
+
+- 배포하기
+
+```bash
+npm run deploy
+```
