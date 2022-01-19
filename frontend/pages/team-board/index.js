@@ -1,17 +1,16 @@
 import Title from "../../components/layout/title";
 import styles from "../../scss/team-board/board.module.scss";
 import Image from "next/image";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { fetchrooms } from "../../store/actions/postAction";
 import Link from 'next/link';
 
 export default function Board() {
+  const { rooms } = useSelector((state) => state.roomReducer);
   const dispatch = useDispatch();
-  const { rooms } = useSelector((state) => state.room);
-
   useEffect(() => {
-    dispatch(fetchrooms());
+    dispatch(fetchrooms())
   }, []);
 
   return (

@@ -1,17 +1,17 @@
-import * as types from "../types";
+import types from "../types";
 
-export const fetchposts = () => async (dispatch) => {
-    
-  dispatch({
+export const fetchposts = () => (
+  {
     type: types.GET_POSTS,
     payload: ["1st post", "2nd posts", "3rd posts"],
     host: ["sid", "syd", "cjs"],
     teamNo: ["123", "Wer"],
-  });
-};
+  }
+);
 
-export const fetchrooms = () => async (dispatch) => {
-  dispatch({
+
+export const fetchrooms = () => (
+  {
     type: types.GET_ROOMS,
     keywords: [
       ["fe", "ghkf", "sdf"],
@@ -19,11 +19,11 @@ export const fetchrooms = () => async (dispatch) => {
       ["뇸뇸", "냥냥", "모여~~"],
       ["하하", "호호"],
     ],
-  });
-};
+  }
+);
 
-export const fetchmyrooms = () => async (dispatch) => {
-  dispatch({
+export const fetchmyrooms = () => (
+  {
     type: types.GET_MY_ROOMS,
     keywords: [
       ["내", "방", "이", "야"],
@@ -32,18 +32,20 @@ export const fetchmyrooms = () => async (dispatch) => {
       ["쓰", "려", "나", "?"],
       ["그림은", "임시"],
     ],
-  });
-};
+  }
+);
 
-export const fetchteamno = () => async (dispatch) => {
+export const fetchteamno = () => {
   function searchParam(key) {
     return new URLSearchParams(location.search).get(key);
   }
   let no = searchParam(no);
   console.log(no);
 
-  dispatch({
-    type: types.SET_TEAM_NO,
-    teamNo: no,
-  });
+  return (
+    {
+      type: types.SET_TEAM_NO,
+      teamNo: no,
+    }
+  );
 };

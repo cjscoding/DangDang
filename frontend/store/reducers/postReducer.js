@@ -1,4 +1,5 @@
-import * as types from "../types";
+import types from "../types";
+
 const initialState = {
   posts: [],
   hosts: [],
