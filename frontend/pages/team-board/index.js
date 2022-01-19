@@ -60,8 +60,7 @@ export default function Board() {
                     height={250}
                   />
                   <div className={styles.keywords}>
-                    {items &&
-                      items.map((item) => <span key={item}># {item}</span>)}
+                    {items ?.map((item) => <span key={item}># {item}</span>)}
                   </div>
                 </div>
               ))}
