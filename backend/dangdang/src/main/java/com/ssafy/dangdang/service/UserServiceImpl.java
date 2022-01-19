@@ -77,14 +77,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public boolean deleteUser(User user, String password) {
 
-
             if (passwordEncoder.matches(password, user.getPassword())) {
                 userRepository.delete(user);
                 return true;
             }
             return false;
-
-
 
     }
 

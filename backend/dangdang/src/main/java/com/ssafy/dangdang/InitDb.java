@@ -2,10 +2,13 @@ package com.ssafy.dangdang;
 
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
+import com.ssafy.dangdang.domain.dto.ResumeDto;
+import com.ssafy.dangdang.domain.dto.ResumeQuestionDto;
 import com.ssafy.dangdang.domain.dto.StudyDto;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.repository.StudyRepository;
 import com.ssafy.dangdang.service.EnterService;
+import com.ssafy.dangdang.service.ResumeService;
 import com.ssafy.dangdang.service.StudyService;
 import com.ssafy.dangdang.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,21 +30,23 @@ public class InitDb {
         initService.signUpUsers();
         initService.createStudy();
         initService.enter();
+        initService.writeResume();
     }
 
     //위 init()함수에 아래 내용을 전부 포함해도 된다고 생각할 수 있지만,
     //Bean의 생명주기 때문에, @Transactional같은 어노테이션을 사용하려면
     //아래와 같이 별도의 클래스를 사용해야한다.
     @Component
+    @Transactional
     @RequiredArgsConstructor
     static class InitService{
         private final UserService userService;
         private final StudyRepository studyRepository;
         private final StudyService studyService;
         private final EnterService enterService;
+        private final ResumeService resumeService;
 
 
-        @Transactional
         public void signUpUsers(){
             UserDto userDto = new UserDto();
 
@@ -59,7 +64,7 @@ public class InitDb {
             }
         }
 
-        @Transactional
+
         public void createStudy(){
             User user = userService.findByEmail("test@ssafy.com").get();
 
@@ -78,13 +83,26 @@ public class InitDb {
             }
         }
 
+
         public void enter(){
             User user = userService.findByEmail("test@ssafy.com").get();
             Study study = studyRepository.findById(1L).get();
-
             enterService.enterStudy(user, 1L);
             study = studyRepository.findById(2L).get();
             enterService.enterStudy(user, 2L);
+        }
+
+        public void writeResume(){
+            User user = userService.findByEmail("test@ssafy.com").get();
+            ResumeDto resumeDto = new ResumeDto();
+            ResumeQuestionDto resumeQuestionDto = new ResumeQuestionDto();
+            resumeQuestionDto.setQuestion("파인애플피자 좋아함?");
+            resumeQuestionDto.setAnswer("없어서 못먹음");
+            resumeDto.getResumeQuestionList().add(resumeQuestionDto);
+            resumeQuestionDto.setQuestion("파인애플피자 좋아함2?");
+            resumeQuestionDto.setAnswer("없어서 못먹음2");
+            resumeDto.getResumeQuestionList().add(resumeQuestionDto);
+            resumeService.writeResume(user, resumeDto.getResumeQuestionList());
         }
 
     }

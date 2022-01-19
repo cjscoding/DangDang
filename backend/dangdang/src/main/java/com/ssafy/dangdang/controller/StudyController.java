@@ -9,6 +9,8 @@ import com.ssafy.dangdang.service.StudyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,7 +29,9 @@ public class StudyController {
 
     @PostMapping()
     @PreAuthorize("hasRole('USER')")
-    public ApiResult<StudyDto> createStudy(@CurrentUser PrincipalDetails userPrincipal,@RequestBody @Valid StudyDto studyDto){
+    public ApiResult<StudyDto> createStudy(@CurrentUser PrincipalDetails userPrincipal
+            ,@RequestBody @Valid StudyDto studyDto){
+
         User user = userPrincipal.getUser();
         log.info(user.toString());
         Study study = Study.of(user, studyDto);

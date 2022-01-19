@@ -37,6 +37,7 @@ public class Study {
     private User host;
 
     @OneToMany(mappedBy = "study")
+    @Builder.Default
     private List<Enter> enters = new ArrayList<>();
 
     @Column(length = 30) //목표하는 기업
