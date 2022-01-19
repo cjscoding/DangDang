@@ -7,6 +7,7 @@ import com.ssafy.dangdang.repository.StudyRepository;
 import com.ssafy.dangdang.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,15 +19,25 @@ public class StudyServiceImpl implements StudyService{
     private final UserRepository userRepository;
 
     @Override
-    public StudyDto createStudy(User user, StudyDto studyDto) {
-
-        Study study = Study.of(user, studyDto);
-
+    public Study createStudy(User user, Study study) {
         log.info(user.toString());
         studyRepository.save(study);
+        return study;
+    }
+
+    @Override
+    public Study updateStudy(User user, Study Study) {
+        return null;
+    }
+
+    @Override
+    public boolean deleteStudy(User user, Study Study) {
+        return false;
+    }
 
 
-
-        return StudyDto.of(study);
+    @Override
+    public Page<StudyDto> getAllStudies() {
+        return null;
     }
 }

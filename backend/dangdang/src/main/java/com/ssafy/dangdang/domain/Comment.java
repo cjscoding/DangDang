@@ -38,6 +38,7 @@ public class Comment {
     private Comment parent;
 
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    @Builder.Default
     private List<Comment> children = new ArrayList<>();
 
 }

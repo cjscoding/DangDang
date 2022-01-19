@@ -46,6 +46,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    // Project으로 데이터 조회할 때, 조회하지는 않는 연관엔티티 들이 프록시 상태여서 에러가 발생
+    // 이 라이브러르는 그런 친구들에게 null을 대입해준다
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate5")
+
     // Jwt 관련설정
     implementation 'com.auth0:java-jwt:3.18.2'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'

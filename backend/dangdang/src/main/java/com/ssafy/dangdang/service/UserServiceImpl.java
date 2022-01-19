@@ -50,9 +50,6 @@ public class UserServiceImpl implements UserService{
     public void updateUser(UserDto userDto) {
         String password = userDto.getPassword();
 
-        // TODO: EXCEPTION 상세화
-
-
         if(!this.idCheck(userDto)) throw new ExtantUserException("존재하지 않는 유저 입니다");
 
 
@@ -78,25 +75,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public boolean deleteUser(UserDto userDto) {
-        Optional<User> userByEmail = userRepository.findUserByEmail(Email.of(userDto.getEmail()));
+    public boolean deleteUser(User user, String password) {
 
-        if (userByEmail.isPresent()){
-            User user = userByEmail.get();
-            String EncryptedPassword = passwordEncoder.encode(userDto.getPassword());
-            if (user.getPassword().equals(EncryptedPassword)){
+            if (passwordEncoder.matches(password, user.getPassword())) {
                 userRepository.delete(user);
                 return true;
             }
             return false;
 
-        } else return false;
-
     }
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findUserByEmail(Email.of(email)).get();
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findUserByEmail(Email.of(email));
     }
 
 

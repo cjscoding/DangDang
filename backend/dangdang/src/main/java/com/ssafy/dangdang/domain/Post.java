@@ -28,6 +28,7 @@ public class Post {
     private String content;
 
     @OneToMany(mappedBy = "post")
+    @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

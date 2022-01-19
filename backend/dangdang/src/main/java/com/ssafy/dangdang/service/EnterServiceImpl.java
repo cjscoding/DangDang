@@ -28,10 +28,8 @@ public class EnterServiceImpl implements EnterService{
 
 
     @Override
-    @Transactional
-    public Long enterStudy(UserDto userDto, Long studyId) {
+    public Long enterStudy(User user, Long studyId) {
 
-        User user = userRepository.findUserByEmail(Email.of(userDto.getEmail())).get();
         Study study = studyRepository.findById(studyId).get();
         Enter enter = Enter.builder()
                 .user(user)
@@ -44,13 +42,17 @@ public class EnterServiceImpl implements EnterService{
     }
 
     @Override
-    public void oustStudy(UserDto userDto, Long studyId) {
-
+    public void outStudy(User user, Long studyId) {
+        Study study = studyRepository.findById(studyId).get();
+        Enter enter = Enter.builder()
+                .user(user)
+                .study(study)
+                .build();
+        enterRepository.delete(enter);
     }
 
-    private List<StudyDto> getStudies(User user){
-        List<Enter> entersByUser = enterRepository.findEntersByUser(user);
-
-        return null;
+    private List<Study> getStudies(User user){
+        List<Study> studies = studyRepository.getStudies(user);
+        return studies;
        }
 }

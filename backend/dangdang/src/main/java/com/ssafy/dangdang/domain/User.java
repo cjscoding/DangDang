@@ -31,7 +31,7 @@ public class User{
     @Enumerated(EnumType.STRING)
     private UserRoleType role;
 
-    @Column(unique = true, length = 50)
+    @Column(unique = true, length = 50, nullable = false)
     @Convert(converter = EmailAttrConverter.class, attributeName = "email")
     @NotNull
     private Email email;
@@ -47,8 +47,10 @@ public class User{
     private String providerId;
 
     @OneToMany(mappedBy = "user")
+    @Builder.Default
     private List<Enter> enters = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 
