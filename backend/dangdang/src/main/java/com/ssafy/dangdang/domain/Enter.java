@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(uniqueConstraints = {@UniqueConstraint(name = "USER_STUDY_QUIQUE", columnNames = {"user_id", "study_id"})})
 public class Enter {
 
     @Id

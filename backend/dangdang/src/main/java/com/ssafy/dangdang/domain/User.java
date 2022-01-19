@@ -1,6 +1,5 @@
 package com.ssafy.dangdang.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.dangdang.domain.types.Email;
 import com.ssafy.dangdang.domain.types.UserRoleType;
 import com.ssafy.dangdang.domain.types.converter.EmailAttrConverter;
@@ -22,15 +21,17 @@ import java.util.List;
 public class User{
 
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 30)
     private String nickname;
 
     @Enumerated(EnumType.STRING)
     private UserRoleType role;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 50)
     @Convert(converter = EmailAttrConverter.class, attributeName = "email")
     @NotNull
     private Email email;
@@ -40,12 +41,8 @@ public class User{
 
     private String imageUrl;
 
-    @OneToOne
-    @JsonIgnore
-    @JoinColumn(name = "salt_id")
-    private Salt salt;
 
-    //OAouth용
+    //OAuth용
     private String provider;
     private String providerId;
 
@@ -54,6 +51,9 @@ public class User{
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "host")
+//    private List<Study> studies = new ArrayList<>();
 
     @Override
     public String toString() {
