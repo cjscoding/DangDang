@@ -1171,3 +1171,18 @@ Kurento의 주요 구성 요소는 미디어 전송, 처리, 녹음 및 재생�
 [[Kurento\] 쿠렌토 서버 Docker로 실행시켜보기 (feat. 윈도우)](https://gh402.tistory.com/44)
 [Windows 10에서 WSL2를 이용하여 Ubuntu 설치하는 방법](https://wylee-developer.tistory.com/57)
 
+------------
+### 2022.01.19
+## KMS, STUN/TURN 서버 설정 및 skeleton 코드 실행
+
+webRTC기술 학습과 주요 기능 구현 pdf 파일을 참고하여 Ubuntu 환경에서 docker에 KMS, STUN/TURN 서버 설정
+
+싸피에서 제공한 skeleton 코드 실행 
+![이미지](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FW19IV%2FbtrrcgQKUue%2FjKcXsLv1IrFQ1OwqUpZSbK%2Fimg.png)
+
+실행 결과
+![이미지](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdVE3i8%2FbtrrcNN5aOE%2FftUO1QorYKzI8ifna22FBK%2Fimg.png)
+
+
+
+
