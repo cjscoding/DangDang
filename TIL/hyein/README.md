@@ -6,9 +6,6 @@
 - [NextJS 시작하기 (NomadCoders)](NextJS.md)
 - [React Redux (생활코딩)](Redux.md)
 
-## Gitㄴ
+## Git
 
 - [git flow 이해하기](git-flow-이해하기.md)
-
-- 지라 연동테스트!
-- 샵 안붙여도 되냐?
