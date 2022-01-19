@@ -13,7 +13,7 @@ export default function CreateRoom() {
         <input type="text" />
         <span>직무(분야)</span>
         <input type="text" />
-        <span>오카방 링크</span>
+        <span>오픈카카오톡방 링크</span>
         <input type="text" />
         <span>팀 소개</span>
         <textarea name="" id="" cols="30" rows="10"></textarea>
