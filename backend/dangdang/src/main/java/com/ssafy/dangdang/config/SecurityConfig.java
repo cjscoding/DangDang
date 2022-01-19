@@ -10,11 +10,9 @@ import com.ssafy.dangdang.config.security.oauth.HttpCookieOAuth2AuthorizationReq
 import com.ssafy.dangdang.config.security.oauth.OAuth2AuthenticationFailureHandler;
 import com.ssafy.dangdang.config.security.oauth.OAuth2AuthenticationSuccessHandler;
 import com.ssafy.dangdang.config.security.oauth.PrincipalOauth2UserService;
-import com.ssafy.dangdang.repository.SaltRepository;
 import com.ssafy.dangdang.repository.UserRepository;
 import com.ssafy.dangdang.util.JwtUtil;
 import com.ssafy.dangdang.util.RedisUtil;
-import com.ssafy.dangdang.util.SaltUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +22,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -36,8 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final PrincipalDetailsService principalDetailsService;
     private final PrincipalOauth2UserService principalOauth2UserService;
 
-    private final SaltRepository saltRepository;
-    private final SaltUtil saltUtil;
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
 
@@ -112,7 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public JwtAuthenticationProvider jwtAuthenticationProvider() {
-        return new JwtAuthenticationProvider(principalDetailsService,saltRepository, saltUtil);
+        return new JwtAuthenticationProvider(principalDetailsService);
     }
 
     @Bean
@@ -125,5 +123,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
         return new JwtAuthorizationFilter(authenticationManager(), principalDetailsService, jwtUtil, redisUtil);
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

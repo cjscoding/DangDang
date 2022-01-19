@@ -1,11 +1,11 @@
 package com.ssafy.dangdang.repository;
 
-import com.ssafy.dangdang.domain.Salt;
+import com.ssafy.dangdang.domain.Study;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableJpaRepositories
-public interface SaltRepository extends JpaRepository<Salt, Long> {
+public interface StudyRepository extends JpaRepository<Study, Long>, StudyRepositorySupport {
 
-    Salt findSaltById(Long id);
+
 }
