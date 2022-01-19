@@ -2,6 +2,7 @@ package com.ssafy.dangdang.controller;
 
 import com.ssafy.dangdang.config.security.CurrentUser;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
+import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.StudyDto;
 import com.ssafy.dangdang.service.StudyService;
@@ -29,8 +30,8 @@ public class StudyController {
     public ApiResult<StudyDto> createStudy(@CurrentUser PrincipalDetails userPrincipal,@RequestBody @Valid StudyDto studyDto){
         User user = userPrincipal.getUser();
         log.info(user.toString());
-
-        StudyDto createdStudy = studyService.createStudy(user, studyDto);
+        Study study = Study.of(user, studyDto);
+        StudyDto createdStudy = StudyDto.of(studyService.createStudy(user, study));
         return success(createdStudy);
 
     }

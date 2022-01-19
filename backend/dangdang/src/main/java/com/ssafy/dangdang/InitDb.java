@@ -61,11 +61,11 @@ public class InitDb {
 
         @Transactional
         public void createStudy(){
-            User user = userService.findByEmail("test@ssafy.com");
+            User user = userService.findByEmail("test@ssafy.com").get();
 
             for (int i=0; i<10;i++){
 
-                StudyDto studyDto = StudyDto.builder()
+                Study study = Study.builder()
                         .name("testStudy"+i)
                         .introduction("안녕하세요!! 네이버 목표 스터디입니다.")
                         .target("네이버")
@@ -74,17 +74,17 @@ public class InitDb {
                         .build();
                 System.out.println(user.toString());
 //                entityManager.persist(Study.of(user, studyDto));
-                studyService.createStudy(user, studyDto);
+                studyService.createStudy(user, study);
             }
         }
 
         public void enter(){
-            User user = userService.findByEmail("test@ssafy.com");
+            User user = userService.findByEmail("test@ssafy.com").get();
             Study study = studyRepository.findById(1L).get();
 
-            enterService.enterStudy(UserDto.of(user), 1L);
+            enterService.enterStudy(user, 1L);
             study = studyRepository.findById(2L).get();
-            enterService.enterStudy(UserDto.of(user), 2L);
+            enterService.enterStudy(user, 2L);
         }
 
     }
