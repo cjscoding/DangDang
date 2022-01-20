@@ -1,21 +1,50 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import Signup from "./Signup";
+import styles from "../scss/layout/navbar.module.scss";
 
 export default function NavBar() {
   const router = useRouter();
-  const [isHidden, setIsHidden] = useState(true);
-  const toggleModals = () => {
-    setIsHidden((curr) => !curr);
-  };
   return (
-    <nav>
-      <Link href="/">
-        <a>Home</a>
-      </Link>
-      <span onClick={toggleModals}>회원가입</span>
-      <Signup isHidden={isHidden} />
+    <nav className={styles.navbar}>
+      <ul>
+        <li>
+          <Link href="/">
+            <a>Home</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/self-practice">
+            <a>혼자연습한당</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/team-space">
+            <a>같이연습한당</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/team-board">
+            <a>스터디구한당</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/interview-question">
+            <a>질문궁금하당</a>
+          </Link>
+        </li>
+        <li>
+          <a>로그인</a>
+        </li>
+        <li>
+          <a>회원가입</a>
+        </li>
+        <li>
+          <a>마이페이지</a>
+        </li>
+        <li>
+          <a>로그아웃</a>
+        </li>
+      </ul>
     </nav>
   );
 }
