@@ -1,18 +1,21 @@
 import Title from "../../components/layout/title";
 import styles from "../../scss/team-board/board.module.scss";
 import Image from "next/image";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch, connect } from "react-redux";
 import { useEffect } from "react";
 import { fetchrooms } from "../../store/actions/postAction";
 import Link from 'next/link';
 
-export default function Board() {
-  const { rooms } = useSelector((state) => state.roomReducer);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchrooms())
-  }, []);
+function mapStateToProps(state) {
+  return state.postReducer;
+}
+function mapDispatchToProps(dispatch) {
+  dispatch(fetchrooms());
+  return ;
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Board);
 
+function Board({rooms}) {
   return (
     <div>
       <Title title="Board"></Title>
@@ -49,8 +52,7 @@ export default function Board() {
           </div>
 
           <div className={styles.rooms}>
-            {rooms &&
-              rooms.map((items, index) => (
+            {rooms?.map((items, index) => (
                 <div className={styles.room} key={index}>
                   <Image
                     src="/vercel.svg"
@@ -59,8 +61,7 @@ export default function Board() {
                     height={250}
                   />
                   <div className={styles.keywords}>
-                    {items &&
-                      items.map((item) => <span key={item}># {item}</span>)}
+                    {items?.map((item) => <span key={item}># {item}</span>)}
                   </div>
                 </div>
               ))}

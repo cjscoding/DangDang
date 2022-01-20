@@ -10,7 +10,8 @@ const initialState = {
   loading: false,
   error: null,
 };
-export const postReducer = (state = initialState, action) => {
+
+export default function postReducer(state=initialState, action) {
   switch (action.type) {
     case types.GET_POSTS:
       return {
@@ -21,28 +22,11 @@ export const postReducer = (state = initialState, action) => {
         loading: false,
         error: null,
       };
-    // case types.SET_TEAM_NO:
-    //   return {
-    //     ...state,
-    //     teamNo: action.teamNo,
-    //   };
-    default:
-      return state;
-  }
-};
-export const roomReducer = (state = initialState, action) => {
-  switch (action.type) {
     case types.GET_ROOMS:
       return {
         ...state,
         rooms: action.keywords,
       };
-    default:
-      return state;
-  }
-};
-export const myRoomReducer = (state = initialState, action) => {
-  switch (action.type) {
     case types.GET_MY_ROOMS:
       return {
         ...state,
@@ -51,4 +35,4 @@ export const myRoomReducer = (state = initialState, action) => {
     default:
       return state;
   }
-};
+}

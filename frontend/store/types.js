@@ -5,10 +5,13 @@ const post = {
   SET_TEAM_NO: "SET_TEAM_NO",
 }
 
-
+const videoTypes = {
+  SET_VIDEO: "SET_VIDEO",
+}
 
 
 const types = {
   ...post,
+  ...videoTypes,
 }
 export default types;
