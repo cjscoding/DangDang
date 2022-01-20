@@ -1,0 +1,15 @@
+@import "../main.scss";
+
+.selectBox {
+  display: flex;
+  justify-content: space-evenly;
+  a {
+    text-decoration: none;
+  }
+}
+.borderBox {
+  height: 80vh;
+  border: 5px solid #764abc;
+  color: #764abc;
+  padding: 0 auto;
+}
