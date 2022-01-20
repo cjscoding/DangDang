@@ -12,8 +12,12 @@ export default function Home() {
             <MainComponent content={"혼자연습한당"} />
           </a>
         </Link>
-        <MainComponent content={"같이연습한당"} />
-        <Link href="/study-board">
+        <Link href="/team-space">
+          <a>
+            <MainComponent content={"같이연습한당"} />
+          </a>
+        </Link>
+        <Link href="/team-board">
           <a>
             <MainComponent content={"스터디구한당"} />
           </a>
