@@ -1183,6 +1183,162 @@ webRTC기술 학습과 주요 기능 구현 pdf 파일을 참고하여 Ubuntu �
 실행 결과
 ![이미지](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdVE3i8%2FbtrrcNN5aOE%2FftUO1QorYKzI8ifna22FBK%2Fimg.png)
 
+------------
+### 2022.01.20
+## SockJS 기반 채팅 서버 예제 따라해보기
+
+쿠렌토 서버는 다음주 월요일 AWS계정 받으면 하기로 하고, 우선 웹소켓 통신부터 공부함.
+
+https://supawer0728.github.io/2018/03/30/spring-websocket/
+
+https://github.com/supawer0728/simple-websocket/blob/master/src/main/resources/templates/chat1/room-detail.html
+
+!주요 코드만 담았음
+
+ChatHandler.java
+
+```java
+package com.ssafy.common;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.db.dto.ChatMessage;
+import com.ssafy.db.dto.ChatRoom;
+import com.ssafy.db.repository.ChatRoomRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+@Slf4j
+@Profile("!stomp")
+@Component
+public class ChatHandler extends TextWebSocketHandler {
+
+    private final ObjectMapper objectMapper;
+    private final ChatRoomRepository repository;
+
+    @Autowired
+    public ChatHandler(ObjectMapper objectMapper, ChatRoomRepository chatRoomRepository) {
+        this.objectMapper = objectMapper;
+        this.repository = chatRoomRepository;
+    }
+
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+
+        String payload = message.getPayload();
+        log.info("payload : {}", payload);
+
+        ChatMessage chatMessage = objectMapper.readValue(payload, ChatMessage.class);
+        ChatRoom chatRoom = repository.getChatRoom(chatMessage.getChatRoomId());
+        chatRoom.handleMessage(session, chatMessage, objectMapper);
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        repository.remove(session);
+    }
+}
+```
+
+WebSocketConfig.java
+
+```java
+package com.ssafy.config;
+
+import com.ssafy.common.ChatHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+
+@Profile("!stomp")
+@Configuration
+@EnableWebSocket
+public class WebSocketConfig implements WebSocketConfigurer {
+    @Autowired
+    private ChatHandler chatHandler;
+
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(chatHandler, "/ws/chat").setAllowedOrigins("*").withSockJS();
+    }
+}
+```
+
+
+ChatRoomController.java
+
+```java
+package com.ssafy.api.controller;
+
+import com.ssafy.db.dto.ChatRoom;
+import com.ssafy.db.repository.ChatRoomRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+@Controller
+@RequestMapping("/chat1")
+public class ChatRoomController {
+
+    private final ChatRoomRepository repository;
+//    private final String listViewName;
+//    private final String detailViewName;
+    private final AtomicInteger seq = new AtomicInteger(0);
+
+    @Autowired
+    public ChatRoomController(ChatRoomRepository repository) {
+        this.repository = repository;
+    }
+
+    @GetMapping("/rooms")
+    public String rooms(Model model) {
+        model.addAttribute("rooms", repository.getChatRooms());
+        return "/chat1/room-list";
+    }
+
+    @GetMapping("/rooms/{id}")
+    public String room(@PathVariable String id, Model model) {
+        ChatRoom room = repository.getChatRoom(id);
+        model.addAttribute("room", room);
+        model.addAttribute("member", "member" + seq.incrementAndGet()); // 회원 이름 부여
+
+        return "/chat1/room";
+    }
+}
+
+```
+
+### Spring Sockets - WebSocket, SockJS, STOMP 공부 중
+
+https://www.youtube.com/watch?v=gQyRxPjssWg&ab_channel=%EC%8B%9C%EB%8B%88%EC%96%B4%EC%BD%94%EB%94%A9
+
+
+- WebSocket
+  - 사용자의 브라우저와 서버 사이의 인터렉티브 통신 세션을 설정할 수 있게 하는 고급 기술.
+- SockJS 
+  - socket.io는 NodeJS 기반
+  - sprnig은 SockJS client가 있음.
+  - 웹 소켓과 유사함
+- STOMP
+  - Spring Only
+  - Use stomp js library
+  - SockJS의 서브 프로토콜
+
+메세지 형식은 JSON을 사용하는 것이 좋다고 함.
+
 
 
 
