@@ -2,10 +2,7 @@ package com.ssafy.dangdang;
 
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
-import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
-import com.ssafy.dangdang.domain.dto.ResumeDto;
-import com.ssafy.dangdang.domain.dto.ResumeQuestionDto;
-import com.ssafy.dangdang.domain.dto.UserDto;
+import com.ssafy.dangdang.domain.dto.*;
 import com.ssafy.dangdang.repository.StudyRepository;
 import com.ssafy.dangdang.service.*;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +26,7 @@ public class InitDb {
         initService.enter();
         initService.writeResume();
         initService.writeInterviewQuestion();
+        initService.writePost();
     }
 
     //위 init()함수에 아래 내용을 전부 포함해도 된다고 생각할 수 있지만,
@@ -44,6 +42,7 @@ public class InitDb {
         private final JoinsService enterService;
         private final ResumeService resumeService;
         private final InterviewQuestionService interviewQuestionService;
+        private final PostService postService;
 
         public void signUpUsers(){
             UserDto userDto = new UserDto();
@@ -115,6 +114,19 @@ public class InitDb {
                         .build();
                 interviewQuestionService.writerQuestion(user, interviewQuestionDto);
             }
+
+        }
+
+        public void writePost(){
+            User user = userService.findByEmail("test@ssafy.com").get();
+            for (int i=0; i< 15;i++){
+                PostDto postDto = PostDto.builder()
+                        .title("제목제목"+i)
+                        .content("내용내용")
+                        .build();
+                postService.writePost(user, postDto, 1L);
+            }
+
 
         }
 
