@@ -26,18 +26,28 @@
       padding: 20px;
   }
 
-  .tag {
+  .tagForm {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
+
+    div{
+        display: flex;
+    }
 
     button {
       padding: 5px 15px;
       width: 100px;
       margin-left: 10px;
     }
+
     input {
       padding: 5px 15px;
       width: 100%;
+    }
+
+    p{
+        margin-top: 10px;
     }
   }
 }

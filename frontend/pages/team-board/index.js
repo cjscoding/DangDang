@@ -1,18 +1,18 @@
 import Title from "../../components/layout/title";
 import styles from "../../scss/team-board/board.module.scss";
 import Image from "next/image";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { fetchrooms } from "../../store/actions/postAction";
-import Link from 'next/link';
+import Link from "next/link";
+import { connect } from "react-redux";
 
-export default function Board() {
-  const { rooms } = useSelector((state) => state.roomReducer);
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchrooms())
-  }, []);
+function mapStateToProps(state) {
+  return {
+    rooms: state.roomReducer.rooms,
+  };
+}
 
+export default connect(mapStateToProps, null)(TeamBoard);
+
+function TeamBoard({ rooms }) {
   return (
     <div>
       <Title title="Board"></Title>
@@ -36,40 +36,39 @@ export default function Board() {
             </div>
             <div className={styles.createRoom}>
               <button>
-                  <Link href="/mypage">
-                    <a>내방 보러가기</a>
-                  </Link>
+                <Link href="/mypage">
+                  <a>내방 보러가기</a>
+                </Link>
               </button>
               <button>
-                  <Link href="/board/create-room">
-                    <a>방 생성</a>
-                  </Link>
+                <Link href="/team-board/create-room">
+                  <a>방 생성</a>
+                </Link>
               </button>
             </div>
           </div>
 
           <div className={styles.rooms}>
-            {rooms &&
-              rooms.map((items, index) => (
-                <div className={styles.room} key={index}>
-                  <Image
-                    src="/vercel.svg"
-                    alt="Vercel Logo"
-                    width={300}
-                    height={250}
-                  />
-                  <div className={styles.keywords}>
-                    {items ?.map((item) => <span key={item}># {item}</span>)}
-                  </div>
-                </div>
-              ))}
+            {rooms?.map((items, index) => (
+              <div className={styles.room} key={index}>
+                <Image
+                  src="/vercel.svg"
+                  alt="Vercel Logo"
+                  width={300}
+                  height={250}
+                />
+                <span key={index}> {items.host}</span>
+                <span key={index}> {items.goal}</span>
+                <span key={index}> {items.desc}</span>
+                <span key={index}> {items.kakao}</span>
+                {items.hashtag?.map((tag, index) => (
+                  <span key={index}># {tag}</span>
+                ))}
+              </div>
+            ))}
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-{/* <Link href="/myrooms:index">
-                    <a>스터디 참여하기</a>
-                  </Link> */}

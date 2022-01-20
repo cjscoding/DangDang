@@ -1,8 +1,63 @@
-import styles from "../../scss/team-board/board.module.scss";
+import styles from "../../scss/team-board/create-room.module.scss";
 import Title from "../../components/layout/title";
 import Link from "next/link";
+import { connect } from "react-redux";
+import { createRoom } from "../../store/actions/postAction";
+import { useState } from "react";
 
-export default function CreateRoom() {
+function mapDispatchToProps(dispatch) {
+  return {
+    create: (roomInfo) => dispatch(createRoom(roomInfo)),
+  };
+}
+
+export default connect(null, mapDispatchToProps)(CreateRoom);
+
+function CreateRoom({ create }) {
+  const roomInit = {
+    host: "",
+    goal: "",
+    desc: "",
+    kakao: "",
+    hashtag: [],
+  };
+
+  const [roomInfo, setRoomInfo] = useState(roomInit);
+  const [roomTags, setRoomTags] = useState([]);
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+
+    const newInfo = {
+      ...roomInfo,
+      hashtag: roomTags,
+    };
+
+    console.log(newInfo);
+    console.log("---------------");
+    create(newInfo);
+    setRoomInfo(roomInit);
+    setRoomTags([]);
+  };
+
+  const onChange = (event) => {
+    const { name, value } = event.target;
+
+    const newInfo = {
+      ...roomInfo,
+      [name]: value,
+    };
+
+    setRoomInfo(newInfo);
+  };
+
+  const onAddTag = (event) => {
+    event.preventDefault();
+    const newTag = event.target[0].value;
+    setRoomTags([...roomTags, newTag]);
+    event.target[0].value = "";
+  };
+
   return (
     <div className={styles.container}>
       <Title title="Create Room"></Title>
@@ -10,27 +65,63 @@ export default function CreateRoom() {
 
       <div className={styles.info}>
         <span>호스트</span>
-        <input type="text" />
-        <span>직무(분야)</span>
-        <input type="text" />
-        <span>오픈카카오톡방 링크</span>
-        <input type="text" />
+        <input
+          type="text"
+          name="host"
+          value={roomInfo.host}
+          onChange={onChange}
+        />
+
+        <span>목표</span>
+        <input
+          type="text"
+          name="goal"
+          value={roomInfo.goal}
+          onChange={onChange}
+        />
+
+        <span>오카방 주소</span>
+        <input
+          type="text"
+          name="kakao"
+          value={roomInfo.kakao}
+          onChange={onChange}
+        />
+
         <span>팀 소개</span>
-        <textarea name="" id="" cols="30" rows="10"></textarea>
+        <textarea
+          cols="30"
+          rows="10"
+          name="desc"
+          value={roomInfo.desc}
+          onChange={onChange}
+        ></textarea>
+
         <label>태그</label>
-        <div className={styles.tag}>
-          <input type="" />
-          <button>태그 추가</button>
-        </div>
+        <form onSubmit={onAddTag} className={styles.tagForm}>
+          <div>
+            <input type="text" />
+            <button>태그 추가</button>
+          </div>
+          <p>
+            내 태그 [
+            {roomTags?.map((tag) => (
+              <span key={tag}>{`${tag} `}</span>
+            ))}
+            ]
+          </p>
+        </form>
       </div>
 
       <div className={styles.btns}>
         <button className="cancelBtn">
-          <Link href="/board">
+          <Link href="/team-board">
             <a>취소</a>
           </Link>
         </button>
-        <button className="createBtn">생성</button>
+        <button className="createBtn" onClick={onSubmit}>
+          생성
+        </button>
       </div>
     </div>
   );

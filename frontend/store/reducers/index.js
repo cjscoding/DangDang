@@ -1,14 +1,14 @@
-import {HYDRATE} from "next-redux-wrapper";
+import { HYDRATE } from "next-redux-wrapper";
 import { combineReducers } from "redux";
-import { postReducer, roomReducer, myRoomReducer } from "./postReducer";
+import roomReducer from "./postReducer";
 
 const combinedReducer = combineReducers({
-  postReducer, roomReducer, myRoomReducer,
+  roomReducer,
 });
 
-const reducer = (state = {tick: 'init'}, action) => {
-  if(action.type === HYDRATE) {
-    const nextState = {...state, ...action.payload};
+const reducer = (state = { tick: "init" }, action) => {
+  if (action.type === HYDRATE) {
+    const nextState = { ...state, ...action.payload };
     if (state.count) nextState.count = state.count;
     return nextState;
   } else {

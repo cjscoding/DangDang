@@ -4,7 +4,7 @@ import { fetchposts } from "../../store/actions/postAction";
 
 export default function TeamSpace() {
   const dispatch = useDispatch();
-  const { teamNo } = useSelector((state) => state.post);
+//   const { teamNo } = useSelector((state) => state.postReducer);
 
   useEffect(() => {
     dispatch(fetchposts());
@@ -12,7 +12,7 @@ export default function TeamSpace() {
 
   return (
     <div>
-      <h1 key={teamNo}>팀 스페이스!! | {teamNo}</h1>
+        
     </div>
   );
 }

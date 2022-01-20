@@ -1,54 +1,17 @@
 import types from "../types";
 
-const initialState = {
-  posts: [],
-  hosts: [],
-  post: {},
+const initialRoomState = {
   rooms: [],
-  myRooms: [],
-  teamNos: [],
-  loading: false,
-  error: null,
 };
-export const postReducer = (state = initialState, action) => {
+
+const roomReducer = (state = initialRoomState, action) => {
   switch (action.type) {
-    case types.GET_POSTS:
-      return {
-        ...state,
-        posts: action.payload,
-        hosts: action.host,
-        teamNos: action.teamNo,
-        loading: false,
-        error: null,
-      };
-    // case types.SET_TEAM_NO:
-    //   return {
-    //     ...state,
-    //     teamNo: action.teamNo,
-    //   };
+    case types.CREATE_ROOM:
+      const rooms = [...state.rooms, action.newRoom];
+      return {...state, rooms};
     default:
       return state;
   }
 };
-export const roomReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case types.GET_ROOMS:
-      return {
-        ...state,
-        rooms: action.keywords,
-      };
-    default:
-      return state;
-  }
-};
-export const myRoomReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case types.GET_MY_ROOMS:
-      return {
-        ...state,
-        myRooms: action.keywords,
-      };
-    default:
-      return state;
-  }
-};
+
+export default roomReducer;
