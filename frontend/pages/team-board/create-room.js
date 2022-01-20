@@ -20,6 +20,7 @@ function CreateRoom({ create }) {
     desc: "",
     kakao: "",
     hashtag: [],
+    member: [],
   };
 
   const [roomInfo, setRoomInfo] = useState(roomInit);
@@ -28,9 +29,12 @@ function CreateRoom({ create }) {
   const onSubmit = (event) => {
     event.preventDefault();
 
+    const member = [...roomInfo.member, roomInfo.host];
+
     const newInfo = {
       ...roomInfo,
       hashtag: roomTags,
+      member: member,
     };
 
     console.log(newInfo);
