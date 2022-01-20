@@ -1,8 +1,17 @@
-import { useEffect, useRef, useState } from "react"
+import Link from "next/link";
+import { useEffect, useRef } from "react"
+import { connect } from "react-redux";
+import styles from "../../../scss/self-practice/interview/check-devices.module.scss";
+import { setVideo } from "../../../store/actions/videoAction";
 
+function mapDispatchToProps(dispatch) {
+  return {
+    selectDevice: (devices) => dispatch(setVideo(devices))
+  }
+}
+export default connect(null, mapDispatchToProps)(CheckDevices);
 
-export default function CheckDevices() {
-  const [videoSize, setVideoSize] = useState(360) // 브라우저창 크기에 따라 크기 바꿀 예정
+function CheckDevices({selectDevice}) {
   const video = useRef(); // 화면 송출
   const cameraSelect = useRef();
   const micSelect = useRef();
@@ -24,20 +33,20 @@ export default function CheckDevices() {
             case "videoinput":
               if (currentCamera.label === device.label) option.selected = true;
               cameraSelect.current.appendChild(option);
-              return;
+              break;
             case "audioinput":
               if (currentMic.label === device.label) option.selected = true;
               micSelect.current.appendChild(option);
-              return;
+              break;
             case "audiooutput":
               if(!currentSpeaker) {
                 currentSpeaker = device;
                 option.selected = true;
               }
               speakerSelect.current.appendChild(option);
-              return;
+              break;
             default:
-              return;
+              break;
           }
         });
       }catch(err) {
@@ -47,13 +56,13 @@ export default function CheckDevices() {
 
     async function getMedia(cameraId, micId) {
       const initialConstraints = { width: 1280, height: 720, facingMode: "user" };
-      const cameraConstraints = {video: {deviceId: {exact: cameraId}}};
-      const micConstraints = {audio: {deviceId: {exact: micId}}};
+      const cameraConstraints = {video: {...initialConstraints, deviceId: {exact: cameraSelect.current.value}}};
+      const micConstraints = {audio: {deviceId: {exact: micSelect.current.value}}};
       try {
         stream = await navigator.mediaDevices.getUserMedia({
           audio: true,
           ...micId?micConstraints:{},
-          video: {...initialConstraints},
+          video: initialConstraints,
           ...cameraId?cameraConstraints:{},
         });
         video.current.srcObject = stream;
@@ -63,18 +72,38 @@ export default function CheckDevices() {
       }
     }
     
-    cameraSelect.current.addEventListener("input", () => getMedia(cameraSelect.current.value, null));
-    micSelect.current.addEventListener("input", () => getMedia(null, micSelect.current.value));
+    cameraSelect.current.addEventListener("input", () => getMedia(cameraSelect.current.value, micSelect.current.value));
+    micSelect.current.addEventListener("input", () => getMedia(cameraSelect.current.value, micSelect.current.value));
     speakerSelect.current.addEventListener("input", () => video.current.setSinkId(speakerSelect.current.value));
     getMedia();
   }, [])
   
-  return <>
-    <video ref={video} autoPlay playsInline width={videoSize * 16/9} height={videoSize} />
-    <div>
-      <select ref={cameraSelect} />
-      <select ref={micSelect} />
-      <select ref={speakerSelect} />
+  const setDevices = () => {
+    const devices = {
+      camera: cameraSelect.current.value,
+      mic: micSelect.current.value,
+      speaker: speakerSelect.current.value,
+    };
+    selectDevice(devices);
+  }
+  return <div className={styles.container}>
+    <div className={styles.videoContainer}>
+      <video ref={video} autoPlay playsInline />
+      <div className={styles.selectContainer}>
+        <label htmlFor="camera-select">카메라</label><br/>
+        <select ref={cameraSelect} id="camera-select" /><br/>
+        <label htmlFor="mic-select">마이크</label><br/>
+        <select ref={micSelect} id="mic-select" /><br/>
+        <label htmlFor="speaker-select">스피커</label><br/>
+        <select ref={speakerSelect} id="speaker-select" /><br/>
+      </div>
+      <Link href="/self-practice/interview">
+        <a className={styles.nextBtn}
+          onClick={setDevices}
+        >
+          <button><h1>NEXT</h1></button>
+        </a>
+      </Link>
     </div>
-  </>
+  </div>
 }

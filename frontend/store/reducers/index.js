@@ -1,9 +1,11 @@
 import { HYDRATE } from "next-redux-wrapper";
 import { combineReducers } from "redux";
 import roomReducer from "./postReducer";
+import videoReducer from "./videoReducer"
 
 const combinedReducer = combineReducers({
   roomReducer,
+  videoReducer,
 });
 
 const reducer = (state = { tick: "init" }, action) => {

@@ -1,0 +1,24 @@
+@import "../main.scss";
+
+.container {
+  display: flex;
+  justify-content: center;
+  .videoContainer {
+    display: flex;
+    flex-direction: column;
+    align-items:flex-start;
+    video {
+      width: 60vw;
+    }
+    .selectContainer {
+      select {
+        width: 30vw;
+      }
+    }
+  }
+}
+
+.nextBtn {
+  margin-top: 1rem;
+  margin-left: auto;
+}
