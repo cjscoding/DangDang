@@ -1,5 +1,5 @@
-import Title from "../../components/layout/title";
-import styles from "../../scss/team-board/board.module.scss";
+import Title from "../../../components/layout/title";
+import styles from "../../../scss/user/mypage.module.scss";
 import Image from "next/image";
 import Link from "next/link";
 import { connect } from "react-redux";
@@ -10,42 +10,33 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, null)(TeamBoard);
+// function mapDispatchToProps(){
+//     return{
 
-function TeamBoard({ rooms }) {
+//     }
+// }
+
+export default connect(mapStateToProps, null)(MyRooms);
+
+function MyRooms({rooms}) {
   return (
     <div>
       <Title title="Board"></Title>
 
-      <h1 className={styles.title}>스터디 구한당</h1>
+      <h1 className={styles.title}>내방들이당</h1>
 
       <div className="container">
-        <div className={styles.categories}>
-          <ul>
-            <li>All</li>
-            <li>FrontEnd</li>
-            <li>BackEnd</li>
-          </ul>
-        </div>
-
         <div className={styles.main}>
           <div className={styles.top}>
             <div className={styles.filter}>
               <label htmlFor="">검색어</label>
               <input type="text" />
             </div>
-            <div className={styles.createRoom}>
-              <button>
-                <Link href="/user/mypage/myroom">
-                  <a>내방 보러가기</a>
-                </Link>
-              </button>
-              <button>
-                <Link href="/team-board/create-room">
-                  <a>방 생성</a>
-                </Link>
-              </button>
-            </div>
+            <button>
+              <Link href="/team-board">
+                <a>스터디 게시판으로</a>
+              </Link>
+            </button>
           </div>
 
           <div className={styles.rooms}>
@@ -64,6 +55,16 @@ function TeamBoard({ rooms }) {
                 {items.hashtag?.map((tag, index) => (
                   <span key={index}># {tag}</span>
                 ))}
+                <Link
+                  href={{
+                    pathname: "/team-space",
+                    query: { no: index },
+                  }}
+                  as="/team-space"
+                  index={index}
+                >
+                  <a>스터디 참여하기</a>
+                </Link>
               </div>
             ))}
           </div>

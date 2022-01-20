@@ -1,18 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { fetchposts } from "../../store/actions/postAction";
+// import { connect } from "react-redux";
 
 export default function TeamSpace() {
-  const dispatch = useDispatch();
-//   const { teamNo } = useSelector((state) => state.postReducer);
-
-  useEffect(() => {
-    dispatch(fetchposts());
-  }, []);
-
   return (
     <div>
-        
+        <p>팀스페이스</p>
     </div>
   );
 }
