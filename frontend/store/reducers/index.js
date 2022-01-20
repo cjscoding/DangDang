@@ -1,6 +1,6 @@
 import { HYDRATE } from "next-redux-wrapper";
 import { combineReducers } from "redux";
-import roomReducer from "./postReducer";
+import roomReducer from "./roomReducer";
 import videoReducer from "./videoReducer"
 
 const combinedReducer = combineReducers({
