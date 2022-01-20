@@ -16,9 +16,14 @@ function mapStateToProps(state) {
 //     }
 // }
 
+// 임시 user
+const user = "jisu";
+
 export default connect(mapStateToProps, null)(MyRooms);
 
-function MyRooms({rooms}) {
+function MyRooms({ rooms }) {
+  const myRooms = rooms?.filter((room) => room.member.includes(user));
+
   return (
     <div>
       <Title title="Board"></Title>
@@ -40,7 +45,7 @@ function MyRooms({rooms}) {
           </div>
 
           <div className={styles.rooms}>
-            {rooms?.map((items, index) => (
+            {myRooms?.map((items, index) => (
               <div className={styles.room} key={index}>
                 <Image
                   src="/vercel.svg"
@@ -58,7 +63,8 @@ function MyRooms({rooms}) {
                 <Link
                   href={{
                     pathname: "/team-space",
-                    query: { no: index },
+                    // roomNo 이후 api 통신할 때 고유 방 넘버로 추가 예정
+                    // query: { roomNo: items.roomNo },
                   }}
                   as="/team-space"
                   index={index}
