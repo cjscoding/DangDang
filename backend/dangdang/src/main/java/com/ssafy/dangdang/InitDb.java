@@ -2,14 +2,12 @@ package com.ssafy.dangdang;
 
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
+import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
 import com.ssafy.dangdang.domain.dto.ResumeDto;
 import com.ssafy.dangdang.domain.dto.ResumeQuestionDto;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.repository.StudyRepository;
-import com.ssafy.dangdang.service.JoinsService;
-import com.ssafy.dangdang.service.ResumeService;
-import com.ssafy.dangdang.service.StudyService;
-import com.ssafy.dangdang.service.UserService;
+import com.ssafy.dangdang.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +28,7 @@ public class InitDb {
         initService.createStudy();
         initService.enter();
         initService.writeResume();
+        initService.writeInterviewQuestion();
     }
 
     //위 init()함수에 아래 내용을 전부 포함해도 된다고 생각할 수 있지만,
@@ -44,7 +43,7 @@ public class InitDb {
         private final StudyService studyService;
         private final JoinsService enterService;
         private final ResumeService resumeService;
-
+        private final InterviewQuestionService interviewQuestionService;
 
         public void signUpUsers(){
             UserDto userDto = new UserDto();
@@ -103,6 +102,20 @@ public class InitDb {
             resumeQuestionDto.setAnswer("없어서 못먹음2");
             resumeDto.getResumeQuestionList().add(resumeQuestionDto);
             resumeService.writeResume(user, resumeDto.getResumeQuestionList());
+        }
+
+        public void writeInterviewQuestion(){
+            User user = userService.findByEmail("test@ssafy.com").get();
+            for (int i=0;i<15;i++){
+                InterviewQuestionDto interviewQuestionDto = InterviewQuestionDto.builder()
+                        .question("민초 어떄요"+i)
+                        .answer("너무 좋죠"+i)
+                        .field("공통")
+                        .visable(false)
+                        .build();
+                interviewQuestionService.writerQuestion(user, interviewQuestionDto);
+            }
+
         }
 
     }

@@ -1,5 +1,6 @@
 package com.ssafy.dangdang.domain;
 
+import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.domain.types.UserRoleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -65,6 +66,15 @@ public class User{
                 ", email=" + email +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    public static User of(UserDto userDto){
+        return User.builder()
+                .email(userDto.getEmail())
+                .nickname(userDto.getNickName())
+                .role(userDto.getRole())
+                .build();
+
     }
 
     public String getUsername() {
