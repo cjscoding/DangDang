@@ -1,37 +1,36 @@
 package com.ssafy.dangdang.service;
 
-import com.ssafy.dangdang.domain.Enter;
+import com.ssafy.dangdang.domain.Joins;
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.StudyDto;
-import com.ssafy.dangdang.domain.dto.UserDto;
-import com.ssafy.dangdang.domain.types.Email;
-import com.ssafy.dangdang.repository.EnterRepository;
+import com.ssafy.dangdang.repository.JoinsRepository;
 import com.ssafy.dangdang.repository.StudyRepository;
 import com.ssafy.dangdang.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class EnterServiceImpl implements EnterService{
+public class JoinsServiceImpl implements JoinsService {
 
     private final UserRepository userRepository;
     private final StudyRepository studyRepository;
 
-    private final EnterRepository enterRepository;
+    private final JoinsRepository enterRepository;
 
 
     @Override
     public Long enterStudy(User user, Long studyId) {
 
         Study study = studyRepository.findById(studyId).get();
-        Enter enter = Enter.builder()
+        Joins enter = Joins.builder()
                 .user(user)
                 .study(study)
                 .build();
@@ -44,15 +43,21 @@ public class EnterServiceImpl implements EnterService{
     @Override
     public void outStudy(User user, Long studyId) {
         Study study = studyRepository.findById(studyId).get();
-        Enter enter = Enter.builder()
+        Joins enter = Joins.builder()
                 .user(user)
                 .study(study)
                 .build();
         enterRepository.delete(enter);
     }
 
-    private List<Study> getStudies(User user){
-        List<Study> studies = studyRepository.getStudies(user);
+    @Override
+    public List<StudyDto> getStudies(User user){
+        List<StudyDto> studies = studyRepository.getStudiesJoined(user);
         return studies;
        }
+
+   @Override
+    public Page<StudyDto> getStudiesJoinedWithPage(User user, Pageable pageable){
+        return studyRepository.getStudiesJoinedWithPage(user, pageable);
+    }
 }

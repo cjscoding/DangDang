@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(uniqueConstraints = {@UniqueConstraint(name = "USER_STUDY_QUIQUE", columnNames = {"user_id", "study_id"})})
-public class Enter {
+public class Joins {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

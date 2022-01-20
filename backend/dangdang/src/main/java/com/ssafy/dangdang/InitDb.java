@@ -4,10 +4,9 @@ import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.ResumeDto;
 import com.ssafy.dangdang.domain.dto.ResumeQuestionDto;
-import com.ssafy.dangdang.domain.dto.StudyDto;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.repository.StudyRepository;
-import com.ssafy.dangdang.service.EnterService;
+import com.ssafy.dangdang.service.JoinsService;
 import com.ssafy.dangdang.service.ResumeService;
 import com.ssafy.dangdang.service.StudyService;
 import com.ssafy.dangdang.service.UserService;
@@ -43,7 +42,7 @@ public class InitDb {
         private final UserService userService;
         private final StudyRepository studyRepository;
         private final StudyService studyService;
-        private final EnterService enterService;
+        private final JoinsService enterService;
         private final ResumeService resumeService;
 
 
@@ -68,7 +67,7 @@ public class InitDb {
         public void createStudy(){
             User user = userService.findByEmail("test@ssafy.com").get();
 
-            for (int i=0; i<10;i++){
+            for (int i=0; i<12;i++){
 
                 Study study = Study.builder()
                         .name("testStudy"+i)
@@ -76,20 +75,21 @@ public class InitDb {
                         .target("네이버")
                         .createdAt(LocalDateTime.now())
                         .number(3)
+                        .host(user)
                         .build();
                 System.out.println(user.toString());
 //                entityManager.persist(Study.of(user, studyDto));
-                studyService.createStudy(user, study);
+                studyService.createStudy(study);
             }
         }
 
 
         public void enter(){
             User user = userService.findByEmail("test@ssafy.com").get();
-            Study study = studyRepository.findById(1L).get();
-            enterService.enterStudy(user, 1L);
-            study = studyRepository.findById(2L).get();
-            enterService.enterStudy(user, 2L);
+            for (long i=1;i<12;i++){
+                Study study = studyRepository.findById(i).get();
+                enterService.enterStudy(user, i);
+            }
         }
 
         public void writeResume(){

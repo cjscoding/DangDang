@@ -2,20 +2,20 @@ package com.ssafy.dangdang.controller;
 
 import com.ssafy.dangdang.config.security.CurrentUser;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
-import com.ssafy.dangdang.domain.dto.DeleteResume;
+import com.ssafy.dangdang.domain.Resume;
+import com.ssafy.dangdang.domain.dto.DeleteRequest;
 import com.ssafy.dangdang.domain.dto.ResumeDto;
 import com.ssafy.dangdang.domain.projection.ResumeMapping;
 import com.ssafy.dangdang.service.ResumeService;
-import com.ssafy.dangdang.util.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.PriorityQueue;
+import java.util.Optional;
 
 import static com.ssafy.dangdang.util.ApiUtils.*;
 
@@ -52,9 +52,10 @@ public class ResumeController {
         return success(newResume);
     }
 
-    @DeleteMapping()
-    public  ApiResult<String> deleteResume(@RequestBody @Valid DeleteResume deleteResume){
-        resumeService.deleteResume(deleteResume.getId());
+    @DeleteMapping("/{resumeId}")
+    public  ApiResult<String> deleteResume(@CurrentUser PrincipalDetails userPrincipal, @PathVariable Long resumeId){
+
+            resumeService.deleteResume(userPrincipal.getUser(), resumeId);
         return success("삭제 성공");
     }
 }

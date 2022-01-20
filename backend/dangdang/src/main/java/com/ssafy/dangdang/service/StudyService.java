@@ -3,15 +3,21 @@ package com.ssafy.dangdang.service;
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.StudyDto;
+import com.ssafy.dangdang.util.ApiUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface StudyService {
 
-    public Study createStudy(User user, Study Study);
+    public Study createStudy(Study study);
 
-    public Study updateStudy(User user, Study Study);
+    public Study updateStudy(Study study);
 
-    public boolean deleteStudy(User user, Study Study);
+    public ApiUtils.ApiResult<String> deleteStudy(User user, Long studyId);
 
-    public Page<StudyDto> getAllStudies();
+    public Page<StudyDto> getAllStudies(Pageable pageable);
+
+    public Study getStudy(Long studyId);
 }

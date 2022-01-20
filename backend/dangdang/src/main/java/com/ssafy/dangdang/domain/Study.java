@@ -38,7 +38,7 @@ public class Study {
 
     @OneToMany(mappedBy = "study")
     @Builder.Default
-    private List<Enter> enters = new ArrayList<>();
+    private List<Joins> enters = new ArrayList<>();
 
     @Column(length = 30) //목표하는 기업
     private String target;

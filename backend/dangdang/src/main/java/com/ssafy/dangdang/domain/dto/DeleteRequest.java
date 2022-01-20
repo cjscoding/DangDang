@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-public class DeleteResume {
+public class DeleteRequest {
 
     @NotBlank
     private Long id;

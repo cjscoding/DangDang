@@ -1,14 +1,13 @@
 package com.ssafy.dangdang.domain;
 
-import com.ssafy.dangdang.domain.types.Email;
 import com.ssafy.dangdang.domain.types.UserRoleType;
-import com.ssafy.dangdang.domain.types.converter.EmailAttrConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +31,9 @@ public class User{
     private UserRoleType role;
 
     @Column(unique = true, length = 50, nullable = false)
-    @Convert(converter = EmailAttrConverter.class, attributeName = "email")
+    @Email
     @NotNull
-    private Email email;
+    private String email;
 
     //@NotBlank OAuth의 경우에는 비밀번호가 필요없음
     private String password;
@@ -48,7 +47,7 @@ public class User{
 
     @OneToMany(mappedBy = "user")
     @Builder.Default
-    private List<Enter> enters = new ArrayList<>();
+    private List<Joins> enters = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)

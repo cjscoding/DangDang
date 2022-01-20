@@ -8,13 +8,18 @@ import com.ssafy.dangdang.domain.dto.ResumeQuestionDto;
 import com.ssafy.dangdang.domain.projection.ResumeMapping;
 import com.ssafy.dangdang.repository.ResumeQuestionRepository;
 import com.ssafy.dangdang.repository.ResumeRepository;
+import com.ssafy.dangdang.util.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static com.ssafy.dangdang.util.ApiUtils.error;
 
 @Service
 @RequiredArgsConstructor
@@ -48,8 +53,6 @@ public class ResumeServiceImpl implements ResumeService{
     public Resume updateResume(User user, ResumeDto resumeDto) {
         Resume resume = resumeRepository.findById(resumeDto.getId()).get();
 
-
-
         for ( ResumeQuestionDto resumeQuestionDto:
                 resumeDto.getResumeQuestionList()) {
             ResumeQuestion resumeQuestion = ResumeQuestion.of(resume, resumeQuestionDto);
@@ -61,15 +64,25 @@ public class ResumeServiceImpl implements ResumeService{
     }
 
     @Override
-    public boolean deleteResume(Long id) {
-        resumeRepository.delete(Resume.builder().id(id).build());
+    public ApiUtils.ApiResult<String> deleteResume(User user, Long resumeId) {
+        Optional<Resume> resume = resumeRepository.findById(resumeId);
+        if(!resume.isPresent()) return (ApiUtils.ApiResult<String>) error("존재하지 않는 자소서 입니다.", HttpStatus.BAD_REQUEST);
+        if (resume.get().getUser().getId() == user.getId())
+            return (ApiUtils.ApiResult<String>) error("자신의 자소서만 삭제할 수 있습니다.",
+                HttpStatus.FORBIDDEN);
 
-        return true;
+            resumeRepository.delete(resume.get());
+        return ApiUtils.success("삭제 성공");
     }
 
     @Override
     @Transactional
     public List<ResumeMapping> getResumes(Long userId){
       return resumeRepository.findResumeListFetchJoinByUserId(userId);
+    }
+
+    @Override
+    public Optional<Resume> getResume(Long resumeId) {
+        return resumeRepository.findById(resumeId);
     }
 }

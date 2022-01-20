@@ -1,13 +1,14 @@
 package com.ssafy.dangdang.study;
 
-import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
-import com.ssafy.dangdang.domain.types.Email;
+import com.ssafy.dangdang.domain.dto.StudyDto;
 import com.ssafy.dangdang.repository.StudyRepository;
 import com.ssafy.dangdang.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
@@ -21,12 +22,21 @@ public class StudyServiceTest {
 
 
     @Test
-    public void getStudies(){
+    public void getStudiesJoined(){
 
-        User user = userRepository.findUserByEmail(Email.of("test@ssafy.com")).get();
-        List<Study> studies = studyRepository.getStudies(user);
+        User user = userRepository.findUserByEmail("test@ssafy.com").get();
+        List<StudyDto> studies = studyRepository.getStudiesJoined(user);
 
         System.out.println(studies);
+    }
+
+    @Test
+    public void getStudiesJoinedWithPage(){
+
+        User user = userRepository.findUserByEmail("test@ssafy.com").get();
+        Page<StudyDto> allWithUser = studyRepository.getStudiesJoinedWithPage(user, PageRequest.of(0, 10));
+
+        System.out.println(allWithUser.getContent());
     }
 
 }
