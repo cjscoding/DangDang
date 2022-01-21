@@ -16,7 +16,6 @@ function MyApp({ Component, pageProps }) {
 
 export default wrapper.withRedux(MyApp);
 
-
 // import App from "next/app";
 // import React from "react";
 // import { createWrapper } from "next-redux-wrapper";

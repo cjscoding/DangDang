@@ -3,6 +3,7 @@ import styles from "../../scss/team-board/board.module.scss";
 import Image from "next/image";
 import Link from "next/link";
 import { connect } from "react-redux";
+import Router from "next/router";
 
 function mapStateToProps(state) {
   return {
@@ -13,6 +14,12 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, null)(TeamBoard);
 
 function TeamBoard({ rooms }) {
+  function onDetail(event) {
+    event.preventDefault();
+    //이후 방 고유번호(roomNo) 옵션 붙어서 이동
+    Router.replace("/team-board/team-detail", "team/detail");
+  }
+
   return (
     <div>
       <Title title="Board"></Title>
@@ -50,7 +57,7 @@ function TeamBoard({ rooms }) {
 
           <div className={styles.rooms}>
             {rooms?.map((items, index) => (
-              <div className={styles.room} key={index}>
+              <div className={styles.room} key={index} onClick={onDetail}>
                 <Image
                   src="/vercel.svg"
                   alt="Vercel Logo"
