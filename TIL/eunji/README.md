@@ -1340,5 +1340,202 @@ https://www.youtube.com/watch?v=gQyRxPjssWg&ab_channel=%EC%8B%9C%EB%8B%88%EC%96%
 메세지 형식은 JSON을 사용하는 것이 좋다고 함.
 
 
+------------
+### 2022.01.21
+## SockJS 기반 채팅 서버 예제 따라해보기 2
+
+# Spring Sockets 
 
 
+- WebSocket
+  - 기본적인 순수한 웹소켓
+  - 사용자의 브라우저와 서버 사이의 인터렉티브 통신 세션을 설정할 수 있게 하는 고급 기술
+  - HTTP 상에 존재함
+- SockJS 
+  - socket.io는 NodeJS 기반
+  - spring은 SockJS client가 있음.
+  - 웹 소켓과 유사함
+- STOMP
+  - Spring Only
+  - Use stomp js library
+  - SockJS의 서브 프로토콜
+  - 약속된 커뮤니케이션
+  - 토픽 구독 방식
+
+세가지 모두 메세지 형식은 JSON을 사용하는 것이 좋다고 함.
+
+
+
+## WebSocket on Spring MVC Project
+
+![image-20220120233839583](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20220120233839583.png)
+
+1. pom.xml, sevlet-context.xml 세팅
+2. WebSocket Handler 만듦 (이미지나 파일은 BinaryWebSocketHandler, 텍스트는 TextWebSocketHandler)
+3. html 만듦 (WebSocket js를 사용)
+
+
+
+ws : 원래 웹소켓
+
+wss: https 인증서 받아서 암호화된 방식 SSL 인증서로 암호화 
+
+long polling : 서버랑 클라이언트가 계속 붙어 있음. 끊어지지 않고 -> 실시간성 보장
+
+auto-reconnect with intelligence
+
+session만 끊는다. 
+
+
+
+### pom.xml
+
+websocket-api, spring-websocket 추가
+
+
+
+### servlet-context.xml
+
+handler 등록 (websocket handler 등록)
+
+handshake하는 interceptor 필요 (로그인한 사용자 session 알아야 해서 사용함)
+
+websocket은 기본적으로 http Session을 가지고 있지 않음
+
+
+
+## ### WebSocketConfig 생성
+
+```java
+package com.example.demo.config;
+
+import com.example.demo.handler.ReplyEchoHandler;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+
+@Configuration
+@EnableWebSocket
+public class WebSocketConfig implements WebSocketConfigurer {
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(new ReplyEchoHandler(), "/replyEcho").setAllowedOrigins("*");
+    }
+
+}
+
+```
+
+
+
+### handler 생성
+
+```java
+public class ReplyEchoHandler implements TextWebSocketHandler{
+    
+    @Override
+    public void afterConnectionsEstablished(WebSocketSession session) thorws Exception{
+        
+    }
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) thorws Exception{
+        
+    }
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) thorws Exception{
+        
+    }
+}
+```
+
+3개의 메소드가 있고, 모두 다 오버라이드 함
+
+- afterConnectionsEstablished (연결이 됐을 때 (클라이언트가 서버 접속 성공헀을 때))
+- handleTextMessage (메세지를 보냈을 때)
+- afterConnectionClosed (연결이 끊어질 때)
+
+
+
+WebSocket 표준 js 코드 
+
+```javascript
+var ws = new WebSocket("ws://localhost:8080/replyEcho?bno=1234");
+
+    ws.onopen = function () {
+        console.log('Info: connection opened.');
+        setTimeout( function(){ connect(); }, 1000); // retry connection!!
+        
+             ws.onmessage = function (event) {
+            console.log(event.data+'\n');
+        };
+    };
+
+   
+
+    ws.onclose = function (event) { console.log('Info: connection closed.'); };
+    ws.onerror = function (event) { console.log('Info: connection closed.'); };
+    
+    $('#btnSend').on('click', function(evt) {
+	  evt.preventDefault();
+  if (socket.readyState !== 1) return;
+    	  let msg = $('input#msg').val();
+    	  ws.send(msg);
+    });
+
+```
+
+
+
+## SockJS
+
+- sockjs-client library 사용
+
+
+
+websocket과 핸들러 똑같이 쓰는데 뒤에 
+
+`withSockJS()` 추가
+
+
+
+client html에 추가
+
+```javascript
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+```
+
+
+
+To allow credentials to a set of origins, list them explicitly or consider using "allowedOriginPatterns" instead. 오류 계속 뜸
+
+```java
+registry.addHandler(new ReplyEchoHandler(), "/replyEcho").setAllowedOrigins("https://localhost:3478/").withSockJS();
+```
+
+일단 setAllowedOrigins에 '*' 대신에 정확한 주소 넣어주니 실행은 됨 
+
+
+
+한번 메세지를 보내면 웹소켓이 자꾸 닫힘
+
+Closing session due to exception for WebSocketServerSockJsSession[id=pdqbk10b]
+
+```java
+function connectSockJS(){
+        var sock = new SockJS("/replyEcho")
+        socket=sock;
+        console.log("연결 중..");
+        sock.onopen = function () {
+            console.log('Info: connection opened.');
+            sock.onmessage = function (event) {
+                console.log("받은 msg :: "+event.data+'\n');
+            };
+            sock.onclose = function (event) {
+                console.log(event+' :: Info: connection closed.');
+            };
+        };
+    }
+```
+
+sock.onmessage와 onclose를 onopen 안에 넣어주니 해결됨.
