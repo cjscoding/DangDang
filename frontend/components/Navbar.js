@@ -1,9 +1,13 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useState } from "react";
 import styles from "../scss/layout/navbar.module.scss";
+import Modal from "./layout/Modal";
+import Login from "./user/Login";
+import Signup from "./user/Signup";
 
 export default function NavBar() {
-  const router = useRouter();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
   return (
     <nav className={styles.navbar}>
       <ul>
@@ -33,7 +37,16 @@ export default function NavBar() {
           </Link>
         </li>
         <li>
-          <a>로그인</a>
+          <a
+            onClick={() => {
+              setShowLoginModal(true);
+            }}
+          >
+            로그인
+          </a>
+          <Modal show={showLoginModal} onClose={() => setShowLoginModal(false)}>
+            <Login></Login>
+          </Modal>
         </li>
         <li>
           <a>회원가입</a>
