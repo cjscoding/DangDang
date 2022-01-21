@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import styles from "../../scss/layout/modal.module.scss";
 
 export default function Modal({ show, onClose, children }) {
-  const [isBrowser, setIsBrowser] = useState(true);
+  // const [isBrowser, setIsBrowser] = useState(true);
   const modalWrapperRef = useRef();
   const modalOverlayRef = useRef();
 
@@ -23,11 +23,11 @@ export default function Modal({ show, onClose, children }) {
   };
 
   useEffect(() => {
-    setIsBrowser(true);
-    window.addEventListener("click", backDropHandler);
-    return () => {
-      window.removeEventListener("click", backDropHandler);
-    };
+    // setIsBrowser(true);
+    // window.addEventListener("click", backDropHandler);
+    // return () => {
+    //   window.removeEventListener("click", backDropHandler);
+    // };
   }, []);
 
   const modalContent = show ? (
@@ -45,7 +45,7 @@ export default function Modal({ show, onClose, children }) {
     </div>
   ) : null;
 
-  if (isBrowser) {
+  if (typeof window !== "undefined") {
     return ReactDOM.createPortal(
       modalContent,
       document.getElementById("modal-root")
