@@ -5,7 +5,7 @@ export default function Signup() {
       <h1>회원가입</h1>
       <form>
         <div>
-          <label for="nickname">
+          <label htmlFor="nickname">
             이름
             <input
               id="nickname"
@@ -16,7 +16,7 @@ export default function Signup() {
           </label>
         </div>
         <div>
-          <label for="password">
+          <label htmlFor="password">
             비밀번호
             <input
               id="password"
@@ -27,7 +27,7 @@ export default function Signup() {
           </label>
         </div>
         <div>
-          <label for="email">
+          <label htmlFor="email">
             이메일
             <input
               id="email"

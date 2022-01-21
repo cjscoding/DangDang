@@ -42,7 +42,7 @@ export default function NavBar() {
             onClick={() => {
               setShowLoginModal(true);
             }}
-            tabindex="0"
+            tabIndex="0"
           >
             로그인
           </a>
@@ -55,7 +55,7 @@ export default function NavBar() {
             onClick={() => {
               setShowSignUpModal(true);
             }}
-            tabindex="0"
+            tabIndex="0"
           >
             회원가입
           </a>
@@ -70,7 +70,7 @@ export default function NavBar() {
           <a>마이페이지</a>
         </li>
         <li>
-          <a tabindex="0">로그아웃</a>
+          <a tabIndex="0">로그아웃</a>
         </li>
       </ul>
     </nav>
