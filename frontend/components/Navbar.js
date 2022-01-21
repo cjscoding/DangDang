@@ -7,6 +7,7 @@ import Signup from "./user/Signup";
 
 export default function NavBar() {
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
 
   return (
     <nav className={styles.navbar}>
@@ -41,6 +42,7 @@ export default function NavBar() {
             onClick={() => {
               setShowLoginModal(true);
             }}
+            tabindex="0"
           >
             로그인
           </a>
@@ -49,13 +51,26 @@ export default function NavBar() {
           </Modal>
         </li>
         <li>
-          <a>회원가입</a>
+          <a
+            onClick={() => {
+              setShowSignUpModal(true);
+            }}
+            tabindex="0"
+          >
+            회원가입
+          </a>
+          <Modal
+            show={showSignUpModal}
+            onClose={() => setShowSignUpModal(false)}
+          >
+            <Signup></Signup>
+          </Modal>
         </li>
         <li>
           <a>마이페이지</a>
         </li>
         <li>
-          <a>로그아웃</a>
+          <a tabindex="0">로그아웃</a>
         </li>
       </ul>
     </nav>
