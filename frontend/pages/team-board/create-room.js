@@ -2,7 +2,7 @@ import styles from "../../scss/team-board/create-room.module.scss";
 import Title from "../../components/layout/title";
 import Link from "next/link";
 import { connect } from "react-redux";
-import { createRoom } from "../../store/actions/postAction";
+import { createRoom } from "../../store/actions/roomAction";
 import { useState } from "react";
 
 function mapDispatchToProps(dispatch) {

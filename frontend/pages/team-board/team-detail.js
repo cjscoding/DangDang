@@ -45,26 +45,17 @@ function TeamDetail() {
       </div>
       <div className={styles.comment}>
         <h2>궁금하당</h2>
-        <h3 className={styles.comment_title}>New Comment</h3>
-        <div className={styles.type}>
-          <div className="user">
-            <div className="icon"></div>
-            <label className="author">me</label>
-          </div>
-          <form className="input_area">
-            <input
-              type="text"
-              className="type_input"
-              placeholder="comment..."
-            />
-            <button type="submit">Upload</button>
-          </form>
+        <h3>New Comment</h3>
+        <div className={styles.user}>
+          <div className="icon"></div>
+          <label className="author">me</label>
         </div>
-        <div className="comments_list">
-          <h3>Comments</h3>
-          <div>
-            <Comment />
-          </div>
+        <form>
+          <input type="text" placeholder="comment..." />
+          <button type="submit">Upload</button>
+        </form>
+        <div className="commentList">
+          <Comment />
         </div>
       </div>
     </div>
