@@ -5,7 +5,7 @@ import styles from "../../scss/layout/modal.module.scss";
 export default function Modal({ show, onClose, children }) {
   const [isBrowser, setIsBrowser] = useState(true);
   const modalWrapperRef = useRef();
-  // const modalOverlayRef = useRef();
+  const modalOverlayRef = useRef();
 
   const closeHandler = (event) => {
     event.preventDefault();
@@ -14,7 +14,7 @@ export default function Modal({ show, onClose, children }) {
 
   const backDropHandler = (event) => {
     console.log(event.target);
-    // console.log(event.currentTarget);
+    console.log(event.currentTarget);
     console.log(modalWrapperRef.current);
     if (modalWrapperRef?.current?.contains(event.target)) {
       event.preventDefault();
@@ -24,10 +24,10 @@ export default function Modal({ show, onClose, children }) {
 
   useEffect(() => {
     setIsBrowser(true);
-    // window.addEventListener("click", backDropHandler);
-    // return () => {
-    //   window.removeEventListener("click", backDropHandler);
-    // };
+    window.addEventListener("click", backDropHandler);
+    return () => {
+      window.removeEventListener("click", backDropHandler);
+    };
   }, []);
 
   const modalContent = show ? (
@@ -39,7 +39,7 @@ export default function Modal({ show, onClose, children }) {
               [ 닫기버튼 ]
             </a>
           </div>
-          <div class="modal-body">{children}</div>
+          <div className="modal-body">{children}</div>
         </div>
       </div>
     </div>
