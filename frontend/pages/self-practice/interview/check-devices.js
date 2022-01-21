@@ -2,16 +2,37 @@ import Link from "next/link";
 import { useEffect, useRef } from "react"
 import { connect } from "react-redux";
 import styles from "../../../scss/self-practice/interview/check-devices.module.scss";
-import { setVideo } from "../../../store/actions/videoAction";
 
+import { setQuestions } from "../../../store/actions/questionAction";
+export async function getServerSideProps() {
+  const questions = [
+    "안녕하세요",
+    "점심 맛있게 드셨어요?",
+    "다음에 봬요!"
+  ]
+  return {props: {questions}};
+};
+function mapStateToProps(state) {
+  return {
+    isQs: state.questionReducer.questions.length !== 0
+  };
+}
+import { setVideo } from "../../../store/actions/videoAction";
 function mapDispatchToProps(dispatch) {
   return {
-    selectDevice: (devices) => dispatch(setVideo(devices))
+    selectDevice: (devices) => dispatch(setVideo(devices)),
+    setQuestions: (questions) => dispatch(setQuestions(questions))
   }
 }
-export default connect(null, mapDispatchToProps)(CheckDevices);
+export default connect(mapStateToProps, mapDispatchToProps)(CheckDevices);
 
-function CheckDevices({selectDevice}) {
+function CheckDevices({questions, isQs, selectDevice, setQuestions}) {
+  useEffect(() => {
+    if(!isQs) {
+      setQuestions(questions);
+    }
+  }, [])
+
   const video = useRef(); // 화면 송출
   const cameraSelect = useRef();
   const micSelect = useRef();
