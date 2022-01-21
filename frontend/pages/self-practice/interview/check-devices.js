@@ -3,20 +3,24 @@ import { useEffect, useRef } from "react"
 import { connect } from "react-redux";
 import styles from "../../../scss/self-practice/interview/check-devices.module.scss";
 
+// export async function getServerSideProps() {
+  //   const questions = [
+    //     "안녕하세요",
+    //     "점심 맛있게 드셨어요?",
+    //     "다음에 봬요!"
+    //   ]
+    //   return {props: {questions}};
+    // };
+    import {wrapper} from '../../../store';
+    export const getServerSideProps = wrapper.getServerSideProps(store => {
+      console.log(store.getState())
+    });
+    function mapStateToProps(state) {
+      return {
+        isQs: state.questionReducer.questions.length !== 0
+      };
+    }
 import { setQuestions } from "../../../store/actions/questionAction";
-export async function getServerSideProps() {
-  const questions = [
-    "안녕하세요",
-    "점심 맛있게 드셨어요?",
-    "다음에 봬요!"
-  ]
-  return {props: {questions}};
-};
-function mapStateToProps(state) {
-  return {
-    isQs: state.questionReducer.questions.length !== 0
-  };
-}
 import { setVideo } from "../../../store/actions/videoAction";
 function mapDispatchToProps(dispatch) {
   return {
@@ -29,7 +33,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(CheckDevices);
 function CheckDevices({questions, isQs, selectDevice, setQuestions}) {
   useEffect(() => {
     if(!isQs) {
-      setQuestions(questions);
+      // setQuestions(questions);
     }
   }, [])
 
