@@ -1,16 +1,20 @@
 package com.ssafy.dangdang;
 
+import com.ssafy.dangdang.domain.Comment;
+import com.ssafy.dangdang.domain.Post;
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.*;
 import com.ssafy.dangdang.repository.StudyRepository;
 import com.ssafy.dangdang.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -27,6 +31,7 @@ public class InitDb {
         initService.writeResume();
         initService.writeInterviewQuestion();
         initService.writePost();
+        initService.writeComment();
     }
 
     //위 init()함수에 아래 내용을 전부 포함해도 된다고 생각할 수 있지만,
@@ -43,6 +48,8 @@ public class InitDb {
         private final ResumeService resumeService;
         private final InterviewQuestionService interviewQuestionService;
         private final PostService postService;
+
+        private final MongoRepository mongoRepository;
 
         public void signUpUsers(){
             UserDto userDto = new UserDto();
@@ -112,7 +119,7 @@ public class InitDb {
                         .field("공통")
                         .visable(false)
                         .build();
-                interviewQuestionService.writerQuestion(user, interviewQuestionDto);
+                interviewQuestionService.writeQuestion(user, interviewQuestionDto);
             }
 
         }
@@ -128,6 +135,25 @@ public class InitDb {
             }
 
 
+        }
+
+        public void writeComment(){
+            mongoRepository.deleteAll();
+            User user = userService.findByEmail("test@ssafy.com").get();
+            Post post = postService.findById(1L).get();
+            for (int i =0;i<5;i++){
+                Comment comment = Comment.builder()
+                        .content("댓글댓글"+i)
+                        .writerId(user.getId())
+                        .writerEmail(user.getEmail())
+                        .writerNickname(user.getNickname())
+                        .postId(post.getId())
+                        .build();
+                mongoRepository.save(comment);
+            }
+
+            List<Comment> all = mongoRepository.findAll();
+            System.out.println(all);
         }
 
     }

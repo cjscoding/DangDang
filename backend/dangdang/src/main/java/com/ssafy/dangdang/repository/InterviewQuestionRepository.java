@@ -1,8 +1,6 @@
 package com.ssafy.dangdang.repository;
 
 import com.ssafy.dangdang.domain.InterviewQuestion;
-import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;

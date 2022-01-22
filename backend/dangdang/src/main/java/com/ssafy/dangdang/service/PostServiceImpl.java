@@ -29,13 +29,13 @@ public class PostServiceImpl implements PostService{
     private final UserService userService;
 
     @Override
-    public ApiResult<Post> writePost(User user, PostDto postDto, Long studyId) {
+    public ApiResult<PostDto> writePost(User user, PostDto postDto, Long studyId) {
         Optional<Study> study = studyRepository.findById(studyId);
         if (!study.isPresent()) error("없는 스터디 입니다.", HttpStatus.NOT_FOUND);
 
         Post post = Post.of(postDto, user, study.get());
         postRepository.save(post);
-        return success(post);
+        return success(PostDto.of(post));
     }
 
     @Override

@@ -25,7 +25,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService{
     private final InterviewQuestionRepository interviewQuestionRepository;
 
     @Override
-    public InterviewQuestionDto writerQuestion(User user, InterviewQuestionDto interviewQuestionDto) {
+    public InterviewQuestionDto writeQuestion(User user, InterviewQuestionDto interviewQuestionDto) {
 
         InterviewQuestion interviewQuestion = InterviewQuestion.of(interviewQuestionDto, user);
         interviewQuestionRepository.save(interviewQuestion);
@@ -37,7 +37,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService{
         Optional<InterviewQuestion> question = interviewQuestionRepository.findById(interviewQuestionId);
 
         if (!question.isPresent()) return (ApiUtils.ApiResult<String>) error("없는 질문입니다.", HttpStatus.NOT_FOUND);
-        if (question.get().getWriter().getId() == user.getId()) error("작성자만 삭제할 수 있습니다.", HttpStatus.FORBIDDEN);
+        if (question.get().getWriter().getId() == user.getId()) return (ApiResult<String>) error("작성자만 삭제할 수 있습니다.", HttpStatus.FORBIDDEN);
         interviewQuestionRepository.delete(question.get());
         return success("삭제 성공");
     }

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface InterviewQuestionService {
 
-    public InterviewQuestionDto writerQuestion(User user, InterviewQuestionDto interviewQuestionDto);
+    public InterviewQuestionDto writeQuestion(User user, InterviewQuestionDto interviewQuestionDto);
 
     ApiUtils.ApiResult<String> deleteQuestion(User user, Long interviewQuestionId);
 

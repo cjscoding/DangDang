@@ -60,7 +60,7 @@ dependencies {
     // Swagger 관련 설정
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.4'
 
-
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

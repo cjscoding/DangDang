@@ -29,7 +29,7 @@ public class InterviewQuestionController {
             @CurrentUser PrincipalDetails userPrincipal,
             @RequestBody InterviewQuestionDto interviewQuestionDto){
 
-        InterviewQuestionDto createdQuestion = interviewQuestionService.writerQuestion(userPrincipal.getUser(), interviewQuestionDto);
+        InterviewQuestionDto createdQuestion = interviewQuestionService.writeQuestion(userPrincipal.getUser(), interviewQuestionDto);
         return success(createdQuestion);
 
     }
@@ -52,7 +52,7 @@ public class InterviewQuestionController {
             @RequestBody InterviewQuestionDto interviewQuestionDto){
         Optional<InterviewQuestion> question = interviewQuestionService.findById(interviewQuestionDto.getId());
         if(!question.isPresent()) return (ApiResult<InterviewQuestionDto>) error("없는 질문 입니다.", HttpStatus.NOT_FOUND);
-        InterviewQuestionDto createdQuestion = interviewQuestionService.writerQuestion(userPrincipal.getUser(), interviewQuestionDto);
+        InterviewQuestionDto createdQuestion = interviewQuestionService.writeQuestion(userPrincipal.getUser(), interviewQuestionDto);
         return success(createdQuestion);
 
     }

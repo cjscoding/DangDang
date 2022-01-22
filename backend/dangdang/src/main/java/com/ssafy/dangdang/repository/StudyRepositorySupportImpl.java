@@ -63,30 +63,8 @@ public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport imple
                                 .from(joins)
                                 .where(joins.user.eq(registeredUser)))));
         return studyDtos;
-//        List<StudyDto> studies = select(Projections.constructor(StudyDto.class,
-//                        study.id, study.name, study.number, study.introduction, study.createdAt, study.target
-//        ,study.host.id, study.host.nickname, study.host.email))
-//                .from(study)
-//                .join(study.host, user)
-//                .where(study.in(select(joins.study)
-//                        .from(joins)
-//                        .where(joins.user.eq(registeredUser))))
-//                .offset(pageable.getOffset())
-//                .limit(pageable.getPageSize())
-//                .fetch();
-//
-//        System.out.println("total: "+studies.size());
-//        return new PageImpl<>(studies, pageable, studies.size());
+
     }
 
-//    @Override
-//    public Page<StudyDto> getAllStudies(User user) {
-//        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(getEntityManager());
-//        List<Study> studies = queryFactory.selectFrom(study)
-//                .where(study.in(select(joins.study)
-//                        .from(joins)
-//                        .where(joins.user.eq(user)))).fetch();
-//
-//        return studies;
-//    }
+
 }
