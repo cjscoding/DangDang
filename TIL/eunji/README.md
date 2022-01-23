@@ -1171,3 +1171,371 @@ Kurento의 주요 구성 요소는 미디어 전송, 처리, 녹음 및 재생�
 [[Kurento\] 쿠렌토 서버 Docker로 실행시켜보기 (feat. 윈도우)](https://gh402.tistory.com/44)
 [Windows 10에서 WSL2를 이용하여 Ubuntu 설치하는 방법](https://wylee-developer.tistory.com/57)
 
+------------
+### 2022.01.19
+## KMS, STUN/TURN 서버 설정 및 skeleton 코드 실행
+
+webRTC기술 학습과 주요 기능 구현 pdf 파일을 참고하여 Ubuntu 환경에서 docker에 KMS, STUN/TURN 서버 설정
+
+싸피에서 제공한 skeleton 코드 실행 
+![이미지](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FW19IV%2FbtrrcgQKUue%2FjKcXsLv1IrFQ1OwqUpZSbK%2Fimg.png)
+
+실행 결과
+![이미지](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdVE3i8%2FbtrrcNN5aOE%2FftUO1QorYKzI8ifna22FBK%2Fimg.png)
+
+------------
+### 2022.01.20
+## SockJS 기반 채팅 서버 예제 따라해보기
+
+쿠렌토 서버는 다음주 월요일 AWS계정 받으면 하기로 하고, 우선 웹소켓 통신부터 공부함.
+
+https://supawer0728.github.io/2018/03/30/spring-websocket/
+
+https://github.com/supawer0728/simple-websocket/blob/master/src/main/resources/templates/chat1/room-detail.html
+
+!주요 코드만 담았음
+
+ChatHandler.java
+
+```java
+package com.ssafy.common;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.db.dto.ChatMessage;
+import com.ssafy.db.dto.ChatRoom;
+import com.ssafy.db.repository.ChatRoomRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+@Slf4j
+@Profile("!stomp")
+@Component
+public class ChatHandler extends TextWebSocketHandler {
+
+    private final ObjectMapper objectMapper;
+    private final ChatRoomRepository repository;
+
+    @Autowired
+    public ChatHandler(ObjectMapper objectMapper, ChatRoomRepository chatRoomRepository) {
+        this.objectMapper = objectMapper;
+        this.repository = chatRoomRepository;
+    }
+
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+
+        String payload = message.getPayload();
+        log.info("payload : {}", payload);
+
+        ChatMessage chatMessage = objectMapper.readValue(payload, ChatMessage.class);
+        ChatRoom chatRoom = repository.getChatRoom(chatMessage.getChatRoomId());
+        chatRoom.handleMessage(session, chatMessage, objectMapper);
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        repository.remove(session);
+    }
+}
+```
+
+WebSocketConfig.java
+
+```java
+package com.ssafy.config;
+
+import com.ssafy.common.ChatHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+
+@Profile("!stomp")
+@Configuration
+@EnableWebSocket
+public class WebSocketConfig implements WebSocketConfigurer {
+    @Autowired
+    private ChatHandler chatHandler;
+
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(chatHandler, "/ws/chat").setAllowedOrigins("*").withSockJS();
+    }
+}
+```
+
+
+ChatRoomController.java
+
+```java
+package com.ssafy.api.controller;
+
+import com.ssafy.db.dto.ChatRoom;
+import com.ssafy.db.repository.ChatRoomRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+@Controller
+@RequestMapping("/chat1")
+public class ChatRoomController {
+
+    private final ChatRoomRepository repository;
+//    private final String listViewName;
+//    private final String detailViewName;
+    private final AtomicInteger seq = new AtomicInteger(0);
+
+    @Autowired
+    public ChatRoomController(ChatRoomRepository repository) {
+        this.repository = repository;
+    }
+
+    @GetMapping("/rooms")
+    public String rooms(Model model) {
+        model.addAttribute("rooms", repository.getChatRooms());
+        return "/chat1/room-list";
+    }
+
+    @GetMapping("/rooms/{id}")
+    public String room(@PathVariable String id, Model model) {
+        ChatRoom room = repository.getChatRoom(id);
+        model.addAttribute("room", room);
+        model.addAttribute("member", "member" + seq.incrementAndGet()); // 회원 이름 부여
+
+        return "/chat1/room";
+    }
+}
+
+```
+
+### Spring Sockets - WebSocket, SockJS, STOMP 공부 중
+
+https://www.youtube.com/watch?v=gQyRxPjssWg&ab_channel=%EC%8B%9C%EB%8B%88%EC%96%B4%EC%BD%94%EB%94%A9
+
+
+- WebSocket
+  - 사용자의 브라우저와 서버 사이의 인터렉티브 통신 세션을 설정할 수 있게 하는 고급 기술.
+- SockJS 
+  - socket.io는 NodeJS 기반
+  - sprnig은 SockJS client가 있음.
+  - 웹 소켓과 유사함
+- STOMP
+  - Spring Only
+  - Use stomp js library
+  - SockJS의 서브 프로토콜
+
+메세지 형식은 JSON을 사용하는 것이 좋다고 함.
+
+
+------------
+### 2022.01.21
+## SockJS 기반 채팅 서버 예제 따라해보기 2
+
+# Spring Sockets 
+
+
+- WebSocket
+  - 기본적인 순수한 웹소켓
+  - 사용자의 브라우저와 서버 사이의 인터렉티브 통신 세션을 설정할 수 있게 하는 고급 기술
+  - HTTP 상에 존재함
+- SockJS 
+  - socket.io는 NodeJS 기반
+  - spring은 SockJS client가 있음.
+  - 웹 소켓과 유사함
+- STOMP
+  - Spring Only
+  - Use stomp js library
+  - SockJS의 서브 프로토콜
+  - 약속된 커뮤니케이션
+  - 토픽 구독 방식
+
+세가지 모두 메세지 형식은 JSON을 사용하는 것이 좋다고 함.
+
+
+
+## WebSocket on Spring MVC Project
+
+![image-20220120233839583](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20220120233839583.png)
+
+1. pom.xml, sevlet-context.xml 세팅
+2. WebSocket Handler 만듦 (이미지나 파일은 BinaryWebSocketHandler, 텍스트는 TextWebSocketHandler)
+3. html 만듦 (WebSocket js를 사용)
+
+
+
+ws : 원래 웹소켓
+
+wss: https 인증서 받아서 암호화된 방식 SSL 인증서로 암호화 
+
+long polling : 서버랑 클라이언트가 계속 붙어 있음. 끊어지지 않고 -> 실시간성 보장
+
+auto-reconnect with intelligence
+
+session만 끊는다. 
+
+
+
+### pom.xml
+
+websocket-api, spring-websocket 추가
+
+
+
+### servlet-context.xml
+
+handler 등록 (websocket handler 등록)
+
+handshake하는 interceptor 필요 (로그인한 사용자 session 알아야 해서 사용함)
+
+websocket은 기본적으로 http Session을 가지고 있지 않음
+
+
+
+## ### WebSocketConfig 생성
+
+```java
+package com.example.demo.config;
+
+import com.example.demo.handler.ReplyEchoHandler;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+
+@Configuration
+@EnableWebSocket
+public class WebSocketConfig implements WebSocketConfigurer {
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(new ReplyEchoHandler(), "/replyEcho").setAllowedOrigins("*");
+    }
+
+}
+
+```
+
+
+
+### handler 생성
+
+```java
+public class ReplyEchoHandler implements TextWebSocketHandler{
+    
+    @Override
+    public void afterConnectionsEstablished(WebSocketSession session) thorws Exception{
+        
+    }
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) thorws Exception{
+        
+    }
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) thorws Exception{
+        
+    }
+}
+```
+
+3개의 메소드가 있고, 모두 다 오버라이드 함
+
+- afterConnectionsEstablished (연결이 됐을 때 (클라이언트가 서버 접속 성공헀을 때))
+- handleTextMessage (메세지를 보냈을 때)
+- afterConnectionClosed (연결이 끊어질 때)
+
+
+
+WebSocket 표준 js 코드 
+
+```javascript
+var ws = new WebSocket("ws://localhost:8080/replyEcho?bno=1234");
+
+    ws.onopen = function () {
+        console.log('Info: connection opened.');
+        setTimeout( function(){ connect(); }, 1000); // retry connection!!
+        
+             ws.onmessage = function (event) {
+            console.log(event.data+'\n');
+        };
+    };
+
+   
+
+    ws.onclose = function (event) { console.log('Info: connection closed.'); };
+    ws.onerror = function (event) { console.log('Info: connection closed.'); };
+    
+    $('#btnSend').on('click', function(evt) {
+	  evt.preventDefault();
+  if (socket.readyState !== 1) return;
+    	  let msg = $('input#msg').val();
+    	  ws.send(msg);
+    });
+
+```
+
+
+
+## SockJS
+
+- sockjs-client library 사용
+
+
+
+websocket과 핸들러 똑같이 쓰는데 뒤에 
+
+`withSockJS()` 추가
+
+
+
+client html에 추가
+
+```javascript
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+```
+
+
+
+To allow credentials to a set of origins, list them explicitly or consider using "allowedOriginPatterns" instead. 오류 계속 뜸
+
+```java
+registry.addHandler(new ReplyEchoHandler(), "/replyEcho").setAllowedOrigins("https://localhost:3478/").withSockJS();
+```
+
+일단 setAllowedOrigins에 '*' 대신에 정확한 주소 넣어주니 실행은 됨 
+
+
+
+한번 메세지를 보내면 웹소켓이 자꾸 닫힘
+
+Closing session due to exception for WebSocketServerSockJsSession[id=pdqbk10b]
+
+```java
+function connectSockJS(){
+        var sock = new SockJS("/replyEcho")
+        socket=sock;
+        console.log("연결 중..");
+        sock.onopen = function () {
+            console.log('Info: connection opened.');
+            sock.onmessage = function (event) {
+                console.log("받은 msg :: "+event.data+'\n');
+            };
+            sock.onclose = function (event) {
+                console.log(event+' :: Info: connection closed.');
+            };
+        };
+    }
+```
+
+sock.onmessage와 onclose를 onopen 안에 넣어주니 해결됨.
