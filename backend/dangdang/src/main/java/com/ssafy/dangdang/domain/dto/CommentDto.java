@@ -65,10 +65,14 @@ public class CommentDto {
                 "id='" + id + '\'' +
                 ", content='" + content + '\'' +
                 ", postId=" + postId +
+                ", depth=" + depth +
                 ", writerId=" + writerId +
                 ", writerNickname='" + writerNickname + '\'' +
                 ", writerEmail='" + writerEmail + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 ", children=" + children +
+                ", parentId='" + parentId + '\'' +
                 '}';
     }
 }

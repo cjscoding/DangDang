@@ -6,6 +6,7 @@ import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.StudyDto;
 import com.ssafy.dangdang.service.StudyService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,7 @@ public class StudyController {
 
     private final StudyService studyService;
 
-
+    @Operation(summary = "스터디 조회", description = "개설된 모든 스터디를 요청한 페이지 만큼 조회")
     @GetMapping()
     public ApiResult<Page<StudyDto>> getAllStudies(Pageable pageable){
         System.out.println(pageable.getOffset());
