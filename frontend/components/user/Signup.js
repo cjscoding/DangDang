@@ -1,16 +1,18 @@
 import Button from "./Button";
-export default function Signup() {
+import styles from "../../scss/user/login-signup.module.scss";
+
+export default function Signup({ onClick }) {
   return (
-    <div>
+    <div className={styles.body}>
       <h1>회원가입</h1>
-      <form>
+      <form className={styles.form}>
         <div>
-          <label htmlFor="nickname">
-            이름
+          <label htmlFor="email">
+            이메일
             <input
-              id="nickname"
-              type="text"
-              placeholder="이름을 입력하세요"
+              id="email"
+              type="email"
+              placeholder="이메일을 입력하세요"
               required
             />
           </label>
@@ -27,18 +29,22 @@ export default function Signup() {
           </label>
         </div>
         <div>
-          <label htmlFor="email">
-            이메일
+          <label htmlFor="nickname">
+            이름
             <input
-              id="email"
-              type="email"
-              placeholder="이메일을 입력하세요"
+              id="nickname"
+              type="text"
+              placeholder="이름을 입력하세요"
               required
             />
           </label>
         </div>
+
         <button type="submit">회원가입</button>
       </form>
+      <p>
+        계정이 있으세요? <a onClick={onClick}>로그인</a>
+      </p>
       <Button text="Google로 시작하기" />
       <Button text="Kakao로 시작하기" />
       {/* <Button text="이메일로 시작하기" /> */}

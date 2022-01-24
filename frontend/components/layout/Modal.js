@@ -3,9 +3,7 @@ import ReactDOM from "react-dom";
 import styles from "../../scss/layout/modal.module.scss";
 
 export default function Modal({ show, onClose, children }) {
-  // const [isBrowser, setIsBrowser] = useState(true);
   const modalWrapperRef = useRef();
-  const modalOverlayRef = useRef();
 
   const closeHandler = (event) => {
     event.preventDefault();
@@ -14,32 +12,35 @@ export default function Modal({ show, onClose, children }) {
 
   const backDropHandler = (event) => {
     console.log(event.target);
-    console.log(event.currentTarget);
+    // console.log(event.currentTarget);
     console.log(modalWrapperRef.current);
-    if (modalWrapperRef?.current?.contains(event.target)) {
+    if (!modalWrapperRef?.current?.contains(event.target)) {
       event.preventDefault();
       onClose();
     }
   };
 
-  useEffect(() => {
-    // setIsBrowser(true);
-    // window.addEventListener("click", backDropHandler);
-    // return () => {
-    //   window.removeEventListener("click", backDropHandler);
-    // };
-  }, []);
+  // useEffect(() => {
+  //   console.log("컴포넌트 생성!");
+  //   // return () => console.log("컴포넌트 삭제!");
+  //   // setIsBrowser(true);
+  //   window.addEventListener("click", backDropHandler);
+  //   return () => {
+  //     window.removeEventListener("click", backDropHandler);
+  //     console.log("컴포넌트 삭제!");
+  //   };
+  // }, []);
 
   const modalContent = show ? (
     <div className={styles.modalOverlay}>
       <div className={styles.modalWrapper} tabIndex={-1} ref={modalWrapperRef}>
         <div className={styles.modal}>
-          <div className="modal-header">
+          <div className={styles.close}>
             <a href="#" onClick={closeHandler}>
-              [ 닫기버튼 ]
+              [ X ]
             </a>
           </div>
-          <div className="modal-body">{children}</div>
+          <div className={styles.modalBody}>{children}</div>
         </div>
       </div>
     </div>
