@@ -10,3 +10,7 @@
     padding-right: 1rem;
   }
 }
+
+.menuContainer {
+  @include flex-center;
+}
