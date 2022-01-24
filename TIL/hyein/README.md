@@ -1,5 +1,9 @@
 # Today I Learned📚✨
 
+## SCSS
+
+- [SCSS에서 @mixin vs @extend](SCSS에서-@mixin-vs-@extend.md)
+
 ## React
 
 - [ReactJS로 영화 웹 서비스 만들기 (NomadCoders)](ReactJS로-영화-웹-서비스-만들기)
