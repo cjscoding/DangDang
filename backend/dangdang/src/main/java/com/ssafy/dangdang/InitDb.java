@@ -5,9 +5,12 @@ import com.ssafy.dangdang.domain.Post;
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.*;
+import com.ssafy.dangdang.repository.CommentRepository;
 import com.ssafy.dangdang.repository.StudyRepository;
 import com.ssafy.dangdang.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Component;
 
@@ -49,8 +52,8 @@ public class InitDb {
         private final InterviewQuestionService interviewQuestionService;
         private final PostService postService;
 
-        private final MongoRepository mongoRepository;
-
+        private final CommentService commentService;
+        private final CommentRepository commentRepository;
         public void signUpUsers(){
             UserDto userDto = new UserDto();
 
@@ -138,22 +141,36 @@ public class InitDb {
         }
 
         public void writeComment(){
-            mongoRepository.deleteAll();
+            commentRepository.deleteAll();
             User user = userService.findByEmail("test@ssafy.com").get();
             Post post = postService.findById(1L).get();
             for (int i =0;i<5;i++){
-                Comment comment = Comment.builder()
+                CommentDto commentDto = CommentDto.builder()
                         .content("댓글댓글"+i)
                         .writerId(user.getId())
                         .writerEmail(user.getEmail())
                         .writerNickname(user.getNickname())
                         .postId(post.getId())
+                        .depth(0)
                         .build();
-                mongoRepository.save(comment);
+                commentService.writeComment(user, commentDto);
+            }
+            Page<CommentDto> comments = commentService.findCommentByPostIdWithPage(1L, PageRequest.of(0, 1));
+
+            String parentId = comments.getContent().get(0).getId();
+            for (int i =0;i<5;i++){
+                CommentDto commentDto = CommentDto.builder()
+                        .content("대댓글!!!!!"+i)
+                        .writerId(user.getId())
+                        .writerEmail(user.getEmail())
+                        .writerNickname(user.getNickname())
+                        .parentId(parentId)
+                        .postId(post.getId())
+                        .depth(1)
+                        .build();
+                commentService.writeComment(user, commentDto);
             }
 
-            List<Comment> all = mongoRepository.findAll();
-            System.out.println(all);
         }
 
     }

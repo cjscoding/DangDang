@@ -99,7 +99,26 @@ public class CommentServiceImpl implements CommentService {
         Optional<Comment> comment = commentRepository.findCommentById(CommentId);
         if (!comment.isPresent()) return (ApiResult<String>) error("없는 댓글 입니다.", HttpStatus.NOT_FOUND);
         if(comment.get().getWriterId() != user.getId()) return (ApiResult<String>) error("작성자만 삭제할 수 있습니다.", HttpStatus.FORBIDDEN);
+        if(!comment.get().getChildren().isEmpty()){
+            for (Comment child:
+                 comment.get().getChildren()) {
+                this.deleteComment(child);
+            }
+        }
         commentRepository.delete(comment.get());
+        return success("댓글 삭제 성공!");
+    }
+
+    @Override
+    public ApiResult<String> deleteComment(Comment comment) {
+
+        if(!comment.getChildren().isEmpty()){
+            for (Comment child:
+                    comment.getChildren()) {
+                    this.deleteComment(child);
+            }
+        }
+        commentRepository.delete(comment);
         return success("댓글 삭제 성공!");
     }
 

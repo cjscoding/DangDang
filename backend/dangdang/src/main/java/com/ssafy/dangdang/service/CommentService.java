@@ -18,5 +18,7 @@ public interface CommentService {
 
     ApiUtils.ApiResult<String> deleteComment(User user, String CommentId);
 
+    ApiUtils.ApiResult<String> deleteComment(Comment comment);
+
     Optional<Comment> findById(String commentId);
 }

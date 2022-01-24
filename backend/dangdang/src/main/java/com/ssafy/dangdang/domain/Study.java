@@ -25,7 +25,7 @@ public class Study {
     private String name;
 
     @Lob //스터디 소개글
-    private String introduction;
+    private String description;
 
 
     private LocalDateTime createdAt;
@@ -52,7 +52,7 @@ public class Study {
                 .createdAt(LocalDateTime.now())
                 .number(studyDto.getNumber())
                 .target(studyDto.getTarget())
-                .introduction(studyDto.getIntroduction())
+                .description(studyDto.getIntroduction())
                 .host(user)
                 .totalTime(0)
                 .lastAccessTime(LocalDateTime.now())
@@ -67,7 +67,7 @@ public class Study {
         return "Study{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", introduction='" + introduction + '\'' +
+                ", introduction='" + description + '\'' +
                 ", createdAt=" + createdAt +
                 ", number=" + number +
                 //   ", host=" + host +
