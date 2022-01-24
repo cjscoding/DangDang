@@ -6,8 +6,9 @@ import Login from "./user/Login";
 import Signup from "./user/Signup";
 
 export default function NavBar() {
-  const [showLoginModal, setShowLoginModal] = useState(false);
-  const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+  const onClick = () => setIsLogin((curr) => !curr);
 
   return (
     <nav className={styles.navbar}>
@@ -40,31 +41,24 @@ export default function NavBar() {
         <li>
           <a
             onClick={() => {
-              setShowLoginModal(true);
+              setShowModal(true);
+              setIsLogin(true);
             }}
             tabIndex="0"
           >
             로그인
           </a>
-          <Modal show={showLoginModal} onClose={() => setShowLoginModal(false)}>
-            <Login></Login>
-          </Modal>
         </li>
         <li>
           <a
             onClick={() => {
-              setShowSignUpModal(true);
+              setShowModal(true);
+              setIsLogin(false);
             }}
             tabIndex="0"
           >
             회원가입
           </a>
-          <Modal
-            show={showSignUpModal}
-            onClose={() => setShowSignUpModal(false)}
-          >
-            <Signup></Signup>
-          </Modal>
         </li>
         <li>
           <a>마이페이지</a>
@@ -73,6 +67,14 @@ export default function NavBar() {
           <a tabIndex="0">로그아웃</a>
         </li>
       </ul>
+
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        {isLogin ? (
+          <Login onClick={onClick}></Login>
+        ) : (
+          <Signup onClick={onClick}></Signup>
+        )}
+      </Modal>
     </nav>
   );
 }

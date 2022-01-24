@@ -22,4 +22,8 @@ body {
 
 a {
   text-decoration: none;
+  cursor: pointer;
+  &:hover {
+    font-weight: bold;
+  }
 }
