@@ -2,17 +2,17 @@ import { HYDRATE } from "next-redux-wrapper";
 import { combineReducers } from "redux";
 import roomReducer from "./roomReducer";
 import videoReducer from "./videoReducer"
+import questionReducer from "./questionReducer";
 
 const combinedReducer = combineReducers({
   roomReducer,
   videoReducer,
+  questionReducer,
 });
 
-const reducer = (state = { tick: "init" }, action) => {
+const reducer = (state, action) => {
   if (action.type === HYDRATE) {
-    const nextState = { ...state, ...action.payload };
-    if (state.count) nextState.count = state.count;
-    return nextState;
+    return {...state, ...action.payload};
   } else {
     return combinedReducer(state, action);
   }
