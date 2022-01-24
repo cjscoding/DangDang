@@ -3,7 +3,6 @@ package com.ssafy.dangdang.domain.dto;
 import com.ssafy.dangdang.domain.Study;
 import lombok.*;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -66,7 +65,7 @@ public class StudyDto {
         return StudyDto.builder()
                 .id(study.getId())
                 .name(study.getName())
-                .introduction(study.getIntroduction())
+                .introduction(study.getDescription())
                 .target(study.getTarget())
                 .createdAt(study.getCreatedAt())
                 .number(study.getNumber())

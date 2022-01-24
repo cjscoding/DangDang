@@ -154,7 +154,6 @@ public class InitDb {
                         .depth(0)
                         .build();
                 commentService.writeComment(user, commentDto);
-                System.out.println(commentDto.toString());
             }
             Page<CommentDto> comments = commentService.findCommentByPostIdWithPage(1L, PageRequest.of(0, 1));
 
@@ -170,7 +169,6 @@ public class InitDb {
                         .depth(1)
                         .build();
                 commentService.writeComment(user, commentDto);
-                System.out.println(commentDto.toString());
             }
 
         }
