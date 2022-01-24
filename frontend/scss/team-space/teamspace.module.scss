@@ -1,8 +1,28 @@
-.container{
-    padding: 50px;
+.container {
+  padding: 50px;
 }
 
-.info{
-    display: grid;
-    grid-template-columns: 1fr 4fr;
+//index
+.info {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
 }
+
+// coverletter
+
+.coverletter {
+  padding: 50px;
+  display: flex;
+  font-size: 30px;
+  justify-content: space-around;
+
+  .member{
+      ul{
+          li{
+              list-style: none;
+          }
+      }
+  }
+}
+
+//board
