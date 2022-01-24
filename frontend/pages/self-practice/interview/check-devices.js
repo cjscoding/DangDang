@@ -3,25 +3,22 @@ import { useEffect, useRef } from "react"
 import { connect } from "react-redux";
 import styles from "../../../scss/self-practice/interview/check-devices.module.scss";
 
-// export async function getServerSideProps() {
-  //   const questions = [
-    //     "안녕하세요",
-    //     "점심 맛있게 드셨어요?",
-    //     "다음에 봬요!"
-    //   ]
-    //   return {props: {questions}};
-    // };
-    import {wrapper} from '../../../store';
-    export const getServerSideProps = wrapper.getServerSideProps(store => {
-      console.log(store.getState())
-    });
-    function mapStateToProps(state) {
-      return {
-        isQs: state.questionReducer.questions.length !== 0
-      };
-    }
-import { setQuestions } from "../../../store/actions/questionAction";
+export async function getServerSideProps() {
+  const preparedQuestions = [
+      "안녕하세요",
+      "점심 맛있게 드셨어요?",
+      "다음에 봬요!"
+  ] // api요청으로 교체될 파트
+  return {props: {preparedQuestions}};
+};
+
+function mapStateToProps(state) {
+  return {
+    isQs: state.questionReducer.questions.length !== 0
+  };
+}
 import { setVideo } from "../../../store/actions/videoAction";
+import { setQuestions } from "../../../store/actions/questionAction";
 function mapDispatchToProps(dispatch) {
   return {
     selectDevice: (devices) => dispatch(setVideo(devices)),
@@ -30,19 +27,16 @@ function mapDispatchToProps(dispatch) {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(CheckDevices);
 
-function CheckDevices({questions, isQs, selectDevice, setQuestions}) {
-  useEffect(() => {
-    if(!isQs) {
-      // setQuestions(questions);
-    }
-  }, [])
-
+function CheckDevices({preparedQuestions, isQs, selectDevice, setQuestions}) {
   const video = useRef(); // 화면 송출
   const cameraSelect = useRef();
   const micSelect = useRef();
   const speakerSelect = useRef();
   
   useEffect(() => {
+    if(!isQs) {
+      setQuestions(preparedQuestions);
+    }
     let stream;
     async function getDevices() {
       try {

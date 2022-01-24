@@ -10,11 +10,9 @@ const combinedReducer = combineReducers({
   questionReducer,
 });
 
-const reducer = (state = { tick: "init" }, action) => {
+const reducer = (state, action) => {
   if (action.type === HYDRATE) {
-    const nextState = { ...state, ...action.payload };
-    if (state.count) nextState.count = state.count;
-    return nextState;
+    return {...state, ...action.payload};
   } else {
     return combinedReducer(state, action);
   }
