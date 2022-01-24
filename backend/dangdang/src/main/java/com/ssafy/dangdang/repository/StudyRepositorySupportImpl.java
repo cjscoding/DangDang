@@ -1,10 +1,9 @@
 package com.ssafy.dangdang.repository;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.dangdang.domain.QUser;
-import com.ssafy.dangdang.domain.Study;
-import com.ssafy.dangdang.domain.User;
+import com.ssafy.dangdang.domain.*;
 import com.ssafy.dangdang.domain.dto.StudyDto;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.repository.support.Querydsl4RepositorySupport;
@@ -19,6 +18,7 @@ import static com.querydsl.jpa.JPAExpressions.select;
 
 import static com.ssafy.dangdang.domain.QJoins.joins;
 import static com.ssafy.dangdang.domain.QStudy.study;
+import static com.ssafy.dangdang.domain.QStudyHashTag.studyHashTag;
 import static com.ssafy.dangdang.domain.QUser.user;
 
 public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport implements StudyRepositorySupport  {
@@ -32,7 +32,7 @@ public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport imple
     @Override
     public List<StudyDto> getStudiesJoined(User user) {
         List<StudyDto> studies = select(Projections.constructor(StudyDto.class,
-                        study.id, study.name, study.number, study.introduction, study.createdAt, study.target,
+                        study.id, study.name, study.number, study.description, study.createdAt, study.goal,
                                 study.host.id, study.host.nickname, study.host.email))
                 .from(study)
                 .where(study.in(select(joins.study)
@@ -44,25 +44,21 @@ public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport imple
     @Override
     public Page<StudyDto> getStudiesJoinedWithPage(User registeredUser, Pageable pageable) {
 
-        Page<StudyDto> studyDtos = applyPagination(pageable, contentQuery -> contentQuery
-                        .select(Projections.constructor(StudyDto.class,
-                                study.id, study.name, study.number, study.introduction, study.createdAt, study.target
-                                , study.host.id, study.host.nickname, study.host.email))
+        Page<Study> studys = applyPagination(pageable, contentQuery -> contentQuery
+                        .selectDistinct(study)
                         .from(study)
-                        .join(study.host, user)
+                        .join(study.host, user).fetchJoin()
+                        .join(study.hashTags, studyHashTag).fetchJoin()
                         .where(study.in(select(joins.study)
                                 .from(joins)
                                 .where(joins.user.eq(registeredUser))))
                 , countQuery -> countQuery
-                        .select(Projections.constructor(StudyDto.class,
-                                study.id, study.name, study.number, study.introduction, study.createdAt, study.target
-                                , study.host.id, study.host.nickname, study.host.email))
+                        .select(study.id)
                         .from(study)
-                        .join(study.host, user)
                         .where(study.in(select(joins.study)
                                 .from(joins)
                                 .where(joins.user.eq(registeredUser)))));
-        return studyDtos;
+        return studys.map(StudyDto::of);
 
     }
 

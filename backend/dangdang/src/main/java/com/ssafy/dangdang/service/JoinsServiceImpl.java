@@ -27,7 +27,7 @@ public class JoinsServiceImpl implements JoinsService {
 
 
     @Override
-    public Long enterStudy(User user, Long studyId) {
+    public Long joinStudy(User user, Long studyId) {
 
         Study study = studyRepository.findById(studyId).get();
         Joins enter = Joins.builder()

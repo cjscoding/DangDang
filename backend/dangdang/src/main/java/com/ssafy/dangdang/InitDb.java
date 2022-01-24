@@ -1,23 +1,22 @@
 package com.ssafy.dangdang;
 
-import com.ssafy.dangdang.domain.Comment;
 import com.ssafy.dangdang.domain.Post;
 import com.ssafy.dangdang.domain.Study;
+import com.ssafy.dangdang.domain.StudyHashTag;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.*;
 import com.ssafy.dangdang.repository.CommentRepository;
+import com.ssafy.dangdang.repository.StudyHashTagRepository;
 import com.ssafy.dangdang.repository.StudyRepository;
 import com.ssafy.dangdang.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -30,7 +29,7 @@ public class InitDb {
     public void init(){
         initService.signUpUsers();
         initService.createStudy();
-        initService.enter();
+        initService.join();
         initService.writeResume();
         initService.writeInterviewQuestion();
         initService.writePost();
@@ -47,10 +46,12 @@ public class InitDb {
         private final UserService userService;
         private final StudyRepository studyRepository;
         private final StudyService studyService;
-        private final JoinsService enterService;
+        private final JoinsService joinsService;
         private final ResumeService resumeService;
         private final InterviewQuestionService interviewQuestionService;
         private final PostService postService;
+
+        private final StudyHashTagRepository hashTagRepository;
 
         private final CommentService commentService;
         private final CommentRepository commentRepository;
@@ -75,12 +76,12 @@ public class InitDb {
         public void createStudy(){
             User user = userService.findByEmail("test@ssafy.com").get();
 
-            for (int i=0; i<12;i++){
+            for (int i=1; i<12;i++){
 
                 Study study = Study.builder()
                         .name("testStudy"+i)
-                        .introduction("안녕하세요!! 네이버 목표 스터디입니다.")
-                        .target("네이버")
+                        .description("안녕하세요!! 네이버 목표 스터디입니다.")
+                        .goal("네이버")
                         .createdAt(LocalDateTime.now())
                         .number(3)
                         .host(user)
@@ -88,15 +89,32 @@ public class InitDb {
                 System.out.println(user.toString());
 //                entityManager.persist(Study.of(user, studyDto));
                 studyService.createStudy(study);
+
+                Study createdStudy = studyService.getStudy(Long.valueOf(i));
+                System.out.println(createdStudy.toString());
+                StudyHashTag hashTag1 = StudyHashTag.builder().hashTag("naver").study(createdStudy).build();
+                StudyHashTag hashTag2 = StudyHashTag.builder().hashTag("네이버").study(createdStudy).build();
+                StudyHashTag hashTag3 = StudyHashTag.builder().hashTag("kakao").study(createdStudy).build();
+                StudyHashTag hashTag4 = StudyHashTag.builder().hashTag("카카오").study(createdStudy).build();
+                hashTagRepository.save(hashTag1);
+                hashTagRepository.save(hashTag2);
+                hashTagRepository.save(hashTag3);
+                hashTagRepository.save(hashTag4);
+
             }
         }
 
 
-        public void enter(){
+        public void join(){
             User user = userService.findByEmail("test@ssafy.com").get();
             for (long i=1;i<12;i++){
                 Study study = studyRepository.findById(i).get();
-                enterService.enterStudy(user, i);
+                joinsService.joinStudy(user, i);
+            }
+
+            for (long i=0;i<5;i++){
+                User joinUser = userService.findByEmail("test"+i+"@ssafy.com").get();
+                joinsService.joinStudy(joinUser, 1L);
             }
         }
 

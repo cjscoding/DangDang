@@ -11,7 +11,7 @@ public interface JoinsService {
 
 
 
-    public Long enterStudy(User user, Long studyId);
+    public Long joinStudy(User user, Long studyId);
 
     public void outStudy(User user, Long studyId);
 

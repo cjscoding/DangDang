@@ -27,8 +27,12 @@ public class Study {
     @Lob //스터디 소개글
     private String description;
 
+    //오픈카톡방 주소
+    private String openKakao;
 
-    private LocalDateTime createdAt;
+
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     private Integer number;
 
@@ -41,18 +45,26 @@ public class Study {
     private List<Joins> enters = new ArrayList<>();
 
     @Column(length = 30) //목표하는 기업
-    private String target;
+    private String goal;
+
+    @OneToMany(mappedBy = "study",fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<StudyHashTag> hashTags = new ArrayList<>();
 
     private Integer totalTime;
-    private LocalDateTime lastAccessTime;
+
+    @Builder.Default
+    private LocalDateTime lastAccessTime = LocalDateTime.now();
 
     public static Study of(User user, StudyDto studyDto) {
         return Study.builder()
                 .name(studyDto.getName())
                 .createdAt(LocalDateTime.now())
                 .number(studyDto.getNumber())
-                .target(studyDto.getTarget())
-                .description(studyDto.getIntroduction())
+                .goal(studyDto.getGoal())
+                .openKakao(studyDto.getOpenKakao())
+                .hashTags(studyDto.getHashTags())
+                .description(studyDto.getDescription())
                 .host(user)
                 .totalTime(0)
                 .lastAccessTime(LocalDateTime.now())
@@ -61,18 +73,17 @@ public class Study {
     }
 
 
-
     @Override
     public String toString() {
         return "Study{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", introduction='" + description + '\'' +
+                ", description='" + description + '\'' +
+                ", openKakao='" + openKakao + '\'' +
                 ", createdAt=" + createdAt +
                 ", number=" + number +
-                //   ", host=" + host +
-                //   ", enters=" + enters +
-                ", target='" + target + '\'' +
+                ", goal='" + goal + '\'' +
+                ", hashTags=" + hashTags +
                 ", totalTime=" + totalTime +
                 ", lastAccessTime=" + lastAccessTime +
                 '}';

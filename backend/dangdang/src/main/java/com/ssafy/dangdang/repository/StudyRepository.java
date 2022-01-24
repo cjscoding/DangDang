@@ -9,11 +9,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.core.parameters.P;
 
+import java.util.List;
+
 @EnableJpaRepositories
 public interface StudyRepository extends JpaRepository<Study, Long>, StudyRepositorySupport {
 
 
-    @Query(value = "select s from  Study s left join fetch s.host",
+    @Query(value = "select s from  Study s " +
+            "left join fetch s.host " +
+            "left join fetch s.hashTags",
     countQuery = "select count(s.id) from Study  s")
     public Page<Study> findAllWithUser(Pageable pageable);
+
+
 }

@@ -38,7 +38,7 @@ public class JoinsController {
 
     @PostMapping()
     public ApiResult<Long> enterStudy(@CurrentUser PrincipalDetails userPrincipal, @RequestBody ManageStudy manageStudy){
-        Long enterId = joinsService.enterStudy(userPrincipal.getUser(), manageStudy.getId());
+        Long enterId = joinsService.joinStudy(userPrincipal.getUser(), manageStudy.getId());
         if(enterId != -1) error("정확한 값을 입력해 주세요", HttpStatus.BAD_REQUEST);
         return success(enterId);
 

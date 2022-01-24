@@ -1,5 +1,6 @@
 package com.ssafy.dangdang.study;
 
+import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.StudyDto;
 import com.ssafy.dangdang.repository.StudyRepository;
@@ -39,4 +40,9 @@ public class StudyServiceTest {
         System.out.println(allWithUser.getContent());
     }
 
+    @Test
+    public void joinTest(){
+        List<Study> studies = studyRepository.testJoin();
+        System.out.println(studies);
+    }
 }
