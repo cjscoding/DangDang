@@ -40,9 +40,5 @@ public class StudyServiceTest {
         System.out.println(allWithUser.getContent());
     }
 
-    @Test
-    public void joinTest(){
-        List<Study> studies = studyRepository.testJoin();
-        System.out.println(studies);
-    }
+
 }

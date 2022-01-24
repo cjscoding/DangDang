@@ -13,9 +13,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.querydsl.jpa.JPAExpressions.select;
 
+import static com.querydsl.jpa.JPAExpressions.selectDistinct;
 import static com.ssafy.dangdang.domain.QJoins.joins;
 import static com.ssafy.dangdang.domain.QStudy.study;
 import static com.ssafy.dangdang.domain.QStudyHashTag.studyHashTag;
@@ -30,15 +32,16 @@ public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport imple
 
 
     @Override
-    public List<StudyDto> getStudiesJoined(User user) {
-        List<StudyDto> studies = select(Projections.constructor(StudyDto.class,
-                        study.id, study.name, study.number, study.description, study.createdAt, study.goal,
-                                study.host.id, study.host.nickname, study.host.email))
+    public List<StudyDto> getStudiesJoined(User registeredUser) {
+        List<Study> studies = select(study)
                 .from(study)
+                .join(study.host, user).fetchJoin()
+                .join(study.hashTags, studyHashTag).fetchJoin()
                 .where(study.in(select(joins.study)
                         .from(joins)
-                        .where(joins.user.eq(user)))).fetch();
-        return studies;
+                        .where(joins.user.eq(registeredUser)))).fetch();
+
+        return studies.stream().map(StudyDto::of).collect(Collectors.toList());
     }
 
     @Override

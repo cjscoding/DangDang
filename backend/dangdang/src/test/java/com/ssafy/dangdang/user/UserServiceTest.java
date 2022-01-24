@@ -19,7 +19,7 @@ public class UserServiceTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
+   // @Test
     public void signUp(){
         UserDto userDto = new UserDto();
 
@@ -36,7 +36,5 @@ public class UserServiceTest {
 
         Assertions.assertEquals(userDto.getNickName(), user.getNickname());
         Assertions.assertEquals(userDto.getEmail().toString(), user.getEmail().toString());
-
-
     }
 }
