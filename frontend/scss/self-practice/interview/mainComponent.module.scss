@@ -18,8 +18,19 @@
     display: flex;
     flex-direction: column;
     align-items:flex-start;
-    video {
+    .video1 {
       position: relative;
+      height: 33.75vw;
+      width: 60vw;
+    }
+    .video2 {
+      position: relative;
+      height: 33.75vw;
+      width: 60vw;
+    }
+    .video3 {
+      position: relative;
+      height: 33.75vw;
       width: 60vw;
     }
     .changeBtn {
