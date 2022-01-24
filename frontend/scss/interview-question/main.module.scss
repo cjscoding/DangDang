@@ -1,0 +1,12 @@
+@import "../common/mixins.scss";
+
+.container {
+  @include flex-center();
+  flex-direction: column;
+}
+
+.table {
+  td {
+    padding-right: 1rem;
+  }
+}
