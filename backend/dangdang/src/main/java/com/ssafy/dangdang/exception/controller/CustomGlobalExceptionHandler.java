@@ -38,14 +38,17 @@ public class CustomGlobalExceptionHandler  {
     public ApiResult<?> BadRequestHandle(ExtantUserException e, HttpServletRequest req){
         log.error("ExtantUserException 발생");
         e.printStackTrace();
+        notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
         return error(e, HttpStatus.BAD_REQUEST);
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+
     @ExceptionHandler(NullPointerException.class)
     public ApiResult<?> NullPointerHandle(NullPointerException e, HttpServletRequest req){
+
         log.error("NullPointerException 발생");
         e.printStackTrace();
+        notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
         return error(e, HttpStatus.NOT_FOUND);
     }
 
