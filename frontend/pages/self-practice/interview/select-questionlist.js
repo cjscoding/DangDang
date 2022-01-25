@@ -1,7 +1,15 @@
 import Link from "next/link";
+import { connect } from "react-redux";
 import styles from "../../../scss/self-practice/interview/select-questionlist.module.scss";
 
-export default function SelectQuestions() {
+import { setQuestions } from "../../../store/actions/questionAction";
+function mapDispatchToProps(dispatch) {
+  dispatch(setQuestions([]));
+  return {};
+}
+export default connect(null, mapDispatchToProps)(SelectQuestions);
+
+function SelectQuestions() {
   return <div className={styles.selectBox}>
     <Link href="/self-practice/interview/check-devices">
       <a>

@@ -1,0 +1,12 @@
+@import "../common/mixins.scss";
+
+.body {
+  @include flex-center;
+  flex-direction: column;
+}
+
+.form {
+  @include flex-center;
+  flex-direction: column;
+  width: 100%;
+}
