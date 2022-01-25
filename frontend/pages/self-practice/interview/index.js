@@ -47,7 +47,7 @@ function Interview({questions}) {
     <div className={styles.videoContainer}>
       <div style={screenNum!==1?{display: "none"}:{}} className={styles.video1}>{questions[questionNum]}</div>
       <div style={screenNum!==2?{display: "none"}:{}} className={styles.video2}><MyFace /></div>
-      <div  style={screenNum!==3?{display: "none"}:{}} className={styles.video3}>면접관 얼굴 나올 예정(아래 버튼으로 화면 바꾸셈)</div>
+      <div style={screenNum!==3?{display: "none"}:{}} className={styles.video3}>면접관 얼굴 나올 예정(아래 버튼으로 화면 바꾸셈)</div>
       <div className={styles.changeBtn}>
         <span onClick={() => setScreenNum(1)}>●</span>
         <span onClick={() => setScreenNum(2)}>●</span>
