@@ -7,14 +7,12 @@ import com.ssafy.dangdang.util.ApiUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface StudyService {
 
 
     public StudyDto createStudy(User user, StudyDto studyDto);
 
-    public ApiUtils.ApiResult<StudyDto> updateStudy(User user, StudyDto studyDto);
+    public StudyDto updateStudy(User user, StudyDto studyDto);
 
     public ApiUtils.ApiResult<String> deleteStudy(User user, Long studyId);
 

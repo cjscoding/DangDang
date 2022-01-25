@@ -23,7 +23,7 @@ public class JoinsServiceImpl implements JoinsService {
     private final UserRepository userRepository;
     private final StudyRepository studyRepository;
 
-    private final JoinsRepository enterRepository;
+    private final JoinsRepository joinsRepository;
 
 
     @Override
@@ -35,7 +35,7 @@ public class JoinsServiceImpl implements JoinsService {
                 .study(study)
                 .build();
 
-        enterRepository.save(enter);
+        joinsRepository.save(enter);
 
         return enter.getId();
     }
@@ -47,7 +47,7 @@ public class JoinsServiceImpl implements JoinsService {
                 .user(user)
                 .study(study)
                 .build();
-        enterRepository.delete(enter);
+        joinsRepository.delete(enter);
     }
 
     @Override

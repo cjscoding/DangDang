@@ -65,7 +65,7 @@ public class StudyController {
 
         User user = userPrincipal.getUser();
         log.info(user.toString());
-        StudyDto study = studyService.createStudy(user, studyDto);
+        StudyDto study = studyService.updateStudy(user, studyDto);
         return success(study);
 
     }
