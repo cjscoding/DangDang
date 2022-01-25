@@ -1,5 +1,6 @@
 package com.ssafy.dangdang.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.domain.types.UserRoleType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -49,10 +50,12 @@ public class User{
     private String providerId;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     @Builder.Default
-    private List<Joins> enters = new ArrayList<>();
+    private List<Joins> joins = new ArrayList<>();
 
     @Builder.Default
+    @JsonIgnore
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 

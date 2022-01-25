@@ -15,11 +15,15 @@ import java.util.List;
 public interface StudyRepository extends JpaRepository<Study, Long>, StudyRepositorySupport {
 
 
-    @Query(value = "select s from  Study s " +
-            "left join fetch s.host " +
-            "left join fetch s.hashTags",
+    @Query(value = "select s from  Study s "+
+            "left join fetch s.host ",
     countQuery = "select count(s.id) from Study  s")
     public Page<Study> findAllWithUser(Pageable pageable);
 
+    @Query("select s " +
+            "from Study s " +
+            "left join fetch s.host " +
+            "where s.id = :studyId ")
+    public Study findStudyById(Long studyId);
 
 }

@@ -21,7 +21,6 @@ import java.util.Optional;
 
 import static com.ssafy.dangdang.util.ApiUtils.*;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -96,7 +95,14 @@ public class StudyServiceImpl implements StudyService{
     }
 
     @Override
-    public Study getStudy(Long studyId) {
-        return studyRepository.getById(studyId);
+    public Study findStudyById(Long studyId) {
+        return studyRepository.findStudyById(studyId);
+    }
+
+    @Override
+    public StudyDto findStudyWithUsers(Long studyId){
+        Study study = studyRepository.findStudyById(studyId);
+        StudyDto studyDto = StudyDto.of(study);
+        return studyDto;
     }
 }

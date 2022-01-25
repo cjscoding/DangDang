@@ -1,5 +1,6 @@
 package com.ssafy.dangdang.domain.dto;
 
+import com.ssafy.dangdang.domain.Joins;
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.StudyHashTag;
 import lombok.*;
@@ -36,7 +37,10 @@ public class StudyDto {
 
     private UserDto userDto;
 
+    @Builder.Default
     private List<StudyHashTagDto> hashTags = new ArrayList<>();
+    @Builder.Default
+    private List<UserDto> userDtos = new ArrayList<>();
 
     //User Fetch Join용
     private Long hostId;
@@ -72,6 +76,10 @@ public class StudyDto {
 
     public static StudyDto of(Study study) {
 
+        List<Joins> joins = study.getJoins();
+        List<UserDto> userDtoLIst = joins.stream().map(join -> UserDto.of(join.getUser())).collect(Collectors.toList());
+
+
         UserDto userDto = UserDto.of(study.getHost());
         List<StudyHashTagDto> hashTags = study.getHashTags()
                 .stream().map(StudyHashTagDto::of)
@@ -85,8 +93,38 @@ public class StudyDto {
                 .openKakao(study.getOpenKakao())
                 .hashTags(hashTags)
                 .number(study.getNumber())
+                .userDtos(userDtoLIst)
                 .userDto(userDto)
                 .build();
+
+    }
+
+    public StudyDto(Study study) {
+
+        UserDto userDto = UserDto.of(study.getHost());
+        List<StudyHashTagDto> hashTags = study.getHashTags()
+                .stream().map(StudyHashTagDto::of)
+                .collect(Collectors.toList());
+        id = study.getId();
+        name = study.getName();
+        description = study.getDescription();
+        goal = study.getGoal();
+        createdAt = study.getCreatedAt();
+        openKakao = study.getOpenKakao();
+        hashTags = hashTags;
+        number =study.getNumber();
+        userDto = userDto;
+//        return StudyDto.builder()
+//                .id(study.getId())
+//                .name(study.getName())
+//                .description(study.getDescription())
+//                .goal(study.getGoal())
+//                .createdAt(study.getCreatedAt())
+//                .openKakao(study.getOpenKakao())
+//                .hashTags(hashTags)
+//                .number(study.getNumber())
+//                .userDto(userDto)
+//                .build();
 
     }
 

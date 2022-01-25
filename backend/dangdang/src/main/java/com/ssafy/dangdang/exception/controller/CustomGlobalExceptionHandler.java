@@ -49,7 +49,7 @@ public class CustomGlobalExceptionHandler  {
         log.error("NullPointerException 발생");
         e.printStackTrace();
         notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
-        return error(e, HttpStatus.NOT_FOUND);
+        return error("NullPointer 참조", HttpStatus.NOT_FOUND);
     }
 
     private String getParams(HttpServletRequest req) {

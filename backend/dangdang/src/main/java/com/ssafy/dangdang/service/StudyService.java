@@ -20,5 +20,8 @@ public interface StudyService {
 
     public Page<StudyDto> getAllStudies(Pageable pageable);
 
-    public Study getStudy(Long studyId);
+
+    Study findStudyById(Long studyId);
+
+    StudyDto findStudyWithUsers(Long studyId);
 }

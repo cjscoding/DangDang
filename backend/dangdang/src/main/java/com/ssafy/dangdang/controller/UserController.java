@@ -4,6 +4,7 @@ import com.ssafy.dangdang.config.security.CurrentUser;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetailsService;
 import com.ssafy.dangdang.domain.User;
+import com.ssafy.dangdang.domain.dto.LoginRequest;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.exception.ExtantUserException;
 import com.ssafy.dangdang.service.UserService;
@@ -114,6 +115,12 @@ public class UserController {
         }
 
         return (ApiResult<String>) error("올바른 유저 정보를 입력해주세요", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/login")
+    public ApiResult<String> login(@RequestBody LoginRequest loginRequest) {
+        log.info("Login 요청");
+        return success("로그인 성공");
     }
 
     @GetMapping("/test")

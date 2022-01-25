@@ -65,5 +65,23 @@ public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport imple
 
     }
 
+//    @Override
+//    public List<Study> findFetchJoinStudyById(Long studyId) {
+//
+////    @Query("select s " +
+////            "from Study s " +
+////            "left join s.hashTags " +
+////            "left join fetch s.joins " +
+////            "where s.id = :studyId ")
+//        List<Study> fetch = select(study)
+//                .from(study)
+//                .leftJoin(study.hashTags).fetchJoin()
+//                .leftJoin(study.joins).fetchJoin()
+//                .where(study.id.eq(studyId))
+//                .fetch();
+//        return fetch;
+//
+//    }
+
 
 }
