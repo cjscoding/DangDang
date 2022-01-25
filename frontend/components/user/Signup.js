@@ -1,17 +1,47 @@
 import Button from "./Button";
+import { useState } from "react";
 import styles from "../../scss/user/login-signup.module.scss";
+import { signUpRequest } from "../../api/user";
 
 export default function Signup({ onClick }) {
+  const [values, setValues] = useState({
+    email: "",
+    password: "",
+    nickName: "",
+  });
+
+  const handleChange = ({ target: { id, value } }) => {
+    const nextValues = {
+      ...values,
+      [id]: value,
+    };
+    setValues(nextValues);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    signUpRequest(
+      values,
+      () => {
+        alert("회원가입 완료!");
+        onClick();
+      },
+      (error) => console.log(error)
+    );
+  };
+
   return (
     <div className={styles.body}>
       <h1>회원가입</h1>
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email">
             이메일
             <input
               id="email"
               type="email"
+              value={values.email}
+              onChange={handleChange}
               placeholder="이메일을 입력하세요"
               required
             />
@@ -23,23 +53,26 @@ export default function Signup({ onClick }) {
             <input
               id="password"
               type="password"
+              value={values.password}
+              onChange={handleChange}
               placeholder="비밀번호를 입력하세요"
               required
             />
           </label>
         </div>
         <div>
-          <label htmlFor="nickname">
+          <label htmlFor="nickName">
             이름
             <input
-              id="nickname"
+              id="nickName"
               type="text"
+              value={values.nickName}
+              onChange={handleChange}
               placeholder="이름을 입력하세요"
               required
             />
           </label>
         </div>
-
         <button type="submit">회원가입</button>
       </form>
       <p>
