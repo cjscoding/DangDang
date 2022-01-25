@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { connect } from "react-redux";
 import styles from "../../../scss/self-practice/interview/add-questions.module.scss";
 
@@ -30,7 +30,7 @@ function AddQuestions({questions, addQuestion}) {
   function alertBlank(event) {
     if(questions.length === 0) {
       event.preventDefault();
-      alert("질문을 추가해주세요!")
+      alert("질문을 추가해주세요!");
     }
   }
   return <div>

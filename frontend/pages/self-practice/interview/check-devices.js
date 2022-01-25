@@ -1,6 +1,10 @@
 import Link from "next/link";
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { connect } from "react-redux";
+import CameraSelect from "../../../components/webRTC/devices/CameraSelect";
+import MicSelect from "../../../components/webRTC/devices/MicSelect";
+import SpeakerSelect from "../../../components/webRTC/devices/SpeakerSelect";
+import MyFace from "../../../components/webRTC/MyFace";
 import styles from "../../../scss/self-practice/interview/check-devices.module.scss";
 
 export async function getServerSideProps() {
@@ -11,114 +15,39 @@ export async function getServerSideProps() {
   ] // api요청으로 교체될 파트
   return {props: {preparedQuestions}};
 };
-
 function mapStateToProps(state) {
   return {
     isQs: state.questionReducer.questions.length !== 0
   };
 }
-import { setVideo } from "../../../store/actions/videoAction";
 import { setQuestions } from "../../../store/actions/questionAction";
 function mapDispatchToProps(dispatch) {
   return {
-    selectDevice: (devices) => dispatch(setVideo(devices)),
     setQuestions: (questions) => dispatch(setQuestions(questions))
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(CheckDevices);
 
-function CheckDevices({preparedQuestions, isQs, selectDevice, setQuestions}) {
-  const video = useRef(); // 화면 송출
-  const cameraSelect = useRef();
-  const micSelect = useRef();
-  const speakerSelect = useRef();
-  
+function CheckDevices({preparedQuestions, isQs, setQuestions}) {
   useEffect(() => {
     if(!isQs) {
       setQuestions(preparedQuestions);
     }
-    let stream;
-    async function getDevices() {
-      try {
-        const devices = await navigator.mediaDevices.enumerateDevices();        
-        const currentCamera = stream.getVideoTracks()[0];
-        const currentMic = stream.getAudioTracks()[0];
-        let currentSpeaker;
-        devices.forEach(device => {
-          const option = document.createElement("option");
-          option.value = device.deviceId;
-          option.innerText = device.label;
-          switch (device.kind) {
-            case "videoinput":
-              if (currentCamera.label === device.label) option.selected = true;
-              cameraSelect.current.appendChild(option);
-              break;
-            case "audioinput":
-              if (currentMic.label === device.label) option.selected = true;
-              micSelect.current.appendChild(option);
-              break;
-            case "audiooutput":
-              if(!currentSpeaker) {
-                currentSpeaker = device;
-                option.selected = true;
-              }
-              speakerSelect.current.appendChild(option);
-              break;
-            default:
-              break;
-          }
-        });
-      }catch(err) {
-        console.log(err);
-      }
-    }
-
-    async function getMedia(cameraId, micId) {
-      const initialConstraints = { width: 1280, height: 720, facingMode: "user" };
-      const cameraConstraints = {video: {...initialConstraints, deviceId: {exact: cameraSelect.current.value}}};
-      const micConstraints = {audio: {deviceId: {exact: micSelect.current.value}}};
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          ...micId?micConstraints:{},
-          video: initialConstraints,
-          ...cameraId?cameraConstraints:{},
-        });
-        video.current.srcObject = stream;
-        if(!cameraId && !micId) await getDevices();
-      }catch(err) {
-        console.log(err);
-      }
-    }
-    
-    cameraSelect.current.addEventListener("input", () => getMedia(cameraSelect.current.value, micSelect.current.value));
-    micSelect.current.addEventListener("input", () => getMedia(cameraSelect.current.value, micSelect.current.value));
-    speakerSelect.current.addEventListener("input", () => video.current.setSinkId(speakerSelect.current.value));
-    getMedia();
   }, [])
-  
-  const setDevices = () => {
-    const devices = {
-      camera: cameraSelect.current.value,
-      mic: micSelect.current.value,
-      speaker: speakerSelect.current.value,
-    };
-    selectDevice(devices);
-  }
+
   return <div className={styles.container}>
     <div className={styles.videoContainer}>
-      <video ref={video} autoPlay playsInline />
+      <div><MyFace /></div>
       <div className={styles.selectContainer}>
         <label htmlFor="camera-select">카메라</label><br/>
-        <select ref={cameraSelect} id="camera-select" /><br/>
+        <CameraSelect id="camera-select" /><br/>
         <label htmlFor="mic-select">마이크</label><br/>
-        <select ref={micSelect} id="mic-select" /><br/>
+        <MicSelect id="mic-select" /><br/>
         <label htmlFor="speaker-select">스피커</label><br/>
-        <select ref={speakerSelect} id="speaker-select" /><br/>
+        <SpeakerSelect id="speaker-select" /><br/>
       </div>
       <Link href="/self-practice/interview">
         <a className={styles.nextBtn}
-          onClick={setDevices}
         >
           <button><h1>NEXT</h1></button>
         </a>

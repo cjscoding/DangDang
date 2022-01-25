@@ -5,6 +5,9 @@ const teamBoard = {
 
 const videoTypes = {
   SET_VIDEO: "SET_VIDEO",
+  SET_CAMERA: "SET_CAMERA",
+  SET_MIC: "SET_MIC",
+  SET_SPEAKER: "SET_SPEAKER",
 }
 
 const questionTypes = {
