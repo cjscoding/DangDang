@@ -126,6 +126,19 @@ notification:
     author-icon: # author-icon 왼쪽에 나올 아이콘의 url링크
     footer: # attachment에 하단에 나올 부분. default=현재 시간
 
+logging:
+  level:
+    root: info
+    com.ssafy.dangdang: debug
+    com:
+      andy: trace
+    #     #HTTP 요청 확인 옵션, 개발할 때만 활성화 할것
+    org:
+      springframework:
+        security: debug
+      apache:
+        coyote:
+          http11: debug
 
 #  security:
 #    oauth2:

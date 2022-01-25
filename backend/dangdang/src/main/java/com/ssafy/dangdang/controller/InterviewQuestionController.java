@@ -17,7 +17,6 @@ import static com.ssafy.dangdang.util.ApiUtils.*;
 
 @RestController
 @RequestMapping("/interview")
-@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class InterviewQuestionController {
