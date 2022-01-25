@@ -1,6 +1,7 @@
 package com.ssafy.dangdang.domain;
 
 import com.ssafy.dangdang.domain.dto.StudyDto;
+import com.ssafy.dangdang.domain.dto.StudyHashTagDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Builder
@@ -57,18 +59,34 @@ public class Study {
     private LocalDateTime lastAccessTime = LocalDateTime.now();
 
     public static Study of(User user, StudyDto studyDto) {
+        if(studyDto.getHashTags()!= null && studyDto.getHashTags().isEmpty()){
+            List<StudyHashTag> hashTags = studyDto.getHashTags().stream().map(StudyHashTag::of).collect(Collectors.toList());
+            return Study.builder()
+                    .name(studyDto.getName())
+                    .createdAt(LocalDateTime.now())
+                    .number(studyDto.getNumber())
+                    .goal(studyDto.getGoal())
+                    .openKakao(studyDto.getOpenKakao())
+                    .hashTags(hashTags)
+                    .description(studyDto.getDescription())
+                    .host(user)
+                    .totalTime(0)
+                    .lastAccessTime(LocalDateTime.now())
+                    .build();
+        }
+
         return Study.builder()
                 .name(studyDto.getName())
                 .createdAt(LocalDateTime.now())
                 .number(studyDto.getNumber())
                 .goal(studyDto.getGoal())
                 .openKakao(studyDto.getOpenKakao())
-                .hashTags(studyDto.getHashTags())
                 .description(studyDto.getDescription())
                 .host(user)
                 .totalTime(0)
                 .lastAccessTime(LocalDateTime.now())
                 .build();
+
 
     }
 

@@ -11,6 +11,7 @@ import java.util.List;
 @EnableJpaRepositories
 public interface JoinsRepository extends JpaRepository<Joins, Long> {
 
-
     List<Joins> findJoinsByUser(User user);
+
+
 }

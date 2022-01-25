@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -35,7 +36,7 @@ public class StudyDto {
 
     private UserDto userDto;
 
-    private List<StudyHashTag> hashTags = new ArrayList<>();
+    private List<StudyHashTagDto> hashTags = new ArrayList<>();
 
     //User Fetch Join용
     private Long hostId;
@@ -43,7 +44,7 @@ public class StudyDto {
     private String hostEmail;
 
     public StudyDto(Long id, String name, Integer number, String description,
-                    LocalDateTime createdAt, String goal, Long hostId, String hostNickname, String hostEmail, List<StudyHashTag> hashTags) {
+                    LocalDateTime createdAt, String goal, Long hostId, String hostNickname, String hostEmail, List<StudyHashTagDto> hashTags) {
         this.id = id;
         this.name = name;
         this.number = number;
@@ -59,7 +60,7 @@ public class StudyDto {
     }
 
     public StudyDto(Long id, String name, Integer number, String description,
-                    LocalDateTime createdAt, String goal,List<StudyHashTag> hashTags) {
+                    LocalDateTime createdAt, String goal,List<StudyHashTagDto> hashTags) {
         this.id = id;
         this.name = name;
         this.number = number;
@@ -72,7 +73,9 @@ public class StudyDto {
     public static StudyDto of(Study study) {
 
         UserDto userDto = UserDto.of(study.getHost());
-
+        List<StudyHashTagDto> hashTags = study.getHashTags()
+                .stream().map(StudyHashTagDto::of)
+                .collect(Collectors.toList());
         return StudyDto.builder()
                 .id(study.getId())
                 .name(study.getName())
@@ -80,7 +83,7 @@ public class StudyDto {
                 .goal(study.getGoal())
                 .createdAt(study.getCreatedAt())
                 .openKakao(study.getOpenKakao())
-                .hashTags(study.getHashTags())
+                .hashTags(hashTags)
                 .number(study.getNumber())
                 .userDto(userDto)
                 .build();

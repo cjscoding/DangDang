@@ -116,6 +116,11 @@ public class UserController {
         return (ApiResult<String>) error("올바른 유저 정보를 입력해주세요", HttpStatus.BAD_REQUEST);
     }
 
+    @GetMapping("/test")
+    public void test(){
+        throw new NullPointerException();
+
+    }
 
 
 }
