@@ -29,6 +29,12 @@ public class Joins {
     @JoinColumn(name = "study_id")
     private Study study;
 
+    private Boolean waiting;
+
+    public void acceptUser(){
+        waiting = false;
+    }
+
     @Override
     public String toString() {
         return "Joins{" +

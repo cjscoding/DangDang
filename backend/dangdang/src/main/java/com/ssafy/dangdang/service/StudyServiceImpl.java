@@ -53,6 +53,7 @@ public class StudyServiceImpl implements StudyService{
         Joins enter = Joins.builder()
                 .user(user)
                 .study(study)
+                .waiting(false)
                 .build();
         joinsRepository.save(enter);
 
@@ -90,11 +91,8 @@ public class StudyServiceImpl implements StudyService{
             study.addHashTags(hashTags);
         }
 
-
         StudyDto updatedStudy = StudyDto.of(study);
         return updatedStudy;
-
-
     }
 
     @Override

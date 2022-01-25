@@ -39,7 +39,7 @@ public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport imple
                 .join(study.hashTags, studyHashTag).fetchJoin()
                 .where(study.in(select(joins.study)
                         .from(joins)
-                        .where(joins.user.eq(registeredUser)))).fetch();
+                        .where(joins.user.eq(registeredUser).and(joins.waiting.eq(false))))).fetch();
 
         return studies.stream().map(StudyDto::of).collect(Collectors.toList());
     }
@@ -54,13 +54,13 @@ public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport imple
                         .join(study.hashTags, studyHashTag).fetchJoin()
                         .where(study.in(select(joins.study)
                                 .from(joins)
-                                .where(joins.user.eq(registeredUser))))
+                                .where(joins.user.eq(registeredUser).and(joins.waiting.eq(false)))))
                 , countQuery -> countQuery
                         .select(study.id)
                         .from(study)
                         .where(study.in(select(joins.study)
                                 .from(joins)
-                                .where(joins.user.eq(registeredUser)))));
+                                .where(joins.user.eq(registeredUser).and(joins.waiting.eq(false))))));
         return studys.map(StudyDto::of);
 
     }

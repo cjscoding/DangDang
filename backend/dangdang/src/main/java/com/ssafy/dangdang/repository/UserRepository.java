@@ -17,11 +17,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     long countUserByEmail(String email);
 
+    @Query("select u from User u " +
+            "where u.id in " +
+            "(select j.id from Joins j where j.study.id = :studyId and j.waiting = true )")
+    List<User> findWaitingUesrs(Long studyId);
 
     @Query("select count(u.id) from User u " +
             "where u.id = :userId and u.id in " +
             "(select j.user.id from Joins j " +
-            "where j.study.id = :studyId)")
+            "where j.study.id = :studyId and j.waiting = false )")
     Integer countUserByStudyId(Long userId, Long studyId);
 
 }
