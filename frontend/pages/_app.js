@@ -3,11 +3,13 @@ import Layout from "../components/Layout";
 import NavBar from "../components/Navbar";
 import { useRouter } from "next/router";
 import "../scss/main.scss";
+import Script from "next/script";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
   return (
     <Layout>
+      <Script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></Script>
       {router.pathname === "/" ? null : <NavBar />}
       <Component {...pageProps} />
     </Layout>
