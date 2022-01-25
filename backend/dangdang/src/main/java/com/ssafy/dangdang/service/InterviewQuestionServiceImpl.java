@@ -3,6 +3,7 @@ package com.ssafy.dangdang.service;
 import com.ssafy.dangdang.domain.InterviewQuestion;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
+import com.ssafy.dangdang.exception.UnauthorizedAccessException;
 import com.ssafy.dangdang.repository.InterviewQuestionRepository;
 import com.ssafy.dangdang.util.ApiUtils;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +37,8 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService{
     public ApiResult<String> deleteQuestion(User user, Long interviewQuestionId) {
         Optional<InterviewQuestion> question = interviewQuestionRepository.findById(interviewQuestionId);
 
-        if (!question.isPresent()) return (ApiUtils.ApiResult<String>) error("없는 질문입니다.", HttpStatus.NOT_FOUND);
-        if (question.get().getWriter().getId() == user.getId()) return (ApiResult<String>) error("작성자만 삭제할 수 있습니다.", HttpStatus.FORBIDDEN);
+        if (!question.isPresent()) throw new NullPointerException("존재하지 않는 질문 입니다.");
+        if (question.get().getWriter().getId() == user.getId()) new UnauthorizedAccessException("작성자만이 삭제할 수 있습니다.");
         interviewQuestionRepository.delete(question.get());
         return success("삭제 성공");
     }

@@ -1,5 +1,6 @@
 package com.ssafy.dangdang.domain.dto;
 
+import com.ssafy.dangdang.domain.Joins;
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.StudyHashTag;
 import lombok.*;
@@ -36,7 +37,11 @@ public class StudyDto {
 
     private UserDto userDto;
 
-    private List<StudyHashTagDto> hashTags = new ArrayList<>();
+    @Builder.Default
+    private List<String> hashTags = new ArrayList<>();
+
+    @Builder.Default
+    private List<UserDto> userDtos = new ArrayList<>();
 
     //User Fetch Join용
     private Long hostId;
@@ -44,7 +49,7 @@ public class StudyDto {
     private String hostEmail;
 
     public StudyDto(Long id, String name, Integer number, String description,
-                    LocalDateTime createdAt, String goal, Long hostId, String hostNickname, String hostEmail, List<StudyHashTagDto> hashTags) {
+                    LocalDateTime createdAt, String goal, Long hostId, String hostNickname, String hostEmail, List<String> hashTags) {
         this.id = id;
         this.name = name;
         this.number = number;
@@ -60,7 +65,7 @@ public class StudyDto {
     }
 
     public StudyDto(Long id, String name, Integer number, String description,
-                    LocalDateTime createdAt, String goal,List<StudyHashTagDto> hashTags) {
+                    LocalDateTime createdAt, String goal,List<String> hashTags) {
         this.id = id;
         this.name = name;
         this.number = number;
@@ -72,9 +77,13 @@ public class StudyDto {
 
     public static StudyDto of(Study study) {
 
+        List<Joins> joins = study.getJoins();
+        List<UserDto> userDtoLIst = joins.stream().map(join -> UserDto.of(join.getUser())).collect(Collectors.toList());
+
+
         UserDto userDto = UserDto.of(study.getHost());
-        List<StudyHashTagDto> hashTags = study.getHashTags()
-                .stream().map(StudyHashTagDto::of)
+        List<String> hashTags = study.getHashTags()
+                .stream().map(StudyHashTag::getHashTag)
                 .collect(Collectors.toList());
         return StudyDto.builder()
                 .id(study.getId())
@@ -85,9 +94,12 @@ public class StudyDto {
                 .openKakao(study.getOpenKakao())
                 .hashTags(hashTags)
                 .number(study.getNumber())
+                .userDtos(userDtoLIst)
                 .userDto(userDto)
                 .build();
 
     }
+
+
 
 }

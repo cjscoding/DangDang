@@ -44,8 +44,9 @@ public class Post {
     @JoinColumn(name = "writer")
     private User writer;
 
-
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+    @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     public static Post of(PostDto postDto, User user, Study study){

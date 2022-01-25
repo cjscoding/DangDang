@@ -26,7 +26,8 @@ spring:
         format_sql : true
         show_sql : true
         dialect : org.hibernate.dialect.MySQL8Dialect
-    open-in-view : false
+        default_batch_fetch_size: 200
+#    open-in-view : false
 
   data:
     mongodb:
@@ -63,7 +64,8 @@ spring:
         format_sql: true
         show_sql: true
         dialect : org.hibernate.dialect.MySQL8Dialect
-    open-in-view: false
+        default_batch_fetch_size: 200
+#    open-in-view: false
 
   data:
     mongodb:
@@ -82,6 +84,11 @@ spring:
   config:
     activate:
       on-profile: common
+
+#  jpa:
+#    properties:
+#      hibernate:
+#        default_batch_fetch_size: 200
 
   jwt:
     secret: eae6d34010d4fea74bcafeeef81c1f8685e4793dfe98701d30e568118b31e4e0
@@ -133,12 +140,12 @@ logging:
     com:
       andy: trace
     #     #HTTP 요청 확인 옵션, 개발할 때만 활성화 할것
-    org:
-      springframework:
-        security: debug
-      apache:
-        coyote:
-          http11: debug
+#    org:
+#      springframework:
+#        security: debug
+#      apache:
+#        coyote:
+#          http11: debug
 
 #  security:
 #    oauth2:

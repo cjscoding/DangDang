@@ -89,7 +89,7 @@ public class InitDb {
 //                entityManager.persist(Study.of(user, studyDto));
                 studyService.createStudy(user, studyDto);
 
-                Study createdStudy = studyService.getStudy(Long.valueOf(i));
+                Study createdStudy = studyService.findStudyById(Long.valueOf(i));
                 System.out.println(createdStudy.toString());
                 StudyHashTag hashTag1 = StudyHashTag.builder().hashTag("naver").study(createdStudy).build();
                 StudyHashTag hashTag2 = StudyHashTag.builder().hashTag("네이버").study(createdStudy).build();
@@ -105,11 +105,11 @@ public class InitDb {
 
 
         public void join(){
-            User user = userService.findByEmail("test@ssafy.com").get();
-            for (long i=1;i<12;i++){
-                Study study = studyRepository.findById(i).get();
-                joinsService.joinStudy(user, i);
-            }
+//            User user = userService.findByEmail("test@ssafy.com").get();
+//            for (long i=1;i<12;i++){
+//                Study study = studyRepository.findById(i).get();
+//                joinsService.joinStudy(user, i);
+//            }
 
             for (long i=0;i<5;i++){
                 User joinUser = userService.findByEmail("test"+i+"@ssafy.com").get();

@@ -16,7 +16,8 @@ spring:
         format_sql : true
         show_sql : true
         dialect : org.hibernate.dialect.MySQL8Dialect
-    open-in-view : false
+        default_batch_fetch_size: 1000
+#    open-in-view : false
 
   data:
     mongodb:
@@ -94,3 +95,15 @@ spring:
 #            tokenUri: https://graph.facebook.com/v3.0/oauth/access_token
 #            userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
 #
+
+
+notification:
+  mattermost:
+    enabled: true # mmSender를 사용할 지 여부, false면 알림이 오지 않는다
+    webhook-url: https://meeting.ssafy.com/hooks/7xqk6s4f57gnuf88f9hbiyjp8w # 위의 Webhook URL을 기입
+    channel: # 기본 설정한 채널이 아닌 다른 채널로 보내고 싶을 때 기입한다
+    pretext: # attachments의 상단에 나오게 되는 일반 텍스트 문자
+    color: # attachment에 왼쪽 사이드 컬러. default=red
+    author-name: # attachment의 상단에 나오는 이름
+    author-icon: # author-icon 왼쪽에 나올 아이콘의 url링크
+    footer: # attachment에 하단에 나올 부분. default=현재 시간

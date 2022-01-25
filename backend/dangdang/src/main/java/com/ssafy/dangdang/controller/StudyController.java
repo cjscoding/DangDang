@@ -32,12 +32,17 @@ public class StudyController {
     @Operation(summary = "스터디 조회", description = "개설된 모든 스터디를 요청한 페이지 만큼 조회")
     @GetMapping()
     public ApiResult<Page<StudyDto>> getAllStudies(Pageable pageable){
-        System.out.println(pageable.getOffset());
-        System.out.println(pageable.getPageNumber());
-        System.out.println(pageable.getPageSize());
         Page<StudyDto> allStudies = studyService.getAllStudies(pageable);
 
         return  success(allStudies);
+    }
+
+    @Operation(summary = "스터디 단일 조회")
+    @GetMapping("/{studyId}")
+    public ApiResult<StudyDto> getStudy(@PathVariable Long studyId){
+
+        StudyDto studyWithUsers = studyService.findStudyWithUsers(studyId);
+        return  success(studyWithUsers);
     }
 
 
@@ -60,7 +65,7 @@ public class StudyController {
 
         User user = userPrincipal.getUser();
         log.info(user.toString());
-        StudyDto study = studyService.createStudy(user, studyDto);
+        StudyDto study = studyService.updateStudy(user, studyDto);
         return success(study);
 
     }

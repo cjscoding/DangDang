@@ -35,7 +35,9 @@ public class Comment {
     private Long postId;
     private Integer depth;
 
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
+    @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
 
 
@@ -48,6 +50,7 @@ public class Comment {
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "Children_id")
     @DBRef
+    @Builder.Default
     private List<Comment> children = new ArrayList<>();
 
 //    @OneToMany(mappedBy = "Children", orphanRemoval = true)

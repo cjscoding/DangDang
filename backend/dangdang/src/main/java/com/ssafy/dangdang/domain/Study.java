@@ -2,10 +2,8 @@ package com.ssafy.dangdang.domain;
 
 import com.ssafy.dangdang.domain.dto.StudyDto;
 import com.ssafy.dangdang.domain.dto.StudyHashTagDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,6 +16,7 @@ import java.util.stream.Collectors;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Study {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,11 +39,12 @@ public class Study {
 
     @ManyToOne(fetch = FetchType.LAZY) //스터디 만든사람
     @JoinColumn(name = "host_id")
+    @ToString.Exclude
     private User host;
 
     @OneToMany(mappedBy = "study")
     @Builder.Default
-    private List<Joins> enters = new ArrayList<>();
+    private List<Joins> joins = new ArrayList<>();
 
     @Column(length = 30) //목표하는 기업
     private String goal;
@@ -90,20 +90,8 @@ public class Study {
 
     }
 
-
-    @Override
-    public String toString() {
-        return "Study{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", openKakao='" + openKakao + '\'' +
-                ", createdAt=" + createdAt +
-                ", number=" + number +
-                ", goal='" + goal + '\'' +
-                ", hashTags=" + hashTags +
-                ", totalTime=" + totalTime +
-                ", lastAccessTime=" + lastAccessTime +
-                '}';
+    public void addHashTags(List<StudyHashTag> studyHashTags){
+        this.hashTags = studyHashTags;
     }
+
 }

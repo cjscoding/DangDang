@@ -27,8 +27,6 @@ public class UserDto {
     @Schema(description = "유저 닉네임", example = "bori")
     private String nickName;
 
-    @NonNull
-    @NotBlank
     @Length(min=8, max=50)
     @Schema(description = "유저 비밀번호", example = "boribori123")
     private String password;

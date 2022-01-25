@@ -43,7 +43,7 @@ public class UserServiceTest {
 
     @Test
     public void findUserByStudyId(){
-        List<User> userByStudyId = userRepository.findUserByStudyId(1L);
-        System.out.println(userByStudyId);
+        Integer integer = userRepository.countUserByStudyId(1L, 1L);
+        System.out.println(integer);
     }
 }

@@ -1,5 +1,6 @@
 package com.ssafy.dangdang.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,8 +25,22 @@ public class Joins {
     private  User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "study_id")
     private Study study;
 
+    private Boolean waiting;
 
+    public void acceptUser(){
+        waiting = false;
+    }
+
+    @Override
+    public String toString() {
+        return "Joins{" +
+                "id=" + id +
+                ", user=" + user +
+//                ", study=" + study +
+                '}';
+    }
 }

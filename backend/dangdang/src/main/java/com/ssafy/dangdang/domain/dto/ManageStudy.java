@@ -10,4 +10,6 @@ import lombok.*;
 public class ManageStudy {
 
     private Long id;
+
+    private Long userId;
 }

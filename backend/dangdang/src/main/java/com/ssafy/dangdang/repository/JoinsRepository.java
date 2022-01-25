@@ -14,4 +14,7 @@ public interface JoinsRepository extends JpaRepository<Joins, Long> {
     List<Joins> findJoinsByUser(User user);
 
 
+    Joins findJoinsByUserIdAndStudyId(Long userId, Long studyId);
+
+
 }
