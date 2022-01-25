@@ -4,6 +4,7 @@ import com.ssafy.dangdang.domain.Comment;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.CommentDto;
 import com.ssafy.dangdang.domain.types.UserRoleType;
+import com.ssafy.dangdang.exception.UnauthorizedAccessException;
 import com.ssafy.dangdang.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,8 +43,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ApiResult<CommentDto> updateComment(User user, CommentDto commentDto) {
         Optional<Comment> comment = commentRepository.findCommentById(commentDto.getId());
-        if (!comment.isPresent()) return (ApiResult<CommentDto>) error("존재하지 않는 댓글 입니다.", HttpStatus.NOT_FOUND);
-        if (comment.get().getWriterId() != user.getId() && user.getRole() == UserRoleType.ADMIN)  return (ApiResult<CommentDto>) error("작성자만 댓글을 삭제할 수 있습니다.", HttpStatus.NOT_FOUND);
+        if (!comment.isPresent()) throw new NullPointerException("존재하지 않는 댓글 입니다.");
+        if (comment.get().getWriterId() != user.getId() && user.getRole() == UserRoleType.ADMIN)  throw new UnauthorizedAccessException("작성자만이 삭제할 수 있습니다.");
         Comment updateComment ;
 
         //TODO: 참조 객체가 바뀌면, 따로 연관관계 셋팅을 안해도 알아서 바뀌는지 테스트 필요함
@@ -97,8 +98,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ApiResult<String> deleteComment(User user, String CommentId) {
         Optional<Comment> comment = commentRepository.findCommentById(CommentId);
-        if (!comment.isPresent()) return (ApiResult<String>) error("없는 댓글 입니다.", HttpStatus.NOT_FOUND);
-        if(comment.get().getWriterId() != user.getId()) return (ApiResult<String>) error("작성자만 삭제할 수 있습니다.", HttpStatus.FORBIDDEN);
+        if (!comment.isPresent())  throw new NullPointerException("존재하지 않는 댓글 입니다.");
+        if(comment.get().getWriterId() != user.getId()) throw new UnauthorizedAccessException("작성자만 삭제할 수 있습니ㅏㄷ.");
         if(!comment.get().getChildren().isEmpty()){
             for (Comment child:
                  comment.get().getChildren()) {

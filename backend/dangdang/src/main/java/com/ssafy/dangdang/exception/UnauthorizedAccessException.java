@@ -6,18 +6,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 @Getter
-public class ExtantUserException extends RuntimeException {
+public class UnauthorizedAccessException extends RuntimeException {
 
-
-    public ExtantUserException(String message) {
+    public UnauthorizedAccessException(String message) {
         super(message);
     }
-    public ExtantUserException(String message, Throwable cause) {
+    public UnauthorizedAccessException(String message, Throwable cause) {
         super(message, cause);
     }
-
-
-
-
 }
-

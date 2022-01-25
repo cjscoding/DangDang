@@ -4,6 +4,7 @@ import com.ssafy.dangdang.domain.Post;
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.PostDto;
+import com.ssafy.dangdang.exception.UnauthorizedAccessException;
 import com.ssafy.dangdang.repository.PostRepository;
 import com.ssafy.dangdang.repository.StudyRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public ApiResult<PostDto> writePost(User user, PostDto postDto, Long studyId) {
         Optional<Study> study = studyRepository.findById(studyId);
-        if (!study.isPresent()) error("없는 스터디 입니다.", HttpStatus.NOT_FOUND);
+        if (!study.isPresent()) throw new NullPointerException("존재하지 않는 스터디 입니다.");
 
         Post post = Post.of(postDto, user, study.get());
         postRepository.save(post);
@@ -41,7 +42,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public ApiResult<Post> updatePost(User user, PostDto postDto, Long studyId) {
         Optional<Study> study = studyRepository.findById(studyId);
-        if (!study.isPresent()) error("없는 스터디 입니다.", HttpStatus.NOT_FOUND);
+        if (!study.isPresent()) throw new NullPointerException("존재하지 않는 스터디 입니다.");
 
         Post post =Post.builder()
                 .id(postDto.getId())
@@ -59,8 +60,8 @@ public class PostServiceImpl implements PostService{
     public ApiResult<String> deletePost(User user, Long postId) {
         Optional<Post> post = postRepository.findById(postId);
 
-        if (!post.isPresent()) return (ApiResult<String>) error("없는 게시글입니다.", HttpStatus.NOT_FOUND);
-        if (post.get().getWriter().getId() == user.getId()) error("작성자만 삭제할 수 있습니다.", HttpStatus.FORBIDDEN);
+        if (!post.isPresent()) throw new NullPointerException("존재하지 않는 게시글 입니다.");
+        if (post.get().getWriter().getId() == user.getId()) throw new UnauthorizedAccessException("작성자만이 삭제할 수 있습니다.");
         postRepository.delete(post.get());
         return success("삭제 성공");
     }

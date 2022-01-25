@@ -2,6 +2,7 @@ package com.ssafy.dangdang.exception.controller;
 
 import com.ssafy.dangdang.exception.BadRequestException;
 import com.ssafy.dangdang.exception.ExtantUserException;
+import com.ssafy.dangdang.exception.UnauthorizedAccessException;
 import com.ssafy.dangdang.exception.mattermost.NotificationManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,15 @@ public class CustomGlobalExceptionHandler  {
         e.printStackTrace();
         notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
         return error("NullPointer 참조", HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ApiResult<?> UnauthorizedAccessHandle(UnauthorizedAccessException e, HttpServletRequest req){
+
+        log.error("권한 없는 사용자 요청");
+        e.printStackTrace();
+        notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
+        return error("권한 없는 사용자 요청", HttpStatus.FORBIDDEN);
     }
 
     private String getParams(HttpServletRequest req) {

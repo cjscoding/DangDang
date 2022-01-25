@@ -4,6 +4,7 @@ import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.StudyHashTag;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.StudyDto;
+import com.ssafy.dangdang.exception.UnauthorizedAccessException;
 import com.ssafy.dangdang.repository.JoinsRepository;
 import com.ssafy.dangdang.repository.StudyHashTagRepository;
 import com.ssafy.dangdang.repository.StudyRepository;
@@ -52,7 +53,7 @@ public class StudyServiceImpl implements StudyService{
     @Override
     public ApiResult<StudyDto> updateStudy(User user, StudyDto studyDto) {
         Optional<Study> findStudy = studyRepository.findById(studyDto.getId());
-        if(!findStudy.isPresent()) return (ApiResult<StudyDto>) error("존재하지 않는 스터디 입니다.", HttpStatus.NOT_FOUND);
+        if(!findStudy.isPresent()) throw new NullPointerException("존재하지 않는 스터디 입니다.");
         List<User> studyUsers = userRepository.findUserByStudyId(studyDto.getId());
 
         for (User studyUser:
@@ -65,7 +66,7 @@ public class StudyServiceImpl implements StudyService{
             }
         }
 
-        return (ApiResult<StudyDto>) error("권한이 없는 사용자입니다.", HttpStatus.FORBIDDEN);
+        throw new UnauthorizedAccessException("권한이 없는 사용자의 요청입니다.");
 
 
     }
@@ -75,11 +76,11 @@ public class StudyServiceImpl implements StudyService{
         Optional<Study> study = studyRepository.findById(studyId);
         if (!study.isPresent()) {
             log.error("존재하지 않는 스터디 삭제 요청");
-            return (ApiResult<String>) error("존재하지 않는 스터디 입니다.", HttpStatus.NOT_FOUND);
+            throw new NullPointerException("존재하지 않는 스터디 입니다.");
         }
         if(study.get().getHost().getId() != user.getId()){
             log.error("권한없는 사용자의 삭제 요청");
-            return (ApiUtils.ApiResult<String>) error("권한이 없는 사용자입니다.", HttpStatus.FORBIDDEN);
+            throw new UnauthorizedAccessException("권한이 없는 사용자의 요청입니다.");
         }
 
         studyRepository.delete(study.get());
