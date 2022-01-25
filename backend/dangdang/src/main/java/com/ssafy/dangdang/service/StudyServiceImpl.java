@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,38 +36,52 @@ public class StudyServiceImpl implements StudyService{
     private final JoinsRepository joinsRepository;
 
     @Override
+    @Transactional
     public StudyDto createStudy(User user, StudyDto studyDto) {
         Study study = Study.of(user, studyDto);
         studyRepository.save(study);
         if (studyDto.getHashTags() !=null && !studyDto.getHashTags().isEmpty()){
+            System.out.println();
             List<StudyHashTag> hashTags = studyDto.getHashTags()
                     .stream()
-                    .map(s->StudyHashTag.builder().id(s.getId()).study(study).hashTag(s.getHashTag()).build())
+                    .map(s->StudyHashTag.builder().study(study).hashTag(s).build())
                     .collect(Collectors.toList());
             hashTagRepository.saveAll(hashTags);
+            study.addHashTags(hashTags);
         }
 
-        StudyDto createdStudy = StudyDto.of(study);
-        return createdStudy;
+        StudyDto createdStudyDto = StudyDto.of(study);
+        return createdStudyDto;
     }
 
     @Override
     public ApiResult<StudyDto> updateStudy(User user, StudyDto studyDto) {
         Optional<Study> findStudy = studyRepository.findById(studyDto.getId());
         if(!findStudy.isPresent()) throw new NullPointerException("존재하지 않는 스터디 입니다.");
-        List<User> studyUsers = userRepository.findUserByStudyId(studyDto.getId());
+        Integer count = userRepository.countUserByStudyId(user.getId(), studyDto.getId());
 
-        for (User studyUser:
-             studyUsers) {
-            if(user.getId() == studyUser.getId()){
-                Study study = Study.of(user, studyDto);
-                studyRepository.save(study);
-                StudyDto updatedStudy = StudyDto.of(study);
-                return success(updatedStudy);
-            }
+        if(count ==0) throw new UnauthorizedAccessException("권한이 없는 사용자의 요청입니다.");
+        Study study = Study.of(user, studyDto);
+        List<StudyHashTag> oldHashTags = findStudy.get().getHashTags();
+        hashTagRepository.deleteAll(oldHashTags);
+        studyRepository.save(study);
+        if (studyDto.getHashTags() !=null && !studyDto.getHashTags().isEmpty()){
+            List<StudyHashTag> hashTags = studyDto.getHashTags()
+                    .stream()
+                    .map(s->StudyHashTag.builder().study(study).hashTag(s).build())
+                    .collect(Collectors.toList());
+            hashTagRepository.saveAll(hashTags);
+
         }
 
-        throw new UnauthorizedAccessException("권한이 없는 사용자의 요청입니다.");
+        Optional<Study> updateStudy = studyRepository.findById(studyDto.getId());
+        StudyDto updatedStudy = StudyDto.of(updateStudy.get());
+        return success(updatedStudy);
+
+
+
+
+
 
 
     }

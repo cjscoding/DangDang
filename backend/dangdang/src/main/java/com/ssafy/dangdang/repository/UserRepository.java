@@ -18,10 +18,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     long countUserByEmail(String email);
 
 
-    @Query("select u from User u " +
-            "where u.id in " +
+    @Query("select count(u.id) from User u " +
+            "where u.id = :userId and u.id in " +
             "(select j.user.id from Joins j " +
             "where j.study.id = :studyId)")
-    List<User> findUserByStudyId(Long studyId);
+    Integer countUserByStudyId(Long userId, Long studyId);
 
 }

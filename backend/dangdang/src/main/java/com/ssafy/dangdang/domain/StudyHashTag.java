@@ -35,4 +35,10 @@ public class StudyHashTag {
                 .build();
     }
 
+    public static StudyHashTag of(String hashTag){
+        return StudyHashTag.builder()
+                .hashTag(hashTag)
+                .build();
+    }
+
 }

@@ -90,5 +90,8 @@ public class Study {
 
     }
 
+    public void addHashTags(List<StudyHashTag> studyHashTags){
+        this.hashTags = studyHashTags;
+    }
 
 }

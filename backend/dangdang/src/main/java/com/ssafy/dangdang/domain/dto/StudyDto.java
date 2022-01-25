@@ -38,7 +38,8 @@ public class StudyDto {
     private UserDto userDto;
 
     @Builder.Default
-    private List<StudyHashTagDto> hashTags = new ArrayList<>();
+    private List<String> hashTags = new ArrayList<>();
+
     @Builder.Default
     private List<UserDto> userDtos = new ArrayList<>();
 
@@ -48,7 +49,7 @@ public class StudyDto {
     private String hostEmail;
 
     public StudyDto(Long id, String name, Integer number, String description,
-                    LocalDateTime createdAt, String goal, Long hostId, String hostNickname, String hostEmail, List<StudyHashTagDto> hashTags) {
+                    LocalDateTime createdAt, String goal, Long hostId, String hostNickname, String hostEmail, List<String> hashTags) {
         this.id = id;
         this.name = name;
         this.number = number;
@@ -64,7 +65,7 @@ public class StudyDto {
     }
 
     public StudyDto(Long id, String name, Integer number, String description,
-                    LocalDateTime createdAt, String goal,List<StudyHashTagDto> hashTags) {
+                    LocalDateTime createdAt, String goal,List<String> hashTags) {
         this.id = id;
         this.name = name;
         this.number = number;
@@ -81,8 +82,8 @@ public class StudyDto {
 
 
         UserDto userDto = UserDto.of(study.getHost());
-        List<StudyHashTagDto> hashTags = study.getHashTags()
-                .stream().map(StudyHashTagDto::of)
+        List<String> hashTags = study.getHashTags()
+                .stream().map(StudyHashTag::getHashTag)
                 .collect(Collectors.toList());
         return StudyDto.builder()
                 .id(study.getId())
@@ -99,33 +100,6 @@ public class StudyDto {
 
     }
 
-    public StudyDto(Study study) {
 
-        UserDto userDto = UserDto.of(study.getHost());
-        List<StudyHashTagDto> hashTags = study.getHashTags()
-                .stream().map(StudyHashTagDto::of)
-                .collect(Collectors.toList());
-        id = study.getId();
-        name = study.getName();
-        description = study.getDescription();
-        goal = study.getGoal();
-        createdAt = study.getCreatedAt();
-        openKakao = study.getOpenKakao();
-        hashTags = hashTags;
-        number =study.getNumber();
-        userDto = userDto;
-//        return StudyDto.builder()
-//                .id(study.getId())
-//                .name(study.getName())
-//                .description(study.getDescription())
-//                .goal(study.getGoal())
-//                .createdAt(study.getCreatedAt())
-//                .openKakao(study.getOpenKakao())
-//                .hashTags(hashTags)
-//                .number(study.getNumber())
-//                .userDto(userDto)
-//                .build();
-
-    }
 
 }
