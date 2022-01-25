@@ -67,21 +67,25 @@ dependencies {
     // Swagger API 문서에서, Spring-Security 인자들 없애줌
     implementation 'org.springdoc:springdoc-openapi-security:1.6.4'
 
+    //MongoDB 관련 설정
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+    implementation 'com.google.code.gson:gson'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'mysql:mysql-connector-java'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor" //matterMost
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
 
-bootRun {
-    String activeProfile = System.properties['spring.profiles.active']
-    println "zone: $activeProfile"
-    systemProperty "spring.profiles.active", activeProfile
-}
+//bootRun {
+//    String activeProfile = System.properties['spring.profiles.active']
+//    println "zone: $activeProfile"
+//    systemProperty "spring.profiles.active", activeProfile
+//}
 
 test {
     useJUnitPlatform()

@@ -11,9 +11,10 @@ import java.util.List;
 
 public interface StudyService {
 
-    public Study createStudy(Study study);
 
-    public Study updateStudy(Study study);
+    public StudyDto createStudy(User user, StudyDto studyDto);
+
+    public ApiUtils.ApiResult<StudyDto> updateStudy(User user, StudyDto studyDto);
 
     public ApiUtils.ApiResult<String> deleteStudy(User user, Long studyId);
 

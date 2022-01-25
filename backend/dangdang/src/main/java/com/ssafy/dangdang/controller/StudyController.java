@@ -48,9 +48,20 @@ public class StudyController {
 
         User user = userPrincipal.getUser();
         log.info(user.toString());
-        Study study = Study.of(user, studyDto);
-        StudyDto createdStudy = StudyDto.of(studyService.createStudy(study));
-        return success(createdStudy);
+        StudyDto study = studyService.createStudy(user, studyDto);
+        return success(study);
+
+    }
+
+    @PatchMapping()
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<StudyDto> updateStudy(@CurrentUser PrincipalDetails userPrincipal
+            ,@RequestBody @Valid StudyDto studyDto){
+
+        User user = userPrincipal.getUser();
+        log.info(user.toString());
+        StudyDto study = studyService.createStudy(user, studyDto);
+        return success(study);
 
     }
 

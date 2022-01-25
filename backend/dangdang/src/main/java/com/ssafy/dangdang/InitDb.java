@@ -78,17 +78,16 @@ public class InitDb {
 
             for (int i=1; i<12;i++){
 
-                Study study = Study.builder()
+                StudyDto studyDto = StudyDto.builder()
                         .name("testStudy"+i)
                         .description("안녕하세요!! 네이버 목표 스터디입니다.")
                         .goal("네이버")
                         .createdAt(LocalDateTime.now())
                         .number(3)
-                        .host(user)
                         .build();
                 System.out.println(user.toString());
 //                entityManager.persist(Study.of(user, studyDto));
-                studyService.createStudy(study);
+                studyService.createStudy(user, studyDto);
 
                 Study createdStudy = studyService.getStudy(Long.valueOf(i));
                 System.out.println(createdStudy.toString());

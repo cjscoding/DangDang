@@ -1,6 +1,7 @@
 package com.ssafy.dangdang.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ssafy.dangdang.domain.dto.StudyHashTagDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,5 +27,12 @@ public class StudyHashTag {
 
     @Column(length = 30)
     private String hashTag;
+
+    public static StudyHashTag of(StudyHashTagDto hashTagDto){
+        return StudyHashTag.builder()
+                .id(hashTagDto.getId())
+                .hashTag(hashTagDto.getHashTag())
+                .build();
+    }
 
 }
