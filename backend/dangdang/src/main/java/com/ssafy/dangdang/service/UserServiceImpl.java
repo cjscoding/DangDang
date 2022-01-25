@@ -2,7 +2,6 @@ package com.ssafy.dangdang.service;
 
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.UserDto;
-import com.ssafy.dangdang.domain.types.Email;
 import com.ssafy.dangdang.domain.types.UserRoleType;
 import com.ssafy.dangdang.exception.ExtantUserException;
 import com.ssafy.dangdang.repository.UserRepository;
@@ -35,7 +34,7 @@ public class UserServiceImpl implements UserService{
         String EncryptedPassword = passwordEncoder.encode(password);
 
         User user = User.builder()
-                .email(Email.of(userDto.getEmail()))
+                .email(userDto.getEmail())
                 .nickname(userDto.getNickName())
                 .password(EncryptedPassword)
                 .role(UserRoleType.USER)
@@ -50,18 +49,15 @@ public class UserServiceImpl implements UserService{
     public void updateUser(UserDto userDto) {
         String password = userDto.getPassword();
 
-        // TODO: EXCEPTION 상세화
-
-
         if(!this.idCheck(userDto)) throw new ExtantUserException("존재하지 않는 유저 입니다");
 
 
-        User user = userRepository.findUserByEmail(Email.of(userDto.getEmail())).get();
+        User user = userRepository.findUserByEmail(userDto.getEmail()).get();
 
         String EncryptedPassword = passwordEncoder.encode(password);
 
         user = User.builder()
-                .email(Email.of(userDto.getEmail()))
+                .email(userDto.getEmail())
                 .nickname(userDto.getNickName())
                 .password(EncryptedPassword)
                 .role(UserRoleType.USER)
@@ -74,29 +70,23 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public boolean idCheck(UserDto userDto) {
-        return userRepository.existsByEmail(Email.of(userDto.getEmail()));
+        return userRepository.existsByEmail(userDto.getEmail());
     }
 
     @Override
-    public boolean deleteUser(UserDto userDto) {
-        Optional<User> userByEmail = userRepository.findUserByEmail(Email.of(userDto.getEmail()));
+    public boolean deleteUser(User user, String password) {
 
-        if (userByEmail.isPresent()){
-            User user = userByEmail.get();
-            String EncryptedPassword = passwordEncoder.encode(userDto.getPassword());
-            if (user.getPassword().equals(EncryptedPassword)){
+            if (passwordEncoder.matches(password, user.getPassword())) {
                 userRepository.delete(user);
                 return true;
             }
             return false;
 
-        } else return false;
-
     }
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findUserByEmail(Email.of(email)).get();
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findUserByEmail(email);
     }
 
 

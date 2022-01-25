@@ -1,11 +1,14 @@
 package com.ssafy.dangdang.domain.dto;
 
 import com.ssafy.dangdang.domain.Study;
+import com.ssafy.dangdang.domain.StudyHashTag;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,13 +25,49 @@ public class StudyDto {
     @NotNull
     private Integer number;
 
-    private String introduction;
+    private String description;
+
+    private String openKakao;
 
     private LocalDateTime createdAt;
 
-    private String target;
+    private String goal;
 
     private UserDto userDto;
+
+    private List<StudyHashTag> hashTags = new ArrayList<>();
+
+    //User Fetch Join용
+    private Long hostId;
+    private String hostNickname;
+    private String hostEmail;
+
+    public StudyDto(Long id, String name, Integer number, String description,
+                    LocalDateTime createdAt, String goal, Long hostId, String hostNickname, String hostEmail, List<StudyHashTag> hashTags) {
+        this.id = id;
+        this.name = name;
+        this.number = number;
+        this.description = description;
+        this.createdAt = createdAt;
+        this.goal = goal;
+
+        this.hashTags =hashTags;
+
+        this.hostId = hostId;
+        this.hostNickname = hostNickname;
+        this.hostEmail =hostEmail;
+    }
+
+    public StudyDto(Long id, String name, Integer number, String description,
+                    LocalDateTime createdAt, String goal,List<StudyHashTag> hashTags) {
+        this.id = id;
+        this.name = name;
+        this.number = number;
+        this.description = description;
+        this.createdAt = createdAt;
+        this.goal = goal;
+        this.hashTags =hashTags;
+    }
 
     public static StudyDto of(Study study) {
 
@@ -37,9 +76,11 @@ public class StudyDto {
         return StudyDto.builder()
                 .id(study.getId())
                 .name(study.getName())
-                .introduction(study.getIntroduction())
-                .target(study.getTarget())
+                .description(study.getDescription())
+                .goal(study.getGoal())
                 .createdAt(study.getCreatedAt())
+                .openKakao(study.getOpenKakao())
+                .hashTags(study.getHashTags())
                 .number(study.getNumber())
                 .userDto(userDto)
                 .build();

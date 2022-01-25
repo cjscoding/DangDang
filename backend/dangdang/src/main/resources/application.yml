@@ -1,4 +1,16 @@
 spring:
+  profiles:
+    group:
+      dev: common, dev
+      prod: common, prod
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
@@ -13,14 +25,64 @@ spring:
       hibernate :
         format_sql : true
         show_sql : true
+        dialect : org.hibernate.dialect.MySQL8Dialect
     open-in-view : false
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/dangdang
+
 
   session:
     store-type: REDIS
   redis:
-    host: localhost
+    host: 127.0.0.1
     port: 6379
   # JWT Secret Key
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://dangdang-mysql:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+    username: ssafy
+    password: ssafy
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    generate-ddl: false
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect : org.hibernate.dialect.MySQL8Dialect
+    open-in-view: false
+
+  data:
+    mongodb:
+      uri: mongodb://dangdang-mongodb:27017/dangdang
+
+
+  session:
+    store-type: REDIS
+  redis:
+    host: dangdang-redis
+    port: 6379
+  # JWT Secret Key
+
+---
+spring:
+  config:
+    activate:
+      on-profile: common
+
   jwt:
     secret: eae6d34010d4fea74bcafeeef81c1f8685e4793dfe98701d30e568118b31e4e0
 
@@ -52,6 +114,7 @@ spring:
             tokenUri: https://kauth.kakao.com/oauth/token
             userInfoUri: https://kapi.kakao.com/v2/user/me
             userNameAttribute: id
+
 
 #  security:
 #    oauth2:

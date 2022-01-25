@@ -19,11 +19,12 @@ querydsl {
 }
 
 sourceSets {
-    main.java.srcDir querydslDir
+    main.java.srcDir querydslDir srcDirs("src/main/resources/profiles")
 }
 compileQuerydsl{
     options.annotationProcessorPath = configurations.querydsl
 }
+
 //QueryDSL 설정 여기까지 추가
 
 configurations {
@@ -32,6 +33,10 @@ configurations {
         extendsFrom annotationProcessor
     }
 }
+
+//tasks.withType(JavaCompile) {
+//    options.annotationProcessorGeneratedSourcesDirectory = file(querydslSrcDir)
+//}
 
 repositories {
     mavenCentral()
@@ -46,6 +51,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    // Project으로 데이터 조회할 때, 조회하지는 않는 연관엔티티 들이 프록시 상태여서 에러가 발생
+    // 이 라이브러르는 그런 친구들에게 null을 대입해준다
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate5")
+
     // Jwt 관련설정
     implementation 'com.auth0:java-jwt:3.18.2'
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
@@ -55,8 +64,10 @@ dependencies {
 
     // Swagger 관련 설정
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.4'
+    // Swagger API 문서에서, Spring-Security 인자들 없애줌
+    implementation 'org.springdoc:springdoc-openapi-security:1.6.4'
 
-
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -64,6 +75,12 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+}
+
+bootRun {
+    String activeProfile = System.properties['spring.profiles.active']
+    println "zone: $activeProfile"
+    systemProperty "spring.profiles.active", activeProfile
 }
 
 test {

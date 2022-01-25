@@ -1,7 +1,7 @@
 package com.ssafy.dangdang.repository;
 
 
-import com.ssafy.dangdang.domain.Enter;
+import com.ssafy.dangdang.domain.Joins;
 import com.ssafy.dangdang.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import java.util.List;
 
 @EnableJpaRepositories
-public interface EnterRepository extends JpaRepository<Enter, Long> {
+public interface JoinsRepository extends JpaRepository<Joins, Long> {
 
 
-    List<Enter> findEntersByUser(User user);
+    List<Joins> findJoinsByUser(User user);
 }

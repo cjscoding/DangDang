@@ -5,11 +5,17 @@ import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetailsService;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.UserDto;
-import com.ssafy.dangdang.exception.BadRequestException;
 import com.ssafy.dangdang.exception.ExtantUserException;
 import com.ssafy.dangdang.service.UserService;
+import com.ssafy.dangdang.util.ApiUtils;
 import com.ssafy.dangdang.util.JwtUtil;
 import com.ssafy.dangdang.util.RedisUtil;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,8 +24,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.Optional;
+
 import static com.ssafy.dangdang.util.ApiUtils.*;
 
+@Tag(name = "user", description = "유저관리 API")
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*")
@@ -32,7 +41,13 @@ public class UserController {
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
 
-
+    @Operation(summary = "유저 정보 조회", description = "header에 있는 AuthenticationToken으로," +
+            " 로그인한 유저의 정보를 조회합니다. 토큰이 없다면 로그인하는 과정이 필요합니다.")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "회원 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 파라미터 요청", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError400.class))),
+            @ApiResponse(responseCode = "500", description = "서버 API 에러", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError500.class)))
+    })
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
     public ApiResult<UserDto> getCurrentUser(@CurrentUser PrincipalDetails userPrincipal) {
@@ -43,6 +58,12 @@ public class UserController {
 
     }
 
+    @Operation(summary = "회원가입 요청")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "회원 가입 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 파라미터 요청", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError400.class))),
+            @ApiResponse(responseCode = "500", description = "서버 API 에러", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError500.class)))
+    })
     @PostMapping()
     public ApiResult<UserDto> signUp(@RequestBody @Valid UserDto userDto) {
 
@@ -57,7 +78,12 @@ public class UserController {
         }
 
     }
-
+    @Operation(summary = "회원정보 수정")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 파라미터 요청", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError400.class))),
+            @ApiResponse(responseCode = "500", description = "서버 API 에러", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError500.class)))
+    })
     @PatchMapping()
     public ApiResult<UserDto> updateUser(@RequestBody @Valid UserDto userDto) {
 
@@ -72,18 +98,25 @@ public class UserController {
 
     }
 
-
+    @Operation(summary = "회원 삭제 요청")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "회원 삭제 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 파라미터 요청", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError400.class))),
+            @ApiResponse(responseCode = "500", description = "서버 API 에러", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError500.class)))
+    })
     @DeleteMapping()
     public ApiResult<String> deleteUser(@RequestBody UserDto userDto) {
 
-        log.info("user delete {}", userDto.toString());
-        if(userService.deleteUser(userDto)) return success("유저 삭제 성공");
+        Optional<User> user = userService.findByEmail(userDto.getEmail());
+        if (user.isPresent()){
+            log.info("user delete {}", userDto.toString());
+            if(userService.deleteUser(user.get(), userDto.getPassword())) return success("유저 삭제 성공");
+        }
+
         return (ApiResult<String>) error("올바른 유저 정보를 입력해주세요", HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/test")
-    public ApiResult<UserDto> test(@RequestBody @Valid UserDto userDto) {
-        throw new BadRequestException("dd");
-    }
+
+
 }
 

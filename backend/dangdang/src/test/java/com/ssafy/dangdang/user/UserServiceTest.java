@@ -2,7 +2,6 @@ package com.ssafy.dangdang.user;
 
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.UserDto;
-import com.ssafy.dangdang.domain.types.Email;
 import com.ssafy.dangdang.repository.UserRepository;
 import com.ssafy.dangdang.service.UserService;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +19,7 @@ public class UserServiceTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
+   // @Test
     public void signUp(){
         UserDto userDto = new UserDto();
 
@@ -30,14 +29,12 @@ public class UserServiceTest {
 
         userService.signUpUser(userDto);
 
-        User user = userRepository.findUserByEmail(Email.of(userDto.getEmail())).get();
+        User user = userRepository.findUserByEmail(userDto.getEmail()).get();
 
         System.out.println("user:"+ user.toString());
         System.out.println("userDto" + userDto.toString());
 
         Assertions.assertEquals(userDto.getNickName(), user.getNickname());
         Assertions.assertEquals(userDto.getEmail().toString(), user.getEmail().toString());
-
-
     }
 }
