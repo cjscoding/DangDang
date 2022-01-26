@@ -2,7 +2,7 @@
     "name": "frontend",
     "private": true,
     "scripts": {
-        "dev": "next dev -p ${PORT}",
+        "dev": "next dev",
         "build": "next build",
         "start": "next start",
         "lint": "next lint"
@@ -10,6 +10,7 @@
     "dependencies": {
         "@reduxjs/toolkit": "^1.7.1",
         "@zeit/next-sass": "^1.0.1",
+        "axios": "^0.25.0",
         "next": "^12.0.8",
         "next-redux-wrapper": "^7.0.5",
         "node-sass": "^6.0.0",
