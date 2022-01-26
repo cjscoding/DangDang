@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class StudyDto {
 
-    @Schema(accessMode = Schema.AccessMode.AUTO, description = "스터디 Id", example = "1")
+    @Schema(description = "스터디 Id", example = "1")
     private Long id;
 
     @NotBlank

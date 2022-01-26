@@ -48,9 +48,7 @@ public class StudyController {
 
     @Operation(summary = "스터디 조회", description = "개설된 모든 스터디를 요청한 페이지 만큼 조회, 서버 과부화 예방을 위해 댓글은 조회되지 않습니다.")
     @ApiResponses( value = {
-            @ApiResponse(responseCode = "200", description = "스터디 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 파라미터 요청", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError400.class))),
-            @ApiResponse(responseCode = "500", description = "서버 API 에러", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError500.class)))
+            @ApiResponse(responseCode = "200", description = "스터디 조회 성공")
     })
     @GetMapping()
     public ApiResult<Page<StudyDto>> getAllStudies(@ParameterObject Pageable pageable){
@@ -61,9 +59,7 @@ public class StudyController {
 
     @Operation(summary = "스터디 단일 조회")
     @ApiResponses( value = {
-            @ApiResponse(responseCode = "200", description = "스터디 단일 조회 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 파라미터 요청", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError400.class))),
-            @ApiResponse(responseCode = "500", description = "서버 API 에러", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError500.class)))
+            @ApiResponse(responseCode = "200", description = "스터디 단일 조회 성공")
     })
     @GetMapping("/{studyId}")
     public ApiResult<StudyDto> getStudy(@Parameter(description = "조회할 스터디 id", example = "1") @PathVariable Long studyId, @ParameterObject Pageable pageable){
@@ -77,9 +73,7 @@ public class StudyController {
 
     @Operation(summary = "스터디 만들기")
     @ApiResponses( value = {
-            @ApiResponse(responseCode = "200", description = "스터디 만들기 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 파라미터 요청", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError400.class))),
-            @ApiResponse(responseCode = "500", description = "서버 API 에러", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError500.class)))
+            @ApiResponse(responseCode = "200", description = "스터디 만들기 성공")
     })
     @PostMapping()
     @PreAuthorize("hasRole('USER')")
@@ -96,9 +90,7 @@ public class StudyController {
 
     @Operation(summary = "스터디 정보 수정")
     @ApiResponses( value = {
-            @ApiResponse(responseCode = "200", description = "스터디 정보 수정"),
-            @ApiResponse(responseCode = "400", description = "잘못된 파라미터 요청", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError400.class))),
-            @ApiResponse(responseCode = "500", description = "서버 API 에러", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError500.class)))
+            @ApiResponse(responseCode = "200", description = "스터디 정보 수정")
     })
     @PatchMapping("/{studyId}")
     @PreAuthorize("hasRole('USER')")
@@ -117,9 +109,7 @@ public class StudyController {
 
     @Operation(summary = "스터디 삭제", description = "스터디장만이 스터디를 삭제할 수 있습니다.")
     @ApiResponses( value = {
-            @ApiResponse(responseCode = "200", description = "스터디 삭제 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 파라미터 요청", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError400.class))),
-            @ApiResponse(responseCode = "500", description = "서버 API 에러", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError500.class)))
+            @ApiResponse(responseCode = "200", description = "스터디 삭제 성공")
     })
     @DeleteMapping("/{studyId}")
     @PreAuthorize("hasRole('USER')")
@@ -132,13 +122,12 @@ public class StudyController {
 
     @Operation(summary = "스터디 댓글 등록", description = "parentId는 답글 작성시에만 작성")
     @ApiResponses( value = {
-            @ApiResponse(responseCode = "200", description = "스터디 댓글 등록 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 파라미터 요청", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError400.class))),
-            @ApiResponse(responseCode = "500", description = "서버 API 에러", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError500.class)))
+            @ApiResponse(responseCode = "200", description = "스터디 댓글 등록 성공")
     })
     @PostMapping("/{studyId}/comment")
     public ApiResult<CommentDto> writeComment(@CurrentUser PrincipalDetails userPrincipal,
-                                              @Parameter(description = "댓글을 등록할 스터디 id", example = "1") @PathVariable Long studyId, @RequestBody WriteComment writeComment){
+                                              @Parameter(description = "댓글을 등록할 스터디 id", example = "1") @PathVariable Long studyId,
+                                              @RequestBody WriteComment writeComment){
         CommentDto commentDto = CommentDto.of(writeComment);
         commentDto.setReferenceId(studyId);
         commentDto.setCommentType(CommentType.STUDY);
@@ -147,9 +136,7 @@ public class StudyController {
 
     @Operation(summary = "스터디 댓글 삭제")
     @ApiResponses( value = {
-            @ApiResponse(responseCode = "200", description = "스터디 댓글 등록 삭제"),
-            @ApiResponse(responseCode = "400", description = "잘못된 파라미터 요청", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError400.class))),
-            @ApiResponse(responseCode = "500", description = "서버 API 에러", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError500.class)))
+            @ApiResponse(responseCode = "200", description = "스터디 댓글 등록 삭제")
     })
     @DeleteMapping("/{studyId}/comment/{commentId}")
     public ApiResult<String> deleteComment(@CurrentUser PrincipalDetails userPrincipal,
@@ -159,9 +146,7 @@ public class StudyController {
 
     @Operation(summary = "스터디 댓글 수정")
     @ApiResponses( value = {
-            @ApiResponse(responseCode = "200", description = "스터디 댓글 등록 수정"),
-            @ApiResponse(responseCode = "400", description = "잘못된 파라미터 요청", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError400.class))),
-            @ApiResponse(responseCode = "500", description = "서버 API 에러", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError500.class)))
+            @ApiResponse(responseCode = "200", description = "스터디 댓글 등록 수정")
     })
     @PatchMapping("/{studyId}/comment/{commentId}")
     public ApiResult<CommentDto> updateComment(@CurrentUser PrincipalDetails userPrincipal,

@@ -74,41 +74,6 @@ public class ApiUtils {
 
   }
 
-  @Getter
-  public static class ApiError400{
-    @Schema(description = "API 호출 성공 유무", defaultValue = "false")
-    private final boolean success = false;
-    @Schema(description = "응답 데이터", defaultValue = "null")
-    private final Object response = null;
-    @Schema(description = "에러 정보")
-    private final SwaggerApiError error = null ;
-
-    @Getter
-    static class SwaggerApiError{
-      @Schema(defaultValue = "잘못된 파라미터 요청입니다.")
-      private String message = "잘못된 파라미터 요청입니다.";
-      @Schema(defaultValue = "400")
-      private HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
-    }
-  }
-
-  @Getter
-  public static class ApiError500{
-    @Schema(description = "API 호출 성공 유무", defaultValue = "false")
-    private final boolean success = false;
-    @Schema(description = "응답 데이터", defaultValue = "null")
-    private final Object response = null;
-    @Schema(description = "에러 정보")
-    private final SwaggerApiError error = null ;
-
-    @Getter
-    static class SwaggerApiError{
-      @Schema(defaultValue = "서버 API 에러 발생")
-      private String message = null;
-      @Schema(defaultValue = "500")
-      private HttpStatus httpStatus = null;
-    }
-  }
 
 
 }
