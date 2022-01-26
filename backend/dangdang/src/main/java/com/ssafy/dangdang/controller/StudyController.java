@@ -150,7 +150,8 @@ public class StudyController {
     })
     @PatchMapping("/{studyId}/comment/{commentId}")
     public ApiResult<CommentDto> updateComment(@CurrentUser PrincipalDetails userPrincipal,
-                                               @Parameter(description = "수정할 댓글 id") @PathVariable String commentId, @RequestBody WriteComment writeComment){
+                                               @Parameter(description = "수정할 댓글 id") @PathVariable String commentId,
+                                               @RequestBody WriteComment writeComment){
         CommentDto commentDto = CommentDto.of(writeComment);
         commentDto.setId(commentId);
         commentDto.setCommentType(CommentType.STUDY);

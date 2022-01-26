@@ -11,8 +11,6 @@ import lombok.*;
 @NoArgsConstructor
 public class WriteInterview {
 
-    @Schema(description = "면접 질문 Id", example = "1")
-    private Long id;
     @Schema(description = "면접 질문 분야, {기술, 인성}", example = "인성")
     private String field;
     @Schema(description = "면접 질문", example = "민초에 대해서 어떻게 생각하시나요?")

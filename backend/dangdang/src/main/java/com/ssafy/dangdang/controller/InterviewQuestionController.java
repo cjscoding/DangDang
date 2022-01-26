@@ -72,14 +72,16 @@ public class InterviewQuestionController {
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "면접 질문 수정 성공")
     })
-    @PatchMapping()
+    @PatchMapping("/{interviewQuestionId}")
     @PreAuthorize("hasRole('USER')")
     public ApiResult<InterviewQuestionDto> updateInterviewQuestion(
             @CurrentUser PrincipalDetails userPrincipal,
+            @PathVariable Long interviewQuestionId,
             @RequestBody WriteInterview writeInterview){
-        Optional<InterviewQuestion> question = interviewQuestionService.findById(writeInterview.getId());
+        Optional<InterviewQuestion> question = interviewQuestionService.findById(interviewQuestionId);
         if(!question.isPresent()) throw new NullPointerException("없는 질문 입니다");
         InterviewQuestionDto interviewQuestionDto = InterviewQuestionDto.of(writeInterview);
+        interviewQuestionDto.setId(interviewQuestionId);
         InterviewQuestionDto createdQuestion = interviewQuestionService.writeQuestion(userPrincipal.getUser(), interviewQuestionDto);
         return success(createdQuestion);
 

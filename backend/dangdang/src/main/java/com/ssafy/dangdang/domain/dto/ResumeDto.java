@@ -34,11 +34,6 @@ public class ResumeDto {
 
 
     public static ResumeDto of(WriteResume writeResume){
-        if ((writeResume.getId() != null))
-        return ResumeDto.builder()
-                .id(writeResume.getId())
-                .resumeQuestionList(writeResume.getResumeQuestionList())
-                .build();
 
         return ResumeDto.builder()
                 .resumeQuestionList(writeResume.getResumeQuestionList())

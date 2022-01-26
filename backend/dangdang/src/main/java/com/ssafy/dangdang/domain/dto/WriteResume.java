@@ -15,10 +15,6 @@ import java.util.List;
 @Schema(description = "자소서 작성")
 public class WriteResume {
 
-    @NotNull
-    @Schema(description = "자소서 Id", example = "1")
-    private Long id;
-
     @Builder.Default
     @Schema(description = "자소서 질문 리스트")
     private List<ResumeQuestionDto> resumeQuestionList = new ArrayList<>();

@@ -71,13 +71,17 @@ public class ResumeController {
 
     // 처음 쓸 때는, ResumeDto에 ID가 필요없지만,
     // 수정할 때는 필요하기 때문에 @Valid옵션을 줌
-    @Operation(summary = "자소서 수정", description = "자소서 Id와 자소서 질문 Id들을 빠짐 없이 입력해야함")
+    @Operation(summary = "자소서 수정", description = "자소서 질문 Id들을 빠짐 없이 입력해야함")
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "자소서 수정 성공")
     })
-    @PatchMapping()
+    @PatchMapping("/{resumeId}")
     @PreAuthorize("hasRole('USER')")
-    public ApiResult<ResumeDto> updateResume(@CurrentUser PrincipalDetails userPrincipal, @RequestBody @Valid ResumeDto resumeDto){
+    public ApiResult<ResumeDto> updateResume(@CurrentUser PrincipalDetails userPrincipal,
+                                             @PathVariable Long resumeId,
+                                             @RequestBody WriteResume writeResume){
+        ResumeDto resumeDto = ResumeDto.of(writeResume);
+        resumeDto.setId(resumeId);
         ResumeDto newResume = ResumeDto.of(resumeService.updateResume(userPrincipal.getUser(),
                 resumeDto));
         return success(newResume);
