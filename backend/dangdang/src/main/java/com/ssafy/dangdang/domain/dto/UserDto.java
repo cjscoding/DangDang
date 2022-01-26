@@ -17,6 +17,8 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
+    @Schema(description = "유저 id", nullable = false, example = "1")
+    private Long id;
 
     @NotBlank
     @Email
@@ -49,6 +51,7 @@ public class UserDto {
 
     public static UserDto of(User user) {
         return UserDto.builder()
+                .id(user.getId())
                 .email(user.getEmail().toString())
                 .nickName(user.getNickname())
                 .password(user.getPassword())

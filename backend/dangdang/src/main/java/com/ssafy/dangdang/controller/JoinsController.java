@@ -2,7 +2,6 @@ package com.ssafy.dangdang.controller;
 
 import com.ssafy.dangdang.config.security.CurrentUser;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
-import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.ManageStudy;
 import com.ssafy.dangdang.domain.dto.StudyDto;
 import com.ssafy.dangdang.domain.dto.UserDto;
@@ -10,13 +9,14 @@ import com.ssafy.dangdang.exception.BadRequestException;
 import com.ssafy.dangdang.service.JoinsService;
 import com.ssafy.dangdang.service.StudyService;
 import com.ssafy.dangdang.service.UserService;
-import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,8 +36,11 @@ public class JoinsController {
     private final UserService userService;
     private final StudyService studyService;
     private final JoinsService joinsService;
-    private final String pageExample = "{ \"page\" : 0, \"size\" : 10, \"sort\" : [\"id\"] }";
 
+    @Operation(summary = "가입한 스터디 조회", description = "로그인한 유저가 가입한 스터디 리스트 조회")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "스터디 조회 성공")
+    })
     @GetMapping
     public ApiResult<Page<StudyDto>> getStudiesJoinedWithPage(@CurrentUser PrincipalDetails userPrincipal, @ParameterObject Pageable pageable){
         Page<StudyDto> studiesJoined = joinsService.getStudiesJoinedWithPage(userPrincipal.getUser(), pageable);
@@ -45,34 +48,64 @@ public class JoinsController {
 
     }
 
+    @Operation(summary = "스터디 가입 신청", description = "로그인한 유저를 가입 대기자 목록에 추가함")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "스터디 가입 성공")
+    })
     @PostMapping()
     @PreAuthorize("hasRole('USER')")
     public ApiResult<Long> joinStudy(@CurrentUser PrincipalDetails userPrincipal, @RequestBody ManageStudy manageStudy){
-        Long enterId = joinsService.joinStudy(userPrincipal.getUser(), manageStudy.getId());
+        Long enterId = joinsService.joinStudy(userPrincipal.getUser(), manageStudy.getStudyId());
         if(enterId == -1) throw new BadRequestException("정확한 값을 입력해주세요");
         return success(enterId);
 
     }
 
+    @Operation(summary = "가입요청 수락", description = "스터디장이 유저의 가입 요청 수락")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "가입요청 수락 성공")
+    })
     @PatchMapping()
     @PreAuthorize("hasRole('USER')")
     public ApiResult<Long> acceptUser(@CurrentUser PrincipalDetails userPrincipal, @RequestBody ManageStudy manageStudy){
-        Long enterId = joinsService.acceptUser(userPrincipal.getUser(), manageStudy.getUserId(), manageStudy.getId());
+        Long enterId = joinsService.acceptUser(userPrincipal.getUser(), manageStudy.getUserId(), manageStudy.getStudyId());
         if(enterId == -1) throw new BadRequestException("정확한 값을 입력해주세요");
         return success(enterId);
     }
 
+    @Operation(summary = "가입 신청자 리스트 조회")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "가입 신청자 리스트 성공")
+    })
     @GetMapping("/waiting/{studyId}")
     public ApiResult<List<UserDto>> getWaitingUsers(@CurrentUser PrincipalDetails userPrincipal, @PathVariable Long studyId){
         List<UserDto> waitingUser = joinsService.getWaitingUser(userPrincipal.getUser(), studyId);
         return success(waitingUser);
     }
 
+    @Operation(summary = "스터디 나가기")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "스터디 나가기 성공")
+    })
     @DeleteMapping("/{studyId}")
     @PreAuthorize("hasRole('USER')")
     public ApiResult<String> outStudy(@CurrentUser PrincipalDetails userPrincipal, @PathVariable Long studyId){
         log.info(userPrincipal.getUser().toString());
         joinsService.outStudy(userPrincipal.getUser(),studyId);
+
+        return success("삭제 성공");
+
+    }
+
+    @Operation(summary = "스터디원 내보내기")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "스터디원 내보내기 성공")
+    })
+    @DeleteMapping("/{studyId}/{userId}")
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<String> outStudy(@CurrentUser PrincipalDetails userPrincipal, @PathVariable Long userId, @PathVariable Long studyId){
+        log.info(userPrincipal.getUser().toString());
+        joinsService.outStudy(userPrincipal.getUser(),userId, studyId);
 
         return success("삭제 성공");
 
