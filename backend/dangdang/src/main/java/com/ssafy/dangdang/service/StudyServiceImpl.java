@@ -78,7 +78,8 @@ public class StudyServiceImpl implements StudyService{
                 .goal(studyDto.getGoal())
                 .openKakao(studyDto.getOpenKakao())
                 .description(studyDto.getDescription())
-                .host(user)
+                .createdAt(findStudy.get().getCreatedAt())
+                .host(findStudy.get().getHost())
                 .lastAccessTime(LocalDateTime.now())
                 .build();
         studyRepository.save(study);
