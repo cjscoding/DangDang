@@ -1,23 +1,25 @@
 import styles from "../../scss/team-board/board.module.scss";
 import Title from "../../components/layout/title";
+import Pagination from "../../components/team-board/pagination";
+
 import Router from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { fetchRooms } from "../../store/actions/roomAction";
 
 function mapStateToProps(state) {
   return {
-    allRooms: state.roomReducer,
+    rooms: state.roomReducer.allRooms,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchAllRooms: () => {
-      const data = fetchRooms();
+    fetchAllRooms: (param) => {
+      const data = fetchRooms(param);
       data.then((res) => dispatch(res));
     },
   };
@@ -25,18 +27,28 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamBoard);
 
-function TeamBoard({ allRooms, fetchAllRooms }) {
+function TeamBoard({ rooms, fetchAllRooms }) {
+  //스터디룸 상세보기 페이지 연결 로직
   function onDetail(event) {
     event.preventDefault();
     //이후 방 고유번호(roomNo) 옵션 붙어서 이동
     Router.replace("/team-board/team-detail", "team/detail");
   }
 
-  useEffect(() => {
-    fetchAllRooms();
-  }, []);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [postsPerPage] = useState(9);
 
-  const rooms = allRooms.allRooms;
+  useEffect(() => {
+    fetchAllRooms({
+      page: currentPage,
+      size: postsPerPage,
+    });
+  }, [currentPage]);
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div>
       <Title title="Board"></Title>
@@ -90,6 +102,8 @@ function TeamBoard({ allRooms, fetchAllRooms }) {
               </div>
             ))}
           </div>
+
+          <Pagination postsPerPage={postsPerPage} paginate={paginate} />
         </div>
       </div>
     </div>

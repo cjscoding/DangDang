@@ -13,9 +13,9 @@ function setAuthToken() {
 }
 
 //actions
-//모든 스터디 조회
-export const fetchRooms = async () => {
-  const response = await api.get("/study");
+//모든 스터디 조회(+ pagination)
+export const fetchRooms = async (param) => {
+  const response = await api.get("/study", {params: param});
   const rooms = response.data.response.content;
   console.log("rooms", rooms);
   return {
