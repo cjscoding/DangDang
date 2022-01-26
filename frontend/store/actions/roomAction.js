@@ -14,12 +14,14 @@ function setAuthToken() {
 
 //actions
 //모든 스터디 조회(+ pagination)
-export const fetchRooms = async (param) => {
-  const response = await api.get("/study", {params: param});
+export const fetchRooms = async () => {
+  const response = await api.get("/study", {});
   const rooms = response.data.response.content;
+  const roomsCount = rooms.length;
   return {
     type: types.GET_ROOMS,
     rooms,
+    roomsCount,
   };
 };
 

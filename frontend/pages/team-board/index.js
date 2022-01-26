@@ -13,13 +13,14 @@ import { fetchRooms } from "../../store/actions/roomAction";
 function mapStateToProps(state) {
   return {
     rooms: state.roomReducer.allRooms,
+    allRoomsCount: state.roomReducer.allRoomsCount,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchAllRooms: (param) => {
-      const data = fetchRooms(param);
+    fetchAllRooms: () => {
+      const data = fetchRooms();
       data.then((res) => dispatch(res));
     },
   };
@@ -27,7 +28,7 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamBoard);
 
-function TeamBoard({ rooms, fetchAllRooms }) {
+function TeamBoard({ rooms, allRoomsCount, fetchAllRooms }) {
   //스터디룸 상세보기 페이지 연결 로직
   function onDetail(event) {
     event.preventDefault();
@@ -41,27 +42,25 @@ function TeamBoard({ rooms, fetchAllRooms }) {
   }, []);
 
   //pagination
-  const [currentPage, setCurrentPage] = useState(0);
   const [postsPerPage] = useState(9);
-
-  //   useEffect(() => {
-  //     fetchAllRooms({
-  //       page: currentPage,
-  //       size: postsPerPage,
-  //     });
-  //   }, [currentPage]);
+  const [startPostIndex, setStartPostIndex] = useState(0);
+  const [endPostIndex, setEndPostIndex] = useState(9);
 
   const paginate = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    setStartPostIndex(pageNumber * postsPerPage);
+    setEndPostIndex((pageNumber + 1) * postsPerPage);
   };
 
   //room filtering
   const [keyword, setKeyword] = useState("");
+  const [filteredRoomsCount, setFilteredRoomsCount] = useState();
 
   const onChangeKeyword = (event) => {
     const { value } = event.target;
-    console.log(value);
     setKeyword(value);
+    const count = rooms.filter((room) => room.hashTags.includes(value)).length;
+    setFilteredRoomsCount(count);
+    paginate(0);
   };
 
   return (
@@ -103,25 +102,28 @@ function TeamBoard({ rooms, fetchAllRooms }) {
 
           <div className={styles.rooms}>
             {keyword === ""
-              ? rooms?.map((room, index) => (
-                  <div className={styles.room} key={index} onClick={onDetail}>
-                    <Image
-                      src="/vercel.svg"
-                      alt="Vercel Logo"
-                      width={300}
-                      height={250}
-                    />
-                    <span> {room.id}</span>
-                    <span> {room.name}</span>
-                    <span> {room.goal}</span>
-                    <span> {room.description}</span>
-                    {room.hashTags?.map((hashTag, index) => (
-                      <span key={index}># {hashTag}</span>
-                    ))}
-                  </div>
-                ))
+              ? rooms
+                  ?.slice(startPostIndex, endPostIndex)
+                  .map((room, index) => (
+                    <div className={styles.room} key={index} onClick={onDetail}>
+                      <Image
+                        src="/vercel.svg"
+                        alt="Vercel Logo"
+                        width={300}
+                        height={250}
+                      />
+                      <span> {room.id}</span>
+                      <span> {room.name}</span>
+                      <span> {room.goal}</span>
+                      <span> {room.description}</span>
+                      {room.hashTags?.map((hashTag, index) => (
+                        <span key={index}># {hashTag}</span>
+                      ))}
+                    </div>
+                  ))
               : rooms
                   ?.filter((room) => room.hashTags.includes(keyword))
+                  .slice(startPostIndex, endPostIndex)
                   .map((room, index) => (
                     <div className={styles.room} key={index} onClick={onDetail}>
                       <Image
@@ -140,10 +142,9 @@ function TeamBoard({ rooms, fetchAllRooms }) {
                     </div>
                   ))}
           </div>
-
           <Pagination
+            allRoomsCount={keyword === "" ? allRoomsCount : filteredRoomsCount}
             postsPerPage={postsPerPage}
-            totalPosts={rooms.length}
             paginate={paginate}
           />
         </div>

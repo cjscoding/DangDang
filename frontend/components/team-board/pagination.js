@@ -1,21 +1,17 @@
 import styles from "../../scss/team-board/board.module.scss";
 
-import { fetchRooms } from "../../store/actions/roomAction";
 import { useEffect, useState } from "react";
 
-export default function Pagination({ postsPerPage, paginate }) {
+export default function Pagination({ allRoomsCount, postsPerPage, paginate }) {
   const [pageNumbers, setPageNumbers] = useState([]);
 
   useEffect(() => {
-    fetchRooms().then((res) => {
-      const cnt = res.rooms.length;
-      const numArr = [];
-      for (let i = 0; i < Math.ceil(cnt / postsPerPage); i++) {
-        numArr.push(i);
-      }
-      setPageNumbers(numArr);
-    });
-  }, []);
+    const numArr = [];
+    for (let i = 0; i < Math.ceil(allRoomsCount / postsPerPage); i++) {
+      numArr.push(i);
+    }
+    setPageNumbers(numArr);
+  }, [allRoomsCount]);
 
   return (
     <nav>
