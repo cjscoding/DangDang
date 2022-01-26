@@ -9,6 +9,7 @@ const initialRoomState = {
 const roomReducer = (state = initialRoomState, action) => {
   switch (action.type) {
     case types.GET_ROOMS:
+      state.allRooms = [];
       const allRooms = [...state.allRooms, ...action.rooms];
       return { ...state, allRooms };
     case types.CREATE_ROOM:

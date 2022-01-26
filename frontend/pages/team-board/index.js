@@ -1,17 +1,19 @@
-import Title from "../../components/layout/title";
 import styles from "../../scss/team-board/board.module.scss";
+import Title from "../../components/layout/title";
+import Router from "next/router";
 import Image from "next/image";
 import Link from "next/link";
-import Router from "next/router";
 
-import { fetchRooms } from "../../store/actions/roomAction";
-import { connect } from "react-redux";
 import { useEffect } from "react";
+import { connect } from "react-redux";
+import { fetchRooms } from "../../store/actions/roomAction";
+
 function mapStateToProps(state) {
   return {
     allRooms: state.roomReducer,
   };
 }
+
 function mapDispatchToProps(dispatch) {
   return {
     fetchAllRooms: () => {
@@ -20,6 +22,7 @@ function mapDispatchToProps(dispatch) {
     },
   };
 }
+
 export default connect(mapStateToProps, mapDispatchToProps)(TeamBoard);
 
 function TeamBoard({ allRooms, fetchAllRooms }) {
@@ -33,17 +36,10 @@ function TeamBoard({ allRooms, fetchAllRooms }) {
     fetchAllRooms();
   }, []);
 
-  function onClick(event) {
-    event.preventDefault();
-    console.log(rooms);
-  }
-
   const rooms = allRooms.allRooms;
   return (
     <div>
       <Title title="Board"></Title>
-
-      <button onClick={onClick}>click</button>
       <h1 className={styles.title}>스터디 구한당</h1>
 
       <div className="container">
@@ -84,13 +80,13 @@ function TeamBoard({ allRooms, fetchAllRooms }) {
                   width={300}
                   height={250}
                 />
-                <span key={index}> {items.id}</span>
-                <span key={index}> {items.name}</span>
-                <span key={index}> {items.goal}</span>
-                <span key={index}> {items.description}</span>
-                {/* {items.hashtag?.map((tag, index) => (
+                <span> {items.id}</span>
+                <span> {items.name}</span>
+                <span> {items.goal}</span>
+                <span> {items.description}</span>
+                {items.hashTags?.map((tag, index) => (
                   <span key={index}># {tag}</span>
-                ))} */}
+                ))}
               </div>
             ))}
           </div>
