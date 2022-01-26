@@ -133,6 +133,24 @@ notification:
     author-icon: # author-icon 왼쪽에 나올 아이콘의 url링크
     footer: # attachment에 하단에 나올 부분. default=현재 시간
 
+springdoc:
+  version: '@project.version@'
+  api-docs:
+    path: /v3/api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    display-query-params-without-oauth2: true
+    persistAuthorization: true
+  paths-to-match:
+    - /**
+    - /test/**
+
+
 logging:
   level:
     root: info

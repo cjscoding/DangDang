@@ -19,6 +19,8 @@ public interface JoinsService {
     public void outStudy(User user, Long studyId);
     public Long acceptUser(User host, Long userId, Long studyId);
 
+    void outStudy(User user, Long userId, Long studyId);
+
     List<StudyDto> getStudies(User user);
 
     Page<StudyDto> getStudiesJoinedWithPage(User user, Pageable pageable);

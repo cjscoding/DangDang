@@ -72,9 +72,18 @@ public class JoinsServiceImpl implements JoinsService {
     public void outStudy(User user, Long studyId) {
         Study study = studyRepository.findById(studyId).get();
         Joins enter = joinsRepository.findJoinsByUserIdAndStudyId(user.getId(), studyId);
-        System.out.println(study.getHost().getId());
-        System.out.println(user.getId());
+
         if (study.getHost().getId().equals(user.getId())) throw new BadRequestException("스터디장은 스터디를 탈퇴할 수 없습니다.");
+        joinsRepository.delete(enter);
+    }
+
+    @Override
+    public void outStudy(User user, Long userId, Long studyId) {
+        Study study = studyRepository.findById(studyId).get();
+        Joins enter = joinsRepository.findJoinsByUserIdAndStudyId(userId, studyId);
+        if (!study.getHost().getId().equals(user.getId())) throw new UnauthorizedAccessException("스터디장만이 유저를 내보낼 수 있습니다.");
+
+
         joinsRepository.delete(enter);
     }
 

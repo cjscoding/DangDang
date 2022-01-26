@@ -6,6 +6,7 @@ import com.ssafy.dangdang.domain.QPost;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.StudyDto;
 import com.ssafy.dangdang.repository.support.Querydsl4RepositorySupport;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -21,7 +22,7 @@ public class PostRepositorySupportImpl extends Querydsl4RepositorySupport implem
     }
 
     @Override
-    public Page<Post> findPostByAllWithUser(Long studyId, Pageable pageable) {
+    public Page<Post> findPostByAllWithUser(Long studyId, @Parameter(description = "페이지 정보", required = false) Pageable pageable) {
 
 
         Page<Post> posts = applyPagination(pageable, contentQuery -> contentQuery

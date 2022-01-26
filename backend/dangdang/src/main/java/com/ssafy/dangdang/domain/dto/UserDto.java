@@ -10,13 +10,15 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-@Schema(description = "유저 정보")
+
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
+    @Schema(description = "유저 id", nullable = false, example = "1")
+    private Long id;
 
     @NotBlank
     @Email
@@ -31,8 +33,7 @@ public class UserDto {
     @Schema(description = "유저 비밀번호", example = "boribori123")
     private String password;
 
-    @Schema( hidden = true)
-
+    @Schema( accessMode = Schema.AccessMode.READ_ONLY, description = "유저 권한", example = "USER")
     private UserRoleType role;
 
 
@@ -50,6 +51,7 @@ public class UserDto {
 
     public static UserDto of(User user) {
         return UserDto.builder()
+                .id(user.getId())
                 .email(user.getEmail().toString())
                 .nickName(user.getNickname())
                 .password(user.getPassword())
