@@ -1,6 +1,7 @@
 const teamBoard = {
   CREATE_ROOM: "CREATE_ROOM",
   CREATE_COMMENT: "CREATE_COMMENT",
+  GET_ROOMS: "GET_ROOMS",
 };
 
 const videoTypes = {
@@ -8,16 +9,16 @@ const videoTypes = {
   SET_CAMERA: "SET_CAMERA",
   SET_MIC: "SET_MIC",
   SET_SPEAKER: "SET_SPEAKER",
-}
+};
 
 const questionTypes = {
   ADD_QUESTION: "ADD_QUESTION",
   SET_QUESTIONS: "SET_QUESTIONS",
-}
+};
 
 const types = {
   ...teamBoard,
   ...videoTypes,
   ...questionTypes,
-}
+};
 export default types;
