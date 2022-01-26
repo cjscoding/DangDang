@@ -1,9 +1,9 @@
 import Button from "./Button";
 import styles from "../../scss/user/login-signup.module.scss";
-import { getToken } from "../../api/user";
+import { getToken, getUserInfo } from "../../api/user";
 import { useState } from "react";
 
-export default function Login({ onClick }) {
+export default function Login({ onClick, onClose }) {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -19,13 +19,23 @@ export default function Login({ onClick }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log("로그인 요청");
     getToken(
       values,
-      ({ headers: { authorization, refreshtoken } }) => {
-        console.log(authorization);
-        console.log(refreshtoken);
+      (response) => {
+        getUserInfo(
+          (response) => {
+            console.log(response);
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+        // onClose();
       },
-      (error) => console.log(error)
+      (error) => {
+        alert("이메일과 비밀번호를 확인해주세요.");
+      }
     );
   };
 
