@@ -61,7 +61,9 @@ export default function NavBar() {
           </a>
         </li>
         <li>
-          <a>마이페이지</a>
+          <Link href="/user">
+            <a>마이페이지</a>
+          </Link>
         </li>
         <li>
           <a tabIndex="0">로그아웃</a>
