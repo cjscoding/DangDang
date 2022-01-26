@@ -1,7 +1,6 @@
 package com.ssafy.dangdang.domain.dto;
 
 import com.ssafy.dangdang.domain.Comment;
-import com.ssafy.dangdang.domain.types.CommentType;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,13 +12,11 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class CommentDto {
+public class PostCommentDto {
 
     private String id;
     private String content;
-    private Long referenceId;
-    private CommentType commentType;
+    private Long postId;
     private Integer depth;
     private Long writerId;
     private String writerNickname;
@@ -27,22 +24,21 @@ public class CommentDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt ;
 
-    private List<CommentDto> children;
+    private List<PostCommentDto> children;
     private String parentId;
 
-    public static CommentDto of(Comment comment){
+    public static PostCommentDto of(Comment comment){
         if (comment.getChildren() != null){
             List<Comment> children = comment.getChildren();
-            List<CommentDto> commentDtos = children.stream().map(child -> CommentDto.of(child))
+            List<PostCommentDto> commentDtos = children.stream().map(child -> PostCommentDto.of(child))
                     .collect(Collectors.toList());
-            return CommentDto.builder()
+            return PostCommentDto.builder()
                     .id(comment.getId())
                     .content(comment.getContent())
                     .depth(comment.getDepth())
                     .createdAt(comment.getCreatedAt())
                     .updatedAt(comment.getUpdatedAt())
-                    .referenceId(comment.getReferenceId())
-                    .commentType(comment.getCommentType())
+                    .postId(comment.getReferenceId())
                     .writerId(comment.getWriterId())
                     .writerEmail(comment.getWriterEmail())
                     .writerNickname(comment.getWriterNickname())
@@ -50,19 +46,33 @@ public class CommentDto {
                     .build();
         }
         else
-            return CommentDto.builder()
+            return PostCommentDto.builder()
                     .id(comment.getId())
                     .content(comment.getContent())
                     .depth(comment.getDepth())
                     .createdAt(comment.getCreatedAt())
                     .updatedAt(comment.getUpdatedAt())
-                    .referenceId(comment.getReferenceId())
-                    .commentType(comment.getCommentType())
+                    .postId(comment.getReferenceId())
                     .writerId(comment.getWriterId())
                     .writerEmail(comment.getWriterEmail())
                     .writerNickname(comment.getWriterNickname())
                     .build();
     }
 
-
+    @Override
+    public String toString() {
+        return "PostCommentDto{" +
+                "id='" + id + '\'' +
+                ", content='" + content + '\'' +
+                ", postId=" + postId +
+                ", depth=" + depth +
+                ", writerId=" + writerId +
+                ", writerNickname='" + writerNickname + '\'' +
+                ", writerEmail='" + writerEmail + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", children=" + children +
+                ", parentId='" + parentId + '\'' +
+                '}';
+    }
 }

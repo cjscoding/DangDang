@@ -27,7 +27,7 @@ spring:
         show_sql : true
         dialect : org.hibernate.dialect.MySQL8Dialect
         default_batch_fetch_size: 200
-#    open-in-view : false
+    open-in-view : false
 
   data:
     mongodb:
@@ -65,7 +65,7 @@ spring:
         show_sql: true
         dialect : org.hibernate.dialect.MySQL8Dialect
         default_batch_fetch_size: 200
-#    open-in-view: false
+    open-in-view: false
 
   data:
     mongodb:

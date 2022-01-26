@@ -21,6 +21,6 @@ public interface ResumeRepository extends JpaRepository<Resume, Long> {
     @Query("select distinct r " +
             "from Resume  r left join fetch r.resumeQuestionList" +
             " where r.user.id = :userId")
-    List<ResumeMapping> findResumeListFetchJoinByUserId(Long userId);
+    List<Resume> findResumeListFetchJoinByUserId(Long userId);
 
 }

@@ -4,7 +4,10 @@ import com.ssafy.dangdang.config.security.CurrentUser;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
+import com.ssafy.dangdang.domain.dto.CommentDto;
 import com.ssafy.dangdang.domain.dto.StudyDto;
+import com.ssafy.dangdang.domain.types.CommentType;
+import com.ssafy.dangdang.service.CommentService;
 import com.ssafy.dangdang.service.StudyService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +31,7 @@ import static com.ssafy.dangdang.util.ApiUtils.*;
 public class StudyController {
 
     private final StudyService studyService;
+    private final CommentService commentService;
 
     @Operation(summary = "스터디 조회", description = "개설된 모든 스터디를 요청한 페이지 만큼 조회")
     @GetMapping()
@@ -39,9 +43,11 @@ public class StudyController {
 
     @Operation(summary = "스터디 단일 조회")
     @GetMapping("/{studyId}")
-    public ApiResult<StudyDto> getStudy(@PathVariable Long studyId){
+    public ApiResult<StudyDto> getStudy(@PathVariable Long studyId, Pageable pageable){
 
         StudyDto studyWithUsers = studyService.findStudyWithUsers(studyId);
+        Page<CommentDto> commentDtos = commentService.findCommentByReferenceIdWithPage(studyId, CommentType.STUDY, pageable);
+        studyWithUsers.setCommentDtos(commentDtos);
         return  success(studyWithUsers);
     }
 
@@ -57,6 +63,8 @@ public class StudyController {
         return success(study);
 
     }
+
+
 
     @PatchMapping()
     @PreAuthorize("hasRole('USER')")
@@ -78,6 +86,26 @@ public class StudyController {
         User user = userPrincipal.getUser();
         return studyService.deleteStudy(user, studyId);
 
+    }
+
+    @PostMapping("/{studyId}/comment")
+    public ApiResult<CommentDto> writeComment(@CurrentUser PrincipalDetails userPrincipal,
+                                              @PathVariable Long studyId, @RequestBody CommentDto commentDto){
+        commentDto.setReferenceId(studyId);
+        commentDto.setCommentType(CommentType.STUDY);
+        return success(commentService.writeComment(userPrincipal.getUser(), commentDto));
+    }
+    @DeleteMapping("/{studyId}/comment/{commentId}")
+    public ApiResult<String> deleteComment(@CurrentUser PrincipalDetails userPrincipal,
+                                           @PathVariable String commentId){
+        return commentService.deleteComment(userPrincipal.getUser(), commentId);
+    }
+    @PatchMapping("/{studyId}/comment/{commentId}")
+    public ApiResult<CommentDto> updateComment(@CurrentUser PrincipalDetails userPrincipal,
+                                               @PathVariable Long studyId, @PathVariable String commentId, @RequestBody CommentDto commentDto){
+        commentDto.setId(commentId);
+        commentDto.setCommentType(CommentType.STUDY);
+        return commentService.updateComment(userPrincipal.getUser(), commentDto);
     }
 
 }

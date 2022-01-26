@@ -1,7 +1,7 @@
 package com.ssafy.dangdang.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.dangdang.domain.dto.CommentDto;
+import com.ssafy.dangdang.domain.types.CommentType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,7 +32,11 @@ public class Comment {
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JsonIgnore
 //    @JoinColumn(name = "post_id")
-    private Long postId;
+    private Long referenceId;
+
+    @Enumerated(EnumType.STRING)
+    private CommentType commentType;
+
     private Integer depth;
 
     @Builder.Default
@@ -62,7 +66,7 @@ public class Comment {
         return "Comment{" +
                 "id='" + id + '\'' +
                 ", content='" + content + '\'' +
-                ", postId=" + postId +
+                ", postId=" + referenceId +
                 ", depth=" + depth +
                 ", writerId=" + writerId +
                 ", writerNickname='" + writerNickname + '\'' +
@@ -71,41 +75,41 @@ public class Comment {
                 '}';
     }
 
-    public static Comment of(CommentDto commentDto){
-        if (commentDto.getChildren() != null){
-            List<CommentDto> childrenDtos = commentDto.getChildren();
-            List<Comment> children =  childrenDtos.stream().map(childDto -> Comment.of(childDto)).collect(Collectors.toList());
-            return Comment.builder()
-                    .id(commentDto.getId())
-                    .content(commentDto.getContent())
-                    .createdAt(commentDto.getCreatedAt())
-                    .updatedAt(commentDto.getUpdatedAt())
-                    .depth(commentDto.getDepth())
-                    .writerNickname(commentDto.getWriterNickname())
-                    .writerEmail(commentDto.getWriterEmail())
-                    .writerId(commentDto.getWriterId())
-                    .postId(commentDto.getPostId())
-                    .children(children)
-                    .build();
-        }
-
-        else return Comment.builder()
-                .id(commentDto.getId())
-                .content(commentDto.getContent())
-                .createdAt(commentDto.getCreatedAt())
-                .updatedAt(commentDto.getUpdatedAt())
-                .depth(commentDto.getDepth())
-                .writerNickname(commentDto.getWriterNickname())
-                .writerEmail(commentDto.getWriterEmail())
-                .writerId(commentDto.getWriterId())
-                .postId(commentDto.getPostId())
-                .build();
-    }
+//    public static Comment of(CommentDto commentDto){
+//        if (commentDto.getChildren() != null){
+//            List<CommentDto> childrenDtos = commentDto.getChildren();
+//            List<Comment> children =  childrenDtos.stream().map(childDto -> Comment.of(childDto)).collect(Collectors.toList());
+//            return Comment.builder()
+//                    .id(commentDto.getId())
+//                    .content(commentDto.getContent())
+//                    .createdAt(commentDto.getCreatedAt())
+//                    .updatedAt(commentDto.getUpdatedAt())
+//                    .depth(commentDto.getDepth())
+//                    .writerNickname(commentDto.getWriterNickname())
+//                    .writerEmail(commentDto.getWriterEmail())
+//                    .writerId(commentDto.getWriterId())
+//                    .postId(commentDto.getPostId())
+//                    .children(children)
+//                    .build();
+//        }
+//
+//        else return Comment.builder()
+//                .id(commentDto.getId())
+//                .content(commentDto.getContent())
+//                .createdAt(commentDto.getCreatedAt())
+//                .updatedAt(commentDto.getUpdatedAt())
+//                .depth(commentDto.getDepth())
+//                .writerNickname(commentDto.getWriterNickname())
+//                .writerEmail(commentDto.getWriterEmail())
+//                .writerId(commentDto.getWriterId())
+//                .postId(commentDto.getPostId())
+//                .build();
+//    }
 
     public static Comment of(User user, CommentDto commentDto){
         if (commentDto.getChildren() != null){
             List<CommentDto> childrenDtos = commentDto.getChildren();
-            List<Comment> children =  childrenDtos.stream().map(childDto -> Comment.of(childDto)).collect(Collectors.toList());
+            List<Comment> children =  childrenDtos.stream().map(childDto -> Comment.of(user,childDto)).collect(Collectors.toList());
             return Comment.builder()
                     .id(commentDto.getId())
                     .content(commentDto.getContent())
@@ -115,7 +119,8 @@ public class Comment {
                     .writerNickname(user.getNickname())
                     .writerEmail(user.getEmail())
                     .writerId(user.getId())
-                    .postId(commentDto.getPostId())
+                    .referenceId(commentDto.getReferenceId())
+                    .commentType(commentDto.getCommentType())
                     .children(children)
                     .build();
         }
@@ -130,7 +135,8 @@ public class Comment {
                     .writerNickname(user.getNickname())
                     .writerEmail(user.getEmail())
                     .writerId(user.getId())
-                    .postId(commentDto.getPostId())
+                    .referenceId(commentDto.getReferenceId())
+                    .commentType(commentDto.getCommentType())
                     .build();
     }
 //    private List<Comment> children = new ArrayList<>();

@@ -42,11 +42,11 @@ public class ResumeServiceTest {
     @Test
     @Transactional
     public void getResumes(){
-        List<ResumeMapping> resumeDtos = resumeRepository.findResumeListFetchJoinByUserId(1L);
+        List<Resume> resumeDtos = resumeRepository.findResumeListFetchJoinByUserId(1L);
 
 
         System.out.println("=============================");
-        for (ResumeMapping r:
+        for (Resume r:
                 resumeDtos) {
             System.out.println(r);
             System.out.println("=============================");

@@ -2,13 +2,12 @@ package com.ssafy.dangdang.controller;
 
 import com.ssafy.dangdang.config.security.CurrentUser;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
-import com.ssafy.dangdang.domain.Comment;
 import com.ssafy.dangdang.domain.Post;
 import com.ssafy.dangdang.domain.dto.CommentDto;
 import com.ssafy.dangdang.domain.dto.PostDto;
+import com.ssafy.dangdang.domain.types.CommentType;
 import com.ssafy.dangdang.service.CommentService;
 import com.ssafy.dangdang.service.PostService;
-import com.ssafy.dangdang.util.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -34,7 +33,7 @@ public class PostController {
     @GetMapping("/{studyId}/post/{postId}")
     public ApiResult<PostDto> getPost(@CurrentUser PrincipalDetails userPrincipal,
                                         @PathVariable Long postId, Pageable pageable){
-        Page<CommentDto> comments = commentService.findCommentByPostIdWithPage(postId, pageable);
+        Page<CommentDto> comments = commentService.findCommentByReferenceIdWithPage(postId, CommentType.POST,pageable);
         PostDto postDto = postService.findPostDtoById(postId);
         postDto.setComments(comments);
         return success(postDto);
@@ -57,7 +56,8 @@ public class PostController {
     @PostMapping("/{studyId}/post/{postId}/comment")
     public ApiResult<CommentDto> writeComment(@CurrentUser PrincipalDetails userPrincipal,
                                                  @PathVariable Long postId, @RequestBody CommentDto commentDto){
-        commentDto.setPostId(postId);
+        commentDto.setReferenceId(postId);
+        commentDto.setCommentType(CommentType.POST);
         return success(commentService.writeComment(userPrincipal.getUser(), commentDto));
 
     }
@@ -87,6 +87,7 @@ public class PostController {
     public ApiResult<CommentDto> updateComment(@CurrentUser PrincipalDetails userPrincipal,
                                                @PathVariable Long postId, @PathVariable String commentId, @RequestBody CommentDto commentDto){
         commentDto.setId(commentId);
+        commentDto.setCommentType(CommentType.POST);
         return commentService.updateComment(userPrincipal.getUser(), commentDto);
     }
 

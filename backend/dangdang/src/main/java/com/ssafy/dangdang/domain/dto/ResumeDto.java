@@ -3,6 +3,8 @@ package com.ssafy.dangdang.domain.dto;
 import com.ssafy.dangdang.domain.Resume;
 import com.ssafy.dangdang.domain.ResumeQuestion;
 import lombok.*;
+import org.springframework.data.domain.Page;
+import org.springframework.security.core.parameters.P;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,6 +24,8 @@ public class ResumeDto {
 
     @Builder.Default
     private List<ResumeQuestionDto> resumeQuestionList = new ArrayList<>();
+
+    private Page<CommentDto> commentDtos;
 
     public static ResumeDto of(Resume resume){
 

@@ -57,6 +57,7 @@ public class JoinsServiceImpl implements JoinsService {
     }
 
     @Override
+    @Transactional
     public List<UserDto> getWaitingUser(User host, Long studyId){
 
         Optional<Study> study = studyRepository.findById(studyId);
@@ -78,12 +79,14 @@ public class JoinsServiceImpl implements JoinsService {
     }
 
     @Override
+    @Transactional
     public List<StudyDto> getStudies(User user){
         List<StudyDto> studies = studyRepository.getStudiesJoined(user);
         return studies;
        }
 
    @Override
+   @Transactional
     public Page<StudyDto> getStudiesJoinedWithPage(User user, Pageable pageable){
         return studyRepository.getStudiesJoinedWithPage(user, pageable);
     }

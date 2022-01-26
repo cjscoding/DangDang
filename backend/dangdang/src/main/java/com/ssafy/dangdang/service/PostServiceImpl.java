@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -69,6 +70,7 @@ public class PostServiceImpl implements PostService{
 
 
     @Override
+    @Transactional
     public Page<PostDto> getAllPost(Long studyId, Pageable pageable){
         Page<Post> postByAllWithUser = postRepository.findPostByAllWithUser(studyId, pageable);
         Page<PostDto> postDtos = postByAllWithUser.map(PostDto::of);
@@ -81,6 +83,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    @Transactional
     public PostDto findPostDtoById(Long postId){
         return PostDto.of(postRepository.findPostWithUser(postId));
     }

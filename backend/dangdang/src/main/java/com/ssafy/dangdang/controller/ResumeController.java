@@ -3,12 +3,17 @@ package com.ssafy.dangdang.controller;
 import com.ssafy.dangdang.config.security.CurrentUser;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
 import com.ssafy.dangdang.domain.Resume;
+import com.ssafy.dangdang.domain.dto.CommentDto;
 import com.ssafy.dangdang.domain.dto.DeleteRequest;
 import com.ssafy.dangdang.domain.dto.ResumeDto;
 import com.ssafy.dangdang.domain.projection.ResumeMapping;
+import com.ssafy.dangdang.domain.types.CommentType;
+import com.ssafy.dangdang.service.CommentService;
 import com.ssafy.dangdang.service.ResumeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,10 +33,16 @@ import static com.ssafy.dangdang.util.ApiUtils.*;
 public class ResumeController {
 
     private final ResumeService resumeService;
+    private final CommentService commentService;
 
     @GetMapping("/{userId}")
-    public ApiResult<List<ResumeMapping>> getResumes(@PathVariable Long userId){
-        List<ResumeMapping> resumes = resumeService.getResumes(userId);
+    public ApiResult<List<ResumeDto>> getResumes(@PathVariable Long userId, Pageable pageable){
+        List<ResumeDto> resumes = resumeService.getResumes(userId);
+        for (ResumeDto resumeDto : resumes){
+            Page<CommentDto> comments = commentService.findCommentByReferenceIdWithPage(resumeDto.getId(), CommentType.RESUME,pageable);
+            resumeDto.setCommentDtos(comments);
+        }
+
         System.out.println(resumes);
         return success(resumes);
     }
@@ -58,4 +69,25 @@ public class ResumeController {
             resumeService.deleteResume(userPrincipal.getUser(), resumeId);
         return success("삭제 성공");
     }
+
+    @PostMapping("/{resumeId}/comment")
+    public ApiResult<CommentDto> writeComment(@CurrentUser PrincipalDetails userPrincipal,
+                                              @PathVariable Long resumeId, @RequestBody CommentDto commentDto){
+        commentDto.setReferenceId(resumeId);
+        commentDto.setCommentType(CommentType.RESUME);
+        return success(commentService.writeComment(userPrincipal.getUser(), commentDto));
+    }
+    @DeleteMapping("/{resumeId}/comment/{commentId}")
+    public ApiResult<String> deleteComment(@CurrentUser PrincipalDetails userPrincipal,
+                                           @PathVariable String commentId){
+        return commentService.deleteComment(userPrincipal.getUser(), commentId);
+    }
+    @PatchMapping("/{resumeId}/comment/{commentId}")
+    public ApiResult<CommentDto> updateComment(@CurrentUser PrincipalDetails userPrincipal,
+                                               @PathVariable Long resumeId, @PathVariable String commentId, @RequestBody CommentDto commentDto){
+        commentDto.setId(commentId);
+        commentDto.setCommentType(CommentType.RESUME);
+        return commentService.updateComment(userPrincipal.getUser(), commentDto);
+    }
+
 }

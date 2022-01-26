@@ -62,6 +62,7 @@ public class StudyServiceImpl implements StudyService{
     }
 
     @Override
+    @Transactional
     public StudyDto updateStudy(User user, StudyDto studyDto) {
         Optional<Study> findStudy = studyRepository.findById(studyDto.getId());
         if(!findStudy.isPresent()) throw new NullPointerException("존재하지 않는 스터디 입니다.");
@@ -113,9 +114,9 @@ public class StudyServiceImpl implements StudyService{
     }
 
     @Override
+    @Transactional
     public Page<StudyDto> getAllStudies(Pageable pageable) {
         Page<Study> studies = studyRepository.findAllWithUser(pageable);
-
         Page<StudyDto> studyDtos = studies.map(StudyDto::of);
         return studyDtos;
     }
@@ -126,6 +127,7 @@ public class StudyServiceImpl implements StudyService{
     }
 
     @Override
+    @Transactional
     public StudyDto findStudyWithUsers(Long studyId){
         Study study = studyRepository.findStudyById(studyId);
         StudyDto studyDto = StudyDto.of(study);

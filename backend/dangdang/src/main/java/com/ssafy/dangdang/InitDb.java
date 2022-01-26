@@ -5,6 +5,7 @@ import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.StudyHashTag;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.*;
+import com.ssafy.dangdang.domain.types.CommentType;
 import com.ssafy.dangdang.repository.CommentRepository;
 import com.ssafy.dangdang.repository.StudyHashTagRepository;
 import com.ssafy.dangdang.repository.StudyRepository;
@@ -163,30 +164,80 @@ public class InitDb {
             Post post = postService.findById(1L).get();
             for (int i =0;i<5;i++){
                 CommentDto commentDto = CommentDto.builder()
-                        .content("댓글댓글"+i)
+                        .content("게시글댓글댓글"+i)
                         .writerId(user.getId())
                         .writerEmail(user.getEmail())
                         .writerNickname(user.getNickname())
-                        .postId(post.getId())
+                        .referenceId(1L)
+                        .commentType(CommentType.POST)
+                        .depth(0)
+                        .build();
+                commentService.writeComment(user, commentDto);
+                commentDto = CommentDto.builder()
+                        .content("스터디 댓글댓글"+i)
+                        .writerId(user.getId())
+                        .writerEmail(user.getEmail())
+                        .writerNickname(user.getNickname())
+                        .referenceId(1L)
+                        .commentType(CommentType.STUDY)
+                        .depth(0)
+                        .build();
+                commentService.writeComment(user, commentDto);
+                commentDto = CommentDto.builder()
+                        .content("자소서 댓글댓글"+i)
+                        .writerId(user.getId())
+                        .writerEmail(user.getEmail())
+                        .writerNickname(user.getNickname())
+                        .referenceId(1L)
+                        .commentType(CommentType.RESUME)
                         .depth(0)
                         .build();
                 commentService.writeComment(user, commentDto);
             }
-            Page<CommentDto> comments = commentService.findCommentByPostIdWithPage(1L, PageRequest.of(0, 1));
+            Page<CommentDto> postComments = commentService.findCommentByReferenceIdWithPage(1L, CommentType.POST, PageRequest.of(0, 1));
+            Page<CommentDto> studyComments = commentService.findCommentByReferenceIdWithPage(1L, CommentType.STUDY, PageRequest.of(0, 1));
+            Page<CommentDto> resumeComments = commentService.findCommentByReferenceIdWithPage(1L, CommentType.RESUME, PageRequest.of(0, 1));
 
-            String parentId = comments.getContent().get(0).getId();
+            String postParentId = postComments.getContent().get(0).getId();
+            String studyParentId = studyComments.getContent().get(0).getId();
+            String resumeParentId = resumeComments.getContent().get(0).getId();
             for (int i =0;i<5;i++){
                 CommentDto commentDto = CommentDto.builder()
-                        .content("대댓글!!!!!"+i)
+                        .content("게시글 대댓글!!!!!"+i)
                         .writerId(user.getId())
                         .writerEmail(user.getEmail())
                         .writerNickname(user.getNickname())
-                        .parentId(parentId)
-                        .postId(post.getId())
+                        .parentId(postParentId)
+                        .referenceId(1L)
+                        .commentType(CommentType.POST)
+                        .depth(1)
+                        .build();
+                commentService.writeComment(user, commentDto);
+                commentDto = CommentDto.builder()
+                        .content("스터디 대댓글!!!!!"+i)
+                        .writerId(user.getId())
+                        .writerEmail(user.getEmail())
+                        .writerNickname(user.getNickname())
+                        .parentId(studyParentId)
+                        .referenceId(1L)
+                        .commentType(CommentType.STUDY)
+                        .depth(1)
+                        .build();
+                commentService.writeComment(user, commentDto);
+                commentDto = CommentDto.builder()
+                        .content("자소서 대댓글!!!!!"+i)
+                        .writerId(user.getId())
+                        .writerEmail(user.getEmail())
+                        .writerNickname(user.getNickname())
+                        .parentId(resumeParentId)
+                        .referenceId(1L)
+                        .commentType(CommentType.RESUME)
                         .depth(1)
                         .build();
                 commentService.writeComment(user, commentDto);
             }
+
+
 
         }
 

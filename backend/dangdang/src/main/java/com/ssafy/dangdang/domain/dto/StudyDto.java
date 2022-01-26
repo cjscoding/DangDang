@@ -4,6 +4,7 @@ import com.ssafy.dangdang.domain.Joins;
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.StudyHashTag;
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -42,6 +43,8 @@ public class StudyDto {
 
     @Builder.Default
     private List<UserDto> userDtos = new ArrayList<>();
+
+    private Page<CommentDto> commentDtos;
 
     //User Fetch Join용
     private Long hostId;

@@ -3,6 +3,7 @@ package com.ssafy.dangdang.service;
 import com.ssafy.dangdang.domain.Comment;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.CommentDto;
+import com.ssafy.dangdang.domain.types.CommentType;
 import com.ssafy.dangdang.domain.types.UserRoleType;
 import com.ssafy.dangdang.exception.UnauthorizedAccessException;
 import com.ssafy.dangdang.repository.CommentRepository;
@@ -10,8 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,16 +28,22 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
 
+
     @Override
     public CommentDto writeComment(User user, CommentDto commentDto) {
-        Comment comment = Comment.of(user, commentDto);
-        commentRepository.save(comment);
+        Comment comment;
         if (commentDto.getParentId() != null){
             Comment parent = commentRepository.findCommentById(commentDto.getParentId()).get();
+            commentDto.setDepth(parent.getDepth()+1);
+            comment = Comment.of(user, commentDto);
+            commentRepository.save(comment);
             parent.getChildren().add(comment);
             commentRepository.save(parent);
+        } else{
+            commentDto.setDepth(0);
+            comment = Comment.of(user, commentDto);
+            commentRepository.save(comment);
         }
-
         return CommentDto.of(comment);
     }
 
@@ -47,26 +54,21 @@ public class CommentServiceImpl implements CommentService {
         if (comment.get().getWriterId() != user.getId() && user.getRole() == UserRoleType.ADMIN)  throw new UnauthorizedAccessException("작성자만이 삭제할 수 있습니다.");
         Comment updateComment ;
 
-        //TODO: 참조 객체가 바뀌면, 따로 연관관계 셋팅을 안해도 알아서 바뀌는지 테스트 필요함
-//        if (commentDto.getParentId() != null){
-//            Comment parent = commentRepository.findCommentById(commentDto.getParentId()).get();
-//            parent.getChildren().add(comment);
-//            commentRepository.save(parent);
-//        }
-
         if (commentDto.getChildren() != null){
-            List<CommentDto> childrenDtos = commentDto.getChildren();
-            List<Comment> children =  childrenDtos.stream().map(childDto -> Comment.of(childDto)).collect(Collectors.toList());
+
+            List<Comment> children = comment.get().getChildren();
+
             updateComment =  Comment.builder()
                     .id(commentDto.getId())
                     .content(commentDto.getContent())
-                    .depth(commentDto.getDepth())
+                    .depth(comment.get().getDepth())
                     .createdAt(comment.get().getCreatedAt())
                     .updatedAt(LocalDateTime.now())
                     .writerNickname(user.getNickname())
                     .writerEmail(user.getEmail())
                     .writerId(user.getId())
-                    .postId(commentDto.getPostId())
+                    .referenceId(comment.get().getReferenceId())
+                    .commentType(comment.get().getCommentType())
                     .children(children)
                     .build();
         }
@@ -75,13 +77,14 @@ public class CommentServiceImpl implements CommentService {
             updateComment = Comment.builder()
                     .id(commentDto.getId())
                     .content(commentDto.getContent())
-                    .depth(commentDto.getDepth())
+                    .depth(comment.get().getDepth())
                     .createdAt(comment.get().getCreatedAt())
                     .updatedAt(LocalDateTime.now())
                     .writerNickname(user.getNickname())
                     .writerEmail(user.getEmail())
                     .writerId(user.getId())
-                    .postId(commentDto.getPostId())
+                    .referenceId(comment.get().getReferenceId())
+                    .commentType(comment.get().getCommentType())
                     .build();
 
         commentRepository.save(updateComment);
@@ -89,8 +92,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Page<CommentDto> findCommentByPostIdWithPage(Long postId, Pageable pageable) {
-        Page<Comment> comments = commentRepository.findByPostIdAndDepth(postId, 0, pageable);
+    @Transactional
+    public Page<CommentDto> findCommentByReferenceIdWithPage(Long postId, CommentType commentType, Pageable pageable) {
+        Page<Comment> comments = commentRepository.findByReferenceIdAndDepthAndCommentType(postId, 0, commentType, pageable);
         Page<CommentDto> commentDtos = comments.map( comment -> CommentDto.of(comment));
         return commentDtos;
     }

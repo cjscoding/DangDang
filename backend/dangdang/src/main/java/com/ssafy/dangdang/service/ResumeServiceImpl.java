@@ -5,20 +5,19 @@ import com.ssafy.dangdang.domain.ResumeQuestion;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.ResumeDto;
 import com.ssafy.dangdang.domain.dto.ResumeQuestionDto;
-import com.ssafy.dangdang.domain.projection.ResumeMapping;
 import com.ssafy.dangdang.exception.UnauthorizedAccessException;
 import com.ssafy.dangdang.repository.ResumeQuestionRepository;
 import com.ssafy.dangdang.repository.ResumeRepository;
 import com.ssafy.dangdang.util.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.ssafy.dangdang.util.ApiUtils.error;
 
@@ -77,8 +76,10 @@ public class ResumeServiceImpl implements ResumeService{
 
     @Override
     @Transactional
-    public List<ResumeMapping> getResumes(Long userId){
-      return resumeRepository.findResumeListFetchJoinByUserId(userId);
+    public List<ResumeDto> getResumes(Long userId){
+        List<Resume> resumes = resumeRepository.findResumeListFetchJoinByUserId(userId);
+        List<ResumeDto> resumeDtos = resumes.stream().map(ResumeDto::of).collect(Collectors.toList());
+        return resumeDtos;
     }
 
     @Override

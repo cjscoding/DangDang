@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +50,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService{
     }
 
     @Override
+    @Transactional
     public List<InterviewQuestionDto> getAllInterviewQustion(){
         List<InterviewQuestion> all = interviewQuestionRepository.findAllInterviewQuestion();
         List<InterviewQuestionDto> interviewQuestionDtos = all.stream().map(InterviewQuestionDto::of).collect(Collectors.toList());
