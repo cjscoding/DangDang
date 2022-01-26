@@ -26,4 +26,5 @@ public interface StudyRepository extends JpaRepository<Study, Long>, StudyReposi
             "where s.id = :studyId ")
     public Study findStudyById(Long studyId);
 
+
 }

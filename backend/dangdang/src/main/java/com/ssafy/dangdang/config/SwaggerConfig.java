@@ -34,7 +34,7 @@ public class SwaggerConfig {
     public OpenApiCustomiser buildSecurityOpenApi() {
         // jwt token 을 한번 설정하면 header 에 값을 넣어주는 코드, 자세한건 아래에 추가적으로 설명할 예정
 
-        return OpenApi -> OpenApi.addSecurityItem(new SecurityRequirement().addList("jwt token"))
+        return OpenApi -> OpenApi.addSecurityItem(new SecurityRequirement().addList("jwt token").addList("refresh token"))
                 .getComponents().addSecuritySchemes("jwt token", new SecurityScheme()
                         .name(JwtUtil.HEADER_STRING)
                         .type(SecurityScheme.Type.HTTP)

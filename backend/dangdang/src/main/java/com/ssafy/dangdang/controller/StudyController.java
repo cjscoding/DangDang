@@ -5,7 +5,9 @@ import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.CommentDto;
+import com.ssafy.dangdang.domain.dto.MakeStudy;
 import com.ssafy.dangdang.domain.dto.StudyDto;
+import com.ssafy.dangdang.domain.dto.WriteComment;
 import com.ssafy.dangdang.domain.types.CommentType;
 import com.ssafy.dangdang.domain.types.UserRoleType;
 import com.ssafy.dangdang.service.CommentService;
@@ -81,13 +83,12 @@ public class StudyController {
     })
     @PostMapping()
     @PreAuthorize("hasRole('USER')")
-//    @PreAuthorize("hasAuthority('USER')")
     public ApiResult<StudyDto> createStudy(@CurrentUser PrincipalDetails userPrincipal
-            ,@RequestBody @Valid StudyDto studyDto){
+            ,@RequestBody @Valid MakeStudy makeStudy){
 
         User user = userPrincipal.getUser();
         log.info(user.toString());
-        StudyDto study = studyService.createStudy(user, studyDto);
+        StudyDto study = studyService.createStudy(user, StudyDto.of(makeStudy));
         return success(study);
 
     }
@@ -99,13 +100,16 @@ public class StudyController {
             @ApiResponse(responseCode = "400", description = "잘못된 파라미터 요청", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError400.class))),
             @ApiResponse(responseCode = "500", description = "서버 API 에러", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError500.class)))
     })
-    @PatchMapping()
+    @PatchMapping("/{studyId}")
     @PreAuthorize("hasRole('USER')")
-    public ApiResult<StudyDto> updateStudy(@CurrentUser PrincipalDetails userPrincipal
-            ,@RequestBody @Valid StudyDto studyDto){
+    public ApiResult<StudyDto> updateStudy(@CurrentUser PrincipalDetails userPrincipal,
+            @Parameter(description = "수정할 스터디 id", example = "1")  @PathVariable Long studyId,
+            @RequestBody @Valid MakeStudy makeStudy){
 
         User user = userPrincipal.getUser();
         log.info(user.toString());
+        StudyDto studyDto = StudyDto.of(makeStudy);
+        studyDto.setId(studyId);
         StudyDto study = studyService.updateStudy(user, studyDto);
         return success(study);
 
@@ -126,7 +130,7 @@ public class StudyController {
 
     }
 
-    @Operation(summary = "스터디 댓글 등록")
+    @Operation(summary = "스터디 댓글 등록", description = "parentId는 답글 작성시에만 작성")
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "스터디 댓글 등록 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 파라미터 요청", content = @Content(schema = @Schema(implementation = ApiUtils.ApiError400.class))),
@@ -134,7 +138,8 @@ public class StudyController {
     })
     @PostMapping("/{studyId}/comment")
     public ApiResult<CommentDto> writeComment(@CurrentUser PrincipalDetails userPrincipal,
-                                              @Parameter(description = "댓글을 등록할 스터디 id", example = "1") @PathVariable Long studyId, @RequestBody CommentDto commentDto){
+                                              @Parameter(description = "댓글을 등록할 스터디 id", example = "1") @PathVariable Long studyId, @RequestBody WriteComment writeComment){
+        CommentDto commentDto = CommentDto.of(writeComment);
         commentDto.setReferenceId(studyId);
         commentDto.setCommentType(CommentType.STUDY);
         return success(commentService.writeComment(userPrincipal.getUser(), commentDto));
@@ -160,7 +165,8 @@ public class StudyController {
     })
     @PatchMapping("/{studyId}/comment/{commentId}")
     public ApiResult<CommentDto> updateComment(@CurrentUser PrincipalDetails userPrincipal,
-                                               @Parameter(description = "수정할 댓글 id") @PathVariable String commentId, @RequestBody CommentDto commentDto){
+                                               @Parameter(description = "수정할 댓글 id") @PathVariable String commentId, @RequestBody WriteComment writeComment){
+        CommentDto commentDto = CommentDto.of(writeComment);
         commentDto.setId(commentId);
         commentDto.setCommentType(CommentType.STUDY);
         return commentService.updateComment(userPrincipal.getUser(), commentDto);

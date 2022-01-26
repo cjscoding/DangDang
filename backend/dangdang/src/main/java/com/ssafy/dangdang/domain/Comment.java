@@ -57,6 +57,8 @@ public class Comment {
     @Builder.Default
     private List<Comment> children = new ArrayList<>();
 
+    private Boolean visable;
+
 //    @OneToMany(mappedBy = "Children", orphanRemoval = true)
 //    @Builder.Default
 
@@ -121,6 +123,7 @@ public class Comment {
                     .writerId(user.getId())
                     .referenceId(commentDto.getReferenceId())
                     .commentType(commentDto.getCommentType())
+                    .visable(true)
                     .children(children)
                     .build();
         }
@@ -135,9 +138,15 @@ public class Comment {
                     .writerNickname(user.getNickname())
                     .writerEmail(user.getEmail())
                     .writerId(user.getId())
+                    .visable(true)
                     .referenceId(commentDto.getReferenceId())
                     .commentType(commentDto.getCommentType())
                     .build();
+    }
+
+
+    public void disappear(){
+        this.visable = false;
     }
 //    private List<Comment> children = new ArrayList<>();
 

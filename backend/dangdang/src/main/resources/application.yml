@@ -158,12 +158,12 @@ logging:
     com:
       andy: trace
     #     #HTTP 요청 확인 옵션, 개발할 때만 활성화 할것
-    org:
-      springframework:
-        security: debug
-      apache:
-        coyote:
-          http11: debug
+#    org:
+#      springframework:
+#        security: debug
+#      apache:
+#        coyote:
+#          http11: debug
 
 #  security:
 #    oauth2:

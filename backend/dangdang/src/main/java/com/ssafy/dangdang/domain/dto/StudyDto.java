@@ -3,6 +3,8 @@ package com.ssafy.dangdang.domain.dto;
 import com.ssafy.dangdang.domain.Joins;
 import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.StudyHashTag;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.data.domain.Page;
@@ -22,7 +24,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class StudyDto {
 
-    @Schema(description = "스터디 Id", example = "1L")
+    @Schema(accessMode = Schema.AccessMode.AUTO, description = "스터디 Id", example = "1")
     private Long id;
 
     @NotBlank
@@ -39,13 +41,15 @@ public class StudyDto {
     @Schema(description = "스터디원들과 소통을 위한 오픈카톡 주소", nullable = true, example = "https://open.kakao.com/o/glDxqScc")
     private String openKakao;
 
-    @Schema(description = "스터디 생성 날짜", nullable = true)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "스터디 생성 날짜", nullable = true)
     private LocalDateTime createdAt;
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "마지막 스터디 진행 날짜", nullable = true)
+    private LocalDateTime lastAccessTime;
 
     @Schema(description = "스터디의 목표기업, 추후 Enum타입으로 교체될 수 있음음", nullable = true, example = "네이버 가즈아~~!")
     private String goal;
 
-    @Schema(description = "스터디장, 스터디를 만든 유저", nullable = false, example = "test@ssafy.com")
+    @Schema( accessMode = Schema.AccessMode.READ_ONLY,readOnly = true, required = false, description = "스터디장, 스터디를 만든 유저", nullable = true)
     private UserDto host;
 
     @Builder.Default
@@ -53,15 +57,27 @@ public class StudyDto {
     private List<String> hashTags = new ArrayList<>();
 
     @Builder.Default
-    @Schema(description = "스터디에 가입한 회원들", nullable = true)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "스터디에 가입한 회원들", nullable = true)
     private List<UserDto> userDtos = new ArrayList<>();
 
-    @Schema(description = "스터디 상세 페이지에 달린 댓글들", nullable = true)
+    @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "스터디 상세 페이지에 달린 댓글들", nullable = true)
     private Page<CommentDto> commentDtos;
 
 
-    public static StudyDto of(Study study) {
+    public static StudyDto of(MakeStudy makeStudy) {
+        return StudyDto.builder()
+                .name(makeStudy.getName())
+                .number(makeStudy.getNumber())
+                .description(makeStudy.getDescription())
+                .goal(makeStudy.getGoal())
+                .hashTags(makeStudy.getHashTags())
+                .openKakao(makeStudy.getOpenKakao())
+                .build();
+    };
 
+
+
+    public static StudyDto of(Study study) {
         List<Joins> joins = study.getJoins();
         List<UserDto> userDtoLIst = joins.stream().map(join -> UserDto.of(join.getUser())).collect(Collectors.toList());
 
@@ -76,6 +92,7 @@ public class StudyDto {
                 .description(study.getDescription())
                 .goal(study.getGoal())
                 .createdAt(study.getCreatedAt())
+                .lastAccessTime(study.getLastAccessTime())
                 .openKakao(study.getOpenKakao())
                 .hashTags(hashTags)
                 .number(study.getNumber())

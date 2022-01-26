@@ -32,7 +32,7 @@ public class InterviewQuestion {
     @JoinColumn(name = "writer")
     private User writer;
 
-    private boolean visable;
+    private Boolean visable;
 
 
     public static InterviewQuestion of(InterviewQuestionDto interviewQuestionDto, User user){

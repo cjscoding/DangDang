@@ -1,15 +1,10 @@
 package com.ssafy.dangdang.service;
 
-import com.ssafy.dangdang.domain.Joins;
-import com.ssafy.dangdang.domain.Study;
-import com.ssafy.dangdang.domain.StudyHashTag;
-import com.ssafy.dangdang.domain.User;
+import com.ssafy.dangdang.domain.*;
 import com.ssafy.dangdang.domain.dto.StudyDto;
+import com.ssafy.dangdang.domain.types.CommentType;
 import com.ssafy.dangdang.exception.UnauthorizedAccessException;
-import com.ssafy.dangdang.repository.JoinsRepository;
-import com.ssafy.dangdang.repository.StudyHashTagRepository;
-import com.ssafy.dangdang.repository.StudyRepository;
-import com.ssafy.dangdang.repository.UserRepository;
+import com.ssafy.dangdang.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -34,6 +29,8 @@ public class StudyServiceImpl implements StudyService{
     private final StudyHashTagRepository hashTagRepository;
     private final UserRepository userRepository;
     private final JoinsRepository joinsRepository;
+    private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
     @Override
     @Transactional
@@ -98,6 +95,7 @@ public class StudyServiceImpl implements StudyService{
     }
 
     @Override
+    @Transactional
     public ApiResult<String> deleteStudy(User user, Long studyId) {
         Optional<Study> study = studyRepository.findById(studyId);
         if (!study.isPresent()) {
@@ -108,6 +106,18 @@ public class StudyServiceImpl implements StudyService{
             log.error("권한없는 사용자의 삭제 요청");
             throw new UnauthorizedAccessException("권한이 없는 사용자의 요청입니다.");
         }
+
+        List<StudyHashTag> hashTags = study.get().getHashTags();
+        hashTagRepository.deleteAll(hashTags);
+
+        List<Post> posts = postRepository.findPostByStudyId(studyId);
+        postRepository.deleteAll(posts);
+
+        List<Comment> comments = commentRepository.findAllByReferenceIdAndDepthAndCommentType(studyId, 0, CommentType.STUDY);
+        comments.forEach(commentRepository::recurDelete);
+
+        List<Joins> joins = joinsRepository.findJoinsByStudyId(studyId);
+        joinsRepository.deleteAll(joins);
 
         studyRepository.delete(study.get());
         return success("삭제 성공!");
