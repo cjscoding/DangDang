@@ -17,7 +17,6 @@ function setAuthToken() {
 export const fetchRooms = async (param) => {
   const response = await api.get("/study", {params: param});
   const rooms = response.data.response.content;
-  console.log("rooms", rooms);
   return {
     type: types.GET_ROOMS,
     rooms,

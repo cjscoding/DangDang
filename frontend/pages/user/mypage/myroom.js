@@ -10,12 +10,6 @@ function mapStateToProps(state) {
   };
 }
 
-// function mapDispatchToProps(){
-//     return{
-
-//     }
-// }
-
 // 임시 user
 const user = "jisu";
 

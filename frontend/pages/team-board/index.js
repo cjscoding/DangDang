@@ -35,18 +35,33 @@ function TeamBoard({ rooms, fetchAllRooms }) {
     Router.replace("/team-board/team-detail", "team/detail");
   }
 
+  //전체 스터디룸 조회
+  useEffect(() => {
+    fetchAllRooms();
+  }, []);
+
+  //pagination
   const [currentPage, setCurrentPage] = useState(0);
   const [postsPerPage] = useState(9);
 
-  useEffect(() => {
-    fetchAllRooms({
-      page: currentPage,
-      size: postsPerPage,
-    });
-  }, [currentPage]);
+  //   useEffect(() => {
+  //     fetchAllRooms({
+  //       page: currentPage,
+  //       size: postsPerPage,
+  //     });
+  //   }, [currentPage]);
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
+  };
+
+  //room filtering
+  const [keyword, setKeyword] = useState("");
+
+  const onChangeKeyword = (event) => {
+    const { value } = event.target;
+    console.log(value);
+    setKeyword(value);
   };
 
   return (
@@ -66,8 +81,11 @@ function TeamBoard({ rooms, fetchAllRooms }) {
         <div className={styles.main}>
           <div className={styles.top}>
             <div className={styles.filter}>
-              <label htmlFor="">검색어</label>
-              <input type="text" />
+              <input
+                type="text"
+                onChange={onChangeKeyword}
+                placeholder="키워드 검색..."
+              />
             </div>
             <div className={styles.createRoom}>
               <button>
@@ -84,26 +102,50 @@ function TeamBoard({ rooms, fetchAllRooms }) {
           </div>
 
           <div className={styles.rooms}>
-            {rooms?.map((items, index) => (
-              <div className={styles.room} key={index} onClick={onDetail}>
-                <Image
-                  src="/vercel.svg"
-                  alt="Vercel Logo"
-                  width={300}
-                  height={250}
-                />
-                <span> {items.id}</span>
-                <span> {items.name}</span>
-                <span> {items.goal}</span>
-                <span> {items.description}</span>
-                {items.hashTags?.map((tag, index) => (
-                  <span key={index}># {tag}</span>
-                ))}
-              </div>
-            ))}
+            {keyword === ""
+              ? rooms?.map((room, index) => (
+                  <div className={styles.room} key={index} onClick={onDetail}>
+                    <Image
+                      src="/vercel.svg"
+                      alt="Vercel Logo"
+                      width={300}
+                      height={250}
+                    />
+                    <span> {room.id}</span>
+                    <span> {room.name}</span>
+                    <span> {room.goal}</span>
+                    <span> {room.description}</span>
+                    {room.hashTags?.map((hashTag, index) => (
+                      <span key={index}># {hashTag}</span>
+                    ))}
+                  </div>
+                ))
+              : rooms
+                  ?.filter((room) => room.hashTags.includes(keyword))
+                  .map((room, index) => (
+                    <div className={styles.room} key={index} onClick={onDetail}>
+                      <Image
+                        src="/vercel.svg"
+                        alt="Vercel Logo"
+                        width={300}
+                        height={250}
+                      />
+                      <span> {room.id}</span>
+                      <span> {room.name}</span>
+                      <span> {room.goal}</span>
+                      <span> {room.description}</span>
+                      {room.hashTags?.map((hashTag, index) => (
+                        <span key={index}># {hashTag}</span>
+                      ))}
+                    </div>
+                  ))}
           </div>
 
-          <Pagination postsPerPage={postsPerPage} paginate={paginate} />
+          <Pagination
+            postsPerPage={postsPerPage}
+            totalPosts={rooms.length}
+            paginate={paginate}
+          />
         </div>
       </div>
     </div>
