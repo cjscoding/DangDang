@@ -8,6 +8,7 @@ import com.ssafy.dangdang.service.InterviewQuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +23,10 @@ import static com.ssafy.dangdang.util.ApiUtils.*;
 public class InterviewQuestionController {
 
     private final InterviewQuestionService interviewQuestionService;
+    private final String pageExample = "{ \"page\" : 0, \"size\" : 10, \"sort\" : [\"id\"] }";
 
     @PostMapping()
+    @PreAuthorize("hasRole('USER')")
     public ApiResult<InterviewQuestionDto> createInterviewQuestion(
             @CurrentUser PrincipalDetails userPrincipal,
             @RequestBody InterviewQuestionDto interviewQuestionDto){
@@ -39,6 +42,7 @@ public class InterviewQuestionController {
     }
 
     @DeleteMapping("/{interviewQuestionId}")
+    @PreAuthorize("hasRole('USER')")
     public ApiResult<String> deleteInterviewQuestion(
             @CurrentUser PrincipalDetails userPrincipal,
             @PathVariable Long interviewQuestionId){
@@ -46,6 +50,7 @@ public class InterviewQuestionController {
     }
 
     @PatchMapping()
+    @PreAuthorize("hasRole('USER')")
     public ApiResult<InterviewQuestionDto> updateInterviewQuestion(
             @CurrentUser PrincipalDetails userPrincipal,
             @RequestBody InterviewQuestionDto interviewQuestionDto){

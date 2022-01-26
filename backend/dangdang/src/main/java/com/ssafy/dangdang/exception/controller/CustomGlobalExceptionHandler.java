@@ -41,10 +41,10 @@ public class CustomGlobalExceptionHandler  {
         log.error("ExtantUserException 발생");
         e.printStackTrace();
         notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
-        return error(e, HttpStatus.BAD_REQUEST);
+        return error(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NullPointerException.class)
     public ApiResult<?> NullPointerHandle(NullPointerException e, HttpServletRequest req){
 
@@ -54,6 +54,7 @@ public class CustomGlobalExceptionHandler  {
         return error("NullPointer 참조", HttpStatus.NOT_FOUND);
     }
 
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(UnauthorizedAccessException.class)
     public ApiResult<?> UnauthorizedAccessHandle(UnauthorizedAccessException e, HttpServletRequest req){
 
@@ -63,13 +64,14 @@ public class CustomGlobalExceptionHandler  {
         return error("권한 없는 사용자 요청", HttpStatus.FORBIDDEN);
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public ApiResult<?> UnauthorizedAccessHandle(SQLIntegrityConstraintViolationException e, HttpServletRequest req){
 
         log.error("엔티티 중복 저장");
         e.printStackTrace();
         notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
-        return error("이미 존재하는 엔티티입니다.", HttpStatus.FORBIDDEN);
+        return error("이미 존재하는 엔티티입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
     private String getParams(HttpServletRequest req) {
         StringBuilder params = new StringBuilder();

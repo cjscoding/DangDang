@@ -66,6 +66,8 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.4'
     // Swagger API 문서에서, Spring-Security 인자들 없애줌
     implementation 'org.springdoc:springdoc-openapi-security:1.6.4'
+    // Pageable객체들 파라미터 만들어줌
+    //implementation 'org.springdoc:springdoc-openapi-data-rest:1.6.4'
 
     //MongoDB 관련 설정
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'

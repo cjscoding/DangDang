@@ -74,8 +74,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 			jwtExpired = true;
 
 		}
-
 		}
+
 		try {
 			if(refreshToken != null && jwtExpired){
 

@@ -86,12 +86,15 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 			Authentication authResult) throws IOException, ServletException {
 		
 		PrincipalDetails principalDetailis = new PrincipalDetails((User) authResult.getPrincipal());
-		log.info("Login 성공");
+		log.info("Login 성공 {}", principalDetailis.getUsername());
+
 		String jwtToken = jwtUtil.generateToken(principalDetailis.getUsername());
 
 		String refreshJwtToken = jwtUtil.generateRefreshToken(principalDetailis.getUsername());
 		redisUtil.setDataExpire(refreshJwtToken, principalDetailis.getUsername(), JwtUtil.REFRESH_EXPIRATION_TIME);
-		
+		log.debug(JwtUtil.HEADER_STRING +jwtToken);
+		log.debug(JwtUtil.REFRESH_HEADER_STRING + refreshJwtToken);
+
 		response.addHeader(JwtUtil.HEADER_STRING, JwtUtil.TOKEN_PREFIX+jwtToken);
 		response.addHeader(JwtUtil.REFRESH_HEADER_STRING, JwtUtil.REFRESH_TOKEN_PREFIX+refreshJwtToken);
 		///chain.doFilter(request, response);
