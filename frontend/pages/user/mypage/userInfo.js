@@ -1,14 +1,21 @@
 import Link from "next/link";
+import { connect } from "react-redux";
 
-export default function userInfo() {
-  const userName = "보리";
-  const userEmail = "bori@dangdang.com";
+function mapStateToProps({ userReducer }) {
+  return {
+    user: userReducer.user,
+  };
+}
+
+export default connect(mapStateToProps)(userInfo);
+
+function userInfo({ user }) {
   return (
     <section>
       <div className="profileImage">프로필사진</div>
       <div className="profile">
-        <p>이름: {userName}</p>
-        <p>이메일: {userEmail}</p>
+        <p>이름: {user.nickName}</p>
+        <p>이메일: {user.email}</p>
         <Link href="/user/mypage/userInfoEdit" as="/user">
           <a>
             <button>변경</button>

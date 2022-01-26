@@ -2,8 +2,8 @@ import types from "../types";
 
 const initialState = {
   user: {
-    nickName: "",
     email: "",
+    nickName: "",
   },
   showModal: false,
   isLogin: false,
@@ -12,11 +12,7 @@ const initialState = {
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
     case types.SET_USERINFO:
-      const nextUser = {
-        ...state.user,
-        ...action.user,
-      };
-      return { ...state, nextUser };
+      return { ...state, user: { ...action.userInfo } };
     case types.SET_SHOWMODAL:
       return { ...state, showModal: action.show };
     case types.SET_ISLOGIN:

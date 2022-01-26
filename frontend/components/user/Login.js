@@ -2,7 +2,11 @@ import Button from "./Button";
 import styles from "../../scss/user/login-signup.module.scss";
 import { useState } from "react";
 import { connect } from "react-redux";
-import { setShowModal, setIsLogin } from "../../store/actions/userAction";
+import {
+  setShowModal,
+  setIsLogin,
+  setUserInfo,
+} from "../../store/actions/userAction";
 import { getToken, getUserInfo } from "../../api/user";
 
 function mapStateToProps({ userReducer }) {
@@ -15,12 +19,13 @@ function mapDispatchToProps(dispatch) {
   return {
     setShowModal: (show) => dispatch(setShowModal(show)),
     setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
+    setUserInfo: (userInfo) => dispatch(setUserInfo(userInfo)),
   };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
-function Login({ setShowModal, isLogin, setIsLogin }) {
+function Login({ setShowModal, isLogin, setIsLogin, setUserInfo }) {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -40,8 +45,13 @@ function Login({ setShowModal, isLogin, setIsLogin }) {
       values,
       (response) => {
         getUserInfo(
-          (response) => {
+          ({ data: { response } }) => {
             console.log(response);
+            const userInfo = {
+              email: response.email,
+              nickName: response.nickName,
+            };
+            setUserInfo(userInfo);
           },
           (error) => {
             console.log(error);
