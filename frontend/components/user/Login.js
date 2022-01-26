@@ -1,9 +1,26 @@
 import Button from "./Button";
 import styles from "../../scss/user/login-signup.module.scss";
-import { getToken, getUserInfo } from "../../api/user";
 import { useState } from "react";
+import { connect } from "react-redux";
+import { setShowModal, setIsLogin } from "../../store/actions/userAction";
+import { getToken, getUserInfo } from "../../api/user";
 
-export default function Login({ onClick, onClose }) {
+function mapStateToProps({ userReducer }) {
+  return {
+    isLogin: userReducer.isLogin,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setShowModal: (show) => dispatch(setShowModal(show)),
+    setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
+
+function Login({ setShowModal, isLogin, setIsLogin }) {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -19,7 +36,6 @@ export default function Login({ onClick, onClose }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("로그인 요청");
     getToken(
       values,
       (response) => {
@@ -31,7 +47,7 @@ export default function Login({ onClick, onClose }) {
             console.log(error);
           }
         );
-        // onClose();
+        setShowModal(false);
       },
       (error) => {
         alert("이메일과 비밀번호를 확인해주세요.");
@@ -72,7 +88,7 @@ export default function Login({ onClick, onClose }) {
         <button type="submit">로그인</button>
       </form>
       <p>
-        회원이 아니세요? <a onClick={onClick}>회원가입</a>
+        회원이 아니세요? <a onClick={() => setIsLogin(!isLogin)}>회원가입</a>
       </p>
       <Button text="Google로 로그인" />
       <Button text="Kakao로 로그인" />

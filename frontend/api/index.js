@@ -41,7 +41,7 @@ function apiInstance() {
       const refreshtoken = response.headers.refreshtoken;
       localStorage.setItem("authorization", authorization);
       localStorage.setItem("refreshtoken", refreshtoken);
-      console.log(`response ${response}`);
+      // console.log(`response ${response}`);
       return response;
     },
     // 오류 응답 처리

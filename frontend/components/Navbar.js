@@ -1,14 +1,33 @@
 import Link from "next/link";
-import { useState } from "react";
+import { connect } from "react-redux";
+import { setIsLogin, setShowModal } from "../store/actions/userAction";
 import styles from "../scss/layout/navbar.module.scss";
 import Modal from "./layout/Modal";
 import Login from "./user/Login";
 import Signup from "./user/Signup";
 
-export default function NavBar() {
-  const [showModal, setShowModal] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+function mapStateToProps({ userReducer }) {
+  return {
+    user: userReducer.user,
+    showModal: userReducer.showModal,
+    isLogin: userReducer.isLogin,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setShowModal: (show) => dispatch(setShowModal(show)),
+    setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+
+function NavBar({ user, showModal, setShowModal, isLogin, setIsLogin }) {
+  // const [showModal, setShowModal] = useState(false);
+  // const [isLogin, setIsLogin] = useState(false);
   const onClick = () => setIsLogin((curr) => !curr);
+  const onClose = () => setShowModal(false);
 
   return (
     <nav className={styles.navbar}>
@@ -62,7 +81,7 @@ export default function NavBar() {
         </li>
         <li>
           <Link href="/user">
-            <a>마이페이지</a>
+            <a>{user.nickName}님 안녕하세요! (마이페이지)</a>
           </Link>
         </li>
         <li>
@@ -70,12 +89,8 @@ export default function NavBar() {
         </li>
       </ul>
 
-      <Modal show={showModal} onClose={() => setShowModal(false)}>
-        {isLogin ? (
-          <Login onClick={onClick}></Login>
-        ) : (
-          <Signup onClick={onClick}></Signup>
-        )}
+      <Modal show={showModal} onClose={onClose}>
+        {isLogin ? <Login></Login> : <Signup></Signup>}
       </Modal>
     </nav>
   );
