@@ -1,0 +1,22 @@
+@import "../common/variables.scss";
+
+.navbar {
+  padding: 1rem;
+  background-color: $main-color;
+  ul {
+    li {
+      display: inline;
+      list-style: none;
+      margin-right: 1rem;
+      cursor: pointer;
+      &:last-child {
+        margin-right: 0;
+      }
+      a {
+        &:hover {
+          color: brown;
+        }
+      }
+    }
+  }
+}

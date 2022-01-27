@@ -1,0 +1,13 @@
+@import "../common/mixins.scss";
+.table {
+  border-collapse: collapse;
+  tr {
+    background-color: white;
+    &:hover {
+      background-color: lightgray;
+    }
+  }
+  td {
+    padding-right: 1rem;
+  }
+}

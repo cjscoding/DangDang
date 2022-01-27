@@ -1,0 +1,43 @@
+
+.btnContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.mainBtn{
+  line-height: 4rem;
+  background:#1AAB8A;
+  color:#fff;
+  margin: 1px;
+  position:relative;
+  height:4rem;
+  font-size:2.4rem;
+  cursor:pointer;
+  transition:800ms ease all;
+  outline:none;
+
+  &:hover {
+    background:#fff;
+    color:#1AAB8A;
+  }
+  &:before, &:after {
+    content:'';
+    position:absolute;
+    top:0;
+    right:0;
+    height:2px;
+    width:0;
+    background: #1AAB8A;
+    transition:400ms ease all;
+  }
+  &:after {
+    right:inherit;
+    top:inherit;
+    left:0;
+    bottom:0;
+  }
+  &:hover:before, &:hover:after {
+    width:100%;
+    transition:800ms ease all;
+  }
+}
