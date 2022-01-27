@@ -1,21 +1,22 @@
 package com.ssafy.dangdang.domain;
 
 import com.ssafy.dangdang.domain.dto.StudyDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.ssafy.dangdang.domain.dto.StudyHashTagDto;
+import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Study {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,55 +26,72 @@ public class Study {
     private String name;
 
     @Lob //스터디 소개글
-    private String introduction;
+    private String description;
+
+    //오픈카톡방 주소
+    private String openKakao;
 
 
-    private LocalDateTime createdAt;
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     private Integer number;
 
     @ManyToOne(fetch = FetchType.LAZY) //스터디 만든사람
     @JoinColumn(name = "host_id")
+    @ToString.Exclude
     private User host;
 
     @OneToMany(mappedBy = "study")
-    private List<Enter> enters = new ArrayList<>();
+    @Builder.Default
+    private List<Joins> joins = new ArrayList<>();
 
     @Column(length = 30) //목표하는 기업
-    private String target;
+    private String goal;
+
+    @OneToMany(mappedBy = "study",fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<StudyHashTag> hashTags = new ArrayList<>();
 
     private Integer totalTime;
-    private LocalDateTime lastAccessTime;
+
+    @Builder.Default
+    private LocalDateTime lastAccessTime = LocalDateTime.now();
 
     public static Study of(User user, StudyDto studyDto) {
+        if(studyDto.getHashTags()!= null && studyDto.getHashTags().isEmpty()){
+            List<StudyHashTag> hashTags = studyDto.getHashTags().stream().map(StudyHashTag::of).collect(Collectors.toList());
+            return Study.builder()
+                    .name(studyDto.getName())
+                    .createdAt(LocalDateTime.now())
+                    .number(studyDto.getNumber())
+                    .goal(studyDto.getGoal())
+                    .openKakao(studyDto.getOpenKakao())
+                    .hashTags(hashTags)
+                    .description(studyDto.getDescription())
+                    .host(user)
+                    .totalTime(0)
+                    .lastAccessTime(LocalDateTime.now())
+                    .build();
+        }
+
         return Study.builder()
                 .name(studyDto.getName())
                 .createdAt(LocalDateTime.now())
                 .number(studyDto.getNumber())
-                .target(studyDto.getTarget())
-                .introduction(studyDto.getIntroduction())
+                .goal(studyDto.getGoal())
+                .openKakao(studyDto.getOpenKakao())
+                .description(studyDto.getDescription())
                 .host(user)
                 .totalTime(0)
                 .lastAccessTime(LocalDateTime.now())
                 .build();
 
+
     }
 
-
-
-    @Override
-    public String toString() {
-        return "Study{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", introduction='" + introduction + '\'' +
-                ", createdAt=" + createdAt +
-                ", number=" + number +
-                //   ", host=" + host +
-                //   ", enters=" + enters +
-                ", target='" + target + '\'' +
-                ", totalTime=" + totalTime +
-                ", lastAccessTime=" + lastAccessTime +
-                '}';
+    public void addHashTags(List<StudyHashTag> studyHashTags){
+        this.hashTags = studyHashTags;
     }
+
 }

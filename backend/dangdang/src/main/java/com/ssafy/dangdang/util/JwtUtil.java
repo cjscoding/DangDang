@@ -23,9 +23,9 @@ public class JwtUtil {
 //    @Value("${spring.jwt.secret}")
 //    private String SECRET_KEY;
 
-    private final static String SECRET_KEY = "eae6d34010d4fea74bcafeeef81c1f8685e4793dfe98701d30e568118b31e4e0"; // 우리 서버만 알고 있는 비밀값
-    private final static long ACCESS_EXPIRATION_TIME = 1800; // 30분
-    public final static long REFRESH_EXPIRATION_TIME = 864000000; // 10일
+    private final static String SECRET_KEY = "boriboriboriboriboriboriboriboriboriboriboribori"; // 우리 서버만 알고 있는 비밀값
+    private final static long ACCESS_EXPIRATION_TIME = 1800000*48; // 30분*48
+    public final static long REFRESH_EXPIRATION_TIME = 864000000*10; // 10일
     public final static String TOKEN_PREFIX = "Bearer ";
     public final static String REFRESH_TOKEN_PREFIX = "Refresh Bearer ";
     public final static String HEADER_STRING = "authorization";

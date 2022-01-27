@@ -5,6 +5,7 @@ import com.ssafy.dangdang.config.security.auth.PrincipalDetailsService;
 import com.ssafy.dangdang.util.JwtUtil;
 import com.ssafy.dangdang.util.RedisUtil;
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 // 인가
+@Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
 	private final PrincipalDetailsService principalDetailsService;
@@ -72,10 +74,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 			jwtExpired = true;
 
 		}
-
 		}
+
 		try {
 			if(refreshToken != null && jwtExpired){
+
 				refreshUsername = redisUtil.getData(refreshToken);
 				//토큰 검증
 				if(refreshUsername.equals(jwtUtil.getUsername(refreshToken))){
@@ -85,6 +88,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null, userDetails.getAuthorities());
 					usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 					SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+					log.info("Refresh 토큰을 이용하여 재발급");
+
 					//refreshToken을 이용해서 access token 재발급
 					String newJwtToken = jwtUtil.generateToken(refreshUsername);
 					response.addHeader(JwtUtil.HEADER_STRING, JwtUtil.TOKEN_PREFIX+newJwtToken);

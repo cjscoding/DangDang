@@ -14,8 +14,9 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(false);
-        config.addAllowedOrigin("http://localhost:3000, http://localhost:8080"); // Access-Control-Allow-Origin  (Response에 자동으로 추가해줌)
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("http://localhost:3000"); // Access-Control-Allow-Origin  (Response에 자동으로 추가해줌)
+//        config.addAllowedOrigin("http://localhost:8080");
         config.addAllowedHeader("*");  // Access-Control-Request-Headers
         config.addAllowedMethod("*"); // Access-Control-Request-Method
         config.addExposedHeader(JwtUtil.HEADER_STRING);

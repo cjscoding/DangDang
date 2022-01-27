@@ -1,4 +1,16 @@
 spring:
+  profiles:
+    group:
+      dev: common, dev
+      prod: common, prod
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
@@ -13,14 +25,71 @@ spring:
       hibernate :
         format_sql : true
         show_sql : true
+        dialect : org.hibernate.dialect.MySQL8Dialect
+        default_batch_fetch_size: 200
     open-in-view : false
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/dangdang
+
 
   session:
     store-type: REDIS
   redis:
-    host: localhost
+    host: 127.0.0.1
     port: 6379
   # JWT Secret Key
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://dangdang-mysql:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+    username: ssafy
+    password: ssafy
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    generate-ddl: false
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect : org.hibernate.dialect.MySQL8Dialect
+        default_batch_fetch_size: 200
+    open-in-view: false
+
+  data:
+    mongodb:
+      uri: mongodb://dangdang-mongodb:27017/dangdang
+
+
+  session:
+    store-type: REDIS
+  redis:
+    host: dangdang-redis
+    port: 6379
+  # JWT Secret Key
+
+---
+spring:
+  config:
+    activate:
+      on-profile: common
+
+#  jpa:
+#    properties:
+#      hibernate:
+#        default_batch_fetch_size: 200
+
   jwt:
     secret: eae6d34010d4fea74bcafeeef81c1f8685e4793dfe98701d30e568118b31e4e0
 
@@ -52,6 +121,49 @@ spring:
             tokenUri: https://kauth.kakao.com/oauth/token
             userInfoUri: https://kapi.kakao.com/v2/user/me
             userNameAttribute: id
+
+notification:
+  mattermost:
+    enabled: true # mmSender를 사용할 지 여부, false면 알림이 오지 않는다
+    webhook-url: https://meeting.ssafy.com/hooks/7xqk6s4f57gnuf88f9hbiyjp8w # 위의 Webhook URL을 기입
+    channel: # 기본 설정한 채널이 아닌 다른 채널로 보내고 싶을 때 기입한다
+    pretext: # attachments의 상단에 나오게 되는 일반 텍스트 문자
+    color: # attachment에 왼쪽 사이드 컬러. default=red
+    author-name: # attachment의 상단에 나오는 이름
+    author-icon: # author-icon 왼쪽에 나올 아이콘의 url링크
+    footer: # attachment에 하단에 나올 부분. default=현재 시간
+
+springdoc:
+  version: '@project.version@'
+  api-docs:
+    path: /v3/api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    display-query-params-without-oauth2: true
+    persistAuthorization: true
+  paths-to-match:
+    - /**
+    - /test/**
+
+
+logging:
+  level:
+    root: info
+    com.ssafy.dangdang: debug
+    com:
+      andy: trace
+    #     #HTTP 요청 확인 옵션, 개발할 때만 활성화 할것
+#    org:
+#      springframework:
+#        security: debug
+#      apache:
+#        coyote:
+#          http11: debug
 
 #  security:
 #    oauth2:
