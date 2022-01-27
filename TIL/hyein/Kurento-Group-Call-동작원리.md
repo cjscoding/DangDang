@@ -18,7 +18,7 @@
 ## 1명이 나갈 때
 
 - 클라이언트가 나가면 다른 클라이언트들은 서버로부터 나갔음을 공지받음
-- client-side에서 서버로 나간 클라이언트의 media elements를 삭제하도록 요청을 보냄
+- client-side에서 서버로 나간 클라이언트의 media elements를 cancel 하도록 요청을 보냄
 
 ## architecture
 
