@@ -2,10 +2,10 @@ import styles from "../../scss/team-board/board.module.scss";
 import Title from "../../components/layout/title";
 import Pagination from "../../components/team-board/pagination";
 
-import Router from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { fetchRooms } from "../../store/actions/roomAction";
@@ -29,13 +29,6 @@ function mapDispatchToProps(dispatch) {
 export default connect(mapStateToProps, mapDispatchToProps)(TeamBoard);
 
 function TeamBoard({ rooms, allRoomsCount, fetchAllRooms }) {
-  //스터디룸 상세보기 페이지 연결 로직
-  function onDetail(event) {
-    event.preventDefault();
-    //이후 방 고유번호(roomNo) 옵션 붙어서 이동
-    Router.replace("/team-board/team-detail", "team/detail");
-  }
-
   //전체 스터디룸 조회
   useEffect(() => {
     fetchAllRooms();
@@ -61,6 +54,21 @@ function TeamBoard({ rooms, allRoomsCount, fetchAllRooms }) {
     const count = rooms.filter((room) => room.hashTags.includes(value)).length;
     setFilteredRoomsCount(count);
     paginate(0);
+  };
+
+  //스터디룸 상세보기 페이지 연결 로직
+  const router = useRouter();
+
+  const onDetail = (id) => {
+    router.push(
+      {
+        pathname: `/team/detail/${id}`,
+        query: {
+          id,
+        },
+      },
+      `/team/detail/${id}`
+    );
   };
 
   return (
@@ -102,30 +110,36 @@ function TeamBoard({ rooms, allRoomsCount, fetchAllRooms }) {
 
           <div className={styles.rooms}>
             {keyword === ""
-              ? rooms
-                  ?.slice(startPostIndex, endPostIndex)
-                  .map((room, index) => (
-                    <div className={styles.room} key={index} onClick={onDetail}>
-                      <Image
-                        src="/vercel.svg"
-                        alt="Vercel Logo"
-                        width={300}
-                        height={250}
-                      />
-                      <span> {room.id}</span>
-                      <span> {room.name}</span>
-                      <span> {room.goal}</span>
-                      <span> {room.description}</span>
-                      {room.hashTags?.map((hashTag, index) => (
-                        <span key={index}># {hashTag}</span>
-                      ))}
-                    </div>
-                  ))
+              ? rooms?.slice(startPostIndex, endPostIndex).map((room) => (
+                  <div
+                    className={styles.room}
+                    key={room.id}
+                    onClick={() => onDetail(room.id)}
+                  >
+                    <Image
+                      src="/vercel.svg"
+                      alt="Vercel Logo"
+                      width={300}
+                      height={250}
+                    />
+                    <span> {room.id}</span>
+                    <span> {room.name}</span>
+                    <span> {room.goal}</span>
+                    <span> {room.description}</span>
+                    {room.hashTags?.map((hashTag, index) => (
+                      <span key={index}># {hashTag}</span>
+                    ))}
+                  </div>
+                ))
               : rooms
                   ?.filter((room) => room.hashTags.includes(keyword))
                   .slice(startPostIndex, endPostIndex)
-                  .map((room, index) => (
-                    <div className={styles.room} key={index} onClick={onDetail}>
+                  .map((room) => (
+                    <div
+                      className={styles.room}
+                      key={room.id}
+                      onClick={() => onDetail(room.id)}
+                    >
                       <Image
                         src="/vercel.svg"
                         alt="Vercel Logo"

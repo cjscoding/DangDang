@@ -25,6 +25,17 @@ export const fetchRooms = async () => {
   };
 };
 
+//현재 스터디 공고 상세정보 조회
+export const fetchRoomInfo = async (studyId) => {
+  console.log("action!!");
+  const response = await api.get(`/study/${studyId}`);
+  const roomInfo = response.data.response;
+  return {
+    type: types.GET_ROOM_INFO,
+    roomInfo,
+  };
+};
+
 export const createRoom = (newRoom) => ({
   type: types.CREATE_ROOM,
   newRoom,
