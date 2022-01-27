@@ -14,3 +14,7 @@ export const setIsLogin = (isLogin) => ({
   type: types.SET_ISLOGIN,
   isLogin,
 });
+
+export const resetUserInfo = () => ({
+  type: types.RESET_USERINFO,
+});

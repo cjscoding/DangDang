@@ -39,8 +39,10 @@ function apiInstance() {
       // 응답 후 토큰 갱신
       const authorization = response.headers.authorization;
       const refreshtoken = response.headers.refreshtoken;
-      localStorage.setItem("authorization", authorization);
-      localStorage.setItem("refreshtoken", refreshtoken);
+      if (authorization && refreshtoken) {
+        localStorage.setItem("authorization", authorization);
+        localStorage.setItem("refreshtoken", refreshtoken);
+      }
       // console.log(`response ${response}`);
       return response;
     },

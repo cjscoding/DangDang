@@ -17,6 +17,15 @@ const userReducer = (state = initialState, action) => {
       return { ...state, showModal: action.show };
     case types.SET_ISLOGIN:
       return { ...state, isLogin: action.isLogin };
+    case types.RESET_USERINFO:
+      return {
+        user: {
+          email: "",
+          nickName: "",
+        },
+        showModal: false,
+        isLogin: false,
+      };
     default:
       return state;
   }

@@ -14,4 +14,8 @@ function getUserInfo(success, fail) {
   api.get(`/user/me`).then(success).catch(fail);
 }
 
-export { signUpRequest, getToken, getUserInfo };
+function logoutRequest(success, fail) {
+  api.post(`/user/logout`).then(success).catch(fail);
+}
+
+export { signUpRequest, getToken, getUserInfo, logoutRequest };
