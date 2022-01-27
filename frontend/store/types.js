@@ -17,9 +17,19 @@ const questionTypes = {
   SET_QUESTIONS: "SET_QUESTIONS",
 };
 
+const userTypes = {
+  SET_USERINFO: "SET_USERINFO",
+  SET_SHOWMODAL: "SET_SHOWMODAL",
+  SET_ISLOGIN: "SET_ISLOGIN",
+  RESET_USERINFO: "RESET_USERINFO",
+};
+
 const types = {
   ...teamBoard,
   ...videoTypes,
   ...questionTypes,
+  ...userTypes,
+};
+
 };
 export default types;

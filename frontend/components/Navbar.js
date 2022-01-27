@@ -1,14 +1,50 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { connect } from "react-redux";
+import { logoutRequest } from "../api/user";
+import {
+  resetUserInfo,
+  setIsLogin,
+  setShowModal,
+} from "../store/actions/userAction";
 import styles from "../scss/layout/navbar.module.scss";
 import Modal from "./layout/Modal";
 import Login from "./user/Login";
 import Signup from "./user/Signup";
 
-export default function NavBar() {
-  const [showModal, setShowModal] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
-  const onClick = () => setIsLogin((curr) => !curr);
+function mapStateToProps({ userReducer }) {
+  return {
+    user: userReducer.user,
+    isLogin: userReducer.isLogin,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setShowModal: (show) => dispatch(setShowModal(show)),
+    setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
+    resetUserInfo: () => dispatch(resetUserInfo()),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+
+function NavBar({ user, isLogin, setShowModal, setIsLogin, resetUserInfo }) {
+  const router = useRouter();
+  const logOut = () => {
+    logoutRequest(
+      (response) => {
+        console.log(response);
+        localStorage.removeItem("authorization");
+        localStorage.removeItem("refreshtoken");
+
+        // 로그아웃 시 삭제해야 하는 store 값들 추가로 삭제 바람!
+        resetUserInfo();
+        router.push("/");
+      },
+      (error) => console.log(error)
+    );
+  };
 
   return (
     <nav className={styles.navbar}>
@@ -62,21 +98,17 @@ export default function NavBar() {
         </li>
         <li>
           <Link href="/user">
-            <a>마이페이지</a>
+            <a>{user.nickName}님 안녕하세요! (마이페이지)</a>
           </Link>
         </li>
         <li>
-          <a tabIndex="0">로그아웃</a>
+          <a tabIndex="0" onClick={logOut}>
+            로그아웃
+          </a>
         </li>
       </ul>
 
-      <Modal show={showModal} onClose={() => setShowModal(false)}>
-        {isLogin ? (
-          <Login onClick={onClick}></Login>
-        ) : (
-          <Signup onClick={onClick}></Signup>
-        )}
-      </Modal>
+      <Modal>{isLogin ? <Login></Login> : <Signup></Signup>}</Modal>
     </nav>
   );
 }

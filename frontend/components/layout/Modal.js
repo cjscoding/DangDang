@@ -1,8 +1,23 @@
 import React, { useEffect, useRef, useState } from "react";
-import ReactDOM from "react-dom";
 import styles from "../../scss/layout/modal.module.scss";
+import ReactDOM from "react-dom";
+import { connect } from "react-redux";
+import { setShowModal } from "../../store/actions/userAction";
 
-export default function Modal({ show, onClose, children }) {
+function mapStateToProps({ userReducer }) {
+  return {
+    showModal: userReducer.showModal,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setShowModal: () => dispatch(setShowModal(false)),
+  };
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Modal);
+
+function Modal({ showModal, setShowModal, children }) {
   const modalWrapperRef = useRef();
 
   const closeHandler = (event) => {
@@ -31,12 +46,12 @@ export default function Modal({ show, onClose, children }) {
   //   };
   // }, []);
 
-  const modalContent = show ? (
+  const modalContent = showModal ? (
     <div className={styles.modalOverlay}>
       <div className={styles.modalWrapper} tabIndex={-1} ref={modalWrapperRef}>
         <div className={styles.modal}>
           <div className={styles.close}>
-            <a href="#" onClick={closeHandler}>
+            <a href="#" onClick={setShowModal}>
               [ X ]
             </a>
           </div>
