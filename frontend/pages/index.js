@@ -12,12 +12,12 @@ export default function Home() {
             <MainComponent content={"혼자연습한당"} />
           </a>
         </Link>
-        <Link href="/team-space">
+        <Link href="/user/mypage/myroom">
           <a>
             <MainComponent content={"같이연습한당"} />
           </a>
         </Link>
-        <Link href="/team-board">
+        <Link href="/team/board">
           <a>
             <MainComponent content={"스터디구한당"} />
           </a>

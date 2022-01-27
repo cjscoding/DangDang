@@ -1,10 +1,10 @@
-import styles from "../../../scss/team-board/team-detail.module.scss";
-import Comment from "../../../components/team-board/comment";
+import styles from "../../../../scss/team/board/detail.module.scss";
+import Comment from "../../../../components/team/board/comment";
 
-import { fetchRoomInfo } from "../../../store/actions/roomAction";
+import { fetchRoomInfo } from "../../../../store/actions/roomAction";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 function mapStateToProps(state) {
   return {

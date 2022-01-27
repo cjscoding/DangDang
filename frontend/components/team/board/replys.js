@@ -1,4 +1,4 @@
-import styles from "../../scss/team-board/reply.module.scss";
+// import styles from "../../scss/team/board/reply.module.scss";
 
 export default function Replys({ replys, on }) {
   return (

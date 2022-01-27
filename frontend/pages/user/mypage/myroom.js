@@ -32,7 +32,7 @@ function MyRooms({ rooms }) {
               <input type="text" />
             </div>
             <button>
-              <Link href="/team-board">
+              <Link href="/team/board">
                 <a>스터디 게시판으로</a>
               </Link>
             </button>

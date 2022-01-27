@@ -1,6 +1,6 @@
-import styles from "../../scss/team-board/board.module.scss";
-import Title from "../../components/layout/title";
-import Pagination from "../../components/team-board/pagination";
+import styles from "../../../scss/team/board/board.module.scss";
+import Title from "../../../components/layout/title";
+import Pagination from "../../../components/team/board/pagination";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { fetchRooms } from "../../store/actions/roomAction";
+import { fetchRooms } from "../../../store/actions/roomAction";
 
 function mapStateToProps(state) {
   return {
@@ -62,12 +62,12 @@ function TeamBoard({ rooms, allRoomsCount, fetchAllRooms }) {
   const onDetail = (id) => {
     router.push(
       {
-        pathname: `/team/detail/${id}`,
+        pathname: `/team/board/detail/${id}`,
         query: {
           id,
         },
       },
-      `/team/detail/${id}`
+      `/team/board/detail/${id}`
     );
   };
 
@@ -101,7 +101,7 @@ function TeamBoard({ rooms, allRoomsCount, fetchAllRooms }) {
                 </Link>
               </button>
               <button>
-                <Link href="/team-board/create-room">
+                <Link href="/team/space/create">
                   <a>방 생성</a>
                 </Link>
               </button>

@@ -1,8 +1,9 @@
-import styles from "../../scss/team-board/create-room.module.scss";
-import Title from "../../components/layout/title";
+import styles from "../../../scss/team/board/create-room.module.scss";
+import Title from "../../../components/layout/title";
 import Link from "next/link";
+
+import { createRoom } from "../../../store/actions/roomAction";
 import { connect } from "react-redux";
-import { createRoom } from "../../store/actions/roomAction";
 import { useState } from "react";
 
 function mapDispatchToProps(dispatch) {
