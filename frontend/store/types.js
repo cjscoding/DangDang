@@ -1,4 +1,6 @@
 const teamBoard = {
+  GET_ROOMS: "GET_ROOMS",
+  GET_ROOM_INFO: "GET_ROOM_INFO",
   CREATE_ROOM: "CREATE_ROOM",
   CREATE_COMMENT: "CREATE_COMMENT",
 };
@@ -29,4 +31,5 @@ const types = {
   ...userTypes,
 };
 
+};
 export default types;

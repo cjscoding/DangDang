@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BACKEND_URL } from "../config";
+import { BACKEND_URL } from "../config/index";
 
 // axios 객체 생성
 function apiInstance() {
@@ -62,5 +62,12 @@ function apiInstance() {
   );
   return instance;
 }
+
+// export { apiInstance };
+//       Authorization: null,
+//     },
+//   });
+//   return instance;
+// }
 
 export { apiInstance };

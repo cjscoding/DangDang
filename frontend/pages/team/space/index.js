@@ -1,5 +1,5 @@
-import Layout from "../../components/team-space/layout";
-import styles from "../../scss/team-space/teamspace.module.scss";
+import Layout from "../../../components/team/space/layout";
+import styles from "../../../scss/team/space/teamspace.module.scss";
 
 export default function TeamSpace() {
   return (

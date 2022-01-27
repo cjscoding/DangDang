@@ -1,5 +1,5 @@
 import Link from "next/link";
-import styles from "../../scss/team-space/layout.module.scss";
+import styles from "../../../scss/team/space/layout.module.scss";
 export default function layout() {
   return (
     <div>
