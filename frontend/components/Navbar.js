@@ -60,12 +60,12 @@ function NavBar({ user, isLogin, setShowModal, setIsLogin, resetUserInfo }) {
           </Link>
         </li>
         <li>
-          <Link href="/team-space">
+          <Link href="/user/mypage/myroom">
             <a>같이연습한당</a>
           </Link>
         </li>
         <li>
-          <Link href="/team-board">
+          <Link href="/team/board">
             <a>스터디구한당</a>
           </Link>
         </li>

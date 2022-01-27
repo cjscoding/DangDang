@@ -1,6 +1,17 @@
 import Layout from "../../../components/team/space/layout";
 import styles from "../../../scss/team/space/teamspace.module.scss";
+
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+
 export default function Board() {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    console.log(router.query);
+  }, [router.isReady]);
+
   return (
     <div>
       <Layout />
@@ -19,11 +30,11 @@ export default function Board() {
               </tr>
             </thead>
             <tbody>
-                <td>공고</td>
-                <td>하반기 공채 일정</td>
-                <td>지수</td>
-                <td>2022.01.24</td>
-                <td>10</td>
+              {/* <td>공고</td>
+              <td>하반기 공채 일정</td>
+              <td>지수</td>
+              <td>2022.01.24</td>
+              <td>10</td> */}
             </tbody>
           </table>
         </div>

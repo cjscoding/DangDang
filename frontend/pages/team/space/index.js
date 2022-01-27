@@ -1,7 +1,17 @@
 import Layout from "../../../components/team/space/layout";
 import styles from "../../../scss/team/space/teamspace.module.scss";
 
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+
 export default function TeamSpace() {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    console.log(router.query);
+  }, [router.isReady]);
+
   return (
     <div>
       <Layout />
@@ -14,18 +24,18 @@ export default function TeamSpace() {
           <span>보리</span>
           <span>팀원</span>
           <div>
-              <span>보리</span>
-              <span>지수</span>
-              <span>혜인</span>
-              <span>동유</span>
+            <span>보리</span>
+            <span>지수</span>
+            <span>혜인</span>
+            <span>동유</span>
           </div>
         </div>
         <div className={styles.waiting}>
           <h1>대기명단</h1>
           <div>
-              <span>윤준</span>
-              <span>은지</span>
-              <span>혁</span>
+            <span>윤준</span>
+            <span>은지</span>
+            <span>혁</span>
           </div>
         </div>
       </div>

@@ -2,7 +2,9 @@ import Title from "../../../components/layout/title";
 import styles from "../../../scss/user/mypage.module.scss";
 import Image from "next/image";
 import Link from "next/link";
+
 import { connect } from "react-redux";
+import { useRouter } from "next/router";
 
 function mapStateToProps(state) {
   return {
@@ -16,13 +18,31 @@ const user = "jisu";
 export default connect(mapStateToProps, null)(MyRooms);
 
 function MyRooms({ rooms }) {
+  const router = useRouter();
   const myRooms = rooms?.filter((room) => room.member.includes(user));
+
+  //   임시 --
+  const onDetail = (id) => {
+    router.push(
+      {
+        pathname: `/team/space`,
+        query: {
+          id,
+        },
+      },
+    //   `/team/space`
+    );
+  };
+  //   -- 임시
 
   return (
     <div>
       <Title title="Board"></Title>
 
       <h1 className={styles.title}>내방들이당</h1>
+
+      <button onClick={() => onDetail(1)}>임시경로1</button>
+      <button onClick={() => onDetail(2)}>임시경로2</button>
 
       <div className="container">
         <div className={styles.main}>

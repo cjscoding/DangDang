@@ -1,6 +1,17 @@
 import Layout from "../../../components/team/space/layout";
 import styles from "../../../scss/team/space/teamspace.module.scss";
+
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+
 export default function CoverLetter() {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    console.log(router.query);
+  }, [router.isReady]);
+
   return (
     <div>
       <Layout />
