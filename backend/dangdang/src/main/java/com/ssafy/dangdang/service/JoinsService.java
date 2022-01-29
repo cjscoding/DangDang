@@ -21,7 +21,7 @@ public interface JoinsService {
 
     void outStudy(User user, Long userId, Long studyId);
 
-    List<StudyDto> getStudies(User user);
+    List<StudyDto> getStudies(User user, List<String> hasgTags);
 
-    Page<StudyDto> getStudiesJoinedWithPage(User user, Pageable pageable);
+    Page<StudyDto> getStudiesJoinedWithPage(User user, List<String> hasgTags, Pageable pageable);
 }

@@ -40,6 +40,7 @@ public class User{
     private String email;
 
     //@NotBlank OAuth의 경우에는 비밀번호가 필요없음
+    @JsonIgnore
     private String password;
 
     private String imageUrl;

@@ -51,8 +51,8 @@ public class StudyController {
             @ApiResponse(responseCode = "200", description = "스터디 조회 성공")
     })
     @GetMapping()
-    public ApiResult<Page<StudyDto>> getAllStudies(@ParameterObject Pageable pageable){
-        Page<StudyDto> allStudies = studyService.getAllStudies(pageable);
+    public ApiResult<Page<StudyDto>> getAllStudies(@RequestParam(required = false) List<String> hashtags, @ParameterObject Pageable pageable){
+        Page<StudyDto> allStudies = studyService.getAllStudies(hashtags, pageable);
 
         return  success(allStudies);
     }

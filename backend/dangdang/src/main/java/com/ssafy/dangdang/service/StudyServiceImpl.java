@@ -125,8 +125,8 @@ public class StudyServiceImpl implements StudyService{
 
     @Override
     @Transactional
-    public Page<StudyDto> getAllStudies(Pageable pageable) {
-        Page<Study> studies = studyRepository.findAllWithUser(pageable);
+    public Page<StudyDto> getAllStudies(List<String> hashTags, Pageable pageable) {
+        Page<Study> studies = studyRepository.findStudiesByHashtags(hashTags, pageable);
         Page<StudyDto> studyDtos = studies.map(StudyDto::of);
         return studyDtos;
     }

@@ -42,8 +42,8 @@ public class JoinsController {
             @ApiResponse(responseCode = "200", description = "스터디 조회 성공")
     })
     @GetMapping
-    public ApiResult<Page<StudyDto>> getStudiesJoinedWithPage(@CurrentUser PrincipalDetails userPrincipal, @ParameterObject Pageable pageable){
-        Page<StudyDto> studiesJoined = joinsService.getStudiesJoinedWithPage(userPrincipal.getUser(), pageable);
+    public ApiResult<Page<StudyDto>> getStudiesJoinedWithPage(@CurrentUser PrincipalDetails userPrincipal, @RequestParam(required = false) List<String> hashtags, @ParameterObject Pageable pageable){
+        Page<StudyDto> studiesJoined = joinsService.getStudiesJoinedWithPage(userPrincipal.getUser(), hashtags, pageable);
         return success(studiesJoined);
 
     }

@@ -1,5 +1,6 @@
 package com.ssafy.dangdang.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.types.UserRoleType;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,7 +31,8 @@ public class UserDto {
     private String nickName;
 
     @Length(min=8, max=50)
-    @Schema(description = "유저 비밀번호", example = "boribori123")
+    //@Schema(description = "유저 비밀번호", example = "boribori123")
+    @JsonIgnore
     private String password;
 
     @Schema( accessMode = Schema.AccessMode.READ_ONLY, description = "유저 권한", example = "USER")

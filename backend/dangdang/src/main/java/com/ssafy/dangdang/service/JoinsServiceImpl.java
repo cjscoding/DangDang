@@ -89,14 +89,16 @@ public class JoinsServiceImpl implements JoinsService {
 
     @Override
     @Transactional
-    public List<StudyDto> getStudies(User user){
-        List<StudyDto> studies = studyRepository.getStudiesJoined(user);
-        return studies;
+    public List<StudyDto> getStudies(User user, List<String> hasgTags){
+        List<Study> studies = studyRepository.getStudiesJoined(user, hasgTags);
+
+        return studies.stream().map(StudyDto::of).collect(Collectors.toList());
        }
 
    @Override
    @Transactional
-    public Page<StudyDto> getStudiesJoinedWithPage(User user, Pageable pageable){
-        return studyRepository.getStudiesJoinedWithPage(user, pageable);
+    public Page<StudyDto> getStudiesJoinedWithPage(User user,List<String> hasgTags, Pageable pageable){
+       Page<Study> studies = studyRepository.getStudiesJoinedWithPage(user, hasgTags, pageable);
+       return studies.map(StudyDto::of) ;
     }
 }
