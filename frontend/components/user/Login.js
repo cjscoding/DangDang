@@ -2,12 +2,14 @@ import Button from "./Button";
 import styles from "../../scss/user/login-signup.module.scss";
 import { useState } from "react";
 import { connect } from "react-redux";
+import { useRouter } from "next/router";
 import {
   setShowModal,
   setIsLogin,
   setUserInfo,
 } from "../../store/actions/userAction";
 import { getToken, getUserInfo } from "../../api/user";
+import userReducer from "../../store/reducers/userReducer";
 
 function mapStateToProps({ userReducer }) {
   return {
@@ -26,6 +28,7 @@ function mapDispatchToProps(dispatch) {
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
 function Login({ setShowModal, isLogin, setIsLogin, setUserInfo }) {
+  const router = useRouter();
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -46,7 +49,6 @@ function Login({ setShowModal, isLogin, setIsLogin, setUserInfo }) {
       (response) => {
         getUserInfo(
           ({ data: { response } }) => {
-            console.log(response);
             const userInfo = {
               email: response.email,
               nickName: response.nickName,
@@ -63,6 +65,10 @@ function Login({ setShowModal, isLogin, setIsLogin, setUserInfo }) {
         alert("이메일과 비밀번호를 확인해주세요.");
       }
     );
+  };
+
+  const socialLoginRequest = (provider) => {
+    window.location.href = `http://localhost:8080/oauth2/authorize/${provider}?redirect_uri=http://localhost:3000/user/oauth2/redirect?destination=${router.pathname}`;
   };
 
   return (
@@ -100,8 +106,14 @@ function Login({ setShowModal, isLogin, setIsLogin, setUserInfo }) {
       <p>
         회원이 아니세요? <a onClick={() => setIsLogin(!isLogin)}>회원가입</a>
       </p>
-      <Button text="Google로 로그인" />
-      <Button text="Kakao로 로그인" />
+      <Button
+        text="Google로 로그인"
+        onClick={() => socialLoginRequest("google")}
+      />
+      <Button
+        text="Kakao로 로그인"
+        onClick={() => socialLoginRequest("kakao")}
+      />
     </div>
   );
 }

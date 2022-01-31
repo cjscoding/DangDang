@@ -31,5 +31,4 @@ const types = {
   ...userTypes,
 };
 
-};
 export default types;

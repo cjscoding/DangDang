@@ -18,4 +18,20 @@ function logoutRequest(success, fail) {
   api.post(`/user/logout`).then(success).catch(fail);
 }
 
-export { signUpRequest, getToken, getUserInfo, logoutRequest };
+/** Social Login */
+function googleLoginRequest(success, fail) {
+  api
+    .get(
+      `/oauth2/authorize/google?redirect_uri=http://localhost:3000/user/oauth2/redirect`
+    )
+    .then(success)
+    .catch(fail);
+}
+
+export {
+  signUpRequest,
+  getToken,
+  getUserInfo,
+  logoutRequest,
+  googleLoginRequest,
+};
