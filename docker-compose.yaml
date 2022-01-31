@@ -2,7 +2,7 @@ version: "3"
 
 services:
   backend:
-    image: dbswns97/dangdang-backend:0.1
+    image: dbswns97/dangdang-backend:0.3
     # build: ./backend/dangdang
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://dangdang-mysql:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul"
@@ -11,18 +11,21 @@ services:
       SPRING_DATA_MONGODB_URI: "mongodb://dangdang-mongodb:27017/dangdang"
       SPRING_REDIS_HOST: "dangdang-redis"
       SPRING_REDIS_PORT: "6379"
-      SERVER_PORT: "8080"
+      SERVER_PORT: "8443"
     ports:
-      - 8080:8080
+      - 8443:8443
     depends_on:
       - "dangdang-mongodb"
       - "dangdang-mysql"
       - "dangdang-redis"
+      - "dangdang-kms"
     restart: always
     links:
       - dangdang-mongodb
+      # - dangdang-kms
     networks:
       - dangdang_network
+    command: "java -Dspring.profiles.active=prod -Dkms.url=ws://dangdang-kms:8888/kurento -jar /app.jar"
 
   dangdang-mysql:
     image: mysql:8.0.28
@@ -60,6 +63,21 @@ services:
     networks:
       - dangdang_network
     command: mongod
+
+  dangdang-kms:
+    image: kurento/kurento-media-server:6.9.0
+    restart: always
+    volumes:
+      - type: bind
+        source: ./backend/dangdang/data
+        target: /tmp
+    # network_mode: host
+    expose:
+      - 8888
+    ports:
+      - 8888:8888
+    networks:
+      - dangdang_network
 
 networks:
   dangdang_network:

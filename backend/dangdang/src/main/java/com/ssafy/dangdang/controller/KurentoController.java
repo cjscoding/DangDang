@@ -1,14 +1,20 @@
 package com.ssafy.dangdang.controller;
 
+import com.ssafy.dangdang.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping("/kurento")
@@ -17,41 +23,32 @@ import java.net.URLEncoder;
 @Slf4j
 public class KurentoController {
 
+    private final StorageService storageService;
 
 
     @GetMapping("/download/{name}")
-    public void download(HttpServletResponse response, @PathVariable String name) throws IOException {
-        System.out.println(name+":: 컨트롤러 연결");
-        String path = "/home/ssafy/share/"+name;
+    public ResponseEntity<Resource> download(HttpServletResponse response, @PathVariable String name) throws IOException {
 
-        byte[] fileByte = FileUtils.readFileToByteArray(new File(path));
 
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment; fileName=\"" + URLEncoder.encode(name, "UTF-8")+"\";");
-        response.setHeader("Content-Transfer-Encoding", "binary");
+        Resource resource = storageService.loadAsResource(name);
+        String encodedUploadFileName = UriUtils.encode(name, StandardCharsets.UTF_8);
 
-        response.getOutputStream().write(fileByte);
-        response.getOutputStream().flush();
-        response.getOutputStream().close();
+//        response.setContentType("application/octet-stream");
+//        response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedUploadFileName);
+//        response.setHeader("Content-Transfer-Encoding", "binary");
+//        response.getOutputStream().flush();
+//        response.getOutputStream().close();
+        String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                contentDisposition).body(resource);
+
     }
 
-    @GetMapping("/delete")
-    public void delete(HttpServletResponse response) throws IOException {
+    @DeleteMapping("/delete/{name}")
+    public void delete(HttpServletResponse response, @PathVariable String name) throws IOException {
         System.out.println("delete 컨트롤러 연결");
-        int cnt=1;
-        while(true){
-            String filePath = "/home/ssafy/share/"+cnt+"HelloWorldRecorded.webm";
-            File deleteFile = new File(filePath);
-            // 파일이 존재하는지 체크 존재할경우 true, 존재하지않을경우 false
-            if(deleteFile.exists()) {
-                deleteFile.delete();
-                System.out.println("파일 삭제");
-                cnt++;
-            } else {
-                System.out.println("파일 없음");
-                break;
-            }
-        }
+
+        storageService.delete(name);
         return;
     }
 }
