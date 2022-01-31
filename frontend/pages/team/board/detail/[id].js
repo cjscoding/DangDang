@@ -1,7 +1,7 @@
 import styles from "../../../../scss/team/board/detail.module.scss";
 import Comment from "../../../../components/team/board/comment";
 
-import { fetchRoomInfo } from "../../../../store/actions/roomAction";
+import { fetchRoomInfo, joinStudy } from "../../../../store/actions/roomAction";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -17,7 +17,6 @@ function mapDispatchToProps(dispatch) {
     getRoomInfo: (id) => {
       const data = fetchRoomInfo(id);
       data.then((res) => {
-        console.log(res);
         dispatch(res);
       });
     },
@@ -27,6 +26,7 @@ function mapDispatchToProps(dispatch) {
 export default connect(mapStateToProps, mapDispatchToProps)(TeamDetail);
 
 function TeamDetail({ roomInfo, getRoomInfo }) {
+  //초기 셋팅
   const router = useRouter();
 
   useEffect(() => {
@@ -34,15 +34,24 @@ function TeamDetail({ roomInfo, getRoomInfo }) {
     getRoomInfo(router.query.id);
   }, [router.isReady]);
 
+  // 가입 신청
+  const onJoinStudy = (id) => {
+    const data = {
+      studyId: id,
+    };
+    joinStudy(data);
+    console.log("가입완료되었습니다.");
+  };
+
   return (
     <div>
       <h1>{roomInfo.name}</h1>
 
-      <button>가입신청</button>
+      <button onClick={() => onJoinStudy(roomInfo.id)}>가입신청</button>
 
       <div className={styles.info}>
         <span>호스트</span>
-        <span>{roomInfo.userDto ? roomInfo.userDto.nickName : null}</span>
+        <span>{/* {roomInfo.host.nickName} */}</span>
 
         <span>생성일</span>
         <div>
