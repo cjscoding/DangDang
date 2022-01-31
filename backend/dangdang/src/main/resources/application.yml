@@ -26,7 +26,6 @@ spring:
         format_sql : true
         show_sql : true
         dialect : org.hibernate.dialect.MySQL8Dialect
-        default_batch_fetch_size: 200
     open-in-view : false
 
   data:
@@ -64,8 +63,7 @@ spring:
         format_sql: true
         show_sql: true
         dialect : org.hibernate.dialect.MySQL8Dialect
-        default_batch_fetch_size: 200
-    open-in-view: false
+    open-in-view: true
 
   data:
     mongodb:
@@ -80,18 +78,44 @@ spring:
   # JWT Secret Key
 
 ---
+
+
+server:
+  port: 8443
+  ssl :
+    key-store: classpath:keystore.jks
+    key-store-password: kurento
+    key-store-type: JKS
+    key-alias: kurento-selfsigned
+
 spring:
   config:
     activate:
       on-profile: common
 
-#  jpa:
-#    properties:
-#      hibernate:
-#        default_batch_fetch_size: 200
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 200
 
   jwt:
     secret: eae6d34010d4fea74bcafeeef81c1f8685e4793dfe98701d30e568118b31e4e0
+
+
+#  mvc :
+#    static-path-pattern : /static/**
+#    hiddenmethod :
+#      filter :
+#        enabled : true
+#    view:
+#      prefix: /resources/static
+#      suffix: .html
+#  web :
+#    resources :
+#      static-locations : classpath:/static
+#      add-mappings :     true
+
+
 
   security:
     oauth2:
@@ -122,6 +146,7 @@ spring:
             userInfoUri: https://kapi.kakao.com/v2/user/me
             userNameAttribute: id
 
+# Exception Handelr 설정
 notification:
   mattermost:
     enabled: true # mmSender를 사용할 지 여부, false면 알림이 오지 않는다
@@ -133,6 +158,7 @@ notification:
     author-icon: # author-icon 왼쪽에 나올 아이콘의 url링크
     footer: # attachment에 하단에 나올 부분. default=현재 시간
 
+# Swagger 옵션
 springdoc:
   version: '@project.version@'
   api-docs:
@@ -157,6 +183,12 @@ logging:
     com.ssafy.dangdang: debug
     com:
       andy: trace
+    org:
+      apache: WARN
+      springframework: WARN
+      kurento:
+        nodeValue: INFO
+        tutorial: INFO
     #     #HTTP 요청 확인 옵션, 개발할 때만 활성화 할것
 #    org:
 #      springframework:
