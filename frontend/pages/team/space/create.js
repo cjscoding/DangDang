@@ -3,26 +3,19 @@ import Title from "../../../components/layout/title";
 import Link from "next/link";
 
 import { createRoom } from "../../../store/actions/roomAction";
-import { connect } from "react-redux";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
-function mapDispatchToProps(dispatch) {
-  return {
-    create: (roomInfo) => dispatch(createRoom(roomInfo)),
-  };
-}
+export default function CreateRoom() {
+  const router = useRouter();
 
-export default connect(null, mapDispatchToProps)(CreateRoom);
-
-function CreateRoom() {
   const roomInit = {
-    host: "",
+    name: "",
+    number: null,
+    description: "",
+    openKakao: "",
     goal: "",
-    desc: "",
-    kakao: "",
-    hashtag: [],
-    member: [],
-    on: true,
+    hashTags: [],
   };
 
   const [roomInfo, setRoomInfo] = useState(roomInit);
@@ -31,19 +24,15 @@ function CreateRoom() {
   const onSubmit = (event) => {
     event.preventDefault();
 
-    const member = [...roomInfo.member, roomInfo.host];
-
     const newInfo = {
       ...roomInfo,
-      hashtag: roomTags,
-      member: member,
+      hashTags: roomTags,
     };
 
-    console.log(newInfo);
-    console.log("---------------");
-    create(newInfo);
+    createRoom(newInfo);
     setRoomInfo(roomInit);
     setRoomTags([]);
+    router.push("/team/board");
   };
 
   const onChange = (event) => {
@@ -70,11 +59,19 @@ function CreateRoom() {
       <h1>방 생성</h1>
 
       <div className={styles.info}>
-        <span>호스트</span>
+        <span>이름</span>
         <input
           type="text"
-          name="host"
-          value={roomInfo.host}
+          name="name"
+          value={roomInfo.name}
+          onChange={onChange}
+        />
+
+        <span>모집인원</span>
+        <input
+          type="number"
+          name="number"
+          value={roomInfo.number}
           onChange={onChange}
         />
 
@@ -89,8 +86,8 @@ function CreateRoom() {
         <span>오카방 주소</span>
         <input
           type="text"
-          name="kakao"
-          value={roomInfo.kakao}
+          name="openKakao"
+          value={roomInfo.openKakao}
           onChange={onChange}
         />
 
@@ -98,8 +95,8 @@ function CreateRoom() {
         <textarea
           cols="30"
           rows="10"
-          name="desc"
-          value={roomInfo.desc}
+          name="description"
+          value={roomInfo.description}
           onChange={onChange}
         ></textarea>
 
@@ -110,7 +107,7 @@ function CreateRoom() {
             <button>태그 추가</button>
           </div>
           <p>
-            내 태그 [
+            태그 [
             {roomTags?.map((tag) => (
               <span key={tag}>{`${tag} `}</span>
             ))}
@@ -121,7 +118,7 @@ function CreateRoom() {
 
       <div className={styles.btns}>
         <button className="cancelBtn">
-          <Link href="/team-board">
+          <Link href="/team/board">
             <a>취소</a>
           </Link>
         </button>

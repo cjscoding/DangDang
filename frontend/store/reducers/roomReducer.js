@@ -21,10 +21,6 @@ const roomReducer = (state = initialRoomState, action) => {
       const curRoomInfo = { ...state.curRoomInfo, ...action.roomInfo };
       return { ...state, curRoomInfo };
 
-    case types.CREATE_ROOM:
-      const rooms = [...state.rooms, action.newRoom];
-      return { ...state, rooms };
-
     case types.CREATE_COMMENT:
       const comments = [...state.comments, action.newComment];
       return { ...state, comments };
