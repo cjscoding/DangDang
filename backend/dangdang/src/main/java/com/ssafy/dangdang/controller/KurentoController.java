@@ -21,6 +21,7 @@ public class KurentoController {
 
     @GetMapping("/download/{name}")
     public void download(HttpServletResponse response, @PathVariable String name) throws IOException {
+        System.out.println();
         System.out.println(name+":: 컨트롤러 연결");
         String path = "/home/ssafy/share/"+name;
 
