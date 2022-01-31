@@ -27,6 +27,11 @@ export default function Home() {
             <MainComponent content={"질문궁금하당"} />
           </a>
         </Link>
+        <Link href="/web-conference/check-devices">
+          <a>
+            <MainComponent content={"webRTC 테스트"} />
+          </a>
+        </Link>
       </nav>
     </main>
   );
