@@ -49,7 +49,6 @@ function TeamBoard({ rooms, totalPosts, fetchAllRooms }) {
   }, [keyword, curPage]);
 
   //filtering keyword
-
   const onAddKeyword = (event) => {
     if (event.key === "Enter") {
       setKeyword(event.target.value);
