@@ -1,5 +1,8 @@
 import types from "../types";
 // import { apiInstance } from "../../api/index";
+
+import axios from "axios";
+import { BACKEND_URL } from "../../config/index";
 function apiInstance() {
   const instance = axios.create({
     baseURL: BACKEND_URL,
@@ -27,10 +30,10 @@ function setAuthToken() {
 
 //actions
 //모든 스터디 조회(+ pagination)
-export const fetchRooms = async () => {
-  const response = await api.get("/study", {});
+export const fetchRooms = async (param) => {
+  const response = await api.get("/study", { params: param });
   const rooms = response.data.response.content;
-  const roomsCount = rooms.length;
+  const roomsCount = response.data.response.totalElements;
   return {
     type: types.GET_ROOMS,
     rooms,

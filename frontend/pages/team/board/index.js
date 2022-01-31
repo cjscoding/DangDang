@@ -12,15 +12,15 @@ import { fetchRooms } from "../../../store/actions/roomAction";
 
 function mapStateToProps(state) {
   return {
-    rooms: state.roomReducer.allRooms,
-    allRoomsCount: state.roomReducer.allRoomsCount,
+    rooms: state.roomReducer.curRooms,
+    totalPosts: state.roomReducer.curRoomsCount,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    fetchAllRooms: () => {
-      const data = fetchRooms();
+    fetchAllRooms: (param) => {
+      const data = fetchRooms(param);
       data.then((res) => dispatch(res));
     },
   };
@@ -28,32 +28,34 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamBoard);
 
-function TeamBoard({ rooms, allRoomsCount, fetchAllRooms }) {
-  //전체 스터디룸 조회
-  useEffect(() => {
-    fetchAllRooms();
-  }, []);
-
+function TeamBoard({ rooms, totalPosts, fetchAllRooms }) {
   //pagination
-  const [postsPerPage] = useState(9);
-  const [startPostIndex, setStartPostIndex] = useState(0);
-  const [endPostIndex, setEndPostIndex] = useState(9);
-
-  const paginate = (pageNumber) => {
-    setStartPostIndex(pageNumber * postsPerPage);
-    setEndPostIndex((pageNumber + 1) * postsPerPage);
+  const [curPage, setCurPage] = useState(0);
+  const [postsPerPage] = useState(12);
+  const [keyword, setKeyword] = useState("");
+  const param = {
+    hashtags: keyword,
+    page: curPage,
+    size: postsPerPage,
   };
 
-  //room filtering
-  const [keyword, setKeyword] = useState("");
-  const [filteredRoomsCount, setFilteredRoomsCount] = useState();
+  const paginate = (pageNumber) => {
+    setCurPage(pageNumber);
+  };
 
-  const onChangeKeyword = (event) => {
-    const { value } = event.target;
-    setKeyword(value);
-    const count = rooms.filter((room) => room.hashTags.includes(value)).length;
-    setFilteredRoomsCount(count);
-    paginate(0);
+  // 스터디룸 조회
+  useEffect(() => {
+    fetchAllRooms(param);
+  }, [keyword, curPage]);
+
+  //filtering keyword
+
+  const onAddKeyword = (event) => {
+    if (event.key === "Enter") {
+      setKeyword(event.target.value);
+      event.target.value = "";
+      setCurPage(0);
+    }
   };
 
   //스터디룸 상세보기 페이지 연결 로직
@@ -90,9 +92,10 @@ function TeamBoard({ rooms, allRoomsCount, fetchAllRooms }) {
             <div className={styles.filter}>
               <input
                 type="text"
-                onChange={onChangeKeyword}
+                onKeyPress={onAddKeyword}
                 placeholder="키워드 검색..."
               />
+              <p>key : {keyword}</p>
             </div>
             <div className={styles.createRoom}>
               <button>
@@ -101,7 +104,7 @@ function TeamBoard({ rooms, allRoomsCount, fetchAllRooms }) {
                 </Link>
               </button>
               <button>
-                <Link href="/team/space/create">
+                <Link href="/team/space/create-room">
                   <a>방 생성</a>
                 </Link>
               </button>
@@ -109,57 +112,32 @@ function TeamBoard({ rooms, allRoomsCount, fetchAllRooms }) {
           </div>
 
           <div className={styles.rooms}>
-            {keyword === ""
-              ? rooms?.slice(startPostIndex, endPostIndex).map((room) => (
-                  <div
-                    className={styles.room}
-                    key={room.id}
-                    onClick={() => onDetail(room.id)}
-                  >
-                    <Image
-                      src="/vercel.svg"
-                      alt="Vercel Logo"
-                      width={300}
-                      height={250}
-                    />
-                    <span> {room.id}</span>
-                    <span> {room.name}</span>
-                    <span> {room.goal}</span>
-                    <span> {room.description}</span>
-                    {room.hashTags?.map((hashTag, index) => (
-                      <span key={index}># {hashTag}</span>
-                    ))}
-                  </div>
-                ))
-              : rooms
-                  ?.filter((room) => room.hashTags.includes(keyword))
-                  .slice(startPostIndex, endPostIndex)
-                  .map((room) => (
-                    <div
-                      className={styles.room}
-                      key={room.id}
-                      onClick={() => onDetail(room.id)}
-                    >
-                      <Image
-                        src="/vercel.svg"
-                        alt="Vercel Logo"
-                        width={300}
-                        height={250}
-                      />
-                      <span> {room.id}</span>
-                      <span> {room.name}</span>
-                      <span> {room.goal}</span>
-                      <span> {room.description}</span>
-                      {room.hashTags?.map((hashTag, index) => (
-                        <span key={index}># {hashTag}</span>
-                      ))}
-                    </div>
-                  ))}
+            {rooms?.map((room) => (
+              <div
+                className={styles.room}
+                key={room.id}
+                onClick={() => onDetail(room.id)}
+              >
+                <Image
+                  src="/vercel.svg"
+                  alt="Vercel Logo"
+                  width={300}
+                  height={250}
+                />
+                <span> {room.id}</span>
+                <span> {room.name}</span>
+                <span> {room.goal}</span>
+                <span> {room.description}</span>
+                {room.hashTags?.map((hashTag, index) => (
+                  <span key={index}># {hashTag}</span>
+                ))}
+              </div>
+            ))}
           </div>
           <Pagination
-            allRoomsCount={keyword === "" ? allRoomsCount : filteredRoomsCount}
-            postsPerPage={postsPerPage}
             paginate={paginate}
+            totalCount={totalPosts}
+            postsPerPage={postsPerPage}
           />
         </div>
       </div>

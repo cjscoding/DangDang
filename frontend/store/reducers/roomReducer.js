@@ -1,8 +1,8 @@
 import types from "../types";
 
 const initialRoomState = {
-  allRoomsCount: 0,
-  allRooms: [],
+  curRoomsCount: 0,
+  curRooms: [],
   rooms: [],
   curRoomInfo: {},
   comments: [],
@@ -11,10 +11,10 @@ const initialRoomState = {
 const roomReducer = (state = initialRoomState, action) => {
   switch (action.type) {
     case types.GET_ROOMS:
-      state.allRoomsCount = action.roomsCount;
-      state.allRooms = [];
-      const allRooms = [...state.allRooms, ...action.rooms];
-      return { ...state, allRooms };
+      state.curRoomsCount = action.roomsCount;
+      state.curRooms = [];
+      const curRooms = [...state.curRooms, ...action.rooms];
+      return { ...state, curRooms };
 
     case types.GET_ROOM_INFO:
       console.log("reducer!!");
