@@ -4,7 +4,6 @@ package com.ssafy.dangdang.service;
 import com.ssafy.dangdang.exception.StorageException;
 import com.ssafy.dangdang.exception.StorageFileNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -33,19 +32,10 @@ public class FileSystemStorageService implements StorageService {
   @Value("${file.upload.file}")
   private String fileLocation;
 
-  @Value("${file.upload.file}")
-  private String imageLocation;
-
-  @Value("${file.upload.file}")
-  private String recordLocation;
-
-
-  @Value("${file.upload.baseLocation}")
-  private String baseLocation;
 
   @Autowired
-  public FileSystemStorageService() {
-    this.rootLocation = Paths.get(baseLocation);
+  public FileSystemStorageService(StorageProperties properties) {
+    this.rootLocation = Paths.get(properties.getLocation());
   }
 
   @Override
@@ -53,7 +43,7 @@ public class FileSystemStorageService implements StorageService {
     if (file.isEmpty()) {
       throw new StorageException("Failed to store empty file.");
     }
-    Path destinationFile = getPathByType(file, uuid);
+    Path destinationFile = rootLocation.resolve(Paths.get(fileLocation + uuid + file.getOriginalFilename())).normalize().toAbsolutePath();
     try (InputStream inputStream = file.getInputStream()) {
       Files.copy(inputStream, destinationFile, StandardCopyOption.REPLACE_EXISTING);
     }
@@ -86,9 +76,9 @@ public class FileSystemStorageService implements StorageService {
   }
 
   @Override
-  public void delete(String filepath) throws FileNotFoundException {
+  public void delete(String fileName) throws FileNotFoundException {
     try {
-      File file = new File(Paths.get(filepath).toString());
+      File file = new File(Paths.get(fileLocation + fileName).toString());
       file.delete();
       log.info(file.getName() + " has deleted");
     } catch (SecurityException se) {
@@ -102,10 +92,7 @@ public class FileSystemStorageService implements StorageService {
     try {
       if (!Files.exists(rootLocation))
         Files.createDirectories(rootLocation);
-      if (!Files.exists(Paths.get(imageLocation)))
-        Files.createDirectories(Paths.get(imageLocation));
-      if (!Files.exists(Paths.get(recordLocation)))
-        Files.createDirectories(Paths.get(recordLocation));
+
       if (!Files.exists(Paths.get(fileLocation)))
         Files.createDirectories(Paths.get(fileLocation));
 
