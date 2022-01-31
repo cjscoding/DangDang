@@ -10,6 +10,7 @@ import com.ssafy.dangdang.service.JoinsService;
 import com.ssafy.dangdang.service.StudyService;
 import com.ssafy.dangdang.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +43,11 @@ public class JoinsController {
             @ApiResponse(responseCode = "200", description = "스터디 조회 성공")
     })
     @GetMapping
-    public ApiResult<Page<StudyDto>> getStudiesJoinedWithPage(@CurrentUser PrincipalDetails userPrincipal, @ParameterObject Pageable pageable){
-        Page<StudyDto> studiesJoined = joinsService.getStudiesJoinedWithPage(userPrincipal.getUser(), pageable);
+    public ApiResult<Page<StudyDto>> getStudiesJoinedWithPage(@CurrentUser PrincipalDetails userPrincipal,
+                                                              @RequestParam(required = false)
+                                                              @Parameter(description = "해쉬태그를 이용해서 검색할 시 적용") List<String> hashtags,
+                                                              @ParameterObject Pageable pageable){
+        Page<StudyDto> studiesJoined = joinsService.getStudiesJoinedWithPage(userPrincipal.getUser(), hashtags, pageable);
         return success(studiesJoined);
 
     }
