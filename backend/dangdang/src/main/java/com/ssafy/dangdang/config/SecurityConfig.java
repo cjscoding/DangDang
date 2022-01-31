@@ -13,9 +13,12 @@ import com.ssafy.dangdang.config.security.oauth.PrincipalOauth2UserService;
 import com.ssafy.dangdang.repository.UserRepository;
 import com.ssafy.dangdang.util.JwtUtil;
 import com.ssafy.dangdang.util.RedisUtil;
+
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -73,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                 .authorizeRequests()
                     .antMatchers("/**").permitAll()//테스트용으로 모든 권한 열기
+//                    .antMatchers(HttpMethod.GET, "/resources/static/read.html","/resources/static/**").permitAll()
                     .antMatchers("/v3/**", "/swagger-ui.html","/swagger-ui/**").permitAll()
                     .antMatchers("/user/login", "/user").permitAll()
                     .antMatchers("/auth/**", "/oauth2/**").permitAll()
