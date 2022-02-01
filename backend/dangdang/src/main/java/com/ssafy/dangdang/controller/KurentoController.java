@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping("/kurento")
-@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*")
+//@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class KurentoController {

@@ -18,7 +18,6 @@ import com.ssafy.dangdang.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -29,6 +28,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 @Configuration
 @EnableWebSecurity
@@ -59,10 +59,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-                .addFilter(corsConfig.corsFilter())
+//                .addFilter(corsConfig.corsFilter())
                 .cors()
+                .configurationSource(corsConfig.corsConfigurationSource())
                 .and()
                 .csrf().disable()
+                .headers()
+                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Methods", "POST, GET, PATCH, DELETE, PUT"))
+                .and()
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
@@ -75,6 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticationEntryPoint(customAuthenticationEntryPoint)
                     .and()
                 .authorizeRequests()
+
                     .antMatchers("/**").permitAll()//테스트용으로 모든 권한 열기
 //                    .antMatchers(HttpMethod.GET, "/resources/static/read.html","/resources/static/**").permitAll()
                     .antMatchers("/v3/**", "/swagger-ui.html","/swagger-ui/**").permitAll()

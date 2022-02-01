@@ -34,7 +34,7 @@ import static com.ssafy.dangdang.util.ApiUtils.*;
 @Tag(name = "user", description = "유저관리 API")
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*")
+//@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {

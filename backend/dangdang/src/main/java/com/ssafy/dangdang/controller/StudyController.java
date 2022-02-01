@@ -26,6 +26,7 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ import static com.ssafy.dangdang.util.ApiUtils.*;
 
 @RestController
 @RequestMapping("/study")
-@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*")
+//@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class StudyController {
@@ -96,19 +97,21 @@ public class StudyController {
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "스터디 정보 수정")
     })
+//    @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*", methods = {RequestMethod.PUT})
     @PatchMapping("/{studyId}")
     @PreAuthorize("hasRole('USER')")
     public ApiResult<StudyDto> updateStudy(@CurrentUser PrincipalDetails userPrincipal,
             @Parameter(description = "수정할 스터디 id", example = "1")  @PathVariable Long studyId,
             @RequestBody @Valid MakeStudy makeStudy){
-
+        log.info("=======================================");
+        log.info("스터디 수정");
+        log.info("=======================================");
         User user = userPrincipal.getUser();
         log.info(user.toString());
         StudyDto studyDto = StudyDto.of(makeStudy);
         studyDto.setId(studyId);
         StudyDto study = studyService.updateStudy(user, studyDto);
         return success(study);
-
     }
 
     @Operation(summary = "스터디 삭제", description = "스터디장만이 스터디를 삭제할 수 있습니다.")

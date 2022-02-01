@@ -79,7 +79,9 @@ public class StudyDto {
 
     public static StudyDto of(Study study) {
         List<Joins> joins = study.getJoins();
-        List<UserDto> userDtoLIst = joins.stream().map(join -> UserDto.of(join.getUser())).collect(Collectors.toList());
+        // 가입 완료된 유저만 조회
+        List<UserDto> userDtoLIst = joins.stream().filter(join -> !join.getWaiting())
+                .map(join -> UserDto.of(join.getUser())).collect(Collectors.toList());
 
 
         UserDto userDto = UserDto.of(study.getHost());

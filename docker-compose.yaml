@@ -2,7 +2,7 @@ version: "3"
 
 services:
   backend:
-    image: dbswns97/dangdang-backend:0.3
+    image: dbswns97/dangdang-backend:0.4
     # build: ./backend/dangdang
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://dangdang-mysql:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul"
@@ -19,10 +19,15 @@ services:
       - "dangdang-mysql"
       - "dangdang-redis"
       - "dangdang-kms"
+    volumes:
+      - kms_data:/app/data/files
+      # - type: bind
+      #   source: ./backend/dangdang/data/files
+      #   target: /app/data/files
     restart: always
     links:
       - dangdang-mongodb
-      # - dangdang-kms
+      - dangdang-kms
     networks:
       - dangdang_network
     command: "java -Dspring.profiles.active=prod -Dkms.url=ws://dangdang-kms:8888/kurento -jar /app.jar"
@@ -65,19 +70,26 @@ services:
     command: mongod
 
   dangdang-kms:
-    image: kurento/kurento-media-server:6.9.0
+    image: kurento/kurento-media-server:latest
     restart: always
     volumes:
-      - type: bind
-        source: ./backend/dangdang/data
-        target: /tmp
-    # network_mode: host
+      - kms_data:/tmp
+      # - type: bind
+      #   source: ./backend/dangdang/data/files
+      #   target: /tmp
+      # network_mode: host
     expose:
       - 8888
     ports:
       - 8888:8888
+      - 5000-5050:5000-5050/udp
+    environment:
+      - GST_DEBUG=2,Kurento*:5
     networks:
       - dangdang_network
+
+volumes:
+  kms_data:
 
 networks:
   dangdang_network:

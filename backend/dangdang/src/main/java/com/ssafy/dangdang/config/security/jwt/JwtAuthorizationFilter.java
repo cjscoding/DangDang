@@ -36,6 +36,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
+//		response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
 
 		String header = request.getHeader(JwtUtil.HEADER_STRING);
 		System.out.println("header Authorization : " + header);

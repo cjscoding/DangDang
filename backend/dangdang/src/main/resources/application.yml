@@ -197,12 +197,15 @@ logging:
     com:
       andy: trace
     org:
-      apache: WARN
+      apache:
+        nodeValue: WARN
+        coyote:
+          http11: debug      #HTTP 요청 확인 옵션, 개발할 때만 활성화 할것
       springframework: WARN
       kurento:
         nodeValue: INFO
         tutorial: INFO
-    #     #HTTP 요청 확인 옵션, 개발할 때만 활성화 할것
+
 #    org:
 #      springframework:
 #        security: debug
