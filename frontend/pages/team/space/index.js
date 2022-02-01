@@ -7,6 +7,7 @@ import {
   getWaitingMembers,
   allowJoinTeam,
   removeMember,
+  outTeam,
 } from "../../../store/actions/roomAction";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
@@ -55,7 +56,7 @@ function TeamSpace({
     console.log(roomMembers);
     if (!router.isReady) return;
     getRoomInfo(router.query.id);
-    getWaitingMember(router.query.id);
+    if (roomHost === 'Bori') getWaitingMember(router.query.id);
   }, [router.isReady]);
 
   //팀 삭제
@@ -93,9 +94,11 @@ function TeamSpace({
       userId: event.target[0].value,
     };
     allowJoinTeam(data);
+  };
 
-    // getRoomInfo(router.query.id);
-    // getWaitingMember(router.query.id);
+  //스터디룸 탈퇴
+  const onOutTeam = () => {
+    outTeam(router.query.id);
   };
 
   return (
@@ -123,12 +126,11 @@ function TeamSpace({
           </div>
         </div>
 
-        <button onClick={onUpdatePage}>팀 수정</button>
-        <button onClick={() => onDeleteTeam()}>팀 삭제</button>
-
         <div>
           {roomHost === "Bori" ? (
             <div>
+              <button onClick={onUpdatePage}>팀 수정</button>
+              <button onClick={() => onDeleteTeam()}>팀 삭제</button>
               <h1>멤버관리</h1>
               {roomMembers.map((member, index) => (
                 <form key={index} onSubmit={onRemoveMember}>
@@ -151,7 +153,9 @@ function TeamSpace({
                 </form>
               ))}
             </div>
-          ) : null}
+          ) : (
+            <button onClick={onOutTeam}>팀 탈퇴</button>
+          )}
         </div>
       </div>
     </div>
