@@ -73,8 +73,14 @@ export const removeStudy = async (studyId) => {
 
 //스터디룸 수정
 export const updateStudy = async (data) => {
-  setAuthToken();
-  await api.patch(`/study/${data.studyId}`, data.newInfo);
+//   setAuthToken();
+
+  await axios.patch(`http://localhost:8080/study/${data.studyId}`, data.newInfo,
+  {
+      headers: {
+        Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3RAc3NhZnkuY29tIiwiaWF0IjoxNjQzNzI2ODUyLCJleHAiOjE2NDM4MTMyNTJ9.EVTU6m3qTe1jNJjNs2vxX5J1-xm0AhHu5-PKTPB2giM"
+      }
+  });
 };
 
 //마이룸 조회

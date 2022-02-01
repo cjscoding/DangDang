@@ -37,10 +37,10 @@ function TeamSpace({
   getRoomInfo,
   deleteStudy,
 }) {
-
   const router = useRouter();
 
   useEffect(() => {
+    console.log(roomMembers);
     if (!router.isReady) return;
     getRoomInfo(router.query.id);
   }, [router.isReady]);
@@ -55,12 +55,12 @@ function TeamSpace({
   //팀 수정
   const onUpdatePage = () => {
     router.push({
-        pathname: `/team/space/update`,
-        query: {
-            id: router.query.id,
-        },
-      });
-  }
+      pathname: `/team/space/update`,
+      query: {
+        id: router.query.id,
+      },
+    });
+  };
 
   return (
     <div>
@@ -89,6 +89,20 @@ function TeamSpace({
 
         <button onClick={onUpdatePage}>팀 수정</button>
         <button onClick={() => onDeleteTeam()}>팀 삭제</button>
+
+        <div>
+          {roomHost === "Bori" ? (
+            <div>
+              <h1>멤버관리</h1>
+              {roomMembers.map((member, index) => (
+                <form key={index}>
+                  <input key={index} value={member.nickName} disabled/>
+                  <button>강제탈퇴</button>
+                </form>
+              ))}
+            </div>
+          ) : null}
+        </div>
 
         <div className={styles.waiting}>
           <h1>대기명단</h1>
