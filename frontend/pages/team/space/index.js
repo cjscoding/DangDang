@@ -62,6 +62,11 @@ function TeamSpace({
     });
   };
 
+  //팀원관리(호스트만 해당)
+  const onRemoveMember = () => {
+      //not yet
+  }
+
   return (
     <div>
       <Layout
@@ -95,7 +100,7 @@ function TeamSpace({
             <div>
               <h1>멤버관리</h1>
               {roomMembers.map((member, index) => (
-                <form key={index}>
+                <form key={index} onSubmit={onRemoveMember}>
                   <input key={index} value={member.nickName} disabled/>
                   <button>강제탈퇴</button>
                 </form>
