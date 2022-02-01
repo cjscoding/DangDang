@@ -11,6 +11,7 @@ const mapStateToProps = (state) => {
     roomInfo: state.roomReducer.curRoomInfo,
     roomHost: state.roomReducer.curRoomHost,
     roomMembers: state.roomReducer.curRoomMembers,
+    waitingList: state.roomReducer.waitings,
   };
 };
 
@@ -27,9 +28,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     getWaitingMember: (id) => {
         const data = getWaitingMembers(id);
-        // data.then((res) => {
-        //     dispatch(res);
-        // })
+        data.then((res) => {
+            dispatch(res);
+        })
     }
   };
 };
@@ -40,6 +41,7 @@ function TeamSpace({
   roomInfo,
   roomHost,
   roomMembers,
+  waitingList,
   getRoomInfo,
   deleteStudy,
   getWaitingMember
@@ -113,13 +115,15 @@ function TeamSpace({
                   <button>강제탈퇴</button>
                 </form>
               ))}
+              <h1>대기명단</h1>
+              {waitingList.map((member, index) => (
+                <form key={index} onSubmit={onRemoveMember}>
+                  <input key={index} value={member.nickName} disabled/>
+                  <button>강제탈퇴</button>
+                </form>
+              ))}
             </div>
           ) : null}
-        </div>
-
-        <div className={styles.waiting}>
-          <h1>대기명단</h1>
-          <div></div>
         </div>
       </div>
     </div>

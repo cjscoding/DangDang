@@ -73,14 +73,18 @@ export const removeStudy = async (studyId) => {
 
 //스터디룸 수정
 export const updateStudy = async (data) => {
-//   setAuthToken();
+  //   setAuthToken();
 
-  await axios.patch(`http://localhost:8080/study/${data.studyId}`, data.newInfo,
-  {
+  await axios.patch(
+    `http://localhost:8080/study/${data.studyId}`,
+    data.newInfo,
+    {
       headers: {
-        Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3RAc3NhZnkuY29tIiwiaWF0IjoxNjQzNzI2ODUyLCJleHAiOjE2NDM4MTMyNTJ9.EVTU6m3qTe1jNJjNs2vxX5J1-xm0AhHu5-PKTPB2giM"
-      }
-  });
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3RAc3NhZnkuY29tIiwiaWF0IjoxNjQzNzI2ODUyLCJleHAiOjE2NDM4MTMyNTJ9.EVTU6m3qTe1jNJjNs2vxX5J1-xm0AhHu5-PKTPB2giM",
+      },
+    }
+  );
 };
 
 //마이룸 조회
@@ -90,20 +94,19 @@ export const getMyRooms = async (param) => {
   const myRooms = response.data.response.content;
   const myRoomsCount = response.data.response.totalElements;
   return {
-      type: types.MY_ROOMS,
-      myRooms,
-      myRoomsCount,
-    };
+    type: types.MY_ROOMS,
+    myRooms,
+    myRoomsCount,
+  };
 };
 
 //스터디룸 가입 대기 명단 조회
 export const getWaitingMembers = async (studyId) => {
-    setAuthToken();
-    const response = await api.get(`/joins/waiting/${studyId}`);
-    console.log(response);
-    return {
-        type: types.MY_ROOMS,
-        myRooms,
-        myRoomsCount,
-      };
-}
+  setAuthToken();
+  const response = await api.get(`/joins/waiting/${studyId}`);
+  const waitings = response.data.response;
+  return {
+    type: types.WAITING_MEMBERS,
+    waitings,
+  };
+};

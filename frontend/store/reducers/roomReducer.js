@@ -13,6 +13,8 @@ const roomState = {
   //마이룸 조회
   myRoomsCount: 0,
   myRooms: [],
+  //팀스페이스
+  waitings: [],
 };
 
 const roomReducer = (state = roomState, action) => {
@@ -38,6 +40,11 @@ const roomReducer = (state = roomState, action) => {
       state.myRooms = [];
       const myRooms = [...state.myRooms, ...action.myRooms];
       return { ...state, myRooms };
+
+    case types.WAITING_MEMBERS:
+      state.waitings = [];
+      const waitings = [...state.waitings, ...action.waitings];
+      return { ...state, waitings };
 
     default:
       return state;
