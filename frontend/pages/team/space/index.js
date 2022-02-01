@@ -1,7 +1,7 @@
 import styles from "../../../scss/team/space/teamspace.module.scss";
 import Layout from "../../../components/team/space/layout";
 
-import { fetchRoomInfo, removeStudy } from "../../../store/actions/roomAction";
+import { fetchRoomInfo, removeStudy, getWaitingMembers } from "../../../store/actions/roomAction";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -25,6 +25,12 @@ const mapDispatchToProps = (dispatch) => {
     deleteStudy: (id) => {
       removeStudy(id);
     },
+    getWaitingMember: (id) => {
+        const data = getWaitingMembers(id);
+        // data.then((res) => {
+        //     dispatch(res);
+        // })
+    }
   };
 };
 
@@ -36,6 +42,7 @@ function TeamSpace({
   roomMembers,
   getRoomInfo,
   deleteStudy,
+  getWaitingMember
 }) {
   const router = useRouter();
 
@@ -43,6 +50,7 @@ function TeamSpace({
     console.log(roomMembers);
     if (!router.isReady) return;
     getRoomInfo(router.query.id);
+    getWaitingMember(router.query.id);
   }, [router.isReady]);
 
   //팀 삭제

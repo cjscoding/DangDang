@@ -90,8 +90,20 @@ export const getMyRooms = async (param) => {
   const myRooms = response.data.response.content;
   const myRoomsCount = response.data.response.totalElements;
   return {
-    type: types.MY_ROOMS,
-    myRooms,
-    myRoomsCount,
-  };
+      type: types.MY_ROOMS,
+      myRooms,
+      myRoomsCount,
+    };
 };
+
+//스터디룸 가입 대기 명단 조회
+export const getWaitingMembers = async (studyId) => {
+    setAuthToken();
+    const response = await api.get(`/joins/waiting/${studyId}`);
+    console.log(response);
+    return {
+        type: types.MY_ROOMS,
+        myRooms,
+        myRoomsCount,
+      };
+}
