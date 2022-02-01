@@ -106,7 +106,14 @@ export const getWaitingMembers = async (studyId) => {
   const response = await api.get(`/joins/waiting/${studyId}`);
   const waitings = response.data.response;
   return {
-    type: types.WAITING_MEMBERS,
-    waitings,
-  };
+      type: types.WAITING_MEMBERS,
+      waitings,
+    };
 };
+
+//스터디룸 가입 허용
+export const allowJoinTeam = async (data) => {
+    setAuthToken();
+    await api.patch("/joins", data);
+    console.log("가입을 허용하였습니다.");
+}
