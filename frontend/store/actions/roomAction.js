@@ -20,9 +20,9 @@ const api = apiInstance();
 
 //헤더 토큰 셋팅(임시)
 const accessToken1 =
-  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3RAc3NhZnkuY29tIiwiaWF0IjoxNjQzNjE4NjcwLCJleHAiOjE2NDM3MDUwNzB9.Wd-n1B6JZ9Y-qe5BWeBkML8Bec1IsrBzAd4Nm0uDABo";
+  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3RAc3NhZnkuY29tIiwiaWF0IjoxNjQzNjkzNTg2LCJleHAiOjE2NDM3Nzk5ODZ9.hzw2oAZCmw0gYsVX2EyNfgwcaX4c3F88niiH9FFcHjo";
 const accessToken2 =
-  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3QwQHNzYWZ5LmNvbSIsImlhdCI6MTY0MzYwNjU0NiwiZXhwIjoxNjQzNjkyOTQ2fQ.J_mjCJIH1i5E-zsdfL477oVZ2mnLHCQhjPbrH0JWIcg";
+  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3QwQHNzYWZ5LmNvbSIsImlhdCI6MTY0MzY5MzM4MSwiZXhwIjoxNjQzNzc5NzgxfQ.ovrH47S-6gqvkQJ3XjsUIv4-AE_U6SalBvuRR2awvu4";
 function setAuthToken() {
   api.defaults.headers.Authorization = accessToken1;
 }
@@ -64,6 +64,11 @@ export const joinStudy = async (data) => {
   setAuthToken();
   await api.post("/joins", data);
 };
+
+export const removeStudy = async (studyId) => {
+    setAuthToken();
+    await api.delete(`/study/${studyId}`);
+}
 
 //마이룸 조회
 export const getMyRooms = async (param) => {
