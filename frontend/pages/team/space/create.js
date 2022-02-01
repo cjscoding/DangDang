@@ -11,7 +11,7 @@ export default function CreateRoom() {
 
   const roomInit = {
     name: "",
-    number: null,
+    number: "",
     description: "",
     openKakao: "",
     goal: "",
@@ -21,6 +21,7 @@ export default function CreateRoom() {
   const [roomInfo, setRoomInfo] = useState(roomInit);
   const [roomTags, setRoomTags] = useState([]);
 
+  //final submit
   const onSubmit = (event) => {
     event.preventDefault();
 
@@ -35,6 +36,7 @@ export default function CreateRoom() {
     router.push("/team/board");
   };
 
+  //input values
   const onChange = (event) => {
     const { name, value } = event.target;
 
@@ -46,11 +48,18 @@ export default function CreateRoom() {
     setRoomInfo(newInfo);
   };
 
+  //hashTags
   const onAddTag = (event) => {
     event.preventDefault();
     const newTag = event.target[0].value;
     setRoomTags([...roomTags, newTag]);
     event.target[0].value = "";
+  };
+
+  const onRemoveTag = (event) => {
+    event.preventDefault();
+    const removeTag = event.target[0].value;
+    setRoomTags(roomTags.filter((tag) => tag !== removeTag));
   };
 
   return (
@@ -106,14 +115,17 @@ export default function CreateRoom() {
             <input type="text" />
             <button>태그 추가</button>
           </div>
-          <p>
-            태그 [
-            {roomTags?.map((tag) => (
-              <span key={tag}>{`${tag} `}</span>
-            ))}
-            ]
-          </p>
         </form>
+        <div>
+          {roomTags?.map((tag, index) => (
+            <form onSubmit={onRemoveTag} key={index}>
+              <div>
+                <input type="text" value={tag} disabled />
+                <button>태그 삭제</button>
+              </div>
+            </form>
+          ))}
+        </div>
       </div>
 
       <div className={styles.btns}>

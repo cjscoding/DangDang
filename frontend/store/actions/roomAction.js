@@ -20,7 +20,7 @@ const api = apiInstance();
 
 //헤더 토큰 셋팅(임시)
 const accessToken1 =
-  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3RAc3NhZnkuY29tIiwiaWF0IjoxNjQzNjkzNTg2LCJleHAiOjE2NDM3Nzk5ODZ9.hzw2oAZCmw0gYsVX2EyNfgwcaX4c3F88niiH9FFcHjo";
+  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3RAc3NhZnkuY29tIiwiaWF0IjoxNjQzNzI2ODUyLCJleHAiOjE2NDM4MTMyNTJ9.EVTU6m3qTe1jNJjNs2vxX5J1-xm0AhHu5-PKTPB2giM";
 const accessToken2 =
   "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3QwQHNzYWZ5LmNvbSIsImlhdCI6MTY0MzY5MzM4MSwiZXhwIjoxNjQzNzc5NzgxfQ.ovrH47S-6gqvkQJ3XjsUIv4-AE_U6SalBvuRR2awvu4";
 function setAuthToken() {
@@ -49,7 +49,7 @@ export const fetchRoomInfo = async (studyId) => {
     type: types.GET_ROOM_INFO,
     roomInfo,
     host,
-    members
+    members,
   };
 };
 
@@ -65,10 +65,23 @@ export const joinStudy = async (data) => {
   await api.post("/joins", data);
 };
 
+//스터디룸 삭제
 export const removeStudy = async (studyId) => {
-    setAuthToken();
-    await api.delete(`/study/${studyId}`);
-}
+  setAuthToken();
+  await api.delete(`/study/${studyId}`);
+};
+
+//스터디룸 수정
+export const updateStudy = async (data) => {
+//   setAuthToken();
+
+  await axios.patch(`http://localhost:8080/study/${data.studyId}`, data.newInfo,
+  {
+      headers: {
+        Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3RAc3NhZnkuY29tIiwiaWF0IjoxNjQzNzI2ODUyLCJleHAiOjE2NDM4MTMyNTJ9.EVTU6m3qTe1jNJjNs2vxX5J1-xm0AhHu5-PKTPB2giM"
+      }
+  });
+};
 
 //마이룸 조회
 export const getMyRooms = async (param) => {

@@ -103,7 +103,7 @@ function TeamBoard({ rooms, totalPosts, fetchAllRooms }) {
                 </Link>
               </button>
               <button>
-                <Link href="/team/space/create-room">
+                <Link href="/team/space/create">
                   <a>방 생성</a>
                 </Link>
               </button>

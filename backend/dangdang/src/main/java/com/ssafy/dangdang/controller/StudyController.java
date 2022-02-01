@@ -92,6 +92,7 @@ public class StudyController {
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "스터디 정보 수정")
     })
+    @CrossOrigin(origins = "localhost:3000", allowedHeaders = {"POST", "GET", "PATCH"})
     @PatchMapping("/{studyId}")
     @PreAuthorize("hasRole('USER')")
     public ApiResult<StudyDto> updateStudy(@CurrentUser PrincipalDetails userPrincipal,
