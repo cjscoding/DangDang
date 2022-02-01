@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import SockJS from "sockjs-client";
-import WebRtcPeer from "kurento-utils";
 // import Participant from "../../webRTC/Participant"
 import { WEBRTC_URL } from "../../config"
 import MyFace from "../../components/webRTC/MyFace";

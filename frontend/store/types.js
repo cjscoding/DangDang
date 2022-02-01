@@ -15,9 +15,14 @@ const questionTypes = {
   SET_QUESTIONS: "SET_QUESTIONS",
 }
 
+const wsTypes = {
+  CONNECT_SOCKET: "CONNECT_SOCKET",
+}
+
 const types = {
   ...teamBoard,
   ...videoTypes,
   ...questionTypes,
+  ...wsTypes,
 }
 export default types;

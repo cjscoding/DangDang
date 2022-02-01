@@ -1,40 +1,72 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import styles from "../../../scss/self-practice/interview/mainComponent.module.scss";
 import MyFace from "../../../components/webRTC/MyFace";
 
 function mapStateToProps(state) {
   return {
+    ws: state.wsReducer.ws,
     questions: state.questionReducer.questions,
   };
 }
 export default connect(mapStateToProps)(Interview);
 
-function Interview({questions}) {
+function Interview({ws, questions}) {
   const router = useRouter();
   const [screenNum, setScreenNum] = useState(3);
   const [questionNum, setQuestionNum] = useState(0);
   const [volume, setVolume] = useState(30);
   const [isVol, setIsVol] = useState(false);
+  const volumeBtn = useRef();
+  const restartBtn = useRef();
+  const saveBtn = useRef();
+  const skipBtn = useRef();
 
-  function restartQuestion() {
-
-  }
-  function saveAndNext() {
-    if(questionNum === questions.length - 1) {
-      router.push(`/self-practice/interview/end`);
+  useEffect(()=>{
+    let WebRtcPeer;
+    let videoInput;
+    let videoOutput;
+    function sendMessage(msgObj) {
+      const msgStr = JSON.stringify(msgObj);
+      console.log(`SEND: ${msgStr}`)
+      ws.send(msgStr);
     }
-    setQuestionNum(questionNum + 1)
-  }
-  function skipQuestion() {
-    if(questionNum === questions.length - 1) {
-      router.push(`/self-practice/interview/end`);
+    ws.onmessage = function(message) {
+      const msgObj = JSON.parse(message.data);
+      console.log(`RECEIVE: ${message.data}`)
+      switch(msgObject.id) {
+        case "startResponse":
+          
+      }
     }
-    setQuestionNum(questionNum + 1)
-  }
-
+    
+    function controlVolume() {
+      setIsVol(true)
+    }
+    function restartQuestion() {
+      
+    }
+    function saveAndNext() {
+      if(questionNum === questions.length - 1) {
+        router.push(`/self-practice/interview/end`);
+      }
+      setQuestionNum(questionNum + 1)
+    }
+    function skipQuestion() {
+      if(questionNum === questions.length - 1) {
+        router.push(`/self-practice/interview/end`);
+      }
+      setQuestionNum(questionNum + 1)
+      console.log(0, questionNum)
+    }
+    volumeBtn.current.addEventListener("click", controlVolume);
+    restartBtn.current.addEventListener("click", restartQuestion);
+    saveBtn.current.addEventListener("click", saveAndNext);
+    skipBtn.current.addEventListener("click", skipQuestion);
+  },[])
+  console.log(1, questionNum)
   return <div>
   <div className={styles.closeBtnBox}>
     <Link href="/self-practice/interview/end">
@@ -55,12 +87,13 @@ function Interview({questions}) {
       </div>
       <div className={styles.btnContainer}>
         <span>
-          <button onClick={() => setIsVol(true)}>음량조절</button><br/>
+          <button ref={volumeBtn}>음량조절</button><br/>
           <input style={isVol?{}:{display: "none"}} type="range" min="0" max="100" step="1" value={volume} onChange={(e) => setVolume(e.target.value)}/>
         </span>
-        <button onClick={restartQuestion}>다시시작</button>
-        <button onClick={saveAndNext}>저장&다음</button>
-        <button onClick={skipQuestion}>질문스킵</button>
+        <button ref={restartBtn}>다시시작</button>
+        <button ref={saveBtn}>저장&다음</button>
+        <button ref={skipBtn}>질문스킵</button>
+
       </div>
     </div>
   </div>

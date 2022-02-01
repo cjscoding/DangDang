@@ -3,11 +3,13 @@ import { combineReducers } from "redux";
 import roomReducer from "./roomReducer";
 import videoReducer from "./videoReducer"
 import questionReducer from "./questionReducer";
+import wsReducer from "./wsReducer";
 
 const combinedReducer = combineReducers({
   roomReducer,
   videoReducer,
   questionReducer,
+  wsReducer,
 });
 
 const reducer = (state, action) => {
