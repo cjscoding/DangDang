@@ -8,6 +8,8 @@ const roomState = {
   //스터디룸 상세 보기
   comments: [],
   curRoomInfo: {},
+  curRoomHost: "",
+  curRoomMembers: [],
   //마이룸 조회
   myRoomsCount: 0,
   myRooms: [],
@@ -22,9 +24,10 @@ const roomReducer = (state = roomState, action) => {
       return { ...state, curRooms };
 
     case types.GET_ROOM_INFO:
-      console.log("reducer!!");
-      const curRoomInfo = { ...state.curRoomInfo, ...action.roomInfo };
-      return { ...state, curRoomInfo };
+      const curRoomInfo = action.roomInfo;
+      const curRoomHost = action.host;
+      const curRoomMembers = action.members;
+      return {...state, curRoomInfo, curRoomHost, curRoomMembers};
 
     case types.CREATE_COMMENT:
       const comments = [...state.comments, action.newComment];

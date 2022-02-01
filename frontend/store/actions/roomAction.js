@@ -43,9 +43,13 @@ export const fetchRooms = async (param) => {
 export const fetchRoomInfo = async (studyId) => {
   const response = await api.get(`/study/${studyId}`);
   const roomInfo = response.data.response;
+  const host = roomInfo.host.nickName;
+  const members = roomInfo.userDtos;
   return {
     type: types.GET_ROOM_INFO,
     roomInfo,
+    host,
+    members
   };
 };
 

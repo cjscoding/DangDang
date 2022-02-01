@@ -1,17 +1,16 @@
-import Link from "next/link";
 import styles from "../../../scss/team/space/layout.module.scss";
+import Link from "next/link";
 
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
-export default function layout() {
+export default function Layout({ name, host, createdAt }) {
   const router = useRouter();
   const [studyId, setStudyId] = useState("");
 
   useEffect(() => {
     if (!router.isReady) return;
     setStudyId(router.query.id);
-    console.log(router.query);
   }, [router.isReady]);
 
   return (
@@ -19,14 +18,11 @@ export default function layout() {
       <div className={styles.preview}>
         <div className={styles.image}>이미지</div>
         <div className={styles.details}>
-          <span>팀명</span>
-          <span>팀설명</span>
-          <span>팀목표</span>
-          <span>호스트</span>
-          <span>팀원</span>
+          <span>팀명 : {name}</span>
+          <span>호스트 : {host}</span>
         </div>
         <div className={styles.etc}>
-          <span>개설일</span>
+          <span>개설일 : {createdAt[0]}. {createdAt[1]}. {createdAt[2]}</span>
           <button>스터디 시작</button>
         </div>
       </div>
@@ -35,10 +31,10 @@ export default function layout() {
           href={{
             pathname: `/team/space`,
             query: {
-              id: studyId,
+                id: studyId,
             },
           }}
-        //   as={`/team/space`}
+          //   as={`/team/space`}
         >
           <a>팀 소개 | </a>
         </Link>
@@ -46,10 +42,10 @@ export default function layout() {
           href={{
             pathname: `/team/space/coverletter`,
             query: {
-              id: studyId,
+                id: studyId,
             },
           }}
-        //   as={`/team/space/coverletter`}
+          //   as={`/team/space/coverletter`}
         >
           <a>자소서 | </a>
         </Link>
@@ -57,10 +53,10 @@ export default function layout() {
           href={{
             pathname: `/team/space/board`,
             query: {
-              id: studyId,
+                id: studyId,
             },
           }}
-        //   as={`/team/space/board`}
+          //   as={`/team/space/board`}
         >
           <a>게시판</a>
         </Link>

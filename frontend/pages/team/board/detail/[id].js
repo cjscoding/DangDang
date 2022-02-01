@@ -9,6 +9,7 @@ import { useEffect } from "react";
 function mapStateToProps(state) {
   return {
     roomInfo: state.roomReducer.curRoomInfo,
+    roomHost: state.roomReducer.curRoomHost,
   };
 }
 
@@ -25,7 +26,7 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamDetail);
 
-function TeamDetail({ roomInfo, getRoomInfo }) {
+function TeamDetail({ roomInfo, roomHost, getRoomInfo }) {
   //초기 셋팅
   const router = useRouter();
 
@@ -51,7 +52,7 @@ function TeamDetail({ roomInfo, getRoomInfo }) {
 
       <div className={styles.info}>
         <span>호스트</span>
-        <span>{/* {roomInfo.host.nickName} */}</span>
+        <span>{roomHost}</span>
 
         <span>생성일</span>
         <div>
