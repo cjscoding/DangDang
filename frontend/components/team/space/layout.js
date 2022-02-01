@@ -22,7 +22,7 @@ export default function Layout({ name, host, createdAt }) {
           <span>호스트 : {host}</span>
         </div>
         <div className={styles.etc}>
-          <span>개설일 : {createdAt[0]}. {createdAt[1]}. {createdAt[2]}</span>
+          <span>개설일 : {createdAt? `${createdAt[0]}. ${createdAt[1]}. ${createdAt[2]}`: null }</span>
           <button>스터디 시작</button>
         </div>
       </div>

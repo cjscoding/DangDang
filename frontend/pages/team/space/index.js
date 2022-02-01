@@ -37,7 +37,7 @@ function TeamSpace({
   getRoomInfo,
   deleteStudy,
 }) {
-    
+
   const router = useRouter();
 
   useEffect(() => {
@@ -51,6 +51,16 @@ function TeamSpace({
     console.log("스터디룸이 삭제되었습니다.");
     router.push("/user/mypage/myroom");
   };
+
+  //팀 수정
+  const onUpdatePage = () => {
+    router.push({
+        pathname: `/team/space/update`,
+        query: {
+            id: router.query.id,
+        },
+      });
+  }
 
   return (
     <div>
@@ -77,7 +87,7 @@ function TeamSpace({
           </div>
         </div>
 
-        <button>팀 수정</button>
+        <button onClick={onUpdatePage}>팀 수정</button>
         <button onClick={() => onDeleteTeam()}>팀 삭제</button>
 
         <div className={styles.waiting}>
