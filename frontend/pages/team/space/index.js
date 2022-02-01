@@ -1,7 +1,13 @@
 import styles from "../../../scss/team/space/teamspace.module.scss";
 import Layout from "../../../components/team/space/layout";
 
-import { fetchRoomInfo, removeStudy, getWaitingMembers, allowJoinTeam } from "../../../store/actions/roomAction";
+import {
+  fetchRoomInfo,
+  removeStudy,
+  getWaitingMembers,
+  allowJoinTeam,
+  removeMember,
+} from "../../../store/actions/roomAction";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -25,10 +31,10 @@ const mapDispatchToProps = (dispatch) => {
     },
 
     getWaitingMember: (id) => {
-        const data = getWaitingMembers(id);
-        data.then((res) => {
-            dispatch(res);
-        })
+      const data = getWaitingMembers(id);
+      data.then((res) => {
+        dispatch(res);
+      });
     },
   };
 };
@@ -70,22 +76,27 @@ function TeamSpace({
   };
 
   //팀원관리(호스트만 해당)
-  const onRemoveMember = () => {
-      //not yet
-  }
+  const onRemoveMember = (event) => {
+    event.preventDefault();
+    const data = {
+      studyId: router.query.id,
+      userId: event.target[0].value,
+    };
+    removeMember(data);
+  };
 
   //대기자 승인
   const onAllowJoin = (event) => {
     event.preventDefault();
     const data = {
-        studyId : router.query.id,
-        userId : event.target[0].value
-    }
+      studyId: router.query.id,
+      userId: event.target[0].value,
+    };
     allowJoinTeam(data);
-    
+
     // getRoomInfo(router.query.id);
     // getWaitingMember(router.query.id);
-  }
+  };
 
   return (
     <div>
@@ -121,15 +132,21 @@ function TeamSpace({
               <h1>멤버관리</h1>
               {roomMembers.map((member, index) => (
                 <form key={index} onSubmit={onRemoveMember}>
-                  <input type="text" key={index} value={member.nickName} disabled/>
+                  <input type="hidden" value={member.id} disabled />
+                  <input
+                    type="text"
+                    key={index}
+                    value={member.nickName}
+                    disabled
+                  />
                   <button>강제탈퇴</button>
                 </form>
               ))}
               <h1>대기명단</h1>
               {waitingList.map((member, index) => (
                 <form key={index} onSubmit={onAllowJoin}>
-                  <input type="hidden" value={member.id} disabled/>
-                  <input type="text" value={member.nickName} disabled/>
+                  <input type="hidden" value={member.id} disabled />
+                  <input type="text" value={member.nickName} disabled />
                   <button>가입승인</button>
                 </form>
               ))}

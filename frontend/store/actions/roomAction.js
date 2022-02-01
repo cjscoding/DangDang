@@ -117,3 +117,10 @@ export const allowJoinTeam = async (data) => {
     await api.patch("/joins", data);
     console.log("가입을 허용하였습니다.");
 }
+
+//스터디룸 팀원 강제 탈퇴
+export const removeMember = async (data) => {
+    setAuthToken();
+    await api.delete(`/joins/${data.studyId}/${data.userId}`);
+    console.log("강제 탈퇴 완료");
+}
