@@ -43,7 +43,7 @@ spring:
 file :
   upload :
     baseLocation : "/home/ssafy/share/"
-    file :         "/home/ssafy/share/file/"
+    file :         "/home/ssafy/share/files/"
 
 ---
 
@@ -112,8 +112,10 @@ spring:
   jwt:
     secret: eae6d34010d4fea74bcafeeef81c1f8685e4793dfe98701d30e568118b31e4e0
 
-
-#  mvc :
+  output:
+    ansi:
+      enabled: DETECT
+  #  mvc :
 #    static-path-pattern : /static/**
 #    hiddenmethod :
 #      filter :

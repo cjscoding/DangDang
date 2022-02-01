@@ -99,10 +99,10 @@ dependencies {
 }
 
 /** * comileQuerydsl.doFirst 추가 */
-//compileQuerydsl.doFirst {
-//    if(file(querydslDir).exists() )
-//        delete(file(querydslDir))
-//}
+compileQuerydsl.doFirst {
+    if(file(querydslDir).exists() )
+        delete(file(querydslDir))
+}
 
 
 

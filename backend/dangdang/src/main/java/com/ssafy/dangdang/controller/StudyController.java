@@ -65,7 +65,8 @@ public class StudyController {
             @ApiResponse(responseCode = "200", description = "스터디 단일 조회 성공")
     })
     @GetMapping("/{studyId}")
-    public ApiResult<StudyDto> getStudy(@Parameter(description = "조회할 스터디 id", example = "1") @PathVariable Long studyId, @ParameterObject Pageable pageable){
+    public ApiResult<StudyDto> getStudy(@Parameter(description = "조회할 스터디 id", example = "1") @PathVariable Long studyId,
+                                        @ParameterObject Pageable pageable){
 
         StudyDto studyWithUsers = studyService.findStudyWithUsers(studyId);
         Page<CommentDto> commentDtos = commentService.findCommentByReferenceIdWithPage(studyId, CommentType.STUDY, pageable);
