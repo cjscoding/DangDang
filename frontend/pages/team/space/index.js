@@ -1,7 +1,14 @@
 import styles from "../../../scss/team/space/teamspace.module.scss";
 import Layout from "../../../components/team/space/layout";
 
-import { fetchRoomInfo, removeStudy, getWaitingMembers } from "../../../store/actions/roomAction";
+import {
+  fetchRoomInfo,
+  removeStudy,
+  getWaitingMembers,
+  allowJoinTeam,
+  removeMember,
+  outTeam,
+} from "../../../store/actions/roomAction";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -11,6 +18,7 @@ const mapStateToProps = (state) => {
     roomInfo: state.roomReducer.curRoomInfo,
     roomHost: state.roomReducer.curRoomHost,
     roomMembers: state.roomReducer.curRoomMembers,
+    waitingList: state.roomReducer.waitings,
   };
 };
 
@@ -22,15 +30,13 @@ const mapDispatchToProps = (dispatch) => {
         dispatch(res);
       });
     },
-    deleteStudy: (id) => {
-      removeStudy(id);
-    },
+
     getWaitingMember: (id) => {
-        const data = getWaitingMembers(id);
-        // data.then((res) => {
-        //     dispatch(res);
-        // })
-    }
+      const data = getWaitingMembers(id);
+      data.then((res) => {
+        dispatch(res);
+      });
+    },
   };
 };
 
@@ -40,9 +46,9 @@ function TeamSpace({
   roomInfo,
   roomHost,
   roomMembers,
+  waitingList,
   getRoomInfo,
-  deleteStudy,
-  getWaitingMember
+  getWaitingMember,
 }) {
   const router = useRouter();
 
@@ -50,12 +56,12 @@ function TeamSpace({
     console.log(roomMembers);
     if (!router.isReady) return;
     getRoomInfo(router.query.id);
-    getWaitingMember(router.query.id);
+    if (roomHost === 'Bori') getWaitingMember(router.query.id);
   }, [router.isReady]);
 
   //팀 삭제
   const onDeleteTeam = () => {
-    deleteStudy(router.query.id);
+    removeStudy(router.query.id);
     console.log("스터디룸이 삭제되었습니다.");
     router.push("/user/mypage/myroom");
   };
@@ -71,9 +77,29 @@ function TeamSpace({
   };
 
   //팀원관리(호스트만 해당)
-  const onRemoveMember = () => {
-      //not yet
-  }
+  const onRemoveMember = (event) => {
+    event.preventDefault();
+    const data = {
+      studyId: router.query.id,
+      userId: event.target[0].value,
+    };
+    removeMember(data);
+  };
+
+  //대기자 승인
+  const onAllowJoin = (event) => {
+    event.preventDefault();
+    const data = {
+      studyId: router.query.id,
+      userId: event.target[0].value,
+    };
+    allowJoinTeam(data);
+  };
+
+  //스터디룸 탈퇴
+  const onOutTeam = () => {
+    outTeam(router.query.id);
+  };
 
   return (
     <div>
@@ -100,26 +126,36 @@ function TeamSpace({
           </div>
         </div>
 
-        <button onClick={onUpdatePage}>팀 수정</button>
-        <button onClick={() => onDeleteTeam()}>팀 삭제</button>
-
         <div>
           {roomHost === "Bori" ? (
             <div>
+              <button onClick={onUpdatePage}>팀 수정</button>
+              <button onClick={() => onDeleteTeam()}>팀 삭제</button>
               <h1>멤버관리</h1>
               {roomMembers.map((member, index) => (
                 <form key={index} onSubmit={onRemoveMember}>
-                  <input key={index} value={member.nickName} disabled/>
+                  <input type="hidden" value={member.id} disabled />
+                  <input
+                    type="text"
+                    key={index}
+                    value={member.nickName}
+                    disabled
+                  />
                   <button>강제탈퇴</button>
                 </form>
               ))}
+              <h1>대기명단</h1>
+              {waitingList.map((member, index) => (
+                <form key={index} onSubmit={onAllowJoin}>
+                  <input type="hidden" value={member.id} disabled />
+                  <input type="text" value={member.nickName} disabled />
+                  <button>가입승인</button>
+                </form>
+              ))}
             </div>
-          ) : null}
-        </div>
-
-        <div className={styles.waiting}>
-          <h1>대기명단</h1>
-          <div></div>
+          ) : (
+            <button onClick={onOutTeam}>팀 탈퇴</button>
+          )}
         </div>
       </div>
     </div>
