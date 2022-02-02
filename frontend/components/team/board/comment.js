@@ -1,7 +1,10 @@
 import styles from "../../../scss/team/board/comment.module.scss";
 import Reply from "./replys";
 
-import { createDetailComment } from "../../../store/actions/roomAction";
+import {
+  createDetailComment,
+  deleteDetailComment,
+} from "../../../store/actions/roomAction";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -15,7 +18,7 @@ export default function Comment({ comment, reload }) {
   }
 
   //대댓글 등록
-  const onUploadComment = (event) => {
+  const onUploadReply = (event) => {
     event.preventDefault();
     const data = {
       studyId: router.query.id,
@@ -29,6 +32,16 @@ export default function Comment({ comment, reload }) {
     reload();
   };
 
+  //댓글 삭제
+  const onDeleteComment = (id) => {
+    const data = {
+      studyId: router.query.id,
+      commentId: id,
+    };
+    deleteDetailComment(data);
+    reload();
+  };
+
   return (
     <div>
       <div className={styles.commentBox}>
@@ -37,13 +50,13 @@ export default function Comment({ comment, reload }) {
         <div className={styles.btns}>
           <button onClick={toggleReply}>대댓글</button>
           <button>수정</button>
-          <button>삭제</button>
+          <button onClick={() => onDeleteComment(comment.id)}>삭제</button>
         </div>
       </div>
       {showReply ? (
         <div>
           <h1>Reply</h1>
-          <form onSubmit={onUploadComment}>
+          <form onSubmit={onUploadReply}>
             <input type="text" placeholder="reply..." />
             <button>Upload</button>
           </form>

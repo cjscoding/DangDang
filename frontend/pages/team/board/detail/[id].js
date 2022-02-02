@@ -63,9 +63,7 @@ function TeamDetail({ roomInfo, roomHost, comments, getRoomInfo }) {
     getRoomInfo(router.query.id);
   };
 
-  const reload = () => {
-    getRoomInfo(router.query.id);
-  };
+  const reload = () => getRoomInfo(router.query.id);
 
   return (
     <div>
