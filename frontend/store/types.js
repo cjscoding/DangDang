@@ -4,7 +4,6 @@ const teamBoard = {
   CREATE_ROOM: "CREATE_ROOM",
   MY_ROOMS: "MY_ROOMS",
   WAITING_MEMBERS: "WAITING_MEMBERS",
-  CREATE_COMMENT: "CREATE_COMMENT",
 };
 
 const videoTypes = {

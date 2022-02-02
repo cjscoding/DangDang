@@ -41,17 +41,19 @@ export const fetchRooms = async (param) => {
   };
 };
 
-//스터디 단일 조회
+//스터디룸 단일 조회
 export const fetchRoomInfo = async (studyId) => {
   const response = await api.get(`/study/${studyId}`);
   const roomInfo = response.data.response;
   const host = roomInfo.host.nickName;
   const members = roomInfo.userDtos;
+  const comments = roomInfo.commentDtos.content;
   return {
     type: types.GET_ROOM_INFO,
     roomInfo,
     host,
     members,
+    comments,
   };
 };
 
@@ -75,18 +77,8 @@ export const removeStudy = async (studyId) => {
 
 //스터디룸 수정
 export const updateStudy = async (data) => {
-  //   setAuthToken();
-
-  await axios.patch(
-    `http://localhost:8080/study/${data.studyId}`,
-    data.newInfo,
-    {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InRlc3RAc3NhZnkuY29tIiwiaWF0IjoxNjQzNzI2ODUyLCJleHAiOjE2NDM4MTMyNTJ9.EVTU6m3qTe1jNJjNs2vxX5J1-xm0AhHu5-PKTPB2giM",
-      },
-    }
-  );
+  setAuthToken();
+  await api.patch(`http://localhost:8080/study/${data.studyId}`, data.newInfo);
 };
 
 //마이룸 조회
@@ -108,28 +100,40 @@ export const getWaitingMembers = async (studyId) => {
   const response = await api.get(`/joins/waiting/${studyId}`);
   const waitings = response.data.response;
   return {
-      type: types.WAITING_MEMBERS,
-      waitings,
-    };
+    type: types.WAITING_MEMBERS,
+    waitings,
+  };
 };
 
 //스터디룸 가입 허용
 export const allowJoinTeam = async (data) => {
-    setAuthToken();
-    await api.patch("/joins", data);
-    console.log("가입을 허용하였습니다.");
-}
+  setAuthToken();
+  await api.patch("/joins", data);
+  console.log("가입을 허용하였습니다.");
+};
 
 //스터디룸 팀원 강제 탈퇴
 export const removeMember = async (data) => {
-    setAuthToken();
-    await api.delete(`/joins/${data.studyId}/${data.userId}`);
-    console.log("강제 탈퇴 완료");
-}
+  setAuthToken();
+  await api.delete(`/joins/${data.studyId}/${data.userId}`);
+  console.log("강제 탈퇴 완료");
+};
 
 //스터디룸 탈퇴
 export const outTeam = async (studyId) => {
+  setAuthToken();
+  await api.delete(`/joins/${studyId}`);
+  console.log("탈퇴 완료");
+};
+
+//스터디룸 상세 공고 댓글, 대댓글 Post
+export const createDetailComment = async (data) => {
     setAuthToken();
-    await api.delete(`/joins/${studyId}`);
-    console.log("탈퇴 완료");
+    await api.post(`/study/${data.studyId}/comment`, data.obj);
+    console.log("등록되었습니다.");
 }
+
+//스터디룸 상세 공고 댓글, 대댓글 Update
+
+
+//스터디룸 상세 공고 댓글, 대댓글 Delete
