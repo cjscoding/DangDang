@@ -23,6 +23,7 @@ function mapDispatchToProps(dispatch) {
     getRoomInfo: (id) => {
       const data = fetchRoomInfo(id);
       data.then((res) => {
+        console.log(res);
         dispatch(res);
       });
     },

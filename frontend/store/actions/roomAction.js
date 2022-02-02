@@ -134,10 +134,15 @@ export const createDetailComment = async (data) => {
 };
 
 //스터디룸 상세 공고 댓글, 대댓글 Update
+export const updateDetailComment = async (data) => {
+  setAuthToken();
+  await api.patch(`/study/{studyId}/comment/${data.commentId}`, data.obj);
+  console.log("수정되었습니다.");
+};
 
 //스터디룸 상세 공고 댓글, 대댓글 Delete
 export const deleteDetailComment = async (data) => {
   setAuthToken();
-  await api.delete(`/study/${data.studyId}/comment/${data.commentId}`);
+  await api.delete(`/study/{studyId}/comment/${data.commentId}`);
   console.log("삭제되었습니다.");
 };
