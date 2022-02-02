@@ -125,3 +125,15 @@ export const outTeam = async (studyId) => {
   await api.delete(`/joins/${studyId}`);
   console.log("탈퇴 완료");
 };
+
+//스터디룸 상세 공고 댓글, 대댓글 Post
+export const createDetailComment = async (data) => {
+    setAuthToken();
+    await api.post(`/study/${data.studyId}/comment`, data.obj);
+    console.log("등록되었습니다.");
+}
+
+//스터디룸 상세 공고 댓글, 대댓글 Update
+
+
+//스터디룸 상세 공고 댓글, 대댓글 Delete

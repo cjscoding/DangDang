@@ -1,14 +1,33 @@
 import styles from "../../../scss/team/board/comment.module.scss";
 import Reply from "./replys";
+
+import { createDetailComment } from "../../../store/actions/roomAction";
+import { useRouter } from "next/router";
 import { useState } from "react";
 
-export default function Comment({ comment }) {
+export default function Comment({ comment, reload }) {
+  const router = useRouter();
   const [showReply, setShowReply] = useState(false);
 
   function toggleReply(event) {
     event.preventDefault();
     setShowReply((showReply) => !showReply);
   }
+
+  //대댓글 등록
+  const onUploadComment = (event) => {
+    event.preventDefault();
+    const data = {
+      studyId: router.query.id,
+      obj: {
+        parentId: comment.id,
+        content: event.target[0].value,
+      },
+    };
+    createDetailComment(data);
+    event.target[0].value = "";
+    reload();
+  };
 
   return (
     <div>
@@ -24,9 +43,9 @@ export default function Comment({ comment }) {
       {showReply ? (
         <div>
           <h1>Reply</h1>
-          <form>
+          <form onSubmit={onUploadComment}>
             <input type="text" placeholder="reply..." />
-            <button type="submit">Upload</button>
+            <button>Upload</button>
           </form>
           {comment.children?.map((reply, index) => (
             <div key={index}>

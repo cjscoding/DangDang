@@ -1,7 +1,11 @@
 import styles from "../../../../scss/team/board/detail.module.scss";
 import Comment from "../../../../components/team/board/comment";
 
-import { fetchRoomInfo, joinStudy } from "../../../../store/actions/roomAction";
+import {
+  fetchRoomInfo,
+  joinStudy,
+  createDetailComment,
+} from "../../../../store/actions/roomAction";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { useEffect } from "react";
@@ -36,13 +40,31 @@ function TeamDetail({ roomInfo, roomHost, comments, getRoomInfo }) {
     getRoomInfo(router.query.id);
   }, [router.isReady]);
 
-  // 가입 신청
+  // 스터디룸 가입 신청
   const onJoinStudy = (id) => {
     const data = {
       studyId: id,
     };
     joinStudy(data);
     console.log("가입완료되었습니다.");
+  };
+
+  //댓글 등록
+  const onUploadComment = (event) => {
+    event.preventDefault();
+    const data = {
+      studyId: router.query.id,
+      obj: {
+        content: event.target[0].value,
+      },
+    };
+    createDetailComment(data);
+    event.target[0].value = "";
+    getRoomInfo(router.query.id);
+  };
+
+  const reload = () => {
+    getRoomInfo(router.query.id);
   };
 
   return (
@@ -86,14 +108,14 @@ function TeamDetail({ roomInfo, roomHost, comments, getRoomInfo }) {
           <div className="icon"></div>
           <label className="author">Bori</label>
         </div>
-        <form>
+        <form onSubmit={onUploadComment}>
           <input type="text" placeholder="comment..." />
           <button>Upload</button>
         </form>
         <div className="commentList">
           <h1>Comments</h1>
           {comments.map((comment, index) => (
-            <Comment comment={comment} key={index} />
+            <Comment comment={comment} key={index} reload={reload} />
           ))}
         </div>
       </div>
