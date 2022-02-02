@@ -23,6 +23,7 @@ function mapDispatchToProps(dispatch) {
     getRoomInfo: (id) => {
       const data = fetchRoomInfo(id);
       data.then((res) => {
+        console.log(res);
         dispatch(res);
       });
     },
@@ -63,9 +64,7 @@ function TeamDetail({ roomInfo, roomHost, comments, getRoomInfo }) {
     getRoomInfo(router.query.id);
   };
 
-  const reload = () => {
-    getRoomInfo(router.query.id);
-  };
+  const reload = () => getRoomInfo(router.query.id);
 
   return (
     <div>
