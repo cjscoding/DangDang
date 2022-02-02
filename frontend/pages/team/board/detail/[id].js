@@ -2,14 +2,15 @@ import styles from "../../../../scss/team/board/detail.module.scss";
 import Comment from "../../../../components/team/board/comment";
 
 import { fetchRoomInfo, joinStudy } from "../../../../store/actions/roomAction";
-import { connect } from "react-redux";
 import { useRouter } from "next/router";
+import { connect } from "react-redux";
 import { useEffect } from "react";
 
 function mapStateToProps(state) {
   return {
     roomInfo: state.roomReducer.curRoomInfo,
     roomHost: state.roomReducer.curRoomHost,
+    comments: state.roomReducer.comments,
   };
 }
 
@@ -26,7 +27,7 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamDetail);
 
-function TeamDetail({ roomInfo, roomHost, getRoomInfo }) {
+function TeamDetail({ roomInfo, roomHost, comments, getRoomInfo }) {
   //초기 셋팅
   const router = useRouter();
 
@@ -83,14 +84,17 @@ function TeamDetail({ roomInfo, roomHost, getRoomInfo }) {
         <h3>New Comment</h3>
         <div className={styles.user}>
           <div className="icon"></div>
-          <label className="author">me</label>
+          <label className="author">Bori</label>
         </div>
         <form>
           <input type="text" placeholder="comment..." />
-          <button type="submit">Upload</button>
+          <button>Upload</button>
         </form>
         <div className="commentList">
-          <Comment />
+          <h1>Comments</h1>
+          {comments.map((comment, index) => (
+            <Comment comment={comment} key={index} />
+          ))}
         </div>
       </div>
     </div>

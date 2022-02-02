@@ -1,27 +1,14 @@
 // import styles from "../../scss/team/board/reply.module.scss";
 
-export default function Replys({ replys, on }) {
+export default function Reply({ reply }) {
   return (
-    <div>
-      {on ? (
-        <div>
-          <h1>Replys</h1>
-          <form>
-            <input
-              type="text"
-              placeholder="reply..."
-            />
-            <button type="submit">Upload</button>
-          </form>
+    <div className="reply">
+      <span>이름 : {reply.writerNickname}</span>
+      <span>내용 : {reply.content}</span>
+      <div>
+          <button>수정</button>
+          <button>삭제</button>
         </div>
-      ) : null}
-
-      {replys?.map((reply) => {
-        <div className="reply">
-          <span>{reply.user}</span>
-          <span>{reply.content}</span>
-        </div>;
-      })}
     </div>
   );
 }
