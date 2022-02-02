@@ -6,6 +6,11 @@ const teamBoard = {
   WAITING_MEMBERS: "WAITING_MEMBERS",
 };
 
+const teamSpace = {
+    GET_RESUME: "GET_RESUME",
+    NO_RESUME: "NO_RESUME"
+}
+
 const videoTypes = {
   SET_VIDEO: "SET_VIDEO",
   SET_CAMERA: "SET_CAMERA",
@@ -27,6 +32,7 @@ const userTypes = {
 
 const types = {
   ...teamBoard,
+  ...teamSpace,
   ...videoTypes,
   ...questionTypes,
   ...userTypes,
