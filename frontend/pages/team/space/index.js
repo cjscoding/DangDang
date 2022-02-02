@@ -53,11 +53,13 @@ function TeamSpace({
   const router = useRouter();
 
   useEffect(() => {
-    console.log(roomMembers);
     if (!router.isReady) return;
     getRoomInfo(router.query.id);
-    if (roomHost === 'Bori') getWaitingMember(router.query.id);
   }, [router.isReady]);
+
+  useEffect(() => {
+    if (roomHost === "Bori") getWaitingMember(router.query.id);
+  }, [roomHost]);
 
   //팀 삭제
   const onDeleteTeam = () => {
@@ -87,13 +89,15 @@ function TeamSpace({
   };
 
   //대기자 승인
-  const onAllowJoin = (event) => {
+  const onAllowJoin = async (event) => {
     event.preventDefault();
     const data = {
       studyId: router.query.id,
       userId: event.target[0].value,
     };
-    allowJoinTeam(data);
+    await allowJoinTeam(data);
+    await getRoomInfo(router.query.id);
+    await getWaitingMember(router.query.id);
   };
 
   //스터디룸 탈퇴
