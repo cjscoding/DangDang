@@ -27,8 +27,7 @@ public class KurentoController {
 
 
     @GetMapping("/download/{name}")
-    public ResponseEntity<Resource> download(HttpServletResponse response, @PathVariable String name) throws IOException {
-
+    public ResponseEntity<Resource> download(HttpServletResponse response, @PathVariable("name") String name) throws IOException {
 
         Resource resource = storageService.loadAsResource(name);
         String encodedUploadFileName = UriUtils.encode(name, StandardCharsets.UTF_8);

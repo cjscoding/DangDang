@@ -43,8 +43,8 @@ import java.util.ArrayList;
  */
 
 public class HelloWorldRecHandler extends TextWebSocketHandler {
-  public static int cnt=1;
-  private static String RECORDER_FILE_PATH = "file:///tmp/"+cnt+"HelloWorldRecorded.webm";
+//  public static int cnt=1;
+  private static String RECORDER_FILE_PATH = "file:///tmp/"+"HelloWorldRecorded.webm";
 
   private final Logger log = LoggerFactory.getLogger(HelloWorldRecHandler.class);
   private static final Gson gson = new GsonBuilder().create();
@@ -71,9 +71,9 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
     switch (jsonMessage.get("id").getAsString()) {
       case "start":
         log.debug("start");
-        RECORDER_FILE_PATH = "file:///tmp/"+cnt+"HelloWorldRecorded.webm";
+        String storeName=jsonMessage.get("name").getAsString(); //프론트로부터 받은 저장 파일 이름
+        RECORDER_FILE_PATH = "file:///tmp/"+storeName+".webm";
         start(session, jsonMessage);
-        cnt++;
         break;
       case "stop":
         if (user != null) {
@@ -120,7 +120,7 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
   // start 누름 -> 녹화 시작
   private void start(final WebSocketSession session, JsonObject jsonMessage) {
     try {
-
+      System.out.println("start 메서드 name 확인 :: "+RECORDER_FILE_PATH);
       // 1. Media logic (webRtcEndpoint in loopback)
       MediaPipeline pipeline = kurento.createMediaPipeline();
       WebRtcEndpoint webRtcEndpoint = new WebRtcEndpoint.Builder(pipeline).build();
