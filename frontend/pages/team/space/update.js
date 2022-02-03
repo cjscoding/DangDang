@@ -1,6 +1,6 @@
 import styles from "../../../scss/team/space/update.module.scss";
 
-import { updateStudy } from "../../../store/actions/roomAction";
+import { updateRoom } from "../../../api/studyroom";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { useState } from "react";
@@ -8,21 +8,12 @@ import { useState } from "react";
 const mapStateToProps = (state) => {
   return {
     roomInfo: state.roomReducer.curRoomInfo,
-    roomMembers: state.roomReducer.curRoomMembers,
   };
 };
 
-const mapDispatchToProps = () => {
-  return {
-    modifyStudy: (data) => {
-      updateStudy(data);
-    },
-  };
-};
+export default connect(mapStateToProps, null)(UpdateTeam);
 
-export default connect(mapStateToProps, mapDispatchToProps)(UpdateTeam);
-
-function UpdateTeam({ roomInfo, modifyStudy }) {
+function UpdateTeam({ roomInfo }) {
   const router = useRouter();
 
   const roomInit = {
@@ -31,7 +22,7 @@ function UpdateTeam({ roomInfo, modifyStudy }) {
     description: roomInfo.description,
     openKakao: roomInfo.openKakao,
     goal: roomInfo.goal,
-    hashTags: roomInfo.hashTags
+    hashTags: roomInfo.hashTags,
   };
 
   const [updateInfo, setUpdateInfo] = useState(roomInit);
@@ -46,11 +37,20 @@ function UpdateTeam({ roomInfo, modifyStudy }) {
     };
 
     const data = {
-        studyId: roomInfo.id,
-        newInfo
-    }
-    
-    modifyStudy(data);
+      studyId: roomInfo.id,
+      newInfo,
+    };
+
+    updateRoom(
+      data,
+      (res) => {
+        console.log(res, "스터디 수정 완료!");
+      },
+      (err) => {
+        console.log(err, "스터디를 수정할 권한이 없습니다.");
+      }
+    );
+
     router.push({
       pathname: `/team/space`,
       query: {

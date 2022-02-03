@@ -91,7 +91,7 @@ function TeamSpace({
     await getRoomInfo(router.query.id);
     await getWaitingMember(router.query.id);
   };
-  //팀 수정
+  //팀 수정페이지로 이동
   const onUpdatePage = () => {
     router.push({
       pathname: `/team/space/update`,

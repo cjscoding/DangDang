@@ -26,3 +26,11 @@ export const createRoom = async (newRoom, success, fail) => {
 export const removeRoom = async (studyId, success, fail) => {
   await api.delete(`/study/${studyId}`).then(success).catch(fail);
 };
+
+//스터디룸 수정
+export const updateRoom = async (data, success, fail) => {
+  await api
+    .patch(`/study/${data.studyId}`, data.newInfo)
+    .then(success)
+    .catch(fail);
+};

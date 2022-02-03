@@ -58,12 +58,6 @@ export const joinStudy = async (data) => {
   await api.post("/joins", data);
 };
 
-//스터디룸 수정
-export const updateStudy = async (data) => {
-  setAuthToken();
-  await api.patch(`http://localhost:8080/study/${data.studyId}`, data.newInfo);
-};
-
 //스터디룸 가입 대기 명단 조회
 export const getWaitingMembers = async (studyId) => {
   setAuthToken();
