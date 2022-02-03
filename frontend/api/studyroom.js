@@ -21,3 +21,8 @@ export const getRoomInfo = async (studyId, success, fail) => {
 export const createRoom = async (newRoom, success, fail) => {
   await api.post("/study", newRoom).then(success).catch(fail);
 };
+
+//스터디룸 삭제
+export const removeRoom = async (studyId, success, fail) => {
+  await api.delete(`/study/${studyId}`).then(success).catch(fail);
+};

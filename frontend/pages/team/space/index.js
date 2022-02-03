@@ -3,13 +3,12 @@ import Layout from "../../../components/team/space/layout";
 
 import {
   setRoomInfo,
-  removeStudy,
   getWaitingMembers,
   allowJoinTeam,
   removeMember,
   outTeam,
 } from "../../../store/actions/roomAction";
-import { getRoomInfo } from "../../../api/studyroom";
+import { getRoomInfo, removeRoom } from "../../../api/studyroom";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -103,8 +102,15 @@ function TeamSpace({
   };
   //팀 삭제
   const onDeleteTeam = () => {
-    removeStudy(router.query.id);
-    console.log("스터디룸이 삭제되었습니다.");
+    removeRoom(
+      router.query.id,
+      (res) => {
+        console.log(res, "스터디 삭제 완료!");
+      },
+      (err) => {
+        console.log(err, "스터디를 삭제할 권한이 없습니다.");
+      }
+    );
     router.push("/user/mypage/myroom");
   };
   //가입대기명단 조회

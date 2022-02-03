@@ -58,12 +58,6 @@ export const joinStudy = async (data) => {
   await api.post("/joins", data);
 };
 
-//스터디룸 삭제
-export const removeStudy = async (studyId) => {
-  setAuthToken();
-  await api.delete(`/study/${studyId}`);
-};
-
 //스터디룸 수정
 export const updateStudy = async (data) => {
   setAuthToken();
