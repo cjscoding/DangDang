@@ -18,6 +18,8 @@ package com.ssafy.dangdang.config.kurento;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.ssafy.dangdang.service.StorageService;
+import lombok.RequiredArgsConstructor;
 import org.kurento.client.*;
 import org.kurento.jsonrpc.JsonUtils;
 import org.slf4j.Logger;
@@ -29,6 +31,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -42,14 +45,18 @@ import java.util.ArrayList;
  * @since 6.1.1
  */
 
+
 public class HelloWorldRecHandler extends TextWebSocketHandler {
   private static String RECORDER_FILE_PATH = "file:///tmp/"+"HelloWorldRecorded.webm"; //default name
 
   private final Logger log = LoggerFactory.getLogger(HelloWorldRecHandler.class);
   private static final Gson gson = new GsonBuilder().create();
-
+  private Boolean isStop = false;
   @Autowired
   private UserRegistry registry;
+
+  @Autowired
+  private StorageService storageService;
 
   @Autowired
   private KurentoClient kurento;
@@ -57,10 +64,10 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
   @Override
   public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
     JsonObject jsonMessage = gson.fromJson(message.getPayload(), JsonObject.class);
-
     log.debug("Incoming message: {}", jsonMessage);
 
     UserSession user = registry.getBySession(session);
+
     log.info("============================================================");
     log.info("session id :{}",user);
     log.info("============================================================");
@@ -80,7 +87,7 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
       case "stop":
         if (user != null) {
           user.stop();
-
+          isStop = true;
           log.debug("stop");
         }
       case "stopPlay":
@@ -96,17 +103,20 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
       case "onIceCandidate": {
         JsonObject jsonCandidate = jsonMessage.get("candidate").getAsJsonObject();
 
-        if (user != null) {
+        if (user != null && !isStop) {
           IceCandidate candidate = new IceCandidate(jsonCandidate.get("candidate").getAsString(),
                   jsonCandidate.get("sdpMid").getAsString(),
                   jsonCandidate.get("sdpMLineIndex").getAsInt());
           user.addCandidate(candidate);
         }
+        if(isStop) isStop = false;
         break;
       }
       case "del": 
         log.debug("del");
-        del(user);
+        if (user != null) {
+          del(user);
+        }
         break;
       default:
         sendError(session, "Invalid message with id " + jsonMessage.get("id").getAsString());
@@ -123,7 +133,7 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
   // start 누름 -> 녹화 시작
   private void start(final WebSocketSession session, String saveName, JsonObject jsonMessage) {
     try {
-      log.debug("녹화될 영상 name 확인 :: {}",RECORDER_FILE_PATH);
+      log.info("녹화될 영상 name 확인 :: {}",RECORDER_FILE_PATH);
       // 1. Media logic (webRtcEndpoint in loopback)
       MediaPipeline pipeline = kurento.createMediaPipeline();
       WebRtcEndpoint webRtcEndpoint = new WebRtcEndpoint.Builder(pipeline).build();
@@ -142,14 +152,19 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
               .withMediaProfile(profile).build();
 
       // 2. Store user session
-      UserSession user = new UserSession(session.getId(),"soloRoom",session, pipeline);
+      UserSession user= registry.getById(session.getId());
 
-//      user.setMediaPipeline(pipeline);
+      if(user == null){
+        user = new UserSession(session.getId(),"soloRoom",session, pipeline);
+        registry.register(user);
+      }
+      user.setMediaPipeline(pipeline);
       user.setWebRtcEndpoint(webRtcEndpoint);
       user.setRecorderEndpoint(recorder);
-      registry.register(user);
-      user.addVideo(user.getId()+saveName); // set 저장
 
+//      user.getVideos().add(user.getId()+saveName);
+      user.addVideo(user.getId()+saveName); // set 저장
+      log.info("지금까지 저장한 파일 이름 :: {}",user.getVideos());
 
       // 녹화 시작
       recorder.addRecordingListener(new EventListener<RecordingEvent>() {
@@ -206,9 +221,6 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
 
       connectAccordingToProfile(webRtcEndpoint, recorder, profile);
 
-
-
-
       // 3. SDP negotiation
       String sdpOffer = jsonMessage.get("sdpOffer").getAsString();
       String sdpAnswer = webRtcEndpoint.processOffer(sdpOffer);
@@ -234,7 +246,7 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
       JsonObject response = new JsonObject();
       response.addProperty("id", "startResponse");
       response.addProperty("sdpAnswer", sdpAnswer);
-      response.addProperty("sessionId으아아아아아ㅏㄱ",user.getId());
+      response.addProperty("sessionId",user.getId());
 
       synchronized (user) {
         session.sendMessage(new TextMessage(response.toString()));
@@ -383,20 +395,24 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
     }
   }
   // delete 추가 
-  private void del(UserSession user){
-
+  private void del(UserSession user) throws FileNotFoundException {
     log.info("delete 컨트롤러 연결");
-    for (String video:
-            user.getVideos()) {
-      String filePath = "/home/ssafy/share/"+video+".webm";
-      File deleteFile = new File(filePath);
-      // 파일이 존재하는지 체크 존재할경우 true, 존재하지않을경우 false
-      if(deleteFile.exists()) {
-        deleteFile.delete();
-        log.info("파일이 삭제되었습니다.");
-      } else {
-        log.info("파일이이 없습니다.");
-      }
+    for (String video : user.getVideos()) {
+//      String filePath = "/home/ssafy/share/files/"+video+".webm";
+      String fileName = video+".webm";
+//      log.info("filePath : {}",filePath);
+      log.info("fileName : {}",fileName);
+      storageService.delete(fileName);
+
+
+//      File deleteFile = new File(filePath);
+//      // 파일이 존재하는지 체크 존재할경우 true, 존재하지않을경우 false
+//      if(deleteFile.exists()) {
+//        deleteFile.delete();
+//        log.info("파일이 삭제되었습니다.");
+//      } else {
+//        log.info("파일이 없습니다.");
+//      }
     }
     return;
   }

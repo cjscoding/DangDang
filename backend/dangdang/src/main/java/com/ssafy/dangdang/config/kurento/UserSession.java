@@ -55,7 +55,7 @@ public class UserSession implements Closeable {
   private Date stopTimestamp;
   private int num; //추가
 
-  // list
+  // 저장한 파일 이름 set
   private Set<String> videos;
 
   //GroupCall 설정
@@ -279,8 +279,8 @@ public class UserSession implements Closeable {
   }
 
 
-  public void addVideo(String path){
-    this.videos.add(path);
+  public void addVideo(String saveName){
+    this.videos.add(saveName);
   }
 
   @Override
@@ -315,6 +315,7 @@ public class UserSession implements Closeable {
             ", mediaPipeline=" + mediaPipeline +
             ", stopTimestamp=" + stopTimestamp +
             ", num=" + num +
+            ", videos=" + videos +
             ", session=" + session +
             ", name='" + name + '\'' +
             ", roomName='" + roomName + '\'' +

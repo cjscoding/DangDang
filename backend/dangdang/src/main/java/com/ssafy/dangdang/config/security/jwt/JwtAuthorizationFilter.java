@@ -39,9 +39,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 //		response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE, PATCH");
 
 		String header = request.getHeader(JwtUtil.HEADER_STRING);
-		System.out.println("header Authorization : " + header);
+		//System.out.println("header Authorization : " + header);
 		String refreshHeader = request.getHeader(JwtUtil.REFRESH_HEADER_STRING);
-		System.out.println("refreshHeader Authorization : " + refreshHeader);
+		//System.out.println("refreshHeader Authorization : " + refreshHeader);
 		String refreshToken = null;
 		String refreshUsername;
 		Boolean jwtExpired = false;

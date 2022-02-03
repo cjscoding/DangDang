@@ -42,8 +42,8 @@ spring:
 
 file :
   upload :
-    baseLocation : "/home/ssafy/share/"
-    file :         "/home/ssafy/share/files/"
+    baseLocation : "C:/home/ssafy/share/"
+    file :         "C:/home/ssafy/share/files/"
 
 ---
 
@@ -199,8 +199,8 @@ logging:
     org:
       apache:
         nodeValue: WARN
-        coyote:
-          http11: debug      #HTTP 요청 확인 옵션, 개발할 때만 활성화 할것
+#        coyote:
+#          http11: debug      #HTTP 요청 확인 옵션, 개발할 때만 활성화 할것
       springframework: WARN
       kurento:
         nodeValue: INFO
