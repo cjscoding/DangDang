@@ -7,9 +7,9 @@ const teamBoard = {
 };
 
 const teamSpace = {
-    GET_RESUME: "GET_RESUME",
-    NO_RESUME: "NO_RESUME"
-}
+  GET_RESUME: "GET_RESUME",
+  NO_RESUME: "NO_RESUME",
+};
 
 const videoTypes = {
   SET_VIDEO: "SET_VIDEO",
@@ -26,7 +26,7 @@ const questionTypes = {
 const userTypes = {
   SET_USERINFO: "SET_USERINFO",
   SET_SHOWMODAL: "SET_SHOWMODAL",
-  SET_ISLOGIN: "SET_ISLOGIN",
+  SET_ISLOGINMODAL: "SET_ISLOGINMODAL",
   RESET_USERINFO: "RESET_USERINFO",
 };
 

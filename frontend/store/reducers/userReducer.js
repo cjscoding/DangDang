@@ -7,7 +7,7 @@ const initialState = {
     nickName: "",
   },
   showModal: false,
-  isLogin: false,
+  isLoginModal: false,
 };
 
 const userReducer = (state = initialState, action) => {
@@ -16,8 +16,8 @@ const userReducer = (state = initialState, action) => {
       return { ...state, user: { ...action.userInfo } };
     case types.SET_SHOWMODAL:
       return { ...state, showModal: action.show };
-    case types.SET_ISLOGIN:
-      return { ...state, isLogin: action.isLogin };
+    case types.SET_ISLOGINMODAL:
+      return { ...state, isLoginModal: action.isLoginModal };
     case types.RESET_USERINFO:
       return {
         user: {
@@ -26,7 +26,7 @@ const userReducer = (state = initialState, action) => {
           nickName: "",
         },
         showModal: false,
-        isLogin: false,
+        isLoginModal: false,
       };
     default:
       return state;

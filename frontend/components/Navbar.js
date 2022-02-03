@@ -4,32 +4,39 @@ import { connect } from "react-redux";
 import { logoutRequest } from "../api/user";
 import {
   resetUserInfo,
-  setIsLogin,
+  setIsLoginModal,
   setShowModal,
 } from "../store/actions/userAction";
 import styles from "../scss/layout/navbar.module.scss";
 import Modal from "./layout/Modal";
 import Login from "./user/Login";
 import Signup from "./user/Signup";
+import { useEffect, useState } from "react";
 
 function mapStateToProps({ userReducer }) {
   return {
     user: userReducer.user,
-    isLogin: userReducer.isLogin,
+    isLoginModal: userReducer.isLoginModal,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     setShowModal: (show) => dispatch(setShowModal(show)),
-    setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
+    setIsLoginModal: (isLoginModal) => dispatch(setIsLoginModal(isLoginModal)),
     resetUserInfo: () => dispatch(resetUserInfo()),
   };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
 
-function NavBar({ user, isLogin, setShowModal, setIsLogin, resetUserInfo }) {
+function NavBar({
+  user,
+  isLoginModal,
+  setShowModal,
+  setIsLoginModal,
+  resetUserInfo,
+}) {
   const router = useRouter();
   const logOut = () => {
     logoutRequest(
@@ -45,6 +52,17 @@ function NavBar({ user, isLogin, setShowModal, setIsLogin, resetUserInfo }) {
       (error) => console.log(error)
     );
   };
+
+  const [isLogin, setIsLogin] = useState(false);
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      localStorage.getItem("authorization") &&
+      localStorage.getItem("refreshtoken")
+    ) {
+      setIsLogin(true);
+    } else setIsLogin(false);
+  }, [user]);
 
   return (
     <nav className={styles.navbar}>
@@ -74,41 +92,48 @@ function NavBar({ user, isLogin, setShowModal, setIsLogin, resetUserInfo }) {
             <a>질문궁금하당</a>
           </Link>
         </li>
-        <li>
-          <a
-            onClick={() => {
-              setShowModal(true);
-              setIsLogin(true);
-            }}
-            tabIndex="0"
-          >
-            로그인
-          </a>
-        </li>
-        <li>
-          <a
-            onClick={() => {
-              setShowModal(true);
-              setIsLogin(false);
-            }}
-            tabIndex="0"
-          >
-            회원가입
-          </a>
-        </li>
-        <li>
-          <Link href="/user">
-            <a>{user.nickName}님 안녕하세요! (마이페이지)</a>
-          </Link>
-        </li>
-        <li>
-          <a tabIndex="0" onClick={logOut}>
-            로그아웃
-          </a>
-        </li>
+        {isLogin ? (
+          <span>
+            <li>
+              <Link href="/user">
+                <a>{user.nickName}님 안녕하세요! (마이페이지)</a>
+              </Link>
+            </li>
+            <li>
+              <a tabIndex="0" onClick={logOut}>
+                로그아웃
+              </a>
+            </li>
+          </span>
+        ) : (
+          <span>
+            <li>
+              <a
+                onClick={() => {
+                  setShowModal(true);
+                  setIsLoginModal(true);
+                }}
+                tabIndex="0"
+              >
+                로그인
+              </a>
+            </li>
+            <li>
+              <a
+                onClick={() => {
+                  setShowModal(true);
+                  setIsLoginModal(false);
+                }}
+                tabIndex="0"
+              >
+                회원가입
+              </a>
+            </li>
+          </span>
+        )}
       </ul>
 
-      <Modal>{isLogin ? <Login></Login> : <Signup></Signup>}</Modal>
+      <Modal>{isLoginModal ? <Login></Login> : <Signup></Signup>}</Modal>
     </nav>
   );
 }
