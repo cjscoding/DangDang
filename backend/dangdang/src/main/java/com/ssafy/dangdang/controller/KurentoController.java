@@ -1,9 +1,13 @@
 package com.ssafy.dangdang.controller;
 
+import com.ssafy.dangdang.config.kurento.HelloWorldRecHandler;
+import com.ssafy.dangdang.config.kurento.UserRegistry;
+import com.ssafy.dangdang.config.kurento.UserSession;
 import com.ssafy.dangdang.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -25,10 +29,8 @@ public class KurentoController {
 
     private final StorageService storageService;
 
-
     @GetMapping("/download/{name}")
     public ResponseEntity<Resource> download(HttpServletResponse response, @PathVariable("name") String name) throws IOException {
-
         Resource resource = storageService.loadAsResource(name);
         String encodedUploadFileName = UriUtils.encode(name, StandardCharsets.UTF_8);
 

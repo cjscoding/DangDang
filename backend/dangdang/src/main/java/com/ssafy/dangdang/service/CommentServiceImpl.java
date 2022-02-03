@@ -51,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
     public ApiResult<CommentDto> updateComment(User user, CommentDto commentDto) {
         Optional<Comment> comment = commentRepository.findCommentById(commentDto.getId());
         if (!comment.isPresent()) throw new NullPointerException("존재하지 않는 댓글 입니다.");
-        if (comment.get().getWriterId() != user.getId() && user.getRole() == UserRoleType.ADMIN)  throw new UnauthorizedAccessException("작성자만이 삭제할 수 있습니다.");
+        if (comment.get().getWriterId() != user.getId() || user.getRole() != UserRoleType.ADMIN)  throw new UnauthorizedAccessException("작성자만이 삭제할 수 있습니다.");
         Comment updateComment ;
 
         if (commentDto.getChildren() != null){

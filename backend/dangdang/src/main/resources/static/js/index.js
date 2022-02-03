@@ -136,6 +136,7 @@ function del(){
 function start(name) {
 	console.log('Starting video call ...');
 	console.log("받은 파일 name :: "+name);
+	name = document.getElementById("fileName").value;
 	saveName=name;
 	// Disable start button
 	setState(DISABLED);
