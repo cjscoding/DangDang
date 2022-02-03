@@ -5,29 +5,29 @@ import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import {
   setShowModal,
-  setIsLogin,
+  setIsLoginModal,
   setUserInfo,
 } from "../../store/actions/userAction";
 import { getToken, getUserInfo } from "../../api/user";
-import userReducer from "../../store/reducers/userReducer";
+import { BACKEND_URL } from "../../config";
 
 function mapStateToProps({ userReducer }) {
   return {
-    isLogin: userReducer.isLogin,
+    isLoginModal: userReducer.isLoginModal,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     setShowModal: (show) => dispatch(setShowModal(show)),
-    setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
+    setIsLoginModal: (isLoginModal) => dispatch(setIsLoginModal(isLoginModal)),
     setUserInfo: (userInfo) => dispatch(setUserInfo(userInfo)),
   };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
-function Login({ setShowModal, isLogin, setIsLogin, setUserInfo }) {
+function Login({ setShowModal, isLoginModal, setIsLoginModal, setUserInfo }) {
   const router = useRouter();
   const [values, setValues] = useState({
     email: "",
@@ -69,7 +69,7 @@ function Login({ setShowModal, isLogin, setIsLogin, setUserInfo }) {
   };
 
   const socialLoginRequest = (provider) => {
-    window.location.href = `http://localhost:8080/oauth2/authorize/${provider}?redirect_uri=http://localhost:3000/user/oauth2/redirect?destination=${router.pathname}`;
+    window.location.href = `${BACKEND_URL}/oauth2/authorize/${provider}?redirect_uri=http://localhost:3000/user/oauth2/redirect?destination=${router.pathname}`;
   };
 
   return (
@@ -105,7 +105,8 @@ function Login({ setShowModal, isLogin, setIsLogin, setUserInfo }) {
         <button type="submit">로그인</button>
       </form>
       <p>
-        회원이 아니세요? <a onClick={() => setIsLogin(!isLogin)}>회원가입</a>
+        회원이 아니세요?{" "}
+        <a onClick={() => setIsLoginModal(!isLoginModal)}>회원가입</a>
       </p>
       <Button
         text="Google로 로그인"

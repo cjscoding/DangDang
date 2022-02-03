@@ -10,9 +10,9 @@ export const setShowModal = (show) => ({
   show,
 });
 
-export const setIsLogin = (isLogin) => ({
-  type: types.SET_ISLOGIN,
-  isLogin,
+export const setIsLoginModal = (isLoginModal) => ({
+  type: types.SET_ISLOGINMODAL,
+  isLoginModal,
 });
 
 export const resetUserInfo = () => ({

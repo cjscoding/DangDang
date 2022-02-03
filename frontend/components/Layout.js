@@ -1,6 +1,53 @@
 import Head from "next/head";
+import { connect } from "react-redux";
+import { setUserInfo } from "../store/actions/userAction";
+import { getUserInfo } from "../api/user";
+import { useEffect } from "react";
 
-export default function Layout({ children }) {
+function mapStateToProps({ userReducer }) {
+  return {
+    user: userReducer.user,
+  };
+}
+function mapDispatchToProps(dispatch) {
+  return {
+    setUserInfo: (userInfo) => dispatch(setUserInfo(userInfo)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);
+
+function Layout({ children, user, setUserInfo }) {
+  useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      localStorage.getItem("authorization") &&
+      localStorage.getItem("refreshtoken")
+    ) {
+      const initialState = {
+        id: "",
+        email: "",
+        nickName: "",
+      };
+
+      if (JSON.stringify(user) === JSON.stringify(initialState)) {
+        getUserInfo(
+          ({ data: { response } }) => {
+            const userInfo = {
+              id: response.id,
+              email: response.email,
+              nickName: response.nickName,
+            };
+            setUserInfo(userInfo);
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      }
+    }
+  }, [user]);
+
   return (
     <>
       <Head>
