@@ -30,6 +30,7 @@ function redirect({ setUserInfo }) {
       ({ data: { response } }) => {
         console.log(response);
         const userInfo = {
+          id: response.id,
           email: response.email,
           nickName: response.nickName,
         };

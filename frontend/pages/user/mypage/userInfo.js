@@ -14,6 +14,7 @@ function userInfo({ user }) {
     <section>
       <div className="profileImage">프로필사진</div>
       <div className="profile">
+        <p>id: {user.id}</p>
         <p>이름: {user.nickName}</p>
         <p>이메일: {user.email}</p>
         <Link href="/user/mypage/userInfoEdit" as="/user">

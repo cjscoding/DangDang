@@ -50,6 +50,7 @@ function Login({ setShowModal, isLogin, setIsLogin, setUserInfo }) {
         getUserInfo(
           ({ data: { response } }) => {
             const userInfo = {
+              id: response.id,
               email: response.email,
               nickName: response.nickName,
             };

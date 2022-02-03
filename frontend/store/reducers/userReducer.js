@@ -2,6 +2,7 @@ import types from "../types";
 
 const initialState = {
   user: {
+    id: "",
     email: "",
     nickName: "",
   },
@@ -20,6 +21,7 @@ const userReducer = (state = initialState, action) => {
     case types.RESET_USERINFO:
       return {
         user: {
+          id: "",
           email: "",
           nickName: "",
         },
