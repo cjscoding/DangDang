@@ -5,10 +5,11 @@ import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
 import com.ssafy.dangdang.exception.UnauthorizedAccessException;
 import com.ssafy.dangdang.repository.InterviewQuestionRepository;
-import com.ssafy.dangdang.util.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,10 +52,34 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService{
 
     @Override
     @Transactional
-    public List<InterviewQuestionDto> getAllInterviewQustion(){
-        List<InterviewQuestion> all = interviewQuestionRepository.findAllInterviewQuestion();
+    public Page<InterviewQuestionDto> getAllInterviewQustion(Pageable pageable){
+        Page<InterviewQuestion> all = interviewQuestionRepository.findAllInterviewQuestion(pageable);
+        Page<InterviewQuestionDto> interviewQuestionDtos = all.map(InterviewQuestionDto::of);
+        return interviewQuestionDtos;
+    }
+
+    @Override
+    @Transactional
+    public List<InterviewQuestionDto> getAllVisableInterviewQustion(){
+        List<InterviewQuestion> all = interviewQuestionRepository.findAllVisableInterviewQuestion();
         List<InterviewQuestionDto> interviewQuestionDtos = all.stream().map(InterviewQuestionDto::of).collect(Collectors.toList());
         return interviewQuestionDtos;
+    }
+
+    @Override
+    @Transactional
+    public void makePublic(Long interviewId){
+        Optional<InterviewQuestion> interview = interviewQuestionRepository.findById(interviewId);
+        if (!interview.isPresent()) throw new NullPointerException("존재하지 않는 질문 입니다.");
+        interview.get().makePubic();
+    }
+
+    @Override
+    @Transactional
+    public void hide(Long interviewId){
+        Optional<InterviewQuestion> interview = interviewQuestionRepository.findById(interviewId);
+        if (!interview.isPresent()) throw new NullPointerException("존재하지 않는 질문 입니다.");
+        interview.get().hide();
     }
 
 }

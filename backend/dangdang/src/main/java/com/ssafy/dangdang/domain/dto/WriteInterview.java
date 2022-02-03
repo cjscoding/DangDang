@@ -17,7 +17,7 @@ public class WriteInterview {
     private String question;
     @Schema(description = "면접 질문 대답", example = "완벽한 음식이죠")
     private String answer;
-    @Schema(description = "공개 유무", example = "true")
-    private boolean visable;
+//    @Schema(description = "공개 유무", example = "false")
+//    private boolean visable;
 
 }

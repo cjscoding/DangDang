@@ -63,6 +63,7 @@ public class InitDb {
             userDto.setNickName("Bori");
             userDto.setPassword("test@ssafy.com");
             userService.signUpUser(userDto);
+            userService.raiseToAdmin(1L);
             for (int i=0;i<20;i++){
                 userDto = new UserDto();
                 userDto.setEmail("test"+i+"@ssafy.com");
@@ -138,7 +139,7 @@ public class InitDb {
                         .question("민초 어떄요"+i)
                         .answer("너무 좋죠"+i)
                         .field("공통")
-                        .visable(false)
+                        .visable(true)
                         .build();
                 interviewQuestionService.writeQuestion(user, interviewQuestionDto);
             }

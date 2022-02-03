@@ -86,4 +86,12 @@ public class User{
     public String getUsername() {
         return this.email.toString();
     }
+
+    public void raiseToManager(){
+        this.role = UserRoleType.MANAGER;
+    }
+
+    public void raiseToAdmin(){
+        this.role = UserRoleType.ADMIN;
+    }
 }
