@@ -16,3 +16,8 @@ export const getMyRooms = async (param, success, fail) => {
 export const getRoomInfo = async (studyId, success, fail) => {
   await api.get(`/study/${studyId}`).then(success).catch(fail);
 };
+
+//스터디 생성
+export const createRoom = async (newRoom, success, fail) => {
+  await api.post("/study", newRoom).then(success).catch(fail);
+};

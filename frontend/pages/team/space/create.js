@@ -2,9 +2,9 @@ import styles from "../../../scss/team/board/create-room.module.scss";
 import Title from "../../../components/layout/title";
 import Link from "next/link";
 
-import { createRoom } from "../../../store/actions/roomAction";
-import { useState } from "react";
+import { createRoom } from "../../../api/studyroom";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 export default function CreateRoom() {
   const router = useRouter();
@@ -30,9 +30,15 @@ export default function CreateRoom() {
       hashTags: roomTags,
     };
 
-    createRoom(newInfo);
-    setRoomInfo(roomInit);
-    setRoomTags([]);
+    createRoom(
+      newInfo,
+      (res) => {
+        console.log(res, "스터디 생성 완료!");
+      },
+      (err) => {
+        console.log(err, "스터디를 생성할 수 없습니다.");
+      }
+    );
     router.push("/team/board");
   };
 
@@ -55,7 +61,7 @@ export default function CreateRoom() {
     setRoomTags([...roomTags, newTag]);
     event.target[0].value = "";
   };
-
+  
   const onRemoveTag = (event) => {
     event.preventDefault();
     const removeTag = event.target[0].value;

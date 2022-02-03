@@ -52,12 +52,6 @@ export const setRoomInfo = (roomData) => ({
   comments: roomData.comments,
 });
 
-//새로운 스터디룸 생성
-export const createRoom = async (newRoom) => {
-  setAuthToken();
-  await api.post("/study", newRoom);
-};
-
 //스터디룸 가입 신청
 export const joinStudy = async (data) => {
   setAuthToken();
