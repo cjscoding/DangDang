@@ -2,13 +2,14 @@ import styles from "../../../scss/team/space/teamspace.module.scss";
 import Layout from "../../../components/team/space/layout";
 
 import {
-  fetchRoomInfo,
+  setRoomInfo,
   removeStudy,
   getWaitingMembers,
   allowJoinTeam,
   removeMember,
   outTeam,
 } from "../../../store/actions/roomAction";
+import { getRoomInfo } from "../../../api/studyroom";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -19,17 +20,13 @@ const mapStateToProps = (state) => {
     roomHost: state.roomReducer.curRoomHost,
     roomMembers: state.roomReducer.curRoomMembers,
     waitingList: state.roomReducer.waitings,
+    userInfo: state.userReducer.user,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getRoomInfo: (id) => {
-      const data = fetchRoomInfo(id);
-      data.then((res) => {
-        dispatch(res);
-      });
-    },
+    setRoomInfo: (studyId) => dispatch(setRoomInfo(studyId)),
 
     getWaitingMember: (id) => {
       const data = getWaitingMembers(id);
@@ -47,38 +44,35 @@ function TeamSpace({
   roomHost,
   roomMembers,
   waitingList,
-  getRoomInfo,
+  userInfo,
+  setRoomInfo,
   getWaitingMember,
 }) {
+  //for everyone
+  //스터디 단일 조회
   const router = useRouter();
-
   useEffect(() => {
     if (!router.isReady) return;
-    getRoomInfo(router.query.id);
+    getRoomInfo(
+      router.query.id,
+      (res) => {
+        const roomData = {
+          roomInfo: res.data.response,
+          host: res.data.response.host.nickName,
+          members: res.data.response.userDtos,
+          comments: res.data.response.commentDtos.content,
+        };
+        console.log(roomData);
+        setRoomInfo(roomData);
+      },
+      (err) => {
+        console.log(err, "스터디를 조회할 수 없습니다.");
+      }
+    );
   }, [router.isReady]);
 
-  useEffect(() => {
-    if (roomHost === "Bori") getWaitingMember(router.query.id);
-  }, [roomHost]);
-
-  //팀 삭제
-  const onDeleteTeam = () => {
-    removeStudy(router.query.id);
-    console.log("스터디룸이 삭제되었습니다.");
-    router.push("/user/mypage/myroom");
-  };
-
-  //팀 수정
-  const onUpdatePage = () => {
-    router.push({
-      pathname: `/team/space/update`,
-      query: {
-        id: router.query.id,
-      },
-    });
-  };
-
-  //팀원관리(호스트만 해당)
+  //for host
+  //팀원관리
   const onRemoveMember = (event) => {
     event.preventDefault();
     const data = {
@@ -87,7 +81,6 @@ function TeamSpace({
     };
     removeMember(data);
   };
-
   //대기자 승인
   const onAllowJoin = async (event) => {
     event.preventDefault();
@@ -99,11 +92,29 @@ function TeamSpace({
     await getRoomInfo(router.query.id);
     await getWaitingMember(router.query.id);
   };
-
-  //스터디룸 탈퇴
-  const onOutTeam = () => {
-    outTeam(router.query.id);
+  //팀 수정
+  const onUpdatePage = () => {
+    router.push({
+      pathname: `/team/space/update`,
+      query: {
+        id: router.query.id,
+      },
+    });
   };
+  //팀 삭제
+  const onDeleteTeam = () => {
+    removeStudy(router.query.id);
+    console.log("스터디룸이 삭제되었습니다.");
+    router.push("/user/mypage/myroom");
+  };
+  //가입대기명단 조회
+  useEffect(() => {
+    if (roomHost === "Bori") getWaitingMember(router.query.id);
+  }, [roomHost]);
+
+  //for member
+  //스터디룸 탈퇴
+  const onOutTeam = () => outTeam(router.query.id);
 
   return (
     <div>

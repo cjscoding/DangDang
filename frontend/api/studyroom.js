@@ -11,3 +11,8 @@ export const getAllRooms = async (param, success, fail) => {
 export const getMyRooms = async (param, success, fail) => {
   await api.get("/joins", { params: param }).then(success).catch(fail);
 };
+
+//스터디 단일 조회
+export const getRoomInfo = async (studyId, success, fail) => {
+  await api.get(`/study/${studyId}`).then(success).catch(fail);
+};

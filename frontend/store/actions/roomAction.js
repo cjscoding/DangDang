@@ -44,20 +44,13 @@ export const setMyRooms = (myRoomList) => ({
 });
 
 //스터디룸 단일 조회
-export const fetchRoomInfo = async (studyId) => {
-  const response = await api.get(`/study/${studyId}`);
-  const roomInfo = response.data.response;
-  const host = roomInfo.host.nickName;
-  const members = roomInfo.userDtos;
-  const comments = roomInfo.commentDtos.content;
-  return {
-    type: types.GET_ROOM_INFO,
-    roomInfo,
-    host,
-    members,
-    comments,
-  };
-};
+export const setRoomInfo = (roomData) => ({
+  type: types.GET_ROOM_INFO,
+  roomInfo: roomData.roomInfo,
+  host: roomData.host,
+  members: roomData.members,
+  comments: roomData.comments,
+});
 
 //새로운 스터디룸 생성
 export const createRoom = async (newRoom) => {
