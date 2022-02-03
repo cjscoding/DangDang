@@ -3,15 +3,11 @@ import Layout from "../../../components/team/space/layout";
 
 import {
   setRoomInfo,
-  getWaitingMembers,
+  setWaitings,
   allowJoinTeam,
 } from "../../../store/actions/roomAction";
-import {
-  getRoomInfo,
-  removeRoom,
-  removeMember,
-  leaveTeam,
-} from "../../../api/studyroom";
+import { getRoomInfo, removeRoom } from "../../../api/studyroom";
+import { removeMember, leaveTeam, getWaitings } from "../../../api/member";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -28,14 +24,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setRoomInfo: (studyId) => dispatch(setRoomInfo(studyId)),
-
-    getWaitingMember: (id) => {
-      const data = getWaitingMembers(id);
-      data.then((res) => {
-        dispatch(res);
-      });
-    },
+    setRoomInfo: (roomData) => dispatch(setRoomInfo(roomData)),
+    setWaitings: (waitings) => dispatch(setWaitings(waitings)),
   };
 };
 
@@ -48,7 +38,7 @@ function TeamSpace({
   waitingList,
   userInfo,
   setRoomInfo,
-  getWaitingMember,
+  setWaitings,
 }) {
   //for everyone
   //스터디 단일 조회
@@ -60,7 +50,7 @@ function TeamSpace({
       (res) => {
         const roomData = {
           roomInfo: res.data.response,
-          host: res.data.response.host.nickName,
+          host: res.data.response.host,
           members: res.data.response.userDtos,
           comments: res.data.response.commentDtos.content,
         };
@@ -147,23 +137,35 @@ function TeamSpace({
   };
   //가입대기명단 조회
   useEffect(() => {
-    if (roomHost === "Bori") getWaitingMember(router.query.id);
+    if (roomHost.id === 1) {
+      getWaitings(
+        router.query.id,
+        (res) => {
+          const waitings = res.data.response;
+          setWaitings(waitings);
+          console.log(res, "가입대기명단 조회 성공!");
+        },
+        (err) => {
+          console.log(err, "가입대기명단 조회에 실패하였습니다.");
+        }
+      );
+    }
   }, [roomHost]);
 
   //for member
   //스터디룸 탈퇴
   const onLeaveTeam = () => {
     // if (userInfo.id !== "") {
-      leaveTeam(
-        router.query.id,
-        (res) => {
-          console.log(res, "팀 탈퇴 완료!");
-          router.push("/user/mypage/myroom");
-        },
-        (err) => {
-          console.log(err, "팀을 탈퇴할 수 없습니다.");
-        }
-      );
+    leaveTeam(
+      router.query.id,
+      (res) => {
+        console.log(res, "팀 탈퇴 완료!");
+        router.push("/user/mypage/myroom");
+      },
+      (err) => {
+        console.log(err, "팀을 탈퇴할 수 없습니다.");
+      }
+    );
     // }
   };
 
@@ -171,7 +173,7 @@ function TeamSpace({
     <div>
       <Layout
         name={roomInfo.name}
-        host={roomHost}
+        host={roomHost.nickName}
         createdAt={roomInfo.createdAt}
       />
       <div className={styles.container}>
@@ -193,7 +195,7 @@ function TeamSpace({
         </div>
 
         <div>
-          {roomHost === "Bori" ? (
+          {roomHost.id === 1 ? (
             <div>
               <button onClick={onUpdatePage}>팀 수정</button>
               <button onClick={() => onDeleteTeam()}>팀 삭제</button>

@@ -59,15 +59,10 @@ export const joinStudy = async (data) => {
 };
 
 //스터디룸 가입 대기 명단 조회
-export const getWaitingMembers = async (studyId) => {
-  setAuthToken();
-  const response = await api.get(`/joins/waiting/${studyId}`);
-  const waitings = response.data.response;
-  return {
-    type: types.WAITING_MEMBERS,
-    waitings,
-  };
-};
+export const setWaitings = (waitings) => ({
+  type: types.WAITING_MEMBERS,
+  waitings,
+});
 
 //스터디룸 가입 허용
 export const allowJoinTeam = async (data) => {
