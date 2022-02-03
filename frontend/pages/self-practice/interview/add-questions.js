@@ -10,7 +10,10 @@ export async function getServerSideProps() {
   return {props: {preparedQuestions}};
 };
 function mapStateToProps(state) {
-    return {questions: state.questionReducer.questions};
+    return {
+      questions: state.questionReducer.questions,
+      ws: state.wsReducer.ws,
+    };
   }
   
 import { addQuestion } from "../../../store/actions/questionAction";
@@ -24,6 +27,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(AddQuestions);
 
 function AddQuestions({preparedQuestions, questions, addQuestion}) {
   const [questionInput, setQuestionInput] = useState("");
+  useEffect(()=>{
+    window.onbeforeunload = function() {
+      sendMessage({
+        id : 'del',
+      });
+      ws.close();
+    }
+  }, [])
   function addQuestionInput() {
     const Qinput = questionInput.trim()
     if(Qinput) {

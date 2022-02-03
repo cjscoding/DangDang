@@ -7,15 +7,23 @@ import styles from "../../../scss/self-practice/interview/mainComponent.module.s
 function mapStateToProps(state) {
   return {
     ws: state.wsReducer.ws,
+    sessionId: state.wsReducer.sessionId,
     questions: state.questionReducer.questions,
     cameraId: state.videoReducer.cameraId, 
     micId: state.videoReducer.micId,
     speakerId: state.videoReducer.speakerId,
   };
 }
-export default connect(mapStateToProps)(Interview);
+import { setWSSessionId, pushRecordedQuestionIdx } from "../../../store/actions/wsAction";
+function mapDispatchToProps(dispatch) {
+  return {
+    setWSSessionId: (sessionId) => dispatch(setWSSessionId(sessionId)),
+    pushRecordedQuestionIdx: (idx) => dispatch(pushRecordedQuestionIdx(idx))
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Interview);
 
-function Interview({ws, questions, cameraId, micId, speakerId}) {
+function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSSessionId, pushRecordedQuestionIdx}) {
   const router = useRouter();
   const myFaceContainer = useRef();
   const [isWait, setIsWait] = useState(true);
@@ -41,23 +49,36 @@ function Interview({ws, questions, cameraId, micId, speakerId}) {
     myFaceContainer.current.appendChild(myFace);
     function sendMessage(msgObj) {
       const msgStr = JSON.stringify(msgObj);
-      console.log(`SEND: ${msgStr}`)
+      console.log(`SEND: ${msgStr}`);
       ws.send(msgStr);
     }
     ws.onmessage = function(message) {
       const msgObj = JSON.parse(message.data);
-      console.log(`RECEIVE: ${message.data}`)
+      console.log(`RECEIVE: ${message.data}`);
       switch(msgObj.id) {
         case "startResponse":
-          responseRecord(msgObj);
+          if(!sessionId) setWSSessionId(msgObj.sessionId);
+          webRtcPeer.processAnswer(msgObj.sdpAnswer, function(error) {
+            if (error) return console.log(`ERROR! ${error}`);
+          });
+          break;
+        case "iceCandidate":
+          webRtcPeer.addIceCandidate(msgObj.candidate, function(error) {
+            if(error) return console.log(`ERROR! ${error}`);
+          })
+        case "stopped":
+          break;
+        case "paused":
+          break;
+        case "recording":
           break;
         default:
-          console.log(`ERROR! ${msgObj}`)
+          console.log(`ERROR! ${msgObj}`);
+          break;
       }
     }
     
     function record() {
-      hideScreen();
       const options = {
         remoteVideo: myFace,
         mediaConstraints : getVideoConstraints(),
@@ -73,19 +94,28 @@ function Interview({ws, questions, cameraId, micId, speakerId}) {
       sendMessage({
         id: "start",
         sdpOffer: offerSdp,
-        mode: "video-and-audio"
-      });
-    }
-
-    function responseRecord(msgObj) {
-      webRtcPeer.processAnswer(msgObj.sdpAnswer, function(error) {
-        if (error) return console.log(`ERROR! ${error}`)
+        mode: "video-and-audio",
+        name: questionNum2
       });
     }
 
     function save() {
-      
+      if(webRtcPeer) {
+        webRtcPeer.dispose();
+        webRtcPeer = null;
+        sendMessage({
+          id: "stop"
+        });
+      }
     }
+
+    function del() {
+      sendMessage({
+        id: "del",
+        name: questionNum2
+      });
+    }
+
     // function play() {
     //   hideScreen();
     //   const options = {
@@ -139,14 +169,17 @@ function Interview({ws, questions, cameraId, micId, speakerId}) {
       setIsVol(true)
     }
     function restartQuestion() {
-      
+      record()
     }
     function saveAndNext() {
+      save();
+      pushRecordedQuestionIdx(questionNum2);
       if(questionNum2 === questions.length - 1) {
         router.push(`/self-practice/interview/end`);
       }
       questionNum2 += 1
       setQuestionNum(questionNum2)
+      record()
     }
     function skipQuestion() {
       if(questionNum2 === questions.length - 1) {
@@ -154,16 +187,23 @@ function Interview({ws, questions, cameraId, micId, speakerId}) {
       }
       questionNum2 += 1
       setQuestionNum(questionNum2)
+      record()
     }
     volumeBtn.current.addEventListener("click", controlVolume);
     restartBtn.current.addEventListener("click", restartQuestion);
     saveBtn.current.addEventListener("click", saveAndNext);
     skipBtn.current.addEventListener("click", skipQuestion);
+    window.onbeforeunload = function() {
+      sendMessage({
+        id : 'del',
+      });
+      ws.close();
+    }
     return () => {
-      volumeBtn.current.removeEventListener("click", controlVolume);
-      restartBtn.current.removeEventListener("click", restartQuestion);
-      saveBtn.current.removeEventListener("click", saveAndNext);
-      skipBtn.current.removeEventListener("click", skipQuestion);
+      // volumeBtn.current.removeEventListener("click", controlVolume);
+      // restartBtn.current.removeEventListener("click", restartQuestion);
+      // saveBtn.current.removeEventListener("click", saveAndNext);
+      // skipBtn.current.removeEventListener("click", skipQuestion);
     }
   },[])
   console.log(1, questionNum)
@@ -188,12 +228,12 @@ function Interview({ws, questions, cameraId, micId, speakerId}) {
       </div>
       <div className={styles.btnContainer}>
         <span>
-          <i ref={volumeBtn} className="fas fa-volume-up"></i>
+          <button ref={volumeBtn}><i className="fas fa-volume-up"></i></button>
           <input style={isVol?{}:{display: "none"}} type="range" min="0" max="100" step="1" value={volume} onChange={(e) => setVolume(e.target.value)}/>
         </span>
-        <i ref={restartBtn} class="fas fa-redo-alt"></i>
-        <i ref={saveBtn} class="fas fa-save"></i>
-        <i ref={skipBtn} class="fas fa-arrow-right"></i>
+        <button ref={restartBtn}><i className="fas fa-redo-alt"></i></button>
+        <button ref={saveBtn}><i className="fas fa-save"></i></button>
+        <button ref={skipBtn}><i className="fas fa-arrow-right"></i></button>
       </div>
     </div>
   </div>
