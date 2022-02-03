@@ -1,65 +1,33 @@
+import Pagination from "../../../components/team/board/pagination";
 import styles from "../../../scss/team/board/board.module.scss";
 import Title from "../../../components/layout/title";
-import Pagination from "../../../components/team/board/pagination";
-
 import Image from "next/image";
 import Link from "next/link";
 
-import { useRouter } from "next/router";
+import { setAllRooms } from "../../../store/actions/roomAction";
+import { getAllRooms } from "../../../api/studyroom";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { connect } from "react-redux";
-import { fetchRooms } from "../../../store/actions/roomAction";
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     rooms: state.roomReducer.curRooms,
     totalPosts: state.roomReducer.curRoomsCount,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
-    fetchAllRooms: (param) => {
-      const data = fetchRooms(param);
-      data.then((res) => dispatch(res));
-    },
+    setAllRooms: (res) => dispatch(setAllRooms(res)),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamBoard);
 
-function TeamBoard({ rooms, totalPosts, fetchAllRooms }) {
-  //pagination
-  const [curPage, setCurPage] = useState(0);
-  const [postsPerPage] = useState(12);
-  const [keyword, setKeyword] = useState("");
-  const param = {
-    hashtags: keyword,
-    page: curPage,
-    size: postsPerPage,
-  };
-
-  const paginate = (pageNumber) => {
-    setCurPage(pageNumber);
-  };
-
-  // 스터디룸 조회
-  useEffect(() => {
-    fetchAllRooms(param);
-  }, [keyword, curPage]);
-
-  //filtering keyword
-  const onAddKeyword = (event) => {
-    if (event.key === "Enter") {
-      setKeyword(event.target.value);
-      event.target.value = "";
-      setCurPage(0);
-    }
-  };
-
+function TeamBoard({ rooms, totalPosts, setAllRooms }) {
   //스터디룸 상세보기 페이지 연결 로직
   const router = useRouter();
-
   const onDetail = (id) => {
     router.push(
       {
@@ -71,6 +39,44 @@ function TeamBoard({ rooms, totalPosts, fetchAllRooms }) {
       `/team/board/detail/${id}`
     );
   };
+
+  //pagination
+  const [curPage, setCurPage] = useState(0);
+  const [postsPerPage] = useState(6);
+  const [keyword, setKeyword] = useState("");
+  const paginate = (pageNumber) => setCurPage(pageNumber);
+
+  //filtering keyword
+  const onAddKeyword = (event) => {
+    if (event.key === "Enter") {
+      setKeyword(event.target.value);
+      event.target.value = "";
+      setCurPage(0);
+    }
+  };
+
+  // 스터디룸 조회
+  useEffect(() => {
+    const param = {
+      hashtags: keyword,
+      page: curPage,
+      size: postsPerPage,
+    };
+    getAllRooms(
+      param,
+      (res) => {
+        const roomList = {
+          rooms: res.data.response.content,
+          roomsCount: res.data.response.totalElements,
+        };
+        console.log(roomList);
+        setAllRooms(roomList);
+      },
+      (err) => {
+        console.log(err, "스터디를 조회할 수 없습니다.");
+      }
+    );
+  }, [keyword, curPage]);
 
   return (
     <div>

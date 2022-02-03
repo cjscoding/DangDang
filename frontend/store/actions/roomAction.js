@@ -30,16 +30,11 @@ function setAuthToken() {
 }
 
 //모든 스터디 조회(+ pagination)
-export const fetchRooms = async (param) => {
-  const response = await api.get("/study", { params: param });
-  const rooms = response.data.response.content;
-  const roomsCount = response.data.response.totalElements;
-  return {
-    type: types.GET_ROOMS,
-    rooms,
-    roomsCount,
-  };
-};
+export const setAllRooms = (roomList) => ({
+  type: types.GET_ROOMS,
+  rooms: roomList.rooms,
+  roomsCount: roomList.roomsCount,
+});
 
 //스터디룸 단일 조회
 export const fetchRoomInfo = async (studyId) => {
