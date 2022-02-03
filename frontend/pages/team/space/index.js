@@ -5,10 +5,9 @@ import {
   setRoomInfo,
   getWaitingMembers,
   allowJoinTeam,
-  removeMember,
   outTeam,
 } from "../../../store/actions/roomAction";
-import { getRoomInfo, removeRoom } from "../../../api/studyroom";
+import { getRoomInfo, removeRoom, removeMember } from "../../../api/studyroom";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -78,7 +77,36 @@ function TeamSpace({
       studyId: router.query.id,
       userId: event.target[0].value,
     };
-    removeMember(data);
+
+    if (data.userId === roomInfo.host.id) {
+      console.log("호스트는 탈퇴시킬 수 없습니다.");
+    } else {
+      removeMember(
+        data,
+        (res) => {
+          console.log(res, "팀원 강제 탈퇴 완료!");
+          getRoomInfo(
+            router.query.id,
+            (res) => {
+              const roomData = {
+                roomInfo: res.data.response,
+                host: res.data.response.host.nickName,
+                members: res.data.response.userDtos,
+                comments: res.data.response.commentDtos.content,
+              };
+              console.log(roomData);
+              setRoomInfo(roomData);
+            },
+            (err) => {
+              console.log(err, "스터디를 조회할 수 없습니다.");
+            }
+          );
+        },
+        (err) => {
+          console.log(err, "팀원을 탈퇴시킬 수 없습니다.");
+        }
+      );
+    }
   };
   //대기자 승인
   const onAllowJoin = async (event) => {

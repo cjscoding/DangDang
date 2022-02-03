@@ -34,3 +34,11 @@ export const updateRoom = async (data, success, fail) => {
     .then(success)
     .catch(fail);
 };
+
+//스터디룸 팀원 강제 탈퇴
+export const removeMember = async (data, success, fail) => {
+  await api
+    .delete(`/joins/${data.studyId}/${data.userId}`)
+    .then(success)
+    .catch(fail);
+};
