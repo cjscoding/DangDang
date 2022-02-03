@@ -32,9 +32,9 @@ public class InterviewQuestionController {
     private final InterviewQuestionService interviewQuestionService;
 
 
-    @Operation(summary = "스터디 조회", description = "개설된 모든 스터디를 요청한 페이지 만큼 조회, 서버 과부화 예방을 위해 댓글은 조회되지 않습니다.")
+    @Operation(summary = "면접 질문 등록")
     @ApiResponses( value = {
-            @ApiResponse(responseCode = "200", description = "스터디 조회 성공")
+            @ApiResponse(responseCode = "200", description = "면접 질문 등록 성공")
     })
     @PostMapping()
     @PreAuthorize("hasRole('USER')")
