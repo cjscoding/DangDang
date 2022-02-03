@@ -188,7 +188,11 @@ function onIceCandidate(candidate) {
 function startResponse(message) {
 	setState(IN_CALL);
 	console.log('SDP answer received from server. Processing ...');
-
+	console.log("============================================")
+	console.log(message)
+	// 서버에서 세션ID 받아옴
+	console.log(message.sessionId)
+	console.log("============================================")
 	webRtcPeer.processAnswer(message.sdpAnswer, function(error) {
 		if (error)
 			return console.error(error);
