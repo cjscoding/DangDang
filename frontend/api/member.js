@@ -24,3 +24,8 @@ export const getWaitings = async (studyId, success, fail) => {
 export const joinTeam = async (data, success, fail) => {
   await api.post("/joins", data).then(success).catch(fail);
 };
+
+//스터디룸 가입 허용
+export const allowMember = async (data, success, fail) => {
+  await api.patch("/joins", data).then(success).catch(fail);
+};
