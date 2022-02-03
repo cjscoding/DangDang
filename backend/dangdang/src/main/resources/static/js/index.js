@@ -116,6 +116,7 @@ ws.onmessage = function(message) {
 	}
 }
 
+
 // 녹화 영상 보여줌
 function playRecord(recordingpath){
 	console.log("녹화 영상 버튼 클릭!");
