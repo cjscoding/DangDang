@@ -31,7 +31,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "where j.study.id = :studyId and j.waiting = false )")
     Integer countUserByStudyId(@Param("userId")Long userId,@Param("studyId") Long studyId);
 
-    @Query(value = "select u from User u where u.role <> 'ADMIN'")
+    @Query(value = "select u from User u where u.role <> 'ADMIN'",
+    countQuery ="select count(u) from User u where u.role <> 'ADMIN'" )
     Page<User> findAllExceptAdmin(Pageable pageable);
 
 }

@@ -48,13 +48,13 @@ public class InterviewQuestionController {
 
     }
 
-    @Operation(summary = "모든 면접 질문 조회")
+    @Operation(summary = "모든 면접 질문 조회", description= "(Visable이 true인 질문만 조회)")
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "모든 면접 질문 조회 성공")
     })
     @GetMapping()
-    public ApiResult<List<InterviewQuestionDto>> getAllInterviewQuestion(){
-        return success(interviewQuestionService.getAllInterviewQustion());
+    public ApiResult<List<InterviewQuestionDto>> getAllVisableInterviewQustion(){
+        return success(interviewQuestionService.getAllVisableInterviewQustion());
     }
 
     @Operation(summary = "면접 질문 삭제")

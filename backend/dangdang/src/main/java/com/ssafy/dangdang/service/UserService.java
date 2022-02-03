@@ -24,4 +24,7 @@ public interface UserService {
 
     @Transactional
     void raiseToManager(Long userId);
+
+    @Transactional
+    void raiseToAdmin(Long userId);
 }

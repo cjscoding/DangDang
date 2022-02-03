@@ -117,5 +117,13 @@ public class UserServiceImpl implements UserService{
         user.get().raiseToManager();
     }
 
+    @Override
+    @Transactional
+    public void raiseToAdmin(Long userId){
+        Optional<User> user = userRepository.findById(userId);
+        if (!user.isPresent()) throw new NullPointerException("존재하지 않는 유저 입니다.");
+        user.get().raiseToAdmin();
+    }
+
 
 }

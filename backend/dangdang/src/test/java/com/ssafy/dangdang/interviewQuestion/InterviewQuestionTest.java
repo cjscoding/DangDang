@@ -5,6 +5,9 @@ import com.ssafy.dangdang.repository.InterviewQuestionRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -16,7 +19,7 @@ public class InterviewQuestionTest {
 
     @Test
     public void findAllInterviewQuestion(){
-        List<InterviewQuestion> allInterviewQuestion = interviewQuestionRepository.findAllInterviewQuestion();
+        Page<InterviewQuestion> allInterviewQuestion = interviewQuestionRepository.findAllInterviewQuestion(PageRequest.of(0,10));
         System.out.println(allInterviewQuestion);
     }
 }

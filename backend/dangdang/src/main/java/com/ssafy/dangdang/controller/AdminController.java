@@ -5,6 +5,7 @@ import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
 import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.domain.dto.WriteInterview;
+import com.ssafy.dangdang.service.InterviewQuestionService;
 import com.ssafy.dangdang.service.UserService;
 import com.ssafy.dangdang.util.ApiUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +20,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.ssafy.dangdang.util.ApiUtils.*;
 
 @RestController
@@ -28,6 +31,7 @@ import static com.ssafy.dangdang.util.ApiUtils.*;
 public class AdminController {
 
     private final UserService userService;
+    private final InterviewQuestionService interviewQuestionService;
 
     @Operation(summary = "모든 유저 조회(ADMIN 제외)")
     @ApiResponses( value = {
@@ -48,10 +52,42 @@ public class AdminController {
     })
     @PatchMapping("/user/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResult<String> raiseToManager(@PathVariable Long userId,
-                                                   @ParameterObject Pageable pageable){
+    public ApiResult<String> raiseToManager(@PathVariable Long userId){
         userService.raiseToManager(userId);
         return success("권한 승격 성공");
    }
+
+    @Operation(summary = "모든 면접 질문 조회")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "모든 면접 질문 조회 성공")
+    })
+    @GetMapping("/interview")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ApiResult<Page<InterviewQuestionDto>> getAllInterviewQustion( @ParameterObject Pageable pageable){
+        return success(interviewQuestionService.getAllInterviewQustion(pageable));
+    }
+
+    @Operation(summary = "면접 질문 공개 허용")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "면접 질문 공개 허용 성공")
+    })
+    @PatchMapping("/interview/{interviewId}/makePublic")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ApiResult<String> makePublic(@PathVariable Long interviewId){
+        interviewQuestionService.makePublic(interviewId);
+        return success("면접 질문 공개 허용");
+    }
+
+    @Operation(summary = "면접 질문 공개 비허용")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "면접 질문 공개 비허용 성공")
+    })
+    @PatchMapping("/interview/{interviewId}/hide")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ApiResult<String> hide(@PathVariable Long interviewId){
+        interviewQuestionService.hide(interviewId);
+        return success("면접 질문 공개 허용");
+    }
+
 
 }

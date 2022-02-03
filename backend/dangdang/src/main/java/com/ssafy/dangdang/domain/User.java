@@ -90,4 +90,8 @@ public class User{
     public void raiseToManager(){
         this.role = UserRoleType.MANAGER;
     }
+
+    public void raiseToAdmin(){
+        this.role = UserRoleType.ADMIN;
+    }
 }
