@@ -5,9 +5,13 @@ import {
   setRoomInfo,
   getWaitingMembers,
   allowJoinTeam,
-  outTeam,
 } from "../../../store/actions/roomAction";
-import { getRoomInfo, removeRoom, removeMember } from "../../../api/studyroom";
+import {
+  getRoomInfo,
+  removeRoom,
+  removeMember,
+  leaveTeam,
+} from "../../../api/studyroom";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -148,7 +152,20 @@ function TeamSpace({
 
   //for member
   //스터디룸 탈퇴
-  const onOutTeam = () => outTeam(router.query.id);
+  const onLeaveTeam = () => {
+    // if (userInfo.id !== "") {
+      leaveTeam(
+        router.query.id,
+        (res) => {
+          console.log(res, "팀 탈퇴 완료!");
+          router.push("/user/mypage/myroom");
+        },
+        (err) => {
+          console.log(err, "팀을 탈퇴할 수 없습니다.");
+        }
+      );
+    // }
+  };
 
   return (
     <div>
@@ -203,7 +220,7 @@ function TeamSpace({
               ))}
             </div>
           ) : (
-            <button onClick={onOutTeam}>팀 탈퇴</button>
+            <button onClick={onLeaveTeam}>팀 탈퇴</button>
           )}
         </div>
       </div>

@@ -76,13 +76,6 @@ export const allowJoinTeam = async (data) => {
   console.log("가입을 허용하였습니다.");
 };
 
-//스터디룸 탈퇴
-export const outTeam = async (studyId) => {
-  setAuthToken();
-  await api.delete(`/joins/${studyId}`);
-  console.log("탈퇴 완료");
-};
-
 //스터디룸 상세 공고 댓글, 대댓글 Post
 export const createDetailComment = async (data) => {
   setAuthToken();
