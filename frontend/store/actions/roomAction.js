@@ -16,7 +16,6 @@ export const setMyRooms = (myRoomList) => ({
 
 //스터디룸 단일 조회
 export const setRoomInfo = (roomData) => {
-    console.log(roomData);
   return {
     type: types.GET_ROOM_INFO,
     roomInfo: roomData.roomInfo,

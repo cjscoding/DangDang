@@ -1,8 +1,10 @@
 import styles from "../../../scss/team/space/teamspace.module.scss";
 import Layout from "../../../components/team/space/layout";
 
-import { fetchRoomInfo } from "../../../store/actions/roomAction";
-import { getResume } from "../../../store/actions/resumeAction";
+import { setRoomInfo } from "../../../store/actions/roomAction";
+import { setResume } from "../../../store/actions/resumeAction";
+import { getRoomInfo } from "../../../api/studyroom";
+import { getResume } from "../../../api/resume";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
@@ -13,24 +15,14 @@ const mapStateToProps = (state) => {
     roomHost: state.roomReducer.curRoomHost,
     roomMembers: state.roomReducer.curRoomMembers,
     curResume: state.resumeReducer.curMemberResume,
+    userInfo: state.userReducer.user,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getRoomInfo: (id) => {
-      const data = fetchRoomInfo(id);
-      data.then((res) => {
-        dispatch(res);
-      });
-    },
-    getCurMemberResume: (userId) => {
-      const data = getResume(userId);
-      data.then((res) => {
-        dispatch(res);
-        console.log(res);
-      });
-    },
+    setRoomInfo: (roomData) => dispatch(setRoomInfo(roomData)),
+    setResume: (userId) => dispatch(setResume(userId)),
   };
 };
 
@@ -41,31 +33,66 @@ function Resume({
   roomHost,
   roomMembers,
   curResume,
-  getRoomInfo,
-  getCurMemberResume,
+  userInfo,
+  setRoomInfo,
+  setResume,
 }) {
   const router = useRouter();
   const [resumeLen, setResumeLen] = useState(0);
 
   useEffect(() => {
     if (!router.isReady) return;
-    getRoomInfo(router.query.id);
+    getResume(
+      userInfo.id,
+      (res) => {
+        const resArray = res.data.response;
+        setResume(resArray);
+        setResumeLen(resArray.length);
+        console.log(res, "자소서 불러오기 성공");
+      },
+      (err) => {
+        console.log(err, "자소서 불러오기 실패");
+      }
+    );
+    getRoomInfo(
+      router.query.id,
+      (res) => {
+        const roomData = {
+          roomInfo: res.data.response,
+          host: res.data.response.host,
+          members: res.data.response.userDtos,
+          comments: res.data.response.commentDtos.content,
+        };
+        setRoomInfo(roomData);
+        console.log(res, "스터디 조회 성공");
+      },
+      (err) => {
+        console.log(err, "스터디를 조회할 수 없습니다.");
+      }
+    );
   }, [router.isReady]);
 
-  useEffect(() => {
-    setResumeLen(curResume.length);
-  }, [curResume]);
-
   //해당 멤버의 자소서 조회
-  const onShowResume = async (userId) => {
-    await getCurMemberResume(userId);
+  const onShowResume = (userId) => {
+    getResume(
+      userId,
+      (res) => {
+        const resArray = res.data.response;
+        setResume(resArray);
+        setResumeLen(resArray.length);
+        console.log(res, "자소서 불러오기 성공");
+      },
+      (err) => {
+        console.log(err, "자소서 불러오기 실패");
+      }
+    );
   };
 
   return (
     <div>
       <Layout
         name={roomInfo.name}
-        host={roomHost}
+        host={roomHost.nickName}
         createdAt={roomInfo.createdAt}
       />
       <h1>자기소개서</h1>
@@ -82,8 +109,12 @@ function Resume({
             <div>
               {curResume?.map((resume, index) => (
                 <div key={index}>
-                  <div>{resume.question}</div>
-                  <div>{resume.answer}</div>
+                  <div>
+                    Q{index + 1} : {resume.question}
+                  </div>
+                  <div>
+                    A{index + 1} : {resume.answer}
+                  </div>
                 </div>
               ))}
             </div>

@@ -40,7 +40,7 @@ export default function Layout({ name, host, createdAt }) {
         </Link>
         <Link
           href={{
-            pathname: `/team/space/coverletter`,
+            pathname: `/team/space/resume`,
             query: {
                 id: studyId,
             },
