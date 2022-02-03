@@ -2,10 +2,9 @@ import styles from "../../../../scss/team/board/detail.module.scss";
 import Comment from "../../../../components/team/board/comment";
 
 import {
-  fetchRoomInfo,
-  joinStudy,
   createDetailComment,
 } from "../../../../store/actions/roomAction";
+import { joinTeam } from "../../../../api/member";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { useEffect } from "react";
@@ -46,7 +45,7 @@ function TeamDetail({ roomInfo, roomHost, comments, getRoomInfo }) {
     const data = {
       studyId: id,
     };
-    joinStudy(data);
+    joinTeam(data);
     console.log("가입완료되었습니다.");
   };
 
