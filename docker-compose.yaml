@@ -2,7 +2,7 @@ version: "3"
 
 services:
   backend:
-    image: dbswns97/dangdang-backend:0.4
+    image: dbswns97/dangdang-backend:0.5
     # build: ./backend/dangdang
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://dangdang-mysql:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul"
