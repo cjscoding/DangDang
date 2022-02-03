@@ -28,8 +28,8 @@ public class PostRepositorySupportImpl extends Querydsl4RepositorySupport implem
 
                 , countQuery -> countQuery
                         .selectFrom(post)
-                        .leftJoin(post.study, study).fetchJoin()
-                        .leftJoin(post.writer, user).fetchJoin()
+//                        .leftJoin(post.study, study).fetchJoin()
+//                        .leftJoin(post.writer, user).fetchJoin()
                         .where(post.study.id.eq(studyId)));
         return posts;
 

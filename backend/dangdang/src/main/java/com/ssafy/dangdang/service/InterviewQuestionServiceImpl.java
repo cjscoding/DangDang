@@ -39,7 +39,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService{
         Optional<InterviewQuestion> question = interviewQuestionRepository.findById(interviewQuestionId);
 
         if (!question.isPresent()) throw new NullPointerException("존재하지 않는 질문 입니다.");
-        if (question.get().getWriter().getId() == user.getId()) new UnauthorizedAccessException("작성자만이 삭제할 수 있습니다.");
+        if (question.get().getWriter().getId() != user.getId()) new UnauthorizedAccessException("작성자만이 삭제할 수 있습니다.");
         interviewQuestionRepository.delete(question.get());
         return success("삭제 성공");
     }
