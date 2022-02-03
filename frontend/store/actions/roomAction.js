@@ -36,6 +36,13 @@ export const setAllRooms = (roomList) => ({
   roomsCount: roomList.roomsCount,
 });
 
+//마이룸 조회
+export const setMyRooms = (myRoomList) => ({
+  type: types.MY_ROOMS,
+  myRooms: myRoomList.myRooms,
+  myRoomsCount: myRoomList.myRoomsCount,
+});
+
 //스터디룸 단일 조회
 export const fetchRoomInfo = async (studyId) => {
   const response = await api.get(`/study/${studyId}`);
@@ -74,19 +81,6 @@ export const removeStudy = async (studyId) => {
 export const updateStudy = async (data) => {
   setAuthToken();
   await api.patch(`http://localhost:8080/study/${data.studyId}`, data.newInfo);
-};
-
-//마이룸 조회
-export const getMyRooms = async (param) => {
-  setAuthToken();
-  const response = await api.get("/joins", { params: param });
-  const myRooms = response.data.response.content;
-  const myRoomsCount = response.data.response.totalElements;
-  return {
-    type: types.MY_ROOMS,
-    myRooms,
-    myRoomsCount,
-  };
 };
 
 //스터디룸 가입 대기 명단 조회

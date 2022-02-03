@@ -4,58 +4,28 @@ import Title from "../../../components/layout/title";
 import Image from "next/image";
 import Link from "next/link";
 
-import { getMyRooms } from "../../../store/actions/roomAction";
+import { setMyRooms } from "../../../store/actions/roomAction";
+import { getMyRooms } from "../../../api/studyroom";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     myRooms: state.roomReducer.myRooms,
     totalPosts: state.roomReducer.myRoomsCount,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
-    fetchMyRooms: (param) => {
-      const data = getMyRooms(param);
-      data.then((res) => dispatch(res));
-    },
+    setMyRooms: (res) => dispatch(setMyRooms(res)),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyRooms);
 
-function MyRooms({ myRooms, totalPosts, fetchMyRooms }) {
-  //pagination
-  const [curPage, setCurPage] = useState(0);
-  const [postsPerPage] = useState(12);
-  const [keyword, setKeyword] = useState("");
-  const param = {
-    hashtags: keyword,
-    page: curPage,
-    size: postsPerPage,
-  };
-
-  const paginate = (pageNumber) => {
-    setCurPage(pageNumber);
-  };
-
-  // 스터디룸 조회
-  useEffect(() => {
-    fetchMyRooms(param);
-  }, [keyword, curPage]);
-
-  //filtering keyword
-  const onAddKeyword = (event) => {
-    if (event.key === "Enter") {
-      setKeyword(event.target.value);
-      event.target.value = "";
-      setCurPage(0);
-    }
-  };
-
+function MyRooms({ myRooms, totalPosts, setMyRooms }) {
   // 팀 스페이스로 이동 로직
   const router = useRouter();
   const onDetail = (id) => {
@@ -69,6 +39,44 @@ function MyRooms({ myRooms, totalPosts, fetchMyRooms }) {
       //   `/team/space`
     );
   };
+
+  //pagination
+  const [curPage, setCurPage] = useState(0);
+  const [postsPerPage] = useState(6);
+  const [keyword, setKeyword] = useState("");
+  const paginate = (pageNumber) => setCurPage(pageNumber);
+
+  //filtering keyword
+  const onAddKeyword = (event) => {
+    if (event.key === "Enter") {
+      setKeyword(event.target.value);
+      event.target.value = "";
+      setCurPage(0);
+    }
+  };
+
+  // 스터디룸 조회
+  useEffect(() => {
+    const param = {
+      hashtags: keyword,
+      page: curPage,
+      size: postsPerPage,
+    };
+    getMyRooms(
+      param,
+      (res) => {
+        const myRoomList = {
+          myRooms: res.data.response.content,
+          myRoomsCount: res.data.response.totalElements,
+        };
+        setMyRooms(myRoomList);
+        console.log(myRoomList);
+      },
+      (err) => {
+        console.log(err, "마이스터디를 조회할 수 없습니다.");
+      }
+    );
+  }, [keyword, curPage]);
 
   return (
     <div>
@@ -97,27 +105,38 @@ function MyRooms({ myRooms, totalPosts, fetchMyRooms }) {
           </div>
 
           <div className={styles.rooms}>
-            {myRooms?.map((room) => (
-              <div
-                className={styles.room}
-                key={room.id}
-                onClick={() => onDetail(room.id)}
-              >
-                <Image
-                  src="/vercel.svg"
-                  alt="Vercel Logo"
-                  width={300}
-                  height={250}
-                />
-                <span> {room.id}</span>
-                <span> {room.name}</span>
-                <span> {room.goal}</span>
-                <span> {room.description}</span>
-                {room.hashTags?.map((hashTag, index) => (
-                  <span key={index}># {hashTag}</span>
-                ))}
+            {myRooms.length > 0 ? (
+              myRooms.map((room) => (
+                <div
+                  className={styles.room}
+                  key={room.id}
+                  onClick={() => onDetail(room.id)}
+                >
+                  <Image
+                    src="/vercel.svg"
+                    alt="Vercel Logo"
+                    width={300}
+                    height={250}
+                  />
+                  <span> {room.id}</span>
+                  <span> {room.name}</span>
+                  <span> {room.goal}</span>
+                  <span> {room.description}</span>
+                  {room.hashTags?.map((hashTag, index) => (
+                    <span key={index}># {hashTag}</span>
+                  ))}
+                </div>
+              ))
+            ) : (
+              <div>
+                <h2>아직 가입한 스터디가 없어요</h2>
+                <button>
+                  <Link href="/team/board">
+                    <a>스터디 가입하러 가기</a>
+                  </Link>
+                </button>
               </div>
-            ))}
+            )}
           </div>
           <Pagination
             paginate={paginate}

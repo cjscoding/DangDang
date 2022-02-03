@@ -6,3 +6,8 @@ const api = apiInstance();
 export const getAllRooms = async (param, success, fail) => {
   await api.get("/study", { params: param }).then(success).catch(fail);
 };
+
+//마이룸 조회
+export const getMyRooms = async (param, success, fail) => {
+  await api.get("/joins", { params: param }).then(success).catch(fail);
+};

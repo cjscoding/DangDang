@@ -32,6 +32,7 @@ const roomReducer = (state = roomState, action) => {
       return { ...state, curRoomInfo, curRoomHost, curRoomMembers, comments };
 
     case types.MY_ROOMS:
+        console.log("myreducer");
       state.myRoomsCount = action.myRoomsCount;
       state.myRooms = [];
       const myRooms = [...state.myRooms, ...action.myRooms];
