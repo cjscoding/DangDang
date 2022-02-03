@@ -54,7 +54,7 @@ public class CommentServiceImpl implements CommentService {
         if (comment.get().getWriterId() != user.getId() && user.getRole() != UserRoleType.ADMIN)  throw new UnauthorizedAccessException("작성자만이 삭제할 수 있습니다.");
         Comment updateComment ;
 
-        if (commentDto.getChildren() != null){
+        if (comment.get().getChildren() != null){
 
             List<Comment> children = comment.get().getChildren();
 
@@ -72,8 +72,7 @@ public class CommentServiceImpl implements CommentService {
                     .children(children)
                     .build();
         }
-
-        else
+        else{
             updateComment = Comment.builder()
                     .id(commentDto.getId())
                     .content(commentDto.getContent())
@@ -86,6 +85,8 @@ public class CommentServiceImpl implements CommentService {
                     .referenceId(comment.get().getReferenceId())
                     .commentType(comment.get().getCommentType())
                     .build();
+        }
+
 
         commentRepository.save(updateComment);
         return success(CommentDto.of(updateComment));
