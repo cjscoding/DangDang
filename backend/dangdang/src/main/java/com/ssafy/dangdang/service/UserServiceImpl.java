@@ -9,6 +9,8 @@ import com.ssafy.dangdang.repository.CommentRepository;
 import com.ssafy.dangdang.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,6 +100,21 @@ public class UserServiceImpl implements UserService{
     @Override
     public Optional<User> findByEmail(String email) {
         return userRepository.findUserByEmail(email);
+    }
+
+    @Override
+    @Transactional
+    public Page<UserDto> findAllExceptAdmin(Pageable pageable){
+        Page<User> users = userRepository.findAllExceptAdmin(pageable);
+        return users.map(UserDto::of);
+    }
+
+    @Override
+    @Transactional
+    public void raiseToManager(Long userId){
+        Optional<User> user = userRepository.findById(userId);
+        if (!user.isPresent()) throw new NullPointerException("존재하지 않는 유저 입니다.");
+        user.get().raiseToManager();
     }
 
 

@@ -42,6 +42,7 @@ public class InterviewQuestionController {
             @CurrentUser PrincipalDetails userPrincipal,
             @RequestBody WriteInterview writeInterview){
         InterviewQuestionDto interviewQuestionDto = InterviewQuestionDto.of(writeInterview);
+        interviewQuestionDto.setVisable(false);
         InterviewQuestionDto createdQuestion = interviewQuestionService.writeQuestion(userPrincipal.getUser(), interviewQuestionDto);
         return success(createdQuestion);
 
@@ -82,6 +83,7 @@ public class InterviewQuestionController {
         if(!question.isPresent()) throw new NullPointerException("없는 질문 입니다");
         InterviewQuestionDto interviewQuestionDto = InterviewQuestionDto.of(writeInterview);
         interviewQuestionDto.setId(interviewQuestionId);
+        interviewQuestionDto.setVisable(false);
         InterviewQuestionDto createdQuestion = interviewQuestionService.writeQuestion(userPrincipal.getUser(), interviewQuestionDto);
         return success(createdQuestion);
 

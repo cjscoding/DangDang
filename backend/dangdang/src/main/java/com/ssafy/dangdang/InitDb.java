@@ -138,7 +138,7 @@ public class InitDb {
                         .question("민초 어떄요"+i)
                         .answer("너무 좋죠"+i)
                         .field("공통")
-                        .visable(false)
+                        .visable(true)
                         .build();
                 interviewQuestionService.writeQuestion(user, interviewQuestionDto);
             }

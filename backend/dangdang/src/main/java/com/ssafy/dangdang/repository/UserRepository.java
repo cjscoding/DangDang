@@ -1,6 +1,8 @@
 package com.ssafy.dangdang.repository;
 
 import com.ssafy.dangdang.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -28,5 +30,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "(select j.user.id from Joins j " +
             "where j.study.id = :studyId and j.waiting = false )")
     Integer countUserByStudyId(@Param("userId")Long userId,@Param("studyId") Long studyId);
+
+    @Query(value = "select u from User u where u.role <> 'ADMIN'")
+    Page<User> findAllExceptAdmin(Pageable pageable);
 
 }
