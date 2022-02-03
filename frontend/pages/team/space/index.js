@@ -9,7 +9,7 @@ import {
   getWaitings,
   allowMember,
 } from "../../../api/member";
-import { connect, useStore } from "react-redux";
+import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -41,9 +41,10 @@ function TeamSpace({
   setRoomInfo,
   setWaitings,
 }) {
+  const router = useRouter();
+
   //for everyone
   //스터디 단일 조회
-  const router = useRouter();
   useEffect(() => {
     if (!router.isReady) return;
     getRoomInfo(
@@ -57,6 +58,17 @@ function TeamSpace({
         };
         console.log(roomData);
         setRoomInfo(roomData);
+        getWaitings(
+          router.query.id,
+          (res) => {
+            const waitings = res.data.response;
+            setWaitings(waitings);
+            console.log(res, "가입대기명단 조회 성공!");
+          },
+          (err) => {
+            console.log(err, "가입대기명단 조회에 실패하였습니다.");
+          }
+        );
       },
       (err) => {
         console.log(err, "스터디를 조회할 수 없습니다.");
@@ -65,7 +77,7 @@ function TeamSpace({
   }, [router.isReady]);
 
   //for host
-  //팀원관리
+  //팀원강제탈퇴
   const onRemoveMember = (event) => {
     event.preventDefault();
     const data = {
@@ -73,7 +85,7 @@ function TeamSpace({
       userId: event.target[0].value,
     };
 
-    if (data.userId === roomInfo.host.id) {
+    if (data.userId === roomHost.id) {
       console.log("호스트는 탈퇴시킬 수 없습니다.");
     } else {
       removeMember(
@@ -89,8 +101,18 @@ function TeamSpace({
                 members: res.data.response.userDtos,
                 comments: res.data.response.commentDtos.content,
               };
-              console.log(roomData);
               setRoomInfo(roomData);
+              getWaitings(
+                router.query.id,
+                (res) => {
+                  const waitings = res.data.response;
+                  setWaitings(waitings);
+                  console.log(res, "가입대기명단 조회 성공!");
+                },
+                (err) => {
+                  console.log(err, "가입대기명단 조회에 실패하였습니다.");
+                }
+              );
             },
             (err) => {
               console.log(err, "스터디를 조회할 수 없습니다.");
@@ -110,11 +132,36 @@ function TeamSpace({
       studyId: router.query.id,
       userId: event.target[0].value,
     };
-    console.log(data);
     allowMember(
       data,
       (res) => {
         console.log(res, "가입승인 성공");
+        getRoomInfo(
+          router.query.id,
+          (res) => {
+            const roomData = {
+              roomInfo: res.data.response,
+              host: res.data.response.host.nickName,
+              members: res.data.response.userDtos,
+              comments: res.data.response.commentDtos.content,
+            };
+            setRoomInfo(roomData);
+            getWaitings(
+              router.query.id,
+              (res) => {
+                const waitings = res.data.response;
+                setWaitings(waitings);
+                console.log(res, "가입대기명단 조회 성공!");
+              },
+              (err) => {
+                console.log(err, "가입대기명단 조회에 실패하였습니다.");
+              }
+            );
+          },
+          (err) => {
+            console.log(err, "스터디를 조회할 수 없습니다.");
+          }
+        );
       },
       (err) => {
         console.log(err, "가입승인 실패");
@@ -143,21 +190,6 @@ function TeamSpace({
     );
     router.push("/user/mypage/myroom");
   };
-  //가입대기명단 조회
-  useEffect(() => {
-    console.log("대기명단 로드");
-    getWaitings(
-      router.query.id,
-      (res) => {
-        const waitings = res.data.response;
-        setWaitings(waitings);
-        console.log(res, "가입대기명단 조회 성공!");
-      },
-      (err) => {
-        console.log(err, "가입대기명단 조회에 실패하였습니다.");
-      }
-    );
-  }, [roomHost]);
 
   //for member
   //스터디룸 탈퇴
@@ -199,11 +231,10 @@ function TeamSpace({
               <span key={index}>{member.nickName}</span>
             ))}
           </div>
-          {roomHost.id}
         </div>
 
         <div>
-          {roomHost.id === 1 ? (
+          {roomHost && roomHost.id === userInfo.id? (
             <div>
               <button onClick={onUpdatePage}>팀 수정</button>
               <button onClick={() => onDeleteTeam()}>팀 삭제</button>
@@ -221,7 +252,7 @@ function TeamSpace({
                 </form>
               ))}
               <h1>대기명단</h1>
-              {waitingList.map((member, index) => (
+              {waitingList?.map((member, index) => (
                 <form key={index} onSubmit={onAllowJoin}>
                   <input type="hidden" value={member.id} disabled />
                   <input type="text" value={member.nickName} disabled />
