@@ -1,52 +1,90 @@
-import styles from "../../../../scss/team/board/detail.module.scss";
-import Comment from "../../../../components/team/board/comment";
+import styles from "../../../scss/team/board/detail.module.scss";
+import Comment from "../../../components/team/board/comment";
 
-import {
-  createDetailComment,
-} from "../../../../store/actions/roomAction";
-import { joinTeam } from "../../../../api/member";
+import { setRoomInfo } from "../../../store/actions/roomAction";
+import { getRoomInfo } from "../../../api/studyroom";
+import { joinTeam } from "../../../api/member";
+import { createDetailComment } from "../../../api/comment";
+
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { useEffect } from "react";
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
     roomInfo: state.roomReducer.curRoomInfo,
     roomHost: state.roomReducer.curRoomHost,
     comments: state.roomReducer.comments,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
-    getRoomInfo: (id) => {
-      const data = fetchRoomInfo(id);
-      data.then((res) => {
-        console.log(res);
-        dispatch(res);
-      });
-    },
+    setRoomInfo: (roomData) => dispatch(setRoomInfo(roomData)),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamDetail);
 
-function TeamDetail({ roomInfo, roomHost, comments, getRoomInfo }) {
+function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
   //초기 셋팅
   const router = useRouter();
 
   useEffect(() => {
     if (!router.isReady) return;
-    getRoomInfo(router.query.id);
+    getRoomInfo(
+      router.query.id,
+      (res) => {
+        const roomData = {
+          roomInfo: res.data.response,
+          host: res.data.response.host,
+          members: res.data.response.userDtos,
+          comments: res.data.response.commentDtos.content,
+        };
+        setRoomInfo(roomData);
+        console.log(res, "스터디 조회 성공");
+      },
+      (err) => {
+        console.log(err, "스터디를 조회할 수 없습니다.");
+      }
+    );
   }, [router.isReady]);
+
+  const reload = () => {
+    getRoomInfo(
+      router.query.id,
+      (res) => {
+        console.log(res, "스터디 조회 성공");
+        const roomData = {
+          roomInfo: res.data.response,
+          host: res.data.response.host,
+          members: res.data.response.userDtos,
+          comments: res.data.response.commentDtos.content,
+        };
+
+        console.log(roomData);
+        setRoomInfo(roomData);
+      },
+      (err) => {
+        console.log(err, "스터디를 조회할 수 없습니다.");
+      }
+    );
+  };
 
   // 스터디룸 가입 신청
   const onJoinStudy = (id) => {
     const data = {
       studyId: id,
     };
-    joinTeam(data);
-    console.log("가입완료되었습니다.");
+    joinTeam(
+      data,
+      (res) => {
+        console.log(res, "가입 완료");
+      },
+      (err) => {
+        console.log(err, "가입 실패");
+      }
+    );
   };
 
   //댓글 등록
@@ -58,22 +96,27 @@ function TeamDetail({ roomInfo, roomHost, comments, getRoomInfo }) {
         content: event.target[0].value,
       },
     };
-    createDetailComment(data);
+    createDetailComment(
+      data,
+      (res) => {
+        console.log(res, "댓글 등록 완료");
+        reload();
+      },
+      (err) => {
+        console.log(err, "댓글 등록 실패");
+      }
+    );
     event.target[0].value = "";
-    getRoomInfo(router.query.id);
   };
-
-  const reload = () => getRoomInfo(router.query.id);
 
   return (
     <div>
       <h1>{roomInfo.name}</h1>
-
       <button onClick={() => onJoinStudy(roomInfo.id)}>가입신청</button>
 
       <div className={styles.info}>
         <span>호스트</span>
-        <span>{roomHost}</span>
+        <span>{roomHost.nickName}</span>
 
         <span>생성일</span>
         <div>

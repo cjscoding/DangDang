@@ -31,12 +31,12 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
   const onDetail = (id) => {
     router.push(
       {
-        pathname: `/team/board/detail/${id}`,
+        pathname: `/team/board/detail`,
         query: {
           id,
         },
       },
-      `/team/board/detail/${id}`
+    //   `/team/board/detail/${id}`
     );
   };
 

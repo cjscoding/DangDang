@@ -1,14 +1,14 @@
 import styles from "../../../scss/team/space/teamspace.module.scss";
 import Layout from "../../../components/team/space/layout";
 
-import { setRoomInfo, setWaitings } from "../../../store/actions/roomAction";
-import { getRoomInfo, removeRoom } from "../../../api/studyroom";
 import {
   removeMember,
   leaveTeam,
   getWaitings,
   allowMember,
 } from "../../../api/member";
+import { setRoomInfo, setWaitings } from "../../../store/actions/roomAction";
+import { getRoomInfo, removeRoom } from "../../../api/studyroom";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect } from "react";

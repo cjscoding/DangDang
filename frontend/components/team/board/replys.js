@@ -1,9 +1,6 @@
 // import styles from "../../scss/team/board/reply.module.scss";
 
-import {
-  updateDetailComment,
-  deleteDetailComment,
-} from "../../../store/actions/roomAction";
+import { updateDetailComment, deleteDetailComment } from "../../../api/comment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -26,8 +23,16 @@ export default function Reply({ reply, submitReload }) {
       studyId: router.query.id,
       commentId: id,
     };
-    deleteDetailComment(data);
-    submitReload();
+    deleteDetailComment(
+      data,
+      (res) => {
+        console.log(res, "대댓글 삭제 완료");
+        submitReload();
+      },
+      (err) => {
+        console.log(err, "대댓글 삭제 실패");
+      }
+    );
   };
 
   //대댓글 수정
@@ -41,9 +46,17 @@ export default function Reply({ reply, submitReload }) {
         content: newReply,
       },
     };
-    updateDetailComment(data);
-    toggleUpdate();
-    submitReload();
+    updateDetailComment(
+      data,
+      (res) => {
+        console.log(res, "대댓글 완료");
+        toggleUpdate();
+        submitReload();
+      },
+      (err) => {
+        console.log(err, "대댓글 실패");
+      }
+    );
   };
 
   return (

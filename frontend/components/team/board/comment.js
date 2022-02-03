@@ -5,7 +5,7 @@ import {
   createDetailComment,
   updateDetailComment,
   deleteDetailComment,
-} from "../../../store/actions/roomAction";
+} from "../../../api/comment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
@@ -34,9 +34,17 @@ export default function Comment({ comment, reload }) {
         content: event.target[0].value,
       },
     };
-    createDetailComment(data);
+    createDetailComment(
+      data,
+      (res) => {
+        console.log(res, "대댓글 등록 완료");
+        reload();
+      },
+      (err) => {
+        console.log(err, "대댓글 등록 실패");
+      }
+    );
     event.target[0].value = "";
-    reload();
   };
 
   //댓글 삭제
@@ -45,8 +53,16 @@ export default function Comment({ comment, reload }) {
       studyId: router.query.id,
       commentId: id,
     };
-    deleteDetailComment(data);
-    reload();
+    deleteDetailComment(
+      data,
+      (res) => {
+        console.log(res, "댓글 삭제 완료");
+        reload();
+      },
+      (err) => {
+        console.log(err, "댓글 삭제 실패");
+      }
+    );
   };
 
   //댓글 수정
@@ -59,9 +75,17 @@ export default function Comment({ comment, reload }) {
         content: newComment,
       },
     };
-    updateDetailComment(data);
-    toggleUpdate();
-    reload();
+    updateDetailComment(
+      data,
+      (res) => {
+        console.log(res, "댓글 수정 완료");
+        toggleUpdate();
+        reload();
+      },
+      (err) => {
+        console.log(err, "댓글 수정 실패");
+      }
+    );
   };
 
   const onChangeComment = (event) => setNewComment(event.target.value);
