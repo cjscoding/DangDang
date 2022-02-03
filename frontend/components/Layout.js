@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { connect } from "react-redux";
-import { setUserInfo } from "../store/actions/userAction";
+import { setUserInfo, setIsLogin } from "../store/actions/userAction";
 import { getUserInfo } from "../api/user";
 import { useEffect } from "react";
 
@@ -12,18 +12,20 @@ function mapStateToProps({ userReducer }) {
 function mapDispatchToProps(dispatch) {
   return {
     setUserInfo: (userInfo) => dispatch(setUserInfo(userInfo)),
+    setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
   };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Layout);
 
-function Layout({ children, user, setUserInfo }) {
+function Layout({ children, user, setUserInfo, setIsLogin }) {
   useEffect(() => {
     if (
       typeof window !== "undefined" &&
       localStorage.getItem("authorization") &&
       localStorage.getItem("refreshtoken")
     ) {
+      setIsLogin(true);
       const initialState = {
         id: "",
         email: "",

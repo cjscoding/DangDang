@@ -7,6 +7,7 @@ import {
   setShowModal,
   setIsLoginModal,
   setUserInfo,
+  setIsMoveTeamStudy,
 } from "../../store/actions/userAction";
 import { getToken, getUserInfo } from "../../api/user";
 import { BACKEND_URL } from "../../config";
@@ -14,6 +15,7 @@ import { BACKEND_URL } from "../../config";
 function mapStateToProps({ userReducer }) {
   return {
     isLoginModal: userReducer.isLoginModal,
+    isMoveTeamStudy: userReducer.isMoveTeamStudy,
   };
 }
 
@@ -22,12 +24,21 @@ function mapDispatchToProps(dispatch) {
     setShowModal: (show) => dispatch(setShowModal(show)),
     setIsLoginModal: (isLoginModal) => dispatch(setIsLoginModal(isLoginModal)),
     setUserInfo: (userInfo) => dispatch(setUserInfo(userInfo)),
+    setIsMoveTeamStudy: (isMoveTeamStudy) =>
+      dispatch(setIsMoveTeamStudy(isMoveTeamStudy)),
   };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
-function Login({ setShowModal, isLoginModal, setIsLoginModal, setUserInfo }) {
+function Login({
+  setShowModal,
+  isLoginModal,
+  setIsLoginModal,
+  setUserInfo,
+  isMoveTeamStudy,
+  setIsMoveTeamStudy,
+}) {
   const router = useRouter();
   const [values, setValues] = useState({
     email: "",
@@ -55,6 +66,8 @@ function Login({ setShowModal, isLoginModal, setIsLoginModal, setUserInfo }) {
               nickName: response.nickName,
             };
             setUserInfo(userInfo);
+            if (isMoveTeamStudy) router.push("/user/mypage/myroom");
+            setIsMoveTeamStudy(false);
           },
           (error) => {
             console.log(error);
