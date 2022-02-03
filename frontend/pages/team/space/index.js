@@ -1,14 +1,15 @@
 import styles from "../../../scss/team/space/teamspace.module.scss";
 import Layout from "../../../components/team/space/layout";
 
-import {
-  setRoomInfo,
-  setWaitings,
-  allowJoinTeam,
-} from "../../../store/actions/roomAction";
+import { setRoomInfo, setWaitings } from "../../../store/actions/roomAction";
 import { getRoomInfo, removeRoom } from "../../../api/studyroom";
-import { removeMember, leaveTeam, getWaitings } from "../../../api/member";
-import { connect } from "react-redux";
+import {
+  removeMember,
+  leaveTeam,
+  getWaitings,
+  allowMember,
+} from "../../../api/member";
+import { connect, useStore } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -103,15 +104,22 @@ function TeamSpace({
     }
   };
   //대기자 승인
-  const onAllowJoin = async (event) => {
+  const onAllowJoin = (event) => {
     event.preventDefault();
     const data = {
       studyId: router.query.id,
       userId: event.target[0].value,
     };
-    await allowJoinTeam(data);
-    await getRoomInfo(router.query.id);
-    await getWaitingMember(router.query.id);
+    console.log(data);
+    allowMember(
+      data,
+      (res) => {
+        console.log(res, "가입승인 성공");
+      },
+      (err) => {
+        console.log(err, "가입승인 실패");
+      }
+    );
   };
   //팀 수정페이지로 이동
   const onUpdatePage = () => {
@@ -137,19 +145,18 @@ function TeamSpace({
   };
   //가입대기명단 조회
   useEffect(() => {
-    if (roomHost.id === 1) {
-      getWaitings(
-        router.query.id,
-        (res) => {
-          const waitings = res.data.response;
-          setWaitings(waitings);
-          console.log(res, "가입대기명단 조회 성공!");
-        },
-        (err) => {
-          console.log(err, "가입대기명단 조회에 실패하였습니다.");
-        }
-      );
-    }
+    console.log("대기명단 로드");
+    getWaitings(
+      router.query.id,
+      (res) => {
+        const waitings = res.data.response;
+        setWaitings(waitings);
+        console.log(res, "가입대기명단 조회 성공!");
+      },
+      (err) => {
+        console.log(err, "가입대기명단 조회에 실패하였습니다.");
+      }
+    );
   }, [roomHost]);
 
   //for member
@@ -192,6 +199,7 @@ function TeamSpace({
               <span key={index}>{member.nickName}</span>
             ))}
           </div>
+          {roomHost.id}
         </div>
 
         <div>

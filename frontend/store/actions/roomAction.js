@@ -52,24 +52,11 @@ export const setRoomInfo = (roomData) => ({
   comments: roomData.comments,
 });
 
-//스터디룸 가입 신청
-export const joinStudy = async (data) => {
-  setAuthToken();
-  await api.post("/joins", data);
-};
-
 //스터디룸 가입 대기 명단 조회
 export const setWaitings = (waitings) => ({
   type: types.WAITING_MEMBERS,
   waitings,
 });
-
-//스터디룸 가입 허용
-export const allowJoinTeam = async (data) => {
-  setAuthToken();
-  await api.patch("/joins", data);
-  console.log("가입을 허용하였습니다.");
-};
 
 //스터디룸 상세 공고 댓글, 대댓글 Post
 export const createDetailComment = async (data) => {
