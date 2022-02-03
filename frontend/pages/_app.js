@@ -5,6 +5,11 @@ import { useRouter } from "next/router";
 import "../scss/main.scss";
 import Script from "next/script";
 import { WEBRTC_URL } from "../config"
+// fontawesome
+import '@fortawesome/fontawesome-free/js/fontawesome'; 
+import '@fortawesome/fontawesome-free/js/solid'; 
+import '@fortawesome/fontawesome-free/js/regular'; 
+import '@fortawesome/fontawesome-free/js/brands';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
