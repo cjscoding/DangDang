@@ -28,10 +28,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(Interview);
 
 function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion}) {
   const router = useRouter();
-  const myFaceContainer = useRef();
   const [isWait, setIsWait] = useState(false);
   const [screenNum, setScreenNum] = useState(3);
-  const [questionNum, setQuestionNum] = useState(0);
   const [volume, setVolume] = useState(30);
   const [isVol, setIsVol] = useState(false);
   const volumeBtn = useRef();
@@ -45,15 +43,13 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
 
     let webRtcPeer;
     const myFace = document.querySelector("#my-face");
-    // myFace.autoplay = true;
-    // myFace.controls = false;
-    // myFace.playsInline = true;
-    // myFace.width = "100%";
-    // myFace.height = "100%";
+    myFace.autoplay = true;
+    myFace.playsInline = true;
+    myFace.style.width = "100%";
+    myFace.style.height = "100%";
     async function getStream() {
       const stream = await navigator.mediaDevices.getUserMedia(getVideoConstraints());
       myFace.srcObject = stream
-      // myFaceContainer.current.appendChild(myFace);
     }
     getStream();
     function sendMessage(msgObj) {
@@ -75,6 +71,7 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
           webRtcPeer.addIceCandidate(msgObj.candidate, function(error) {
             if(error) return console.log(`ERROR! ${error}`);
           })
+          break;
         case "stopped":
           break;
         case "paused":
@@ -88,7 +85,6 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
     }
     
     function record() {
-      // hideScreen();
       const options = {
         localVideo: myFace,
         mediaConstraints : getVideoConstraints(),
@@ -119,12 +115,6 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
       }
     }
 
-    function del() {
-      sendMessage({
-        id: "del",
-        name: questionNum2
-      });
-    }
 
     // function play() {
     //   hideScreen();
@@ -189,7 +179,6 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
         router.push(`/self-practice/interview/end`);
       }
       questionNum2 += 1
-      // setQuestionNum(questionNum2)
       setSelectedQuestion(questions[questionNum2])
       record();
       return false;
@@ -199,7 +188,6 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
         router.push(`/self-practice/interview/end`);
       }
       questionNum2 += 1
-      // setQuestionNum(questionNum2)
       setSelectedQuestion(questions[questionNum2])
       record();
       return false;
@@ -222,7 +210,6 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
       // skipBtn.current.removeEventListener("click", skipQuestion);
     }
   },[])
-  console.log(1, questionNum)
   return <div>
   <div className={styles.closeBtnBox}>
     <Link href="/self-practice/interview/end">
@@ -234,7 +221,7 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
   <div className={styles.container}>
     <div className={styles.videoContainer}>
       <div style={isWait||screenNum!==1?{display: "none"}:{}} className={styles.video1}><ShowQuestion /></div>
-      <div style={isWait||screenNum!==2?{display: "none"}:{}} className={styles.video2}><video height={"360px"} width={"480px"} autoPlay id="my-face"></video></div>
+      <div style={isWait||screenNum!==2?{display: "none"}:{}} className={styles.video2}><video id="my-face"></video></div>
       <div style={isWait||screenNum!==3?{display: "none"}:{}} className={styles.video3}>면접관 얼굴 나올 예정(아래 버튼으로 화면 바꾸셈)</div>
       <div style={!isWait?{display: "none"}:{}} className={styles.video4}>화면 기다리는 중</div>
       <div className={styles.changeBtn}>
