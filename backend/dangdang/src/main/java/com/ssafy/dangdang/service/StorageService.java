@@ -10,9 +10,13 @@ import java.nio.file.Path;
 
 public interface StorageService {
 
+    Resource loadImageAsResource(String filename);
+
     void delete(String filename) throws FileNotFoundException;
 
-    void store(String toString, MultipartFile thumbnailImg) throws IOException;
+    void store(String toString, MultipartFile file) throws IOException;
+
+    void imageStore(String uuid, MultipartFile file) throws IOException;
 
     Path load(String filename);
 

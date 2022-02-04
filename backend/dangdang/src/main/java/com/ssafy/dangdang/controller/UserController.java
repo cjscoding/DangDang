@@ -9,11 +9,13 @@ import com.ssafy.dangdang.domain.dto.SignUp;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.exception.BadRequestException;
 import com.ssafy.dangdang.exception.ExtantUserException;
+import com.ssafy.dangdang.service.StorageService;
 import com.ssafy.dangdang.service.UserService;
 import com.ssafy.dangdang.util.ApiUtils;
 import com.ssafy.dangdang.util.JwtUtil;
 import com.ssafy.dangdang.util.RedisUtil;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,13 +24,17 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.ssafy.dangdang.util.ApiUtils.*;
 
@@ -42,6 +48,7 @@ public class UserController {
 
     private final PrincipalDetailsService principalDetailsService;
     private final UserService userService;
+    private final StorageService storageService;
     private final JwtUtil jwtUtil;
     private final RedisUtil redisUtil;
 
@@ -65,12 +72,30 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "회원 가입 성공")
     })
     @PostMapping()
-    public ApiResult<UserDto> signUp(@RequestBody @Valid SignUp signUp) {
-
-        log.info("user SignUp {}", signUp.toString());
+    public ApiResult<UserDto> signUp( @RequestBody @Valid SignUp signUp) {
+        log.info(signUp.toString());
         UserDto user = UserDto.of(signUp);
+        log.info("user SignUp {}", user.toString());
         userService.signUpUser(user);
         return success(user);
+    }
+
+    @Operation(summary = "유저 프로필 이미지 등록")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "유저 프로필 이미지 등록 성공")
+    })
+    @PostMapping(value = "/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<String> uploadImage(@CurrentUser PrincipalDetails userPrincipal,
+                                         @Parameter(
+                                                 description = "Files to be uploaded",
+                                                 content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)  // Won't work without OCTET_STREAM as the mediaType.
+                                                 ) MultipartFile image) throws IOException {
+        log.info("user image 등록 {}", image.getOriginalFilename());
+        UUID uuid = UUID.randomUUID();
+        storageService.imageStore(uuid.toString(), image);
+        userService.uploadImage(userPrincipal.getUser(), uuid.toString(), image);
+        return success("등록 성공");
     }
 
     @Operation(summary = "회원정보 수정")
@@ -78,12 +103,13 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공")
     })
     @PatchMapping()
-    public ApiResult<UserDto> updateUser(@RequestBody @Valid UserDto userDto) {
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<UserDto> updateUser(@CurrentUser PrincipalDetails userPrincipal, @RequestBody SignUp signUp) {
+        UserDto updateUser = UserDto.of(signUp);
+        log.info("user Update {}", updateUser.toString());
 
-        log.info("user Update {}", userDto.toString());
-
-        userService.updateUser(userDto);
-        return success(userDto);
+        userService.updateUser(userPrincipal.getUser(), updateUser);
+        return success(updateUser);
 
 
     }

@@ -42,9 +42,10 @@ spring:
 
 file :
   upload :
-    baseLocation : "C:/home/ssafy/share/"
-    file :         "C:/home/ssafy/share/files/"
-
+    baseLocation : "C:\\home\\ssafy\\share\\"
+    file :  "C:\\home\\ssafy\\share\\files\\"
+    image: "C:\\home\\ssafy\\share\\images\\"
+    address : "https://localhost:8443/files/"
 ---
 
 spring:
@@ -85,8 +86,8 @@ file :
   upload :
     baseLocation : "/app/data/"
     file :         "/app/data/files/"
-
-
+    image: "/app/data/files/images/"
+    address : "https://localhost:8443/files/"
 
 ---
 
@@ -128,7 +129,10 @@ spring:
 #      static-locations : classpath:/static
 #      add-mappings :     true
 
-
+  servlet :
+    multipart :
+      max-file-size :    100MB
+      max-request-size : 100MB
 
   security:
     oauth2:
