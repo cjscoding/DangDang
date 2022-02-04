@@ -1,5 +1,9 @@
-import styles from "../scss/layout.module.scss"
+import styles from "../../scss/layout/layout.module.scss";
 
 export default function Footer() {
-  return <div className={styles.footer}>요기는 푸터야</div>;
+  return (
+    <footer className={styles.footer}>
+      copyright 2022. dangdang PROJECT. All rights reserved.
+    </footer>
+  );
 }

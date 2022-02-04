@@ -1,10 +1,30 @@
 @import "../common/variables.scss";
+@import "../common//mixins.scss";
+// .navbar,
+// .footer{
+//     color: white;
+//     background-color: $main-color;
+//     font-size: 50px;
+//     text-align: center;
+//     padding: 20px;
+// }
+.footer {
+  padding: 2rem 0;
+  font-size: 0.75rem;
+  width: 100%;
+  text-align: center;
+  position: absolute;
+  bottom: 0px;
+}
 
-.navbar,
-.footer{
-    color: white;
-    background-color: $main-color;
-    font-size: 50px;
-    text-align: center;
-    padding: 20px;
+.bodyWrapper {
+  min-height: 100%;
+  position: relative;
+  padding-bottom: $footer-height;
+}
+
+.mainContainer {
+  @include flex-center;
+  flex-direction: column;
+  min-height: calc(100vh - #{$footer-height});
 }
