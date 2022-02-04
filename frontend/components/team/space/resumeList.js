@@ -1,9 +1,25 @@
 import styles from "../../../scss/team/space/resume.module.scss";
 
-import { updateResume, deleteResume } from "../../../api/resume";
+import { setResume } from "../../../store/actions/resumeAction";
+import { getResume, updateResume, deleteResume } from "../../../api/resume";
+import { connect } from "react-redux";
 import { useState } from "react";
 
-export default function ResumeList({ resume, index }) {
+const mapStateToProps = (state) => {
+  return {
+    userInfo: state.userReducer.user,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setResume: (userId) => dispatch(setResume(userId)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ResumeList);
+
+function ResumeList({ userInfo, setResume, resume, index }) {
   const [questionId] = useState(resume.resumeQuestionList[0].id);
   const [resumeId] = useState(resume.id);
   const [question, setQuestion] = useState(
@@ -45,6 +61,17 @@ export default function ResumeList({ resume, index }) {
       resumeId,
       (res) => {
         console.log(res, "자소서 삭제 성공");
+        getResume(
+          userInfo.id,
+          (res) => {
+            const resArray = res.data.response;
+            setResume(resArray);
+            console.log(res, "자소서 불러오기 성공");
+          },
+          (err) => {
+            console.log(err, "자소서 불러오기 실패");
+          }
+        );
       },
       (err) => {
         console.log(err, "자소서 삭제 실패");
