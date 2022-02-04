@@ -94,4 +94,6 @@ public class User{
     public void raiseToAdmin(){
         this.role = UserRoleType.ADMIN;
     }
+
+    public void addImageUrl(String path){ this.imageUrl = path;}
 }

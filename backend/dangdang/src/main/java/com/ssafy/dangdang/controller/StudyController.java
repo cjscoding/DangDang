@@ -11,6 +11,7 @@ import com.ssafy.dangdang.domain.dto.WriteComment;
 import com.ssafy.dangdang.domain.types.CommentType;
 import com.ssafy.dangdang.domain.types.UserRoleType;
 import com.ssafy.dangdang.service.CommentService;
+import com.ssafy.dangdang.service.StorageService;
 import com.ssafy.dangdang.service.StudyService;
 import com.ssafy.dangdang.util.ApiUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,12 +28,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import static com.ssafy.dangdang.util.ApiUtils.*;
 
@@ -46,6 +51,7 @@ public class StudyController {
     private final StudyService studyService;
     private final CommentService commentService;
 
+    private final StorageService storageService;
 
     @Operation(summary = "스터디 조회", description = "개설된 모든 스터디를 요청한 페이지 만큼 조회, 서버 과부화 예방을 위해 댓글은 조회되지 않습니다.")
     @ApiResponses( value = {
@@ -165,4 +171,45 @@ public class StudyController {
         return commentService.updateComment(userPrincipal.getUser(), commentDto);
     }
 
+    @Operation(summary = "스터디 이미지 등록")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "스터디 이미지 등록 성공")
+    })
+    @PostMapping(value = "/{studyId}/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<String> uploadImage(@CurrentUser PrincipalDetails userPrincipal,
+                                         @PathVariable Long studyId,
+                                         @Parameter(
+                                                 description = "업로드할 이미지",
+                                                 content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)  // Won't work without OCTET_STREAM as the mediaType.
+                                         ) MultipartFile image) throws IOException {
+        log.info("스터디 image 등록 {}", image.getOriginalFilename());
+        UUID uuid = UUID.randomUUID();
+        storageService.imageStore(uuid.toString(), image);
+        studyService.uploadImage(userPrincipal.getUser(), studyId,  uuid.toString(), image);
+        return success("등록 성공");
+    }
+
+    @Operation(summary = "스터디 이미지 수정")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "스터디 이미지 수정 성공")
+    })
+    @PatchMapping(value = "/{studyId}/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<String> updateImage(@CurrentUser PrincipalDetails userPrincipal,
+                                         @PathVariable Long studyId,
+                                         @Parameter(
+                                                 description = "수정될 이미지",
+                                                 content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)  // Won't work without OCTET_STREAM as the mediaType.
+                                         ) MultipartFile image) throws IOException {
+
+        String studyImageUrl = studyService.getImageUrl(studyId);
+        if(studyImageUrl != null) storageService.deleteImage(studyImageUrl);
+
+        log.info("스터디 image 수정 {}", image.getOriginalFilename());
+        UUID uuid = UUID.randomUUID();
+        storageService.imageStore(uuid.toString(), image);
+        studyService.uploadImage(userPrincipal.getUser(), studyId, uuid.toString(), image);
+        return success("수정 성공");
+    }
 }

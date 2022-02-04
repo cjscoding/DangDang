@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -97,17 +98,9 @@ public class StudyServiceImpl implements StudyService{
     @Override
     @Transactional
     public ApiResult<String> deleteStudy(User user, Long studyId) {
-        Optional<Study> study = studyRepository.findById(studyId);
-        if (!study.isPresent()) {
-            log.error("존재하지 않는 스터디 삭제 요청");
-            throw new NullPointerException("존재하지 않는 스터디 입니다.");
-        }
-        if(study.get().getHost().getId() != user.getId()){
-            log.error("권한없는 사용자의 삭제 요청");
-            throw new UnauthorizedAccessException("권한이 없는 사용자의 요청입니다.");
-        }
+        Study study = errorCheck(user, studyId);
 
-        List<StudyHashTag> hashTags = study.get().getHashTags();
+        List<StudyHashTag> hashTags = study.getHashTags();
         hashTagRepository.deleteAll(hashTags);
 
         List<Post> posts = postRepository.findPostByStudyId(studyId);
@@ -119,7 +112,7 @@ public class StudyServiceImpl implements StudyService{
         List<Joins> joins = joinsRepository.findJoinsByStudyId(studyId);
         joinsRepository.deleteAll(joins);
 
-        studyRepository.delete(study.get());
+        studyRepository.delete(study);
         return success("삭제 성공!");
     }
 
@@ -142,5 +135,35 @@ public class StudyServiceImpl implements StudyService{
         Study study = studyRepository.findStudyById(studyId);
         StudyDto studyDto = StudyDto.of(study);
         return studyDto;
+    }
+
+    @Override
+    @Transactional
+    public void uploadImage(User user, Long studyId, String uuid, MultipartFile file){
+        Study study = errorCheck(user, studyId);
+        study.addImageUrl(uuid + file.getOriginalFilename());
+    }
+
+    private Study errorCheck(User user, Long studyId) {
+        Optional<Study> study = studyRepository.findById(studyId);
+        if (!study.isPresent()) {
+            log.error("존재하지 않는 스터디 삭제 요청");
+            throw new NullPointerException("존재하지 않는 스터디 입니다.");
+        }
+        if(study.get().getHost().getId() != user.getId()){
+            log.error("권한없는 사용자의 삭제 요청");
+            throw new UnauthorizedAccessException("권한이 없는 사용자의 요청입니다.");
+        }
+        return study.get();
+    }
+
+    @Override
+    public String getImageUrl(Long studyId){
+        Optional<Study> study = studyRepository.findById(studyId);
+        if (!study.isPresent()) {
+            log.error("존재하지 않는 스터디 삭제 요청");
+            throw new NullPointerException("존재하지 않는 스터디 입니다.");
+        }
+        return study.get().getImageUrl();
     }
 }

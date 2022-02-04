@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,27 +52,37 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public void updateUser(UserDto userDto) {
-        String password = userDto.getPassword();
-
-        if(!this.idCheck(userDto)) throw new ExtantUserException("존재하지 않는 유저 입니다");
+    @Transactional
+    public void updateUser(User user, UserDto userDto) {
 
 
-        User user = userRepository.findUserByEmail(userDto.getEmail()).get();
+        //if(!this.idCheck(userDto)) throw new ExtantUserException("존재하지 않는 유저 입니다");
 
-        String EncryptedPassword = passwordEncoder.encode(password);
+        String encryptedPassword = user.getPassword();
+        if (userDto.getPassword() != null){
+            String password = userDto.getPassword();
+            encryptedPassword = passwordEncoder.encode(password);
+        }
+
 
         user = User.builder()
+                .id(user.getId())
                 .email(userDto.getEmail())
                 .nickname(userDto.getNickName())
-                .password(EncryptedPassword)
-                .role(UserRoleType.USER)
+                .password(encryptedPassword)
+                .role(user.getRole())
                 .build();
         userRepository.save(user);
 
     }
 
-
+    @Override
+    @Transactional
+    public void uploadImage(User user, String uuid, MultipartFile file){
+        // 컨트롤러에서 넘어온 유저는 OSIV 옵션이 꺼져있으면 준영속상태이기 때문에, 다시 조회해서 영속상태인 객체에서 값을 변경해야 더티체킹이 일어난다.
+        user = userRepository.findById(user.getId()).get();
+        user.addImageUrl(uuid + file.getOriginalFilename());
+    }
 
     @Override
     public boolean idCheck(UserDto userDto) {
