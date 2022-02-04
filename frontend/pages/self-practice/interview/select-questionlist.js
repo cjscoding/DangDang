@@ -1,15 +1,35 @@
 import Link from "next/link";
 import { connect } from "react-redux";
 import styles from "../../../scss/self-practice/interview/select-questionlist.module.scss";
+import SockJS from "sockjs-client";
+import { WEBRTC_URL } from "../../../config"
 
 import { setQuestions } from "../../../store/actions/questionAction";
+import { connectSocket } from "../../../store/actions/wsAction";
+import { useEffect } from "react";
+
+function mapStateToProps(state) {
+  return {
+    ws: state.wsReducer.ws,
+  };
+}
 function mapDispatchToProps(dispatch) {
+  const ws = new SockJS(`${WEBRTC_URL}/recording`);
+  dispatch(connectSocket(ws))
   dispatch(setQuestions([]));
   return {};
 }
-export default connect(null, mapDispatchToProps)(SelectQuestions);
+export default connect(mapStateToProps, mapDispatchToProps)(SelectQuestions);
 
-function SelectQuestions() {
+function SelectQuestions({ws}) {
+  useEffect(()=>{
+    window.onbeforeunload = function() {
+      sendMessage({
+        id : 'del',
+      });
+      ws.close();
+    }
+  }, [])
   return <div className={styles.selectBox}>
     <Link href="/self-practice/interview/check-devices">
       <a>

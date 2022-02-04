@@ -1,14 +1,18 @@
 import { wrapper } from "../store";
+import Script from "next/script";
 import Layout from "../components/Layout";
 import "../scss/main.scss";
-import "@fortawesome/fontawesome-free/js/fontawesome";
-import "@fortawesome/fontawesome-free/js/solid";
-import "@fortawesome/fontawesome-free/js/regular";
-import "@fortawesome/fontawesome-free/js/brands";
+import { WEBRTC_URL } from "../config"
+// fontawesome
+import '@fortawesome/fontawesome-free/js/fontawesome'; 
+import '@fortawesome/fontawesome-free/js/solid'; 
+import '@fortawesome/fontawesome-free/js/regular'; 
+import '@fortawesome/fontawesome-free/js/brands';
 
 function MyApp({ Component, pageProps }) {
   return (
     <Layout>
+      <Script src={`${WEBRTC_URL}/js/kurento-utils.js`}></Script>
       <Component {...pageProps} />
     </Layout>
   );

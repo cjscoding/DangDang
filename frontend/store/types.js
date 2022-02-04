@@ -33,12 +33,19 @@ const userTypes = {
   MOVE_TEAMSTUDY: "MOVE_TEAMSTUDY",
 };
 
+const wsTypes = {
+  CONNECT_SOCKET: "CONNECT_SOCKET",
+  SET_WEB_SOCKET_SESSION_ID: "SET_WEB_SOCKET_SESSION_ID",
+  PUSH_RECORDED_QUESTION_IDX: "PUSH_RECORDED_QUESTION_IDX",
+  SET_SELECTED_QUESTION: "SET_SELECTED_QUESTION",
+}
+
 const types = {
   ...teamBoard,
   ...teamSpace,
   ...videoTypes,
   ...questionTypes,
   ...userTypes,
-};
-
+  ...wsTypes,
+}
 export default types;
