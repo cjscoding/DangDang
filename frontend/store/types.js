@@ -9,6 +9,7 @@ const teamBoard = {
 const teamSpace = {
   GET_RESUME: "GET_RESUME",
   NO_RESUME: "NO_RESUME",
+  GET_STUDYPOST: "GET_STUDYPOST",
 };
 
 const videoTypes = {
