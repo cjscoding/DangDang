@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .headers()
-                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Methods", "POST, GET, PATCH, DELETE, PUT"))
+ //               .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Methods", "POST, GET, PATCH, DELETE, PUT"))
                 .and()
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

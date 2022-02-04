@@ -16,7 +16,8 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("http://localhost:3000"); // Access-Control-Allow-Origin  (Response에 자동으로 추가해줌)
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("http://localhost:80"); // Access-Control-Allow-Origin  (Response에 자동으로 추가해줌)
 //        config.addAllowedOrigin("http://localhost:8080");
         config.addAllowedHeader("*");  // Access-Control-Request-Headers
         config.addAllowedMethod("*");
