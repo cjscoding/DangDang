@@ -33,6 +33,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 
 /**
@@ -402,8 +403,12 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
       String fileName = video+".webm";
 //      log.info("filePath : {}",filePath);
       log.info("fileName : {}",fileName);
-      storageService.delete(fileName);
-
+      try {
+        storageService.delete(fileName);
+      }catch (InvalidPathException e){
+          e.printStackTrace();
+          log.error("잘못된 경로입니다!");
+      }
 
 //      File deleteFile = new File(filePath);
 //      // 파일이 존재하는지 체크 존재할경우 true, 존재하지않을경우 false
@@ -414,6 +419,7 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
 //        log.info("파일이 없습니다.");
 //      }
     }
+    user.getVideos().clear();
     return;
   }
 }
