@@ -2,6 +2,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
+import MyFace from "../../../components/webRTC/MyFace";
+import ShowQuestion from "../../../components/webRTC/self-practice/ShowQuestion";
 import styles from "../../../scss/self-practice/interview/mainComponent.module.scss";
 
 function mapStateToProps(state) {
@@ -14,19 +16,20 @@ function mapStateToProps(state) {
     speakerId: state.videoReducer.speakerId,
   };
 }
-import { setWSSessionId, pushRecordedQuestionIdx } from "../../../store/actions/wsAction";
+import { setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion } from "../../../store/actions/wsAction";
 function mapDispatchToProps(dispatch) {
   return {
     setWSSessionId: (sessionId) => dispatch(setWSSessionId(sessionId)),
-    pushRecordedQuestionIdx: (idx) => dispatch(pushRecordedQuestionIdx(idx))
+    pushRecordedQuestionIdx: (idx) => dispatch(pushRecordedQuestionIdx(idx)),
+    setSelectedQuestion: (selectedQuestion) => dispatch(setSelectedQuestion(selectedQuestion)),
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Interview);
 
-function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSSessionId, pushRecordedQuestionIdx}) {
+function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion}) {
   const router = useRouter();
   const myFaceContainer = useRef();
-  const [isWait, setIsWait] = useState(true);
+  const [isWait, setIsWait] = useState(false);
   const [screenNum, setScreenNum] = useState(3);
   const [questionNum, setQuestionNum] = useState(0);
   const [volume, setVolume] = useState(30);
@@ -37,16 +40,22 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
   const skipBtn = useRef();
 
   useEffect(()=>{
+    setSelectedQuestion(questions[0])
     let questionNum2 = 0;
 
     let webRtcPeer;
-    const myFace = document.createElement("video");
-    myFace.autoplay = true;
-    myFace.controls = false;
-    myFace.playsInline = true;
-    myFace.width = "100%";
-    myFace.height = "100%";
-    myFaceContainer.current.appendChild(myFace);
+    const myFace = document.querySelector("#my-face");
+    // myFace.autoplay = true;
+    // myFace.controls = false;
+    // myFace.playsInline = true;
+    // myFace.width = "100%";
+    // myFace.height = "100%";
+    async function getStream() {
+      const stream = await navigator.mediaDevices.getUserMedia(getVideoConstraints());
+      myFace.srcObject = stream
+      // myFaceContainer.current.appendChild(myFace);
+    }
+    getStream();
     function sendMessage(msgObj) {
       const msgStr = JSON.stringify(msgObj);
       console.log(`SEND: ${msgStr}`);
@@ -79,12 +88,13 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
     }
     
     function record() {
+      // hideScreen();
       const options = {
-        remoteVideo: myFace,
+        localVideo: myFace,
         mediaConstraints : getVideoConstraints(),
         onicecandidate : onIceCandidate
       }
-      webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function(error) {
+      webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function(error) {
         if (error) return console.log(`ERROR! ${error}`);
         webRtcPeer.generateOffer(onOffer);
       });
@@ -153,7 +163,7 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
     function onIceCandidate(candidate) {
       sendMessage({
         id: "onIceCandidate",
-        candidate: candidate
+        candidate : candidate
       });
     }
 
@@ -170,6 +180,7 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
     }
     function restartQuestion() {
       record()
+      return false;
     }
     function saveAndNext() {
       save();
@@ -178,16 +189,20 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
         router.push(`/self-practice/interview/end`);
       }
       questionNum2 += 1
-      setQuestionNum(questionNum2)
-      record()
+      // setQuestionNum(questionNum2)
+      setSelectedQuestion(questions[questionNum2])
+      record();
+      return false;
     }
     function skipQuestion() {
       if(questionNum2 === questions.length - 1) {
         router.push(`/self-practice/interview/end`);
       }
       questionNum2 += 1
-      setQuestionNum(questionNum2)
-      record()
+      // setQuestionNum(questionNum2)
+      setSelectedQuestion(questions[questionNum2])
+      record();
+      return false;
     }
     volumeBtn.current.addEventListener("click", controlVolume);
     restartBtn.current.addEventListener("click", restartQuestion);
@@ -199,6 +214,7 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
       });
       ws.close();
     }
+    record();
     return () => {
       // volumeBtn.current.removeEventListener("click", controlVolume);
       // restartBtn.current.removeEventListener("click", restartQuestion);
@@ -217,8 +233,8 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
   </div>
   <div className={styles.container}>
     <div className={styles.videoContainer}>
-      <div style={isWait||screenNum!==1?{display: "none"}:{}} className={styles.video1}>{questions[questionNum]}</div>
-      <div style={isWait||screenNum!==2?{display: "none"}:{}} className={styles.video2} ref={myFaceContainer}></div>
+      <div style={isWait||screenNum!==1?{display: "none"}:{}} className={styles.video1}><ShowQuestion /></div>
+      <div style={isWait||screenNum!==2?{display: "none"}:{}} className={styles.video2}><video height={"360px"} width={"480px"} autoPlay id="my-face"></video></div>
       <div style={isWait||screenNum!==3?{display: "none"}:{}} className={styles.video3}>면접관 얼굴 나올 예정(아래 버튼으로 화면 바꾸셈)</div>
       <div style={!isWait?{display: "none"}:{}} className={styles.video4}>화면 기다리는 중</div>
       <div className={styles.changeBtn}>

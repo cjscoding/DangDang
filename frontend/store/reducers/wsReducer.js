@@ -4,6 +4,7 @@ const initialState = {
   ws: null,
   sessionId: null,
   recordedQuestionIdxes: [],
+  selectedQuestion: null,
 };
 
 const wsReducer = (state=initialState, action) => {
@@ -15,6 +16,8 @@ const wsReducer = (state=initialState, action) => {
     case types.PUSH_RECORDED_QUESTION_IDX:
       const recordedQuestionIdxes = [...state.recordedQuestionIdxes, action.idx]
       return {...state, recordedQuestionIdxes};
+    case types.SET_SELECTED_QUESTION:
+      return {...state, selectedQuestion: action.selectedQuestion};
     default:
       return state;
   }

@@ -20,3 +20,10 @@ export const pushRecordedQuestionIdx = (idx) => (
     idx,
   }
 );
+
+export const setSelectedQuestion = (selectedQuestion) => (
+  {
+    type: types.SET_SELECTED_QUESTION,
+    selectedQuestion,
+  }
+)

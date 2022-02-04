@@ -4,12 +4,11 @@ export default function ASDF(){
   const [counts, setCount] = useState([0])
   const [ok, setOk] = useState(true)
   let y = 1;
+
   useEffect(() => {
     console.log("마운트", counts[0])
   }, [counts])
 
-  console.log(+ new Date())
-  console.log(+ new Date())
   console.log("스크립트", counts[0])
   return<div>
     {counts.map(c => {
