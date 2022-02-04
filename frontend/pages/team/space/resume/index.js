@@ -103,6 +103,7 @@ function Resume({
               {member.nickName}
             </button>
           ))}
+          <button onClick={onMoveToAddResume}>자소서 등록</button>
         </div>
         <div>
           {selected ? (
@@ -112,12 +113,10 @@ function Resume({
                   {curResume?.map((resume, index) => (
                     <ResumeList resume={resume} key={index} index={index}/>
                   ))}
-                  <button onClick={onMoveToAddResume}>자소서 추가 등록</button>
                 </div>
               ) : (
                 <div>
                   <h1>아직 등록된 자소서가 없어요 ㅠㅠ</h1>
-                  <button onClick={onMoveToAddResume}>등록하기</button>
                 </div>
               )}
             </div>
