@@ -1,10 +1,11 @@
-import styles from "../../../scss/team/space/teamspace.module.scss";
-import Layout from "../../../components/team/space/layout";
+import styles from "../../../../scss/team/space/teamspace.module.scss";
+import Layout from "../../../../components/team/space/layout";
+import ResumeList from "../../../../components/team/space/resumeList";
 
-import { setRoomInfo } from "../../../store/actions/roomAction";
-import { setResume } from "../../../store/actions/resumeAction";
-import { getRoomInfo } from "../../../api/studyroom";
-import { getResume } from "../../../api/resume";
+import { setRoomInfo } from "../../../../store/actions/roomAction";
+import { setResume } from "../../../../store/actions/resumeAction";
+import { getRoomInfo } from "../../../../api/studyroom";
+import { getResume } from "../../../../api/resume";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
@@ -78,6 +79,15 @@ function Resume({
     );
   };
 
+  //자소서 등록 페이지로 이동
+  const onMoveToAddResume = () => {
+      router.push({
+          pathname:"/team/space/resume/create",
+          query:{
+              id:router.query.id,
+          }
+      })
+  }
   return (
     <div>
       <Layout
@@ -100,20 +110,14 @@ function Resume({
               {resumeLen > 0 ? (
                 <div>
                   {curResume?.map((resume, index) => (
-                    <div key={index}>
-                      <div>
-                        Q{index + 1} : {resume.question}
-                      </div>
-                      <div>
-                        A{index + 1} : {resume.answer}
-                      </div>
-                    </div>
+                    <ResumeList resume={resume} key={index} index={index}/>
                   ))}
+                  <button onClick={onMoveToAddResume}>자소서 추가 등록</button>
                 </div>
               ) : (
                 <div>
                   <h1>아직 등록된 자소서가 없어요 ㅠㅠ</h1>
-                  <button>등록하기</button>
+                  <button onClick={onMoveToAddResume}>등록하기</button>
                 </div>
               )}
             </div>
