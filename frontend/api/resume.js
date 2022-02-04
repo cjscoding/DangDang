@@ -13,4 +13,7 @@ export const getResume = async (userId, success, fail) => {
 };
 
 //자소서 update
+export const updateResume = async (data, success, fail) => {
+    await api.patch(`/resume/${data.resumeId}`, data.req).then(success).catch(fail);
+}
 //자소서 delete
