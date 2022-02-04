@@ -38,22 +38,11 @@ function Resume({
   setResume,
 }) {
   const router = useRouter();
+  const [selected, setSelected] = useState(false);
   const [resumeLen, setResumeLen] = useState(0);
 
   useEffect(() => {
     if (!router.isReady) return;
-    getResume(
-      userInfo.id,
-      (res) => {
-        const resArray = res.data.response;
-        setResume(resArray);
-        setResumeLen(resArray.length);
-        console.log(res, "자소서 불러오기 성공");
-      },
-      (err) => {
-        console.log(err, "자소서 불러오기 실패");
-      }
-    );
     getRoomInfo(
       router.query.id,
       (res) => {
@@ -80,6 +69,7 @@ function Resume({
         const resArray = res.data.response;
         setResume(resArray);
         setResumeLen(resArray.length);
+        setSelected(true);
         console.log(res, "자소서 불러오기 성공");
       },
       (err) => {
@@ -104,24 +94,32 @@ function Resume({
             </button>
           ))}
         </div>
-        <div className="list">
-          {resumeLen > 0 ? (
-            <div>
-              {curResume?.map((resume, index) => (
-                <div key={index}>
-                  <div>
-                    Q{index + 1} : {resume.question}
-                  </div>
-                  <div>
-                    A{index + 1} : {resume.answer}
-                  </div>
+        <div>
+          {selected ? (
+            <div className="list">
+              {resumeLen > 0 ? (
+                <div>
+                  {curResume?.map((resume, index) => (
+                    <div key={index}>
+                      <div>
+                        Q{index + 1} : {resume.question}
+                      </div>
+                      <div>
+                        A{index + 1} : {resume.answer}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <div>
+                  <h1>아직 등록된 자소서가 없어요 ㅠㅠ</h1>
+                  <button>등록하기</button>
+                </div>
+              )}
             </div>
           ) : (
-            <div>
-              <h1>아직 등록된 자소서가 없어요 ㅠㅠ</h1>
-              <button>등록하기</button>
+            <div className="list">
+              <p>조회하실 팀원을 선택해주세요!</p>
             </div>
           )}
         </div>

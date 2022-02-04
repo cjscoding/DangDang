@@ -120,9 +120,9 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
 
         <span>생성일</span>
         <div>
-          {roomInfo.createdAt?.slice(0, 3).map((date, index) => (
-            <span key={index}>{date}. </span>
-          ))}
+          {/* {roomInfo.createdAt
+            ? `${createdAt[0]}${createdAt[1]}${createdAt[2]}${createdAt[3]}. ${createdAt[5]}${createdAt[6]}. ${createdAt[8]}${createdAt[9]}`
+            : null} */}
         </div>
 
         <span>목표</span>
