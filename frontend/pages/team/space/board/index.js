@@ -102,7 +102,16 @@ function Board({ roomInfo, roomHost, userInfo, posts, setRoomInfo, setPosts }) {
       />
       <div className={styles.container}>
         <h1>회사정보공유페이지</h1>
-        <button className={styles.createBtn}>글 작성</button>
+        <Link
+          href={{
+            pathname: "/team/space/board/create",
+            query: {
+              id: router.query.id,
+            },
+          }}
+        >
+          <a>글작성</a>
+        </Link>
         <div className={styles.table}>
           <table>
             <thead>
@@ -112,22 +121,28 @@ function Board({ roomInfo, roomHost, userInfo, posts, setRoomInfo, setPosts }) {
                 <th>작성일</th>
               </tr>
             </thead>
-            {posts?.map((post, index) => (
-              <tbody key={index}>
-                <td>
-                  <Link
-                    href={{
-                      pathname: "/team/space/board/post",
-                      query: { post: JSON.stringify({ post }) },
-                    }}
-                  >
-                    <a>{post.title}</a>
-                  </Link>
-                </td>
-                <td>{post.writer.nickName}</td>
-                <td>{post.createdAt.slice(0, 10)}</td>
-              </tbody>
-            ))}
+            <tbody>
+              {posts?.map((post, index) => (
+                <tr key={index}>
+                  <td>
+                    <Link
+                      href={{
+                        pathname: "/team/space/board/post",
+                        query: {
+                          id: router.query.id,
+                          post: JSON.stringify({ post }),
+                        },
+                      }}
+                      as={`/team/space/board/post/${router.query.id}`}
+                    >
+                      <a>{post.title}</a>
+                    </Link>
+                  </td>
+                  <td>{post.writer.nickName}</td>
+                  <td>{post.createdAt.slice(0, 10)}</td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
         <Pagination
