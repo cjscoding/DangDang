@@ -8,22 +8,18 @@ import com.ssafy.dangdang.domain.dto.LoginRequest;
 import com.ssafy.dangdang.domain.dto.SignUp;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.exception.BadRequestException;
-import com.ssafy.dangdang.exception.ExtantUserException;
 import com.ssafy.dangdang.service.StorageService;
 import com.ssafy.dangdang.service.UserService;
-import com.ssafy.dangdang.util.ApiUtils;
 import com.ssafy.dangdang.util.JwtUtil;
 import com.ssafy.dangdang.util.RedisUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -88,7 +84,7 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     public ApiResult<String> uploadImage(@CurrentUser PrincipalDetails userPrincipal,
                                          @Parameter(
-                                                 description = "Files to be uploaded",
+                                                 description = "업로드할 이미지",
                                                  content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)  // Won't work without OCTET_STREAM as the mediaType.
                                                  ) MultipartFile image) throws IOException {
         log.info("user image 등록 {}", image.getOriginalFilename());
@@ -96,6 +92,28 @@ public class UserController {
         storageService.imageStore(uuid.toString(), image);
         userService.uploadImage(userPrincipal.getUser(), uuid.toString(), image);
         return success("등록 성공");
+    }
+
+    @Operation(summary = "유저 프로필 이미지 수정")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "유저 프로필 이미지 수정 성공")
+    })
+    @PatchMapping(value = "/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<String> updateImage(@CurrentUser PrincipalDetails userPrincipal,
+                                         @Parameter(
+                                                 description = "수정될 이미지",
+                                                 content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)  // Won't work without OCTET_STREAM as the mediaType.
+                                         ) MultipartFile image) throws IOException {
+
+        if (userPrincipal.getUser().getImageUrl() != null){
+            storageService.deleteImage(userPrincipal.getUser().getImageUrl());
+        }
+        log.info("user image 수정 {}", image.getOriginalFilename());
+        UUID uuid = UUID.randomUUID();
+        storageService.imageStore(uuid.toString(), image);
+        userService.uploadImage(userPrincipal.getUser(), uuid.toString(), image);
+        return success("수정 성공");
     }
 
     @Operation(summary = "회원정보 수정")

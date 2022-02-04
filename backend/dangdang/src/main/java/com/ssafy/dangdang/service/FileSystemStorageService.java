@@ -120,6 +120,16 @@ public class FileSystemStorageService implements StorageService {
     }
   }
 
+  @Override
+  public void deleteImage(String fileName) throws FileNotFoundException {
+    try {
+      File file = new File(Paths.get(imageLocation + fileName).toString());
+      if(file.delete())
+        log.info(file.getName() + " has deleted");
+    } catch (SecurityException se) {
+      throw new SecurityException(se.getMessage());
+    }
+  }
 
   @PostConstruct
   public void init() {

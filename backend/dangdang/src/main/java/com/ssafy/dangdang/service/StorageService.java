@@ -1,6 +1,5 @@
 package com.ssafy.dangdang.service;
 
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,4 +20,6 @@ public interface StorageService {
     Path load(String filename);
 
     Resource loadAsResource(String filename);
+
+    void deleteImage(String fileName) throws FileNotFoundException;
 }
