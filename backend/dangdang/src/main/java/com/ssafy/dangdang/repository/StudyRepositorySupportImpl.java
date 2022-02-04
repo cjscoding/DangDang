@@ -72,7 +72,7 @@ public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport imple
     }
 
 
-    private BooleanExpression uesrEq(User registeredUser){
+    private BooleanExpression userEq(User registeredUser){
         return registeredUser != null ? joins.user.eq(registeredUser) : null;
     }
 
@@ -84,7 +84,7 @@ public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport imple
     private BooleanExpression isJoinedUser(User registeredUser){
        return study.in(select(joins.study)
                 .from(joins)
-                .where(uesrEq(registeredUser).and(waitingEqFalse()))) ;
+                .where(userEq(registeredUser).and(waitingEqFalse()))) ;
 
     }
 

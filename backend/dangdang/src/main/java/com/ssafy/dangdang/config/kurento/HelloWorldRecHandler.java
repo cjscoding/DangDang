@@ -156,7 +156,7 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
       UserSession user= registry.getById(session.getId());
 
       if(user == null){
-        user = new UserSession(session.getId(),"soloRoom",session, pipeline);
+        user = new UserSession(session.getId(),session.getId(),session, pipeline);
         registry.register(user);
       }
       user.setMediaPipeline(pipeline);
