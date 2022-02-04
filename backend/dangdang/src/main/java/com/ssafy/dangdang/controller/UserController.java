@@ -5,6 +5,7 @@ import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetailsService;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.LoginRequest;
+import com.ssafy.dangdang.domain.dto.SignUp;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.exception.BadRequestException;
 import com.ssafy.dangdang.exception.ExtantUserException;
@@ -64,19 +65,14 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "회원 가입 성공")
     })
     @PostMapping()
-    public ApiResult<UserDto> signUp(@RequestBody @Valid UserDto userDto) {
+    public ApiResult<UserDto> signUp(@RequestBody @Valid SignUp signUp) {
 
-
-        log.info("user SignUp {}", userDto.toString());
-        try {
-            userService.signUpUser(userDto);
-            return success(userDto);
-        }catch (ExtantUserException e){
-            e.printStackTrace();
-            return (ApiResult<UserDto>) error(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
+        log.info("user SignUp {}", signUp.toString());
+        UserDto user = UserDto.of(signUp);
+        userService.signUpUser(user);
+        return success(user);
     }
+
     @Operation(summary = "회원정보 수정")
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공")
@@ -85,13 +81,10 @@ public class UserController {
     public ApiResult<UserDto> updateUser(@RequestBody @Valid UserDto userDto) {
 
         log.info("user Update {}", userDto.toString());
-        try {
-            userService.updateUser(userDto);
-            return success(userDto);
-        }catch (ExtantUserException e){
-            e.printStackTrace();
-            return (ApiResult<UserDto>) error(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
+        userService.updateUser(userDto);
+        return success(userDto);
+
 
     }
 

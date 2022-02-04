@@ -62,6 +62,17 @@ public class UserDto {
 
     }
 
+    public static UserDto of(SignUp user) {
+        return UserDto.builder()
+                .id(user.getId())
+                .email(user.getEmail().toString())
+                .nickName(user.getNickName())
+                .password(user.getPassword())
+                .role(UserRoleType.USER)
+                .build();
+
+    }
+
 
 
 }
