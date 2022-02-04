@@ -6,12 +6,16 @@ const initialState = {
     email: "",
     nickName: "",
   },
+  isLogin: false,
   showModal: false,
   isLoginModal: false,
+  isMoveTeamStudy: false,
 };
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
+    case types.SET_ISLOGIN:
+      return { ...state, isLogin: action.isLogin };
     case types.SET_USERINFO:
       return { ...state, user: { ...action.userInfo } };
     case types.SET_SHOWMODAL:
@@ -28,6 +32,8 @@ const userReducer = (state = initialState, action) => {
         showModal: false,
         isLoginModal: false,
       };
+    case types.MOVE_TEAMSTUDY:
+      return { ...state, isMoveTeamStudy: action.isMoveTeamStudy };
     default:
       return state;
   }

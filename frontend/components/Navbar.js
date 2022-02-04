@@ -6,16 +6,18 @@ import {
   resetUserInfo,
   setIsLoginModal,
   setShowModal,
+  setIsLogin,
+  setIsMoveTeamStudy,
 } from "../store/actions/userAction";
 import styles from "../scss/layout/navbar.module.scss";
 import Modal from "./layout/Modal";
 import Login from "./user/Login";
 import Signup from "./user/Signup";
-import { useEffect, useState } from "react";
 
 function mapStateToProps({ userReducer }) {
   return {
     user: userReducer.user,
+    isLogin: userReducer.isLogin,
     isLoginModal: userReducer.isLoginModal,
   };
 }
@@ -25,6 +27,9 @@ function mapDispatchToProps(dispatch) {
     setShowModal: (show) => dispatch(setShowModal(show)),
     setIsLoginModal: (isLoginModal) => dispatch(setIsLoginModal(isLoginModal)),
     resetUserInfo: () => dispatch(resetUserInfo()),
+    setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
+    setIsMoveTeamStudy: (isMoveTeamStudy) =>
+      dispatch(setIsMoveTeamStudy(isMoveTeamStudy)),
   };
 }
 
@@ -32,37 +37,29 @@ export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
 
 function NavBar({
   user,
+  isLogin,
+  setIsLogin,
   isLoginModal,
   setShowModal,
   setIsLoginModal,
   resetUserInfo,
+  setIsMoveTeamStudy,
 }) {
   const router = useRouter();
   const logOut = () => {
     logoutRequest(
       (response) => {
-        console.log(response);
         localStorage.removeItem("authorization");
         localStorage.removeItem("refreshtoken");
 
         // 로그아웃 시 삭제해야 하는 store 값들 추가로 삭제 바람!
         resetUserInfo();
+        setIsLogin(false);
         router.push("/");
       },
       (error) => console.log(error)
     );
   };
-
-  const [isLogin, setIsLogin] = useState(false);
-  useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      localStorage.getItem("authorization") &&
-      localStorage.getItem("refreshtoken")
-    ) {
-      setIsLogin(true);
-    } else setIsLogin(false);
-  }, [user]);
 
   return (
     <nav className={styles.navbar}>
@@ -78,9 +75,22 @@ function NavBar({
           </Link>
         </li>
         <li>
-          <Link href="/user/mypage/myroom">
-            <a>같이연습한당</a>
-          </Link>
+          {isLogin ? (
+            <Link href="/user/mypage/myroom">
+              <a>같이연습한당</a>
+            </Link>
+          ) : (
+            <a
+              onClick={() => {
+                setShowModal(true);
+                setIsLoginModal(true);
+                setIsMoveTeamStudy(true);
+              }}
+              tabIndex="0"
+            >
+              같이연습한당
+            </a>
+          )}
         </li>
         <li>
           <Link href="/team/board">
