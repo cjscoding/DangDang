@@ -43,22 +43,35 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
   //pagination
   const [curPage, setCurPage] = useState(0);
   const [postsPerPage] = useState(6);
-  const [keyword, setKeyword] = useState("");
+  const [searchTags, setSearchTags] = useState([]);
   const paginate = (pageNumber) => setCurPage(pageNumber);
 
   //filtering keyword
-  const onAddKeyword = (event) => {
+  const onAddTag = (event) => {
+    event.preventDefault();
     if (event.key === "Enter") {
-      setKeyword(event.target.value);
-      event.target.value = "";
-      setCurPage(0);
+      const newTag = event.target.value;
+      if (newTag == "") {
+        console.log("키워드를 입력해주세요.");
+      } else if (searchTags.indexOf(newTag) === -1) {
+        setSearchTags([...searchTags, newTag]);
+        event.target.value = "";
+        setCurPage(0);
+      } else {
+        console.log("이미 존재하는 키워드입니다.");
+        event.target.value = "";
+      }
     }
+  };
+  const onRemoveTag = (event) => {
+    setSearchTags(searchTags.filter((tag) => tag != event.target.value));
+    setCurPage(0);
   };
 
   // 스터디룸 조회
   useEffect(() => {
     const param = {
-      hashtags: keyword,
+      hashtags: searchTags.join(","),
       page: curPage,
       size: postsPerPage,
     };
@@ -76,7 +89,7 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
         console.log(err, "마이스터디를 조회할 수 없습니다.");
       }
     );
-  }, [keyword, curPage]);
+  }, [searchTags, curPage]);
 
   return (
     <div>
@@ -91,10 +104,20 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
               <div className={styles.filter}>
                 <input
                   type="text"
-                  onKeyPress={onAddKeyword}
+                  onKeyUp={onAddTag}
                   placeholder="키워드 검색..."
                 />
-                <p>key : {keyword}</p>
+                <div>
+                  tag :{" "}
+                  {searchTags.map((tag, index) => (
+                    <div key={index}>
+                      {tag}{" "}
+                      <button value={tag} onClick={onRemoveTag}>
+                        x
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             <button>
