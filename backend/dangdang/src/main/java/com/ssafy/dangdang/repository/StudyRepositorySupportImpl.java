@@ -1,19 +1,12 @@
 package com.ssafy.dangdang.repository;
 
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.ssafy.dangdang.domain.*;
-import com.ssafy.dangdang.domain.dto.StudyDto;
-import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.repository.support.Querydsl4RepositorySupport;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.querydsl.jpa.JPAExpressions.select;
 
@@ -32,56 +25,81 @@ public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport imple
 
 
     @Override
-    public List<StudyDto> getStudiesJoined(User registeredUser) {
+    public List<Study> getStudiesJoined(User registeredUser, List<String> hashtags) {
         List<Study> studies = select(study)
                 .from(study)
                 .join(study.host, user).fetchJoin()
-                .join(study.hashTags, studyHashTag).fetchJoin()
-                .where(study.in(select(joins.study)
-                        .from(joins)
-                        .where(joins.user.eq(registeredUser).and(joins.waiting.eq(false))))).fetch();
+          //      .join(study.hashTags, studyHashTag).fetchJoin() //일대다 컬랙션 페이지네이션을 위해 지연로딩으로 처리함
+                .where(isJoinedUser(registeredUser),
+                        containsHashTags(hashtags) ).fetch();
 
-        return studies.stream().map(StudyDto::of).collect(Collectors.toList());
+        return studies;
     }
 
     @Override
-    public Page<StudyDto> getStudiesJoinedWithPage(User registeredUser, Pageable pageable) {
+    public Page<Study> getStudiesJoinedWithPage(User registeredUser,List<String> hashtags,  Pageable pageable) {
 
-        Page<Study> studys = applyPagination(pageable, contentQuery -> contentQuery
+        Page<Study> studies = applyPagination(pageable, contentQuery -> contentQuery
                         .selectDistinct(study)
                         .from(study)
                         .join(study.host, user).fetchJoin()
-                        .join(study.hashTags, studyHashTag).fetchJoin()
-                        .where(study.in(select(joins.study)
-                                .from(joins)
-                                .where(joins.user.eq(registeredUser).and(joins.waiting.eq(false)))))
+            //            .join(study.hashTags, studyHashTag).fetchJoin()
+                        .where( isJoinedUser(registeredUser),
+                                containsHashTags(hashtags))
                 , countQuery -> countQuery
                         .select(study.id)
                         .from(study)
-                        .where(study.in(select(joins.study)
-                                .from(joins)
-                                .where(joins.user.eq(registeredUser).and(joins.waiting.eq(false))))));
-        return studys.map(StudyDto::of);
+                        .where(isJoinedUser(registeredUser),
+                                containsHashTags(hashtags)));
+        return studies ;
 
     }
 
-//    @Override
-//    public List<Study> findFetchJoinStudyById(Long studyId) {
-//
-////    @Query("select s " +
-////            "from Study s " +
-////            "left join s.hashTags " +
-////            "left join fetch s.joins " +
-////            "where s.id = :studyId ")
-//        List<Study> fetch = select(study)
-//                .from(study)
-//                .leftJoin(study.hashTags).fetchJoin()
-//                .leftJoin(study.joins).fetchJoin()
-//                .where(study.id.eq(studyId))
-//                .fetch();
-//        return fetch;
-//
-//    }
+    @Override
+    public Page<Study> findStudiesByHashtags(List<String> hashtags, Pageable pageable){
+
+        Page<Study> studies = applyPagination(pageable, contentQuery -> contentQuery
+                        .selectDistinct(study)
+                        .from(study)
+                        .join(study.host, user).fetchJoin()
+                        .where(containsHashTags(hashtags))
+                , countQuery -> countQuery
+                        .selectDistinct(study)
+                        .from(study)
+//                        .join(study.host, user).fetchJoin()
+                        .where(containsHashTags(hashtags) ));
+        return studies ;
+    }
+
+
+    private BooleanExpression userEq(User registeredUser){
+        return registeredUser != null ? joins.user.eq(registeredUser) : null;
+    }
+
+    private BooleanExpression waitingEqFalse(){
+        return joins.waiting.eq(false);
+    }
+
+
+    private BooleanExpression isJoinedUser(User registeredUser){
+       return study.in(select(joins.study)
+                .from(joins)
+                .where(userEq(registeredUser).and(waitingEqFalse()))) ;
+
+    }
+
+    private BooleanExpression containsHashTags(List<String> hashtags){
+        if (hashtags == null || hashtags.isEmpty()) return null;
+
+        return study.in(select(studyHashTag.study)
+                .from(studyHashTag)
+                .where( studyHashTag.hashTag.in(hashtags))) ;
+    }
+
+
+
+
+
 
 
 }

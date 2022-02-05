@@ -72,7 +72,7 @@ public class ResumeServiceImpl implements ResumeService{
     public ApiUtils.ApiResult<String> deleteResume(User user, Long resumeId) {
         Optional<Resume> resume = resumeRepository.findById(resumeId);
         if(!resume.isPresent()) throw new NullPointerException("존재하지 않는 자소서 입니다.");
-        if (resume.get().getUser().getId() == user.getId())
+        if (resume.get().getUser().getId() != user.getId())
             throw new UnauthorizedAccessException("자신의 자소서만 삭제할 수 있습니다.");
         List<Comment> comments = commentRepository.findAllByReferenceIdAndDepthAndCommentType(resumeId, 0, CommentType.RESUME);
         comments.forEach(commentRepository::recurDelete);

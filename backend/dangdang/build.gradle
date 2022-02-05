@@ -52,7 +52,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // Project으로 데이터 조회할 때, 조회하지는 않는 연관엔티티 들이 프록시 상태여서 에러가 발생
-    // 이 라이브러르는 그런 친구들에게 null을 대입해준다
+    // 이 라이브러리는 그런 친구들에게 null을 대입해준다
      implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate5")
 
     // Jwt 관련설정
@@ -71,12 +71,26 @@ dependencies {
 
     //MongoDB 관련 설정
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-
+    //Exception Handler
     implementation 'com.google.code.gson:gson'
     implementation 'org.apache.httpcomponents:httpclient'
 
+    //Kurento 설정
+    implementation 'org.springframework:spring-websocket:5.3.15'
+    implementation 'org.webjars:webjars-locator:0.42'
+    implementation 'org.webjars.bower:jquery:3.6.0'
+    implementation 'org.webjars.bower:bootstrap:5.1.3'
+    implementation 'org.webjars.bower:demo-console:1.5.1'
+    implementation 'org.webjars.bower:ekko-lightbox:5.2.0'
+    implementation 'org.webjars.bower:webrtc-adapter:7.4.0'
+    implementation 'org.kurento:kurento-client:6.16.3'
+    implementation 'org.kurento:kurento-utils-js:6.15.0'
+    implementation 'commons-io:commons-io:2.11.0'
+
+
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
+//    developmentOnly 'org.apache.tomcat.embed:tomcat-embed-jasper:10.0.14'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor" //matterMost
     annotationProcessor 'org.projectlombok:lombok'
@@ -85,10 +99,10 @@ dependencies {
 }
 
 /** * comileQuerydsl.doFirst 추가 */
-//compileQuerydsl.doFirst {
-//    if(file(querydslDir).exists() )
-//        delete(file(querydslDir))
-//}
+compileQuerydsl.doFirst {
+    if(file(querydslDir).exists() )
+        delete(file(querydslDir))
+}
 
 
 

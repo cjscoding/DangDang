@@ -3,6 +3,7 @@ package com.ssafy.dangdang.controller;
 import com.ssafy.dangdang.config.security.CurrentUser;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
 import com.ssafy.dangdang.domain.InterviewQuestion;
+import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
 import com.ssafy.dangdang.domain.dto.WriteInterview;
 import com.ssafy.dangdang.service.InterviewQuestionService;
@@ -14,6 +15,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +36,9 @@ public class InterviewQuestionController {
     private final InterviewQuestionService interviewQuestionService;
 
 
-    @Operation(summary = "스터디 조회", description = "개설된 모든 스터디를 요청한 페이지 만큼 조회, 서버 과부화 예방을 위해 댓글은 조회되지 않습니다.")
+    @Operation(summary = "면접 질문 등록")
     @ApiResponses( value = {
-            @ApiResponse(responseCode = "200", description = "스터디 조회 성공")
+            @ApiResponse(responseCode = "200", description = "면접 질문 등록 성공")
     })
     @PostMapping()
     @PreAuthorize("hasRole('USER')")
@@ -42,18 +46,33 @@ public class InterviewQuestionController {
             @CurrentUser PrincipalDetails userPrincipal,
             @RequestBody WriteInterview writeInterview){
         InterviewQuestionDto interviewQuestionDto = InterviewQuestionDto.of(writeInterview);
+        interviewQuestionDto.setVisable(false);
         InterviewQuestionDto createdQuestion = interviewQuestionService.writeQuestion(userPrincipal.getUser(), interviewQuestionDto);
         return success(createdQuestion);
 
     }
 
-    @Operation(summary = "모든 면접 질문 조회")
+    @Operation(summary = "모든 면접 질문 조회", description= "Visable이 true이거나 로그인한 유저가 작성한 면접질문들만 조회, 비로그인 시 Visable이 true인 면접 질문만  조회")
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "모든 면접 질문 조회 성공")
     })
     @GetMapping()
-    public ApiResult<List<InterviewQuestionDto>> getAllInterviewQuestion(){
-        return success(interviewQuestionService.getAllInterviewQustion());
+    public ApiResult<Page<InterviewQuestionDto>> getAllVisableInterviewQustion(@CurrentUser PrincipalDetails userPrincipal,
+                                                                               @ParameterObject Pageable pageable){
+        User writer = null;
+        if (userPrincipal != null) writer = userPrincipal.getUser();
+        return success(interviewQuestionService.getAllVisableInterviewQustion(writer, pageable));
+    }
+
+    @Operation(summary = "내가 등록한 면접 질문만 조회", description = "visable 값에 상관없이, 내가 작성한 질문들 조회")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "내가 등록한 면접 질문만 조회 성공")
+    })
+    @GetMapping("/mine")
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<Page<InterviewQuestionDto>> getMyQuestion(@CurrentUser PrincipalDetails userPrincipal,
+                                                               @ParameterObject Pageable pageable){
+        return success(interviewQuestionService.getMyQuestion(userPrincipal.getUser(), pageable));
     }
 
     @Operation(summary = "면접 질문 삭제")
@@ -82,6 +101,7 @@ public class InterviewQuestionController {
         if(!question.isPresent()) throw new NullPointerException("없는 질문 입니다");
         InterviewQuestionDto interviewQuestionDto = InterviewQuestionDto.of(writeInterview);
         interviewQuestionDto.setId(interviewQuestionId);
+        interviewQuestionDto.setVisable(false);
         InterviewQuestionDto createdQuestion = interviewQuestionService.writeQuestion(userPrincipal.getUser(), interviewQuestionDto);
         return success(createdQuestion);
 
