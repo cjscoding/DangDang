@@ -2,7 +2,7 @@ import styles from "../../../scss/team/board/create-room.module.scss";
 import Title from "../../../components/layout/title";
 import Link from "next/link";
 
-import { createRoom } from "../../../api/studyroom";
+import { createRoom, addRoomImg } from "../../../api/studyroom";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -20,6 +20,7 @@ export default function CreateRoom() {
 
   const [roomInfo, setRoomInfo] = useState(roomInit);
   const [roomTags, setRoomTags] = useState([]);
+  const [image, setImage] = useState("");
 
   //final submit
   const onSubmit = (event) => {
@@ -34,12 +35,26 @@ export default function CreateRoom() {
       newInfo,
       (res) => {
         console.log(res, "스터디 생성 완료!");
+        const data = {
+          studyId: res.data.response.id,
+          image,
+        };
+        addRoomImg(
+          data,
+          (res) => {
+            console.log(res, "스터디 이미지 등록 성공");
+          },
+          (err) => {
+            console.log(err, "스터디 이미지 등록 실패");
+          }
+        );
       },
       (err) => {
         console.log(err, "스터디를 생성할 수 없습니다.");
       }
     );
-    router.push("/team/board");
+
+    // router.push("/team/board");
   };
 
   //input values
@@ -58,15 +73,25 @@ export default function CreateRoom() {
   const onAddTag = (event) => {
     event.preventDefault();
     const newTag = event.target[0].value;
-    setRoomTags([...roomTags, newTag]);
-    event.target[0].value = "";
+    if (newTag == "") {
+      console.log("키워드를 입력해주세요.");
+    } else if (roomTags.indexOf(newTag) === -1) {
+      setRoomTags([...roomTags, newTag]);
+      event.target[0].value = "";
+    } else {
+      console.log("이미 존재하는 키워드입니다.");
+      event.target[0].value = "";
+    }
   };
-  
+
   const onRemoveTag = (event) => {
     event.preventDefault();
     const removeTag = event.target[0].value;
     setRoomTags(roomTags.filter((tag) => tag !== removeTag));
   };
+
+  //studyroom image
+  const onSetImage = (event) => setImage(event.target.files[0].name);
 
   return (
     <div className={styles.container}>
@@ -122,16 +147,21 @@ export default function CreateRoom() {
             <button>태그 추가</button>
           </div>
         </form>
+        <div></div>
         <div>
           {roomTags?.map((tag, index) => (
             <form onSubmit={onRemoveTag} key={index}>
               <div>
                 <input type="text" value={tag} disabled />
-                <button>태그 삭제</button>
+                <button>x</button>
               </div>
             </form>
           ))}
         </div>
+        <div className=""></div>
+        <img src={image} alt="" />
+        <label htmlFor="profile">프로필 사진</label>
+        <input type="file" name="profile" onChange={onSetImage} />
       </div>
 
       <div className={styles.btns}>
