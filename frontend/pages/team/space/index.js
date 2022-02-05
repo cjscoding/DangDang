@@ -214,6 +214,7 @@ function TeamSpace({
         name={roomInfo.name}
         host={roomHost.nickName}
         createdAt={roomInfo.createdAt}
+        image={roomInfo.imageUrl}
       />
       <div className={styles.container}>
         <div className={styles.info}>

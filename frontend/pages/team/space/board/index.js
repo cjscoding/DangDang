@@ -99,6 +99,7 @@ function Board({ roomInfo, roomHost, userInfo, posts, setRoomInfo, setPosts }) {
         name={roomInfo.name}
         host={roomHost.nickName}
         createdAt={roomInfo.createdAt}
+        image={roomInfo.imageUrl}
       />
       <div className={styles.container}>
         <h1>회사정보공유페이지</h1>

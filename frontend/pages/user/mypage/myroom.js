@@ -135,12 +135,16 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
                   key={room.id}
                   onClick={() => onDetail(room.id)}
                 >
-                  <Image
-                    src="/vercel.svg"
-                    alt="Vercel Logo"
-                    width={300}
-                    height={250}
-                  />
+                  {room.imageUrl !== null ? (
+                    <img src={`https://localhost:8443/files/images/${room.imageUrl}`} width="300" height="200" alt="" />
+                    ) : (
+                      <Image
+                        src='/vercel.svg'
+                        alt="Vercel Logo"
+                        width={300}
+                        height={250}
+                      />
+                )}
                   <span> {room.id}</span>
                   <span> {room.name}</span>
                   <span> {room.goal}</span>

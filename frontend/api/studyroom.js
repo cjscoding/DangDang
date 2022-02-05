@@ -34,3 +34,23 @@ export const updateRoom = async (data, success, fail) => {
     .then(success)
     .catch(fail);
 };
+
+//스터디 이미지 등록
+export const addRoomImg = async (data, success, fail) => {
+  const formData = new FormData();
+  formData.append("image", data.image);
+  await api
+    .post(`/study/${data.studyId}/image`, formData)
+    .then(success)
+    .catch(fail);
+};
+
+//스터디 이미지 수정
+export const updateRoomImg = async (data, success, fail) => {
+  const formData = new FormData();
+  formData.append("image", data.image);
+  await api
+    .patch(`/study/${data.studyId}/image`, formData)
+    .then(success)
+    .catch(fail);
+};
