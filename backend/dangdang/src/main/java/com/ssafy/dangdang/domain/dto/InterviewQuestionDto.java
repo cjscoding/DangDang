@@ -33,7 +33,7 @@ public class InterviewQuestionDto {
                 .field(writeInterview.getField())
                 .question(writeInterview.getQuestion())
                 .answer(writeInterview.getAnswer())
-                .visable(writeInterview.isVisable())
+                .visable(false)
                 .build();
     }
 
@@ -43,6 +43,7 @@ public class InterviewQuestionDto {
                 .question(interviewQuestion.getQuestion())
                 .answer(interviewQuestion.getAnswer())
                 .field(interviewQuestion.getField())
+                .visable(interviewQuestion.getVisable())
                 .writer(UserDto.of(interviewQuestion.getWriter()))
                 .build();
     }

@@ -66,13 +66,13 @@ public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport imple
                 , countQuery -> countQuery
                         .selectDistinct(study)
                         .from(study)
-                        .join(study.host, user).fetchJoin()
+//                        .join(study.host, user).fetchJoin()
                         .where(containsHashTags(hashtags) ));
         return studies ;
     }
 
 
-    private BooleanExpression uesrEq(User registeredUser){
+    private BooleanExpression userEq(User registeredUser){
         return registeredUser != null ? joins.user.eq(registeredUser) : null;
     }
 
@@ -84,7 +84,7 @@ public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport imple
     private BooleanExpression isJoinedUser(User registeredUser){
        return study.in(select(joins.study)
                 .from(joins)
-                .where(uesrEq(registeredUser).and(waitingEqFalse()))) ;
+                .where(userEq(registeredUser).and(waitingEqFalse()))) ;
 
     }
 

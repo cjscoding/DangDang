@@ -46,8 +46,8 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(handler(), "/recording");
-        registry.addHandler(groupCallHandler(), "/groupcall").setAllowedOrigins("http://localhost:3000").withSockJS();
+        registry.addHandler(handler(), "/recording").setAllowedOrigins("http://localhost:3000","http://localhost:80").withSockJS();
+        registry.addHandler(groupCallHandler(), "/groupcall").setAllowedOrigins("http://localhost:3000", "http://localhost:80").withSockJS();
     }
 
     @Bean

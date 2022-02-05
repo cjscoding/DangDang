@@ -20,6 +20,7 @@
 <script src="webjars/ekko-lightbox/dist/ekko-lightbox.min.js"></script>
 <script src="/webjars/webrtc-adapter/release/adapter.js"></script>
 <script src="webjars/demo-console/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 
 <script src="js/kurento-utils.js"></script>
 <script src="js/index.js"></script>
@@ -61,8 +62,11 @@
 					poster="img/person.png"></video>
 			</div>
 			<div class="col-md-2">
+				<!-- start함수 매개변수 -->
+				<label for="fileName"> 저장파일 이름
+					<input type="text" id="fileName" name="fileName">
 				<a id="start" href="#" class="btn btn-success"
-					onclick="start(); return false;"><span
+					onclick="start('test'); return false;"><span
 					class="glyphicon glyphicon-play"></span> Start</a><br> <br> <a
 					id="stop" href="#" class="btn btn-danger"
 					onclick="stop(); return false;"><span
@@ -74,18 +78,17 @@
 			<div class="col-md-5">
 				<h3>Remote stream</h3>
 				<video id="videoOutput" autoplay width="480px" height="360px"
-					poster="img/person.png"></video>
+					poster="img/person.png" controls></video>
 			</div>
 		</div>
-		<a id="del" href="#" class="btn btn-danger" onclick="del(); return false;">삭제!!!!!!</a>
-		<a href="https://localhost:8443/kurento/delete">삭제</a>
+		<a id="del" href="#" class="btn btn-danger" onclick="del(); return false;">전체 영상 삭제</a>
 		<div class="row">
 			<!-- 녹화된 영상 길이만큼 button 생성 -->
 			<!-- 녹화 영상 이름 동적으로 생성해서 controller로 -->
 			<div class="col-4">
-				<button onclick="playRecord('1HelloWorldRecorded.webm'); return false;">녹화 영상 1</button>
+				<button onclick="playRecord('rthws4sldd.webm'); return false;">녹화 영상 1</button>
 				
-				<a href="https://localhost:8443/kurento/download/1HelloWorldRecorded.webm">다운로드</a>
+				<a href="https://localhost:8443/kurento/download/5tovjjbh1.webm">다운로드</a>
 			</div>
 			<div class="col-4">
 				<button onclick="playRecord('2HelloWorldRecorded.webm'); return false;">녹화 영상 2</button>
@@ -99,6 +102,12 @@
 				<button onclick="playRecord('2HelloWorldRecorded.webm'); return false;">녹화 영상 4</button>
 				<a href="https://localhost:8443/kurento/download/4HelloWorldRecorded.webm">다운로드</a>
 			</div>
+		</div>
+		<div>
+			test
+			<img src="https://localhost:8443/files/images/21d246b8-1c35-458f-803a-9d2905506654압도적감사.jpg">
+			<video src="https://localhost:8443/files/videos/z5br3ivm22.webm" controls></video>
+
 		</div>
 		<div class="row">
 			<div class="col-md-12">

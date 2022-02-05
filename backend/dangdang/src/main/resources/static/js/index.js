@@ -15,14 +15,14 @@
  *
  */
 
-var ws = new WebSocket('wss://' + location.host + '/recording');
+var ws = new SockJS('https://' + location.host + '/recording');
 var videoInput;
 var videoOutput;
 var webRtcPeer;
 var state;
 
-// 내가 추가한 코드
-var rpath;
+var rpath; //녹화 파일 이름
+var saveName; //프론트로부터 받은 저장할 파일 이름
 
 const NO_CALL = 0;
 const IN_CALL = 1;
@@ -116,7 +116,8 @@ ws.onmessage = function(message) {
 	}
 }
 
-// 추가한 코드
+
+// 녹화 영상 보여줌
 function playRecord(recordingpath){
 	console.log("녹화 영상 버튼 클릭!");
 	console.log("path :: ",recordingpath);
@@ -124,7 +125,7 @@ function playRecord(recordingpath){
 	play();
 }
 
-// 추가한 코드
+// 삭제
 function del(){
 	console.log("js del 확인!");
 	var message = {
@@ -133,9 +134,11 @@ function del(){
 	sendMessage(message);
 }
 
-function start() {
+function start(name) {
 	console.log('Starting video call ...');
-	
+	console.log("받은 파일 name :: "+name);
+	name = document.getElementById("fileName").value;
+	saveName=name;
 	// Disable start button
 	setState(DISABLED);
 	showSpinner(videoInput);
@@ -163,7 +166,8 @@ function onOffer(error, offerSdp) {
 	var message = {
 			id : 'start',
 			sdpOffer : offerSdp,
-			mode :  $('input[name="mode"]:checked').val()
+			mode :  $('input[name="mode"]:checked').val(),
+			name : saveName
 	}
 	sendMessage(message);
 }
@@ -185,7 +189,11 @@ function onIceCandidate(candidate) {
 function startResponse(message) {
 	setState(IN_CALL);
 	console.log('SDP answer received from server. Processing ...');
-
+	console.log("============================================")
+	console.log(message)
+	// 서버에서 세션ID 받아옴
+	console.log(message.sessionId)
+	console.log("============================================")
 	webRtcPeer.processAnswer(message.sdpAnswer, function(error) {
 		if (error)
 			return console.error(error);

@@ -24,7 +24,7 @@ public class JwtUtil {
 //    private String SECRET_KEY;
 
     private final static String SECRET_KEY = "boriboriboriboriboriboriboriboriboriboriboribori"; // 우리 서버만 알고 있는 비밀값
-    private final static long ACCESS_EXPIRATION_TIME = 1800000*48; // 30분*48
+    private final static long ACCESS_EXPIRATION_TIME = 1800000*48*15; // 30분*48*15 = 15일
     public final static long REFRESH_EXPIRATION_TIME = 864000000*10; // 10일
     public final static String TOKEN_PREFIX = "Bearer ";
     public final static String REFRESH_TOKEN_PREFIX = "Refresh Bearer ";

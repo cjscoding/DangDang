@@ -28,7 +28,7 @@ import static com.ssafy.dangdang.util.ApiUtils.*;
 
 @RestController
 @RequestMapping("/joins")
-@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*")
+//@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class JoinsController {

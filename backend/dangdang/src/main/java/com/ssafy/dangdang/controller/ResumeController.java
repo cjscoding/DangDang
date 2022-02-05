@@ -31,7 +31,7 @@ import static com.ssafy.dangdang.util.ApiUtils.*;
 
 @RestController
 @RequestMapping("/resume")
-@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*")
+//@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class ResumeController {

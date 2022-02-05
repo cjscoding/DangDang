@@ -24,7 +24,6 @@ import java.util.List;
 public class User{
 
     @Id
-    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -86,4 +85,14 @@ public class User{
     public String getUsername() {
         return this.email.toString();
     }
+
+    public void raiseToManager(){
+        this.role = UserRoleType.MANAGER;
+    }
+
+    public void raiseToAdmin(){
+        this.role = UserRoleType.ADMIN;
+    }
+
+    public void addImageUrl(String path){ this.imageUrl = path;}
 }

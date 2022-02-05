@@ -46,6 +46,13 @@ public class InterviewQuestion {
                 .build();
     }
 
+    public void makePubic(){
+        this.visable = true;
+    }
+    public void hide(){
+        this.visable = false;
+    }
+
     @Override
     public String toString() {
         return "InterviewQuestion{" +

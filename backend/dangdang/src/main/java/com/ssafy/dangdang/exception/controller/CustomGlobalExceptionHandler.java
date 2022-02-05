@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.io.IOException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Enumeration;
 
@@ -98,6 +99,19 @@ public class CustomGlobalExceptionHandler  {
         notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
         return error("중복된 엔티티거나 외래키 제약이 있습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content(schema = @Schema(implementation = ApiError400.class))),
+    })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IOException.class)
+    public ApiResult<?> BadRequestHandle(IOException e, HttpServletRequest req){
+        log.error("IOException 발생");
+        e.printStackTrace();
+        notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
+        return error(e, HttpStatus.BAD_REQUEST);
+    }
+
     private String getParams(HttpServletRequest req) {
         StringBuilder params = new StringBuilder();
         Enumeration<String> keys = req.getParameterNames();

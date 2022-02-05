@@ -19,6 +19,7 @@ import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
 import org.kurento.client.*;
+import org.kurento.client.EventListener;
 import org.kurento.jsonrpc.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.Date;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CountDownLatch;
@@ -52,7 +53,10 @@ public class UserSession implements Closeable {
   private RecorderEndpoint recorderEndpoint;
   private MediaPipeline mediaPipeline;
   private Date stopTimestamp;
-  private int num; //추가 
+  private int num; //추가
+
+  // 저장한 파일 이름 set
+  private Set<String> videos;
 
   //GroupCall 설정
   private  final  WebSocketSession session;
@@ -69,6 +73,7 @@ public class UserSession implements Closeable {
     this.session = session;
     this.roomName = roomName;
     this.webRtcEndpoint = new WebRtcEndpoint.Builder(mediaPipeline).build();
+    this.videos = new HashSet<>();
 
     this.webRtcEndpoint.addIceCandidateFoundListener(new EventListener<IceCandidateFoundEvent>() {
 
@@ -273,6 +278,11 @@ public class UserSession implements Closeable {
     }
   }
 
+
+  public void addVideo(String saveName){
+    this.videos.add(saveName);
+  }
+
   @Override
   public boolean equals(Object obj) {
 
@@ -296,4 +306,20 @@ public class UserSession implements Closeable {
     return result;
   }
 
+  @Override
+  public String toString() {
+    return "UserSession{" +
+            "id='" + id + '\'' +
+            ", webRtcEndpoint=" + webRtcEndpoint +
+            ", recorderEndpoint=" + recorderEndpoint +
+            ", mediaPipeline=" + mediaPipeline +
+            ", stopTimestamp=" + stopTimestamp +
+            ", num=" + num +
+            ", videos=" + videos +
+            ", session=" + session +
+            ", name='" + name + '\'' +
+            ", roomName='" + roomName + '\'' +
+            ", incomingMedia=" + incomingMedia +
+            '}';
+  }
 }

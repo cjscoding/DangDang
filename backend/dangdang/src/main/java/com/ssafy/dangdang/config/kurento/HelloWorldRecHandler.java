@@ -18,6 +18,8 @@ package com.ssafy.dangdang.config.kurento;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.ssafy.dangdang.service.StorageService;
+import lombok.RequiredArgsConstructor;
 import org.kurento.client.*;
 import org.kurento.jsonrpc.JsonUtils;
 import org.slf4j.Logger;
@@ -29,7 +31,9 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.util.ArrayList;
 
 /**
@@ -42,15 +46,18 @@ import java.util.ArrayList;
  * @since 6.1.1
  */
 
+
 public class HelloWorldRecHandler extends TextWebSocketHandler {
-  public static int cnt=1;
-  private static String RECORDER_FILE_PATH = "file:///tmp/"+cnt+"HelloWorldRecorded.webm";
+  private static String RECORDER_FILE_PATH = "file:///tmp/"+"HelloWorldRecorded.webm"; //default name
 
   private final Logger log = LoggerFactory.getLogger(HelloWorldRecHandler.class);
   private static final Gson gson = new GsonBuilder().create();
-
+  private Boolean isStop = false;
   @Autowired
   private UserRegistry registry;
+
+  @Autowired
+  private StorageService storageService;
 
   @Autowired
   private KurentoClient kurento;
@@ -58,10 +65,13 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
   @Override
   public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
     JsonObject jsonMessage = gson.fromJson(message.getPayload(), JsonObject.class);
-
     log.debug("Incoming message: {}", jsonMessage);
 
     UserSession user = registry.getBySession(session);
+
+    log.info("============================================================");
+    log.info("session id :{}",user);
+    log.info("============================================================");
     if (user != null) {
       log.debug("Incoming message from user '{}': {}", user.getId(), jsonMessage);
     } else {
@@ -71,13 +81,14 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
     switch (jsonMessage.get("id").getAsString()) {
       case "start":
         log.debug("start");
-        RECORDER_FILE_PATH = "file:///tmp/"+cnt+"HelloWorldRecorded.webm";
-        start(session, jsonMessage);
-        cnt++;
+        String saveName=jsonMessage.get("name").getAsString(); //프론트로부터 받은 저장 파일 이름
+        RECORDER_FILE_PATH = "file:///tmp/"+session.getId()+saveName+".webm"; // user session id+지정한 이름.webm
+        start(session, saveName, jsonMessage);
         break;
       case "stop":
         if (user != null) {
           user.stop();
+          isStop = true;
           log.debug("stop");
         }
       case "stopPlay":
@@ -93,17 +104,20 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
       case "onIceCandidate": {
         JsonObject jsonCandidate = jsonMessage.get("candidate").getAsJsonObject();
 
-        if (user != null) {
+        if (user != null && !isStop) {
           IceCandidate candidate = new IceCandidate(jsonCandidate.get("candidate").getAsString(),
                   jsonCandidate.get("sdpMid").getAsString(),
                   jsonCandidate.get("sdpMLineIndex").getAsInt());
           user.addCandidate(candidate);
         }
+        if(isStop) isStop = false;
         break;
       }
       case "del": 
         log.debug("del");
-        del();
+        if (user != null) {
+          del(user);
+        }
         break;
       default:
         sendError(session, "Invalid message with id " + jsonMessage.get("id").getAsString());
@@ -118,9 +132,9 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
   }
 
   // start 누름 -> 녹화 시작
-  private void start(final WebSocketSession session, JsonObject jsonMessage) {
+  private void start(final WebSocketSession session, String saveName, JsonObject jsonMessage) {
     try {
-
+      log.info("녹화될 영상 name 확인 :: {}",RECORDER_FILE_PATH);
       // 1. Media logic (webRtcEndpoint in loopback)
       MediaPipeline pipeline = kurento.createMediaPipeline();
       WebRtcEndpoint webRtcEndpoint = new WebRtcEndpoint.Builder(pipeline).build();
@@ -131,14 +145,27 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
       // https://doc-kurento.readthedocs.io/en/latest/_static/client-javadoc/org/kurento/client/MediaProfileSpecType.html
       MediaProfileSpecType profile = getMediaProfileFromMessage(jsonMessage);
 
-      ArrayList<Object> list=new ArrayList<>(); //추가한 코드
-
       //recorder
       // 미디어 콘텐츠를 저장하는 기능을 제공합니다.
       // RecorderEndpoint는 미디어를 로컬 파일에 저장하거나 원격 네트워크 저장소로 보낼 수 있습니다.
       // 다른 하나 MediaElement가 RecorderEndpoint에 연결되면 전자에서 오는 미디어는 선택한 녹화 형식으로 캡슐화되어 지정된 위치에 저장됩니다.
       RecorderEndpoint recorder = new RecorderEndpoint.Builder(pipeline, RECORDER_FILE_PATH)
               .withMediaProfile(profile).build();
+
+      // 2. Store user session
+      UserSession user= registry.getById(session.getId());
+
+      if(user == null){
+        user = new UserSession(session.getId(),session.getId(),session, pipeline);
+        registry.register(user);
+      }
+      user.setMediaPipeline(pipeline);
+      user.setWebRtcEndpoint(webRtcEndpoint);
+      user.setRecorderEndpoint(recorder);
+
+//      user.getVideos().add(user.getId()+saveName);
+      user.addVideo(user.getId()+saveName); // set 저장
+      log.info("지금까지 저장한 파일 이름 :: {}",user.getVideos());
 
       // 녹화 시작
       recorder.addRecordingListener(new EventListener<RecordingEvent>() {
@@ -167,9 +194,7 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
           try {
             synchronized (session) {
               session.sendMessage(new TextMessage(response.toString()));
-              list.add(recorder);
-              log.debug("recoder 저장 확인 ===================== {}",recorder);
-              System.out.println("recoder 저장 확인 =====================");
+              log.debug("recoder 저장 확인 {}",recorder);
             }
           } catch (IOException e) {
             log.error(e.getMessage());
@@ -197,15 +222,6 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
 
       connectAccordingToProfile(webRtcEndpoint, recorder, profile);
 
-      // 2. Store user session
-      UserSession user = new UserSession(session.getId(),"soloRoom",session, pipeline);
-
-//      user.setMediaPipeline(pipeline);
-      user.setWebRtcEndpoint(webRtcEndpoint);
-      user.setRecorderEndpoint(recorder);
-      user.setNum(list.size()); // 추가
-      registry.register(user);
-
       // 3. SDP negotiation
       String sdpOffer = jsonMessage.get("sdpOffer").getAsString();
       String sdpAnswer = webRtcEndpoint.processOffer(sdpOffer);
@@ -231,6 +247,7 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
       JsonObject response = new JsonObject();
       response.addProperty("id", "startResponse");
       response.addProperty("sdpAnswer", sdpAnswer);
+      response.addProperty("sessionId",user.getId());
 
       synchronized (user) {
         session.sendMessage(new TextMessage(response.toString()));
@@ -379,22 +396,30 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
     }
   }
   // delete 추가 
-  private void del(){
-    System.out.println("delete 컨트롤러 연결");
-    int cnt=1;
-    while(true){
-        String filePath = "/home/ssafy/share/"+cnt+"HelloWorldRecorded.webm";
-        File deleteFile = new File(filePath);
-        // 파일이 존재하는지 체크 존재할경우 true, 존재하지않을경우 false
-        if(deleteFile.exists()) {
-            deleteFile.delete(); 
-            System.out.println("파일 삭제");
-            cnt++;
-        } else {
-            System.out.println("파일 없음");
-            break;
-        }
+  private void del(UserSession user) throws FileNotFoundException {
+    log.info("delete 컨트롤러 연결");
+    for (String video : user.getVideos()) {
+//      String filePath = "/home/ssafy/share/files/"+video+".webm";
+      String fileName = video+".webm";
+//      log.info("filePath : {}",filePath);
+      log.info("fileName : {}",fileName);
+      try {
+        storageService.delete(fileName);
+      }catch (InvalidPathException e){
+          e.printStackTrace();
+          log.error("잘못된 경로입니다!");
+      }
+
+//      File deleteFile = new File(filePath);
+//      // 파일이 존재하는지 체크 존재할경우 true, 존재하지않을경우 false
+//      if(deleteFile.exists()) {
+//        deleteFile.delete();
+//        log.info("파일이 삭제되었습니다.");
+//      } else {
+//        log.info("파일이 없습니다.");
+//      }
     }
+    user.getVideos().clear();
     return;
   }
 }

@@ -25,6 +25,7 @@ spring:
       hibernate :
         format_sql : true
         show_sql : true
+        user_sql_comments: true # 실행되는 JPQL 보기
         dialect : org.hibernate.dialect.MySQL8Dialect
     open-in-view : false
 
@@ -40,7 +41,13 @@ spring:
     port: 6379
   # JWT Secret Key
 
-
+file :
+  upload :
+    baseLocation : "C:\\home\\ssafy\\share\\"
+    file :  "C:\\home\\ssafy\\share\\files\\"
+    video : "C:\\home\\ssafy\\share\\videos\\"
+    image: "C:\\home\\ssafy\\share\\images\\"
+    address : "https://localhost:8443/files/"
 ---
 
 spring:
@@ -77,6 +84,14 @@ spring:
     port: 6379
   # JWT Secret Key
 
+file :
+  upload :
+    baseLocation : "/app/data/"
+    file :         "/app/data/files/"
+    image: "/app/data/images/"
+    video : "/app/data/videos/"
+    address : "https://localhost:8443/files/"
+
 ---
 
 
@@ -98,11 +113,14 @@ spring:
       hibernate:
         default_batch_fetch_size: 200
 
+
   jwt:
     secret: eae6d34010d4fea74bcafeeef81c1f8685e4793dfe98701d30e568118b31e4e0
 
-
-#  mvc :
+  output:
+    ansi:
+      enabled: DETECT
+  #  mvc :
 #    static-path-pattern : /static/**
 #    hiddenmethod :
 #      filter :
@@ -115,7 +133,10 @@ spring:
 #      static-locations : classpath:/static
 #      add-mappings :     true
 
-
+  servlet :
+    multipart :
+      max-file-size :    100MB
+      max-request-size : 100MB
 
   security:
     oauth2:
@@ -184,12 +205,15 @@ logging:
     com:
       andy: trace
     org:
-      apache: WARN
+      apache:
+        nodeValue: WARN
+#        coyote:
+#          http11: debug      #HTTP 요청 확인 옵션, 개발할 때만 활성화 할것
       springframework: WARN
       kurento:
         nodeValue: INFO
         tutorial: INFO
-    #     #HTTP 요청 확인 옵션, 개발할 때만 활성화 할것
+
 #    org:
 #      springframework:
 #        security: debug
