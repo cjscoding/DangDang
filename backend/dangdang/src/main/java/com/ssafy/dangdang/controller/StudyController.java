@@ -182,7 +182,7 @@ public class StudyController {
                                          @Parameter(
                                                  description = "업로드할 이미지",
                                                  content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)  // Won't work without OCTET_STREAM as the mediaType.
-                                         ) MultipartFile image) throws IOException {
+                                         )@RequestParam("image")  MultipartFile image) throws IOException {
         log.info("스터디 image 등록 {}", image.getOriginalFilename());
         UUID uuid = UUID.randomUUID();
         storageService.imageStore(uuid.toString(), image);
