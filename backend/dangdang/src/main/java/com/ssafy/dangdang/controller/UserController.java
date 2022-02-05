@@ -125,7 +125,7 @@ public class UserController {
     public ApiResult<UserDto> updateUser(@CurrentUser PrincipalDetails userPrincipal, @RequestBody SignUp signUp) {
         UserDto updateUser = UserDto.of(signUp);
         log.info("user Update {}", updateUser.toString());
-
+        updateUser.setId(userPrincipal.getUser().getId());
         userService.updateUser(userPrincipal.getUser(), updateUser);
         return success(updateUser);
 

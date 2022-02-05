@@ -143,6 +143,15 @@ public class InitDb {
                         .build();
                 interviewQuestionService.writeQuestion(user, interviewQuestionDto);
             }
+            for (int i=0;i<6;i++){
+                InterviewQuestionDto interviewQuestionDto = InterviewQuestionDto.builder()
+                        .question("파인애플피자 어떄요"+i)
+                        .answer("너무 좋죠"+i)
+                        .field("공통")
+                        .visable(false)
+                        .build();
+                interviewQuestionService.writeQuestion(user, interviewQuestionDto);
+            }
 
         }
 

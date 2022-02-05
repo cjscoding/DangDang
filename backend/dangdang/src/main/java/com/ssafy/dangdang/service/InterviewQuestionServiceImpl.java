@@ -7,15 +7,12 @@ import com.ssafy.dangdang.exception.UnauthorizedAccessException;
 import com.ssafy.dangdang.repository.InterviewQuestionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.ssafy.dangdang.util.ApiUtils.*;
 
@@ -60,9 +57,9 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService{
 
     @Override
     @Transactional
-    public List<InterviewQuestionDto> getAllVisableInterviewQustion(){
-        List<InterviewQuestion> all = interviewQuestionRepository.findAllVisableInterviewQuestion();
-        List<InterviewQuestionDto> interviewQuestionDtos = all.stream().map(InterviewQuestionDto::of).collect(Collectors.toList());
+    public Page<InterviewQuestionDto> getAllVisableInterviewQustion(User writer, Pageable pageable){
+        Page<InterviewQuestion> all = interviewQuestionRepository.findAllVisableInterviewQuestion(writer, pageable);
+        Page<InterviewQuestionDto> interviewQuestionDtos = all.map(InterviewQuestionDto::of);
         return interviewQuestionDtos;
     }
 
@@ -80,6 +77,14 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService{
         Optional<InterviewQuestion> interview = interviewQuestionRepository.findById(interviewId);
         if (!interview.isPresent()) throw new NullPointerException("존재하지 않는 질문 입니다.");
         interview.get().hide();
+    }
+
+    @Override
+    @Transactional
+    public Page<InterviewQuestionDto> getMyQuestion(User writer, Pageable pageable) {
+        Page<InterviewQuestion> all = interviewQuestionRepository.findAllByWriter(writer.getId(), pageable);
+        Page<InterviewQuestionDto> interviewQuestionDtos = all.map(InterviewQuestionDto::of);
+        return interviewQuestionDtos;
     }
 
 }

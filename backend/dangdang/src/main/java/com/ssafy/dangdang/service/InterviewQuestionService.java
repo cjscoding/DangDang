@@ -25,10 +25,13 @@ public interface InterviewQuestionService {
     Page<InterviewQuestionDto> getAllInterviewQustion(@ParameterObject Pageable pageable);
 
     @Transactional
-    List<InterviewQuestionDto> getAllVisableInterviewQustion();
+    Page<InterviewQuestionDto> getAllVisableInterviewQustion(User writer, Pageable pageable);
 
     void makePublic(Long interviewId);
 
     @Transactional
     void hide(Long interviewId);
+
+    Page<InterviewQuestionDto> getMyQuestion(User writer, Pageable pageable);
+
 }

@@ -3,6 +3,7 @@ package com.ssafy.dangdang.controller;
 import com.ssafy.dangdang.config.security.CurrentUser;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
 import com.ssafy.dangdang.domain.InterviewQuestion;
+import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
 import com.ssafy.dangdang.domain.dto.WriteInterview;
 import com.ssafy.dangdang.service.InterviewQuestionService;
@@ -14,6 +15,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -48,13 +52,27 @@ public class InterviewQuestionController {
 
     }
 
-    @Operation(summary = "모든 면접 질문 조회", description= "(Visable이 true인 질문만 조회)")
+    @Operation(summary = "모든 면접 질문 조회", description= "Visable이 true이거나 로그인한 유저가 작성한 면접질문들만 조회, 비로그인 시 Visable이 true인 면접 질문만  조회")
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "모든 면접 질문 조회 성공")
     })
     @GetMapping()
-    public ApiResult<List<InterviewQuestionDto>> getAllVisableInterviewQustion(){
-        return success(interviewQuestionService.getAllVisableInterviewQustion());
+    public ApiResult<Page<InterviewQuestionDto>> getAllVisableInterviewQustion(@CurrentUser PrincipalDetails userPrincipal,
+                                                                               @ParameterObject Pageable pageable){
+        User writer = null;
+        if (userPrincipal != null) writer = userPrincipal.getUser();
+        return success(interviewQuestionService.getAllVisableInterviewQustion(writer, pageable));
+    }
+
+    @Operation(summary = "내가 등록한 면접 질문만 조회", description = "visable 값에 상관없이, 내가 작성한 질문들 조회")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "내가 등록한 면접 질문만 조회 성공")
+    })
+    @GetMapping("/mine")
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<Page<InterviewQuestionDto>> getMyQuestion(@CurrentUser PrincipalDetails userPrincipal,
+                                                               @ParameterObject Pageable pageable){
+        return success(interviewQuestionService.getMyQuestion(userPrincipal.getUser(), pageable));
     }
 
     @Operation(summary = "면접 질문 삭제")

@@ -66,7 +66,7 @@ public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport imple
                 , countQuery -> countQuery
                         .selectDistinct(study)
                         .from(study)
-                        .join(study.host, user).fetchJoin()
+//                        .join(study.host, user).fetchJoin()
                         .where(containsHashTags(hashtags) ));
         return studies ;
     }

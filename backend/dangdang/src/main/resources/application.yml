@@ -25,6 +25,7 @@ spring:
       hibernate :
         format_sql : true
         show_sql : true
+        user_sql_comments: true # 실행되는 JPQL 보기
         dialect : org.hibernate.dialect.MySQL8Dialect
     open-in-view : false
 
@@ -109,6 +110,7 @@ spring:
     properties:
       hibernate:
         default_batch_fetch_size: 200
+
 
   jwt:
     secret: eae6d34010d4fea74bcafeeef81c1f8685e4793dfe98701d30e568118b31e4e0
