@@ -2,25 +2,29 @@ import Button from "./Button";
 import styles from "../../scss/user/login-signup.module.scss";
 import { useState } from "react";
 import { connect } from "react-redux";
-import { setIsLogin } from "../../store/actions/userAction";
+import {
+  resetUserInfo,
+  setIsLoginModal,
+  setShowModal,
+} from "../../store/actions/userAction";
 import { signUpRequest } from "../../api/user";
 
 function mapStateToProps({ userReducer }) {
   return {
-    isLogin: userReducer.isLogin,
+    isLoginModal: userReducer.isLoginModal,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     setShowModal: (show) => dispatch(setShowModal(show)),
-    setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
+    setIsLoginModal: (isLoginModal) => dispatch(setIsLoginModal(isLoginModal)),
   };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);
 
-function Signup({ isLogin, setIsLogin }) {
+function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -39,9 +43,10 @@ function Signup({ isLogin, setIsLogin }) {
     event.preventDefault();
     signUpRequest(
       values,
-      () => {
+      (response) => {
         alert("회원가입 완료!");
-        onClick();
+        console.log(response);
+        setShowModal(false);
       },
       (error) => console.log(error)
     );
@@ -93,11 +98,11 @@ function Signup({ isLogin, setIsLogin }) {
         <button type="submit">회원가입</button>
       </form>
       <p>
-        계정이 있으세요? <a onClick={() => setIsLogin(!isLogin)}>로그인</a>
+        계정이 있으세요?{" "}
+        <a onClick={() => setIsLoginModal(!isLoginModal)}>로그인</a>
       </p>
       <Button text="Google로 시작하기" />
       <Button text="Kakao로 시작하기" />
-      {/* <Button text="이메일로 시작하기" /> */}
     </div>
   );
 }

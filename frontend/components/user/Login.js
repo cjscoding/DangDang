@@ -2,30 +2,44 @@ import Button from "./Button";
 import styles from "../../scss/user/login-signup.module.scss";
 import { useState } from "react";
 import { connect } from "react-redux";
+import { useRouter } from "next/router";
 import {
   setShowModal,
-  setIsLogin,
+  setIsLoginModal,
   setUserInfo,
+  setIsMoveTeamStudy,
 } from "../../store/actions/userAction";
 import { getToken, getUserInfo } from "../../api/user";
+import { BACKEND_URL } from "../../config";
 
 function mapStateToProps({ userReducer }) {
   return {
-    isLogin: userReducer.isLogin,
+    isLoginModal: userReducer.isLoginModal,
+    isMoveTeamStudy: userReducer.isMoveTeamStudy,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     setShowModal: (show) => dispatch(setShowModal(show)),
-    setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
+    setIsLoginModal: (isLoginModal) => dispatch(setIsLoginModal(isLoginModal)),
     setUserInfo: (userInfo) => dispatch(setUserInfo(userInfo)),
+    setIsMoveTeamStudy: (isMoveTeamStudy) =>
+      dispatch(setIsMoveTeamStudy(isMoveTeamStudy)),
   };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
-function Login({ setShowModal, isLogin, setIsLogin, setUserInfo }) {
+function Login({
+  setShowModal,
+  isLoginModal,
+  setIsLoginModal,
+  setUserInfo,
+  isMoveTeamStudy,
+  setIsMoveTeamStudy,
+}) {
+  const router = useRouter();
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -46,12 +60,14 @@ function Login({ setShowModal, isLogin, setIsLogin, setUserInfo }) {
       (response) => {
         getUserInfo(
           ({ data: { response } }) => {
-            console.log(response);
             const userInfo = {
+              id: response.id,
               email: response.email,
               nickName: response.nickName,
             };
             setUserInfo(userInfo);
+            if (isMoveTeamStudy) router.push("/user/mypage/myroom");
+            setIsMoveTeamStudy(false);
           },
           (error) => {
             console.log(error);
@@ -63,6 +79,10 @@ function Login({ setShowModal, isLogin, setIsLogin, setUserInfo }) {
         alert("이메일과 비밀번호를 확인해주세요.");
       }
     );
+  };
+
+  const socialLoginRequest = (provider) => {
+    window.location.href = `${BACKEND_URL}/oauth2/authorize/${provider}?redirect_uri=http://localhost:3000/user/oauth2/redirect?destination=${router.pathname}`;
   };
 
   return (
@@ -98,10 +118,17 @@ function Login({ setShowModal, isLogin, setIsLogin, setUserInfo }) {
         <button type="submit">로그인</button>
       </form>
       <p>
-        회원이 아니세요? <a onClick={() => setIsLogin(!isLogin)}>회원가입</a>
+        회원이 아니세요?{" "}
+        <a onClick={() => setIsLoginModal(!isLoginModal)}>회원가입</a>
       </p>
-      <Button text="Google로 로그인" />
-      <Button text="Kakao로 로그인" />
+      <Button
+        text="Google로 로그인"
+        onClick={() => socialLoginRequest("google")}
+      />
+      <Button
+        text="Kakao로 로그인"
+        onClick={() => socialLoginRequest("kakao")}
+      />
     </div>
   );
 }

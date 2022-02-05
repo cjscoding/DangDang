@@ -1,10 +1,19 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import styles from "../../../scss/self-practice/interview/add-questions.module.scss";
 
+export async function getServerSideProps() {
+  const preparedQuestions = (await(await fetch(`${process.env.BACKEND_URL}/interview`,{
+    method: 'GET'
+  })).json()).response
+  return {props: {preparedQuestions}};
+};
 function mapStateToProps(state) {
-    return {questions: state.questionReducer.questions};
+    return {
+      questions: state.questionReducer.questions,
+      ws: state.wsReducer.ws,
+    };
   }
   
 import { addQuestion } from "../../../store/actions/questionAction";
@@ -16,8 +25,16 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddQuestions); 
 
-function AddQuestions({questions, addQuestion}) {
+function AddQuestions({preparedQuestions, questions, addQuestion}) {
   const [questionInput, setQuestionInput] = useState("");
+  useEffect(()=>{
+    window.onbeforeunload = function() {
+      sendMessage({
+        id : 'del',
+      });
+      ws.close();
+    }
+  }, [])
   function addQuestionInput() {
     const Qinput = questionInput.trim()
     if(Qinput) {
@@ -37,7 +54,11 @@ function AddQuestions({questions, addQuestion}) {
     <div className={styles.mainContainer}>
       <div className={styles.columnContainer}>
         <div className={styles.baseContainer}>
-          <h1></h1>
+          <div>
+            {preparedQuestions?.map(preparedQuestion => (
+              <h2 key={preparedQuestion.id}>{preparedQuestion.question}</h2>
+            ))}
+          </div>
         </div>
         <div className={styles.addContainer}>
           <textarea value={questionInput} onChange={(event) => {setQuestionInput(event.target.value)}}></textarea>
@@ -45,8 +66,9 @@ function AddQuestions({questions, addQuestion}) {
         </div>
       </div>
       <div className={styles.selectedContainer}>
-      {questions.map((question, idx) => <h1 key={idx}>{question}</h1>
-      )}
+        {questions?.map((question, idx) => (
+          <h1 key={idx}>{question}</h1>
+        ))}
       </div>
     </div>
     <Link href="/self-practice/interview/check-devices">

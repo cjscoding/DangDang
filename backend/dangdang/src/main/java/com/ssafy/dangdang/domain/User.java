@@ -24,7 +24,6 @@ import java.util.List;
 public class User{
 
     @Id
-    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -40,6 +39,7 @@ public class User{
     private String email;
 
     //@NotBlank OAuth의 경우에는 비밀번호가 필요없음
+    @JsonIgnore
     private String password;
 
     private String imageUrl;
@@ -85,4 +85,14 @@ public class User{
     public String getUsername() {
         return this.email.toString();
     }
+
+    public void raiseToManager(){
+        this.role = UserRoleType.MANAGER;
+    }
+
+    public void raiseToAdmin(){
+        this.role = UserRoleType.ADMIN;
+    }
+
+    public void addImageUrl(String path){ this.imageUrl = path;}
 }

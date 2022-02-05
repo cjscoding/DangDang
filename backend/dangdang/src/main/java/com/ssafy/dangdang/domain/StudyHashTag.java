@@ -2,10 +2,7 @@ package com.ssafy.dangdang.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.dangdang.domain.dto.StudyHashTagDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -14,6 +11,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class StudyHashTag {
 
     @Id
@@ -22,6 +20,7 @@ public class StudyHashTag {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
+    @ToString.Exclude
     @JoinColumn(name = "study_id")
     private Study study;
 

@@ -1,11 +1,40 @@
 import Link from "next/link";
+import { connect } from "react-redux";
 import Table from "../../components/layout/table/table";
 import TableRow from "../../components/layout/table/tableRow";
 import TableColumn from "../../components/layout/table/tableColumn";
 import styles from "../../scss/interview-question/main.module.scss";
+import { getInterviewQuestions } from "../../api/interviewQuestion";
+import { setQuestions } from "../../store/actions/questionAction";
+import { useEffect } from "react";
 
-export default function interviewQuestion() {
+function mapStateToProps({ questionReducer }) {
+  return {
+    questions: questionReducer.questions,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setQuestions: (questions) => dispatch(setQuestions(questions)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(interviewQuestion);
+
+function interviewQuestion({ questions, setQuestions }) {
   const headers = ["카테고리", "질문"];
+  useEffect(() => {
+    // if (Array.isArray(questions) && questions.length === 0) {
+    getInterviewQuestions(
+      ({ data: { response } }) => {
+        setQuestions(response);
+      },
+      (error) => console.log(error)
+    );
+    // }
+  }, []);
+
   return (
     <section className={styles.container}>
       <h1>인터뷰 질문</h1>
@@ -15,7 +44,9 @@ export default function interviewQuestion() {
           <button>검색</button>
         </div>
         <div>
-          <button>내 질문 등록하기</button>
+          <Link href="/interview-question/me">
+            <button>내 질문 보기</button>
+          </Link>
           <Link href="/self-practice">
             <a>
               <button>연습 시작하기</button>
@@ -24,16 +55,12 @@ export default function interviewQuestion() {
         </div>
       </div>
       <Table headers={headers}>
-        <TableRow>
-          <TableColumn>인성면접</TableColumn>
-          <TableColumn>보리는 귀여운가요?</TableColumn>
-        </TableRow>
-        <TableRow>
-          <TableColumn>기술면접</TableColumn>
-          <TableColumn>
-            당당이의 MBTI를 예측하고 그 이유를 말해주세요.
-          </TableColumn>
-        </TableRow>
+        {questions.map((question, index) => (
+          <TableRow key={index}>
+            <TableColumn>{question.field}</TableColumn>
+            <TableColumn>{question.question}</TableColumn>
+          </TableRow>
+        ))}
       </Table>
     </section>
   );
