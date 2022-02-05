@@ -4,7 +4,10 @@ const api = apiInstance();
 
 //팀스페이스 게시판 create
 export const addPost = async (data, success, fail) => {
-  await api.post(`/study/${data.studyId}/post`, data.req).then(success).catch(fail);
+  await api
+    .post(`/study/${data.studyId}/post`, data.req)
+    .then(success)
+    .catch(fail);
 };
 //팀스페이스 게시판 read
 export const getPosts = async (params, success, fail) => {
