@@ -44,8 +44,8 @@ function interviewQuestion({ questions, setQuestions }) {
           <button>검색</button>
         </div>
         <div>
-          <Link href="/interview-question/add">
-            <button>내 질문 등록하기</button>
+          <Link href="/interview-question/me">
+            <button>내 질문 보기</button>
           </Link>
           <Link href="/self-practice">
             <a>
