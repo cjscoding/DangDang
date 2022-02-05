@@ -94,6 +94,7 @@ function Resume({
         name={roomInfo.name}
         host={roomHost.nickName}
         createdAt={roomInfo.createdAt}
+        image={roomInfo.imageUrl}
       />
       <h1>자기소개서</h1>
       <div className={styles.coverletter}>

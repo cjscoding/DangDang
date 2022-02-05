@@ -1,6 +1,6 @@
 import styles from "../../../scss/team/space/update.module.scss";
 
-import { updateRoom } from "../../../api/studyroom";
+import { updateRoom, updateRoomImg } from "../../../api/studyroom";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { useState } from "react";
@@ -27,6 +27,7 @@ function UpdateTeam({ roomInfo }) {
 
   const [updateInfo, setUpdateInfo] = useState(roomInit);
   const [updateTags, setUpdateTags] = useState(roomInit.hashTags);
+  const [image, setImage] = useState("");
 
   //final submit
   const onUpdateTeam = (event) => {
@@ -45,6 +46,19 @@ function UpdateTeam({ roomInfo }) {
       data,
       (res) => {
         console.log(res, "스터디 수정 완료!");
+        const data = {
+          studyId: router.query.id,
+          image,
+        };
+        updateRoomImg(
+          data,
+          (res) => {
+            console.log(res, "스터디 이미지 등록 성공");
+          },
+          (err) => {
+            console.log(err, "스터디 이미지 등록 실패");
+          }
+        );
       },
       (err) => {
         console.log(err, "스터디를 수정할 권한이 없습니다.");
@@ -94,6 +108,9 @@ function UpdateTeam({ roomInfo }) {
       },
     });
   };
+
+  //studyroom image
+  const onSetImage = (event) => setImage(event.target.files[0]);
 
   return (
     <div>
@@ -156,6 +173,8 @@ function UpdateTeam({ roomInfo }) {
               </form>
             ))}
           </div>
+          <label htmlFor="profile">프로필 사진</label>
+          <input type="file" name="profile" onChange={onSetImage} />
         </div>
       ) : (
         <h1>해당 내역을 찾을 수 없습니다.</h1>

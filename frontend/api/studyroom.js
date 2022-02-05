@@ -1,5 +1,4 @@
 import { apiInstance } from "./index";
-import axios from 'axios';
 
 const api = apiInstance();
 
@@ -40,25 +39,18 @@ export const updateRoom = async (data, success, fail) => {
 export const addRoomImg = async (data, success, fail) => {
   const formData = new FormData();
   formData.append("image", data.image);
-  const authorization = localStorage.getItem("authorization");
-  const refreshtoken = localStorage.getItem("refreshtoken");
-  const config = {
-    headers: {
-      "Content-type": "multipart/form-data",
-      authorization,
-      refreshtoken
-    }
-  };
-  await axios
-    .post(`https://localhost:8443/study/${data.studyId}/image`, formData, config)
+  await api
+    .post(`/study/${data.studyId}/image`, formData)
     .then(success)
     .catch(fail);
 };
 
 //스터디 이미지 수정
 export const updateRoomImg = async (data, success, fail) => {
+  const formData = new FormData();
+  formData.append("image", data.image);
   await api
-    .patch(`/study/${data.studyId}/image`, data.image)
+    .patch(`/study/${data.studyId}/image`, formData)
     .then(success)
     .catch(fail);
 };

@@ -31,6 +31,20 @@ export default function CreateRoom() {
       hashTags: roomTags,
     };
 
+    if(roomInfo.name === ""){
+        console.log("방 이름을 작성해주세요!");
+        return;
+    }else if(roomInfo.number === ""){
+        console.log("모집 인원 수를 작성해주세요!");
+        return;
+    }else if(roomTags.length === 0){
+        console.log("최소 하나 이상의 태그를 작성해주세요!");
+        return;
+    }else if(image === ""){
+        console.log("스터디 프로필 이미지를 첨부해주세요!");
+        return;
+    }
+
     createRoom(
       newInfo,
       (res) => {
@@ -43,6 +57,7 @@ export default function CreateRoom() {
           data,
           (res) => {
             console.log(res, "스터디 이미지 등록 성공");
+            console.log("마이룸으로 이동합니다.");
           },
           (err) => {
             console.log(err, "스터디 이미지 등록 실패");
@@ -54,7 +69,7 @@ export default function CreateRoom() {
       }
     );
 
-    // router.push("/team/board");
+    router.push("/user/mypage/myroom");
   };
 
   //input values
@@ -91,7 +106,7 @@ export default function CreateRoom() {
   };
 
   //studyroom image
-  const onSetImage = (event) => setImage(event.target.files[0].name);
+  const onSetImage = (event) => setImage(event.target.files[0]);
 
   return (
     <div className={styles.container}>
@@ -158,8 +173,6 @@ export default function CreateRoom() {
             </form>
           ))}
         </div>
-        <div className=""></div>
-        <img src={image} alt="" />
         <label htmlFor="profile">프로필 사진</label>
         <input type="file" name="profile" onChange={onSetImage} />
       </div>
