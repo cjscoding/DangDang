@@ -11,6 +11,8 @@ public interface StorageService {
 
     Resource loadImageAsResource(String filename);
 
+    Resource loadVideoAsResource(String filename);
+
     void delete(String filename) throws FileNotFoundException;
 
     void store(String toString, MultipartFile file) throws IOException;
@@ -22,4 +24,6 @@ public interface StorageService {
     Resource loadAsResource(String filename);
 
     void deleteImage(String fileName) throws FileNotFoundException;
+
+    void deleteVideo(String fileName) throws FileNotFoundException;
 }

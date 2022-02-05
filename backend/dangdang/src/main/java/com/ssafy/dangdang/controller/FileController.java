@@ -21,10 +21,18 @@ public class FileController {
     private String fileLocation;
     @Value("${file.upload.image}")
     private String imageLocation;
+    @Value("${file.upload.video}")
+    private String videoLocation;
 
     @GetMapping("/images/{filename}")
     public Resource showImage(@PathVariable String filename) throws
             MalformedURLException {
         return new UrlResource("file:///" + imageLocation+filename);
+    }
+
+    @GetMapping("/videos/{filename}")
+    public Resource showVideo(@PathVariable String filename) throws
+            MalformedURLException {
+        return new UrlResource("file:///" + videoLocation+filename);
     }
 }

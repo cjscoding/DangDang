@@ -33,7 +33,8 @@ public class FileSystemStorageService implements StorageService {
 
   @Value("${file.upload.file}")
   private String fileLocation;
-
+  @Value("${file.upload.video}")
+  private String videoLocation;
   @Value("${file.upload.image}")
   private String imageLocation;
 
@@ -79,13 +80,7 @@ public class FileSystemStorageService implements StorageService {
       Path file = load(filename);
       Resource resource = new UrlResource(file.toUri());
 
-      if (resource.exists() || resource.isReadable()) {
-        return resource;
-      } else {
-        throw new StorageFileNotFoundException(
-            "Could not read file: " + filename);
-
-      }
+      return getResource(resource, filename);
     } catch (MalformedURLException e) {
       throw new StorageFileNotFoundException("Could not read file: " + filename, e);
     }
@@ -96,16 +91,29 @@ public class FileSystemStorageService implements StorageService {
     try {
       Path file =rootLocation.resolve(Paths.get(imageLocation + filename));
       Resource resource = new UrlResource(file.toUri());
-
-      if (resource.exists() || resource.isReadable()) {
-        return resource;
-      } else {
-        throw new StorageFileNotFoundException(
-                "Could not read file: " + filename);
-
-      }
+      return getResource(resource, filename);
     } catch (MalformedURLException e) {
       throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+    }
+  }
+
+  @Override
+  public Resource loadVideoAsResource(String filename) {
+    try {
+      Path file =rootLocation.resolve(Paths.get(videoLocation + filename));
+      Resource resource = new UrlResource(file.toUri());
+      return getResource(resource, filename);
+    } catch (MalformedURLException e) {
+      throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+    }
+  }
+
+  private Resource getResource(Resource resource, String filename) {
+    if (resource.exists() || resource.isReadable()) {
+      return resource;
+    } else {
+      throw new StorageFileNotFoundException(
+              "Could not read file: " + filename);
     }
   }
 
@@ -131,6 +139,17 @@ public class FileSystemStorageService implements StorageService {
     }
   }
 
+  @Override
+  public void deleteVideo(String fileName) throws FileNotFoundException {
+    try {
+      File file = new File(Paths.get(videoLocation + fileName).toString());
+      if(file.delete())
+        log.info(file.getName() + " has deleted");
+    } catch (SecurityException se) {
+      throw new SecurityException(se.getMessage());
+    }
+  }
+
   @PostConstruct
   public void init() {
     try {
@@ -138,6 +157,8 @@ public class FileSystemStorageService implements StorageService {
         Files.createDirectories(rootLocation);
       if (!Files.exists(Paths.get(imageLocation)))
         Files.createDirectories(Paths.get(imageLocation));
+      if (!Files.exists(Paths.get(videoLocation)))
+        Files.createDirectories(Paths.get(videoLocation));
       if (!Files.exists(Paths.get(fileLocation)))
         Files.createDirectories(Paths.get(fileLocation));
 

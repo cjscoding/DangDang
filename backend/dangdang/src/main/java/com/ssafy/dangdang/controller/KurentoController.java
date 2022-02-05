@@ -31,7 +31,7 @@ public class KurentoController {
 
     @GetMapping("/download/{name}")
     public ResponseEntity<Resource> download(HttpServletResponse response, @PathVariable("name") String name) throws IOException {
-        Resource resource = storageService.loadAsResource(name);
+        Resource resource = storageService.loadVideoAsResource(name);
         String encodedUploadFileName = UriUtils.encode(name, StandardCharsets.UTF_8);
 
 //        response.setContentType("application/octet-stream");
@@ -49,7 +49,7 @@ public class KurentoController {
     public void delete(HttpServletResponse response, @PathVariable String name) throws IOException {
         System.out.println("delete 컨트롤러 연결");
 
-        storageService.delete(name);
+        storageService.deleteVideo(name);
         return;
     }
 }
