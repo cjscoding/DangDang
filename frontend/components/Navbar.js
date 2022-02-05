@@ -4,8 +4,10 @@ import { connect } from "react-redux";
 import { logoutRequest } from "../api/user";
 import {
   resetUserInfo,
-  setIsLogin,
+  setIsLoginModal,
   setShowModal,
+  setIsLogin,
+  setIsMoveTeamStudy,
 } from "../store/actions/userAction";
 import styles from "../scss/layout/navbar.module.scss";
 import Modal from "./layout/Modal";
@@ -16,30 +18,43 @@ function mapStateToProps({ userReducer }) {
   return {
     user: userReducer.user,
     isLogin: userReducer.isLogin,
+    isLoginModal: userReducer.isLoginModal,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     setShowModal: (show) => dispatch(setShowModal(show)),
-    setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
+    setIsLoginModal: (isLoginModal) => dispatch(setIsLoginModal(isLoginModal)),
     resetUserInfo: () => dispatch(resetUserInfo()),
+    setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
+    setIsMoveTeamStudy: (isMoveTeamStudy) =>
+      dispatch(setIsMoveTeamStudy(isMoveTeamStudy)),
   };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
 
-function NavBar({ user, isLogin, setShowModal, setIsLogin, resetUserInfo }) {
+function NavBar({
+  user,
+  isLogin,
+  setIsLogin,
+  isLoginModal,
+  setShowModal,
+  setIsLoginModal,
+  resetUserInfo,
+  setIsMoveTeamStudy,
+}) {
   const router = useRouter();
   const logOut = () => {
     logoutRequest(
       (response) => {
-        console.log(response);
         localStorage.removeItem("authorization");
         localStorage.removeItem("refreshtoken");
 
         // 로그아웃 시 삭제해야 하는 store 값들 추가로 삭제 바람!
         resetUserInfo();
+        setIsLogin(false);
         router.push("/");
       },
       (error) => console.log(error)
@@ -60,12 +75,25 @@ function NavBar({ user, isLogin, setShowModal, setIsLogin, resetUserInfo }) {
           </Link>
         </li>
         <li>
-          <Link href="/team-space">
-            <a>같이연습한당</a>
-          </Link>
+          {isLogin ? (
+            <Link href="/user/mypage/myroom">
+              <a>같이연습한당</a>
+            </Link>
+          ) : (
+            <a
+              onClick={() => {
+                setShowModal(true);
+                setIsLoginModal(true);
+                setIsMoveTeamStudy(true);
+              }}
+              tabIndex="0"
+            >
+              같이연습한당
+            </a>
+          )}
         </li>
         <li>
-          <Link href="/team-board">
+          <Link href="/team/board">
             <a>스터디구한당</a>
           </Link>
         </li>
@@ -74,41 +102,48 @@ function NavBar({ user, isLogin, setShowModal, setIsLogin, resetUserInfo }) {
             <a>질문궁금하당</a>
           </Link>
         </li>
-        <li>
-          <a
-            onClick={() => {
-              setShowModal(true);
-              setIsLogin(true);
-            }}
-            tabIndex="0"
-          >
-            로그인
-          </a>
-        </li>
-        <li>
-          <a
-            onClick={() => {
-              setShowModal(true);
-              setIsLogin(false);
-            }}
-            tabIndex="0"
-          >
-            회원가입
-          </a>
-        </li>
-        <li>
-          <Link href="/user">
-            <a>{user.nickName}님 안녕하세요! (마이페이지)</a>
-          </Link>
-        </li>
-        <li>
-          <a tabIndex="0" onClick={logOut}>
-            로그아웃
-          </a>
-        </li>
+        {isLogin ? (
+          <span>
+            <li>
+              <Link href="/user">
+                <a>{user.nickName}님 안녕하세요! (마이페이지)</a>
+              </Link>
+            </li>
+            <li>
+              <a tabIndex="0" onClick={logOut}>
+                로그아웃
+              </a>
+            </li>
+          </span>
+        ) : (
+          <span>
+            <li>
+              <a
+                onClick={() => {
+                  setShowModal(true);
+                  setIsLoginModal(true);
+                }}
+                tabIndex="0"
+              >
+                로그인
+              </a>
+            </li>
+            <li>
+              <a
+                onClick={() => {
+                  setShowModal(true);
+                  setIsLoginModal(false);
+                }}
+                tabIndex="0"
+              >
+                회원가입
+              </a>
+            </li>
+          </span>
+        )}
       </ul>
 
-      <Modal>{isLogin ? <Login></Login> : <Signup></Signup>}</Modal>
+      <Modal>{isLoginModal ? <Login></Login> : <Signup></Signup>}</Modal>
     </nav>
   );
 }

@@ -2,20 +2,34 @@ import { apiInstance } from "./index";
 
 const api = apiInstance();
 
-function signUpRequest(params, success, fail) {
+/** 회원 인증: 회원가입, 로그인, 로그아웃 */
+export function signUpRequest(params, success, fail) {
   api.post(`/user`, params).then(success).catch(fail);
 }
 
-function getToken(params, success, fail) {
+export function getToken(params, success, fail) {
   api.post(`/user/login`, params).then(success).catch(fail);
 }
 
-function getUserInfo(success, fail) {
-  api.get(`/user/me`).then(success).catch(fail);
-}
-
-function logoutRequest(success, fail) {
+export function logoutRequest(success, fail) {
   api.post(`/user/logout`).then(success).catch(fail);
 }
 
-export { signUpRequest, getToken, getUserInfo, logoutRequest };
+/** Social Login */
+export function googleLoginRequest(success, fail) {
+  api
+    .get(
+      `/oauth2/authorize/google?redirect_uri=http://localhost:3000/user/oauth2/redirect`
+    )
+    .then(success)
+    .catch(fail);
+}
+
+/** 회원 정보 관리: 정보 얻어오기, 수정, 삭제 등 */
+export function getUserInfo(success, fail) {
+  api.get(`/user/me`).then(success).catch(fail);
+}
+
+export function modifyUserInfo(params, success, fail) {
+  api.patch(`/user`, params).then(success).catch(fail);
+}

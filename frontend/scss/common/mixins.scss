@@ -10,8 +10,12 @@
   }
 }
 
-@mixin flex-center() {
+@mixin flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@mixin main-container {
+  max-width: 1000px;
 }

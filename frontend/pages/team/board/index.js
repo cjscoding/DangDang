@@ -1,75 +1,95 @@
+import Pagination from "../../../components/team/board/pagination";
 import styles from "../../../scss/team/board/board.module.scss";
 import Title from "../../../components/layout/title";
-import Pagination from "../../../components/team/board/pagination";
-
 import Image from "next/image";
 import Link from "next/link";
 
-import { useRouter } from "next/router";
+import { setAllRooms } from "../../../store/actions/roomAction";
+import { getAllRooms } from "../../../api/studyroom";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { connect } from "react-redux";
-import { fetchRooms } from "../../../store/actions/roomAction";
 
-function mapStateToProps(state) {
+const mapStateToProps = (state) => {
   return {
-    rooms: state.roomReducer.allRooms,
-    allRoomsCount: state.roomReducer.allRoomsCount,
+    rooms: state.roomReducer.curRooms,
+    totalPosts: state.roomReducer.curRoomsCount,
   };
-}
+};
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = (dispatch) => {
   return {
-    fetchAllRooms: () => {
-      const data = fetchRooms();
-      data.then((res) => dispatch(res));
-    },
+    setAllRooms: (res) => dispatch(setAllRooms(res)),
   };
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamBoard);
 
-function TeamBoard({ rooms, allRoomsCount, fetchAllRooms }) {
-  //전체 스터디룸 조회
-  useEffect(() => {
-    fetchAllRooms();
-  }, []);
-
-  //pagination
-  const [postsPerPage] = useState(9);
-  const [startPostIndex, setStartPostIndex] = useState(0);
-  const [endPostIndex, setEndPostIndex] = useState(9);
-
-  const paginate = (pageNumber) => {
-    setStartPostIndex(pageNumber * postsPerPage);
-    setEndPostIndex((pageNumber + 1) * postsPerPage);
-  };
-
-  //room filtering
-  const [keyword, setKeyword] = useState("");
-  const [filteredRoomsCount, setFilteredRoomsCount] = useState();
-
-  const onChangeKeyword = (event) => {
-    const { value } = event.target;
-    setKeyword(value);
-    const count = rooms.filter((room) => room.hashTags.includes(value)).length;
-    setFilteredRoomsCount(count);
-    paginate(0);
-  };
-
+function TeamBoard({ rooms, totalPosts, setAllRooms }) {
   //스터디룸 상세보기 페이지 연결 로직
   const router = useRouter();
-
   const onDetail = (id) => {
     router.push(
       {
-        pathname: `/team/board/detail/${id}`,
+        pathname: `/team/board/detail`,
         query: {
           id,
         },
-      },
-      `/team/board/detail/${id}`
+      }
+      //   `/team/board/detail/${id}`
     );
   };
+
+  //pagination
+  const [curPage, setCurPage] = useState(0);
+  const [postsPerPage] = useState(6);
+  const [searchTags, setSearchTags] = useState([]);
+  const paginate = (pageNumber) => setCurPage(pageNumber);
+
+  //filtering keyword
+  const onAddTag = (event) => {
+    event.preventDefault();
+    if (event.key === "Enter") {
+      const newTag = event.target.value;
+      if (newTag == "") {
+        console.log("키워드를 입력해주세요.");
+      } else if (searchTags.indexOf(newTag) === -1) {
+        setSearchTags([...searchTags, newTag]);
+        event.target.value = "";
+        setCurPage(0);
+      } else {
+        console.log("이미 존재하는 키워드입니다.");
+        event.target.value = "";
+      }
+    }
+  };
+  const onRemoveTag = (event) => {
+    setSearchTags(searchTags.filter((tag) => tag != event.target.value));
+    setCurPage(0);
+  };
+
+  // 스터디룸 조회
+  useEffect(() => {
+    const param = {
+      hashtags: searchTags.join(","),
+      page: curPage,
+      size: postsPerPage,
+    };
+    getAllRooms(
+      param,
+      (res) => {
+        const roomList = {
+          rooms: res.data.response.content,
+          roomsCount: res.data.response.totalElements,
+        };
+        console.log(roomList);
+        setAllRooms(roomList);
+      },
+      (err) => {
+        console.log(err, "스터디를 조회할 수 없습니다.");
+      }
+    );
+  }, [searchTags, curPage]);
 
   return (
     <div>
@@ -90,9 +110,20 @@ function TeamBoard({ rooms, allRoomsCount, fetchAllRooms }) {
             <div className={styles.filter}>
               <input
                 type="text"
-                onChange={onChangeKeyword}
+                onKeyUp={onAddTag}
                 placeholder="키워드 검색..."
               />
+              <div>
+                tag :{" "}
+                {searchTags.map((tag) => (
+                  <div key={tag}>
+                    {tag}{" "}
+                    <button value={tag} onClick={onRemoveTag}>
+                      x
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className={styles.createRoom}>
               <button>
@@ -109,57 +140,36 @@ function TeamBoard({ rooms, allRoomsCount, fetchAllRooms }) {
           </div>
 
           <div className={styles.rooms}>
-            {keyword === ""
-              ? rooms?.slice(startPostIndex, endPostIndex).map((room) => (
-                  <div
-                    className={styles.room}
-                    key={room.id}
-                    onClick={() => onDetail(room.id)}
-                  >
-                    <Image
-                      src="/vercel.svg"
-                      alt="Vercel Logo"
-                      width={300}
-                      height={250}
-                    />
-                    <span> {room.id}</span>
-                    <span> {room.name}</span>
-                    <span> {room.goal}</span>
-                    <span> {room.description}</span>
-                    {room.hashTags?.map((hashTag, index) => (
-                      <span key={index}># {hashTag}</span>
-                    ))}
-                  </div>
-                ))
-              : rooms
-                  ?.filter((room) => room.hashTags.includes(keyword))
-                  .slice(startPostIndex, endPostIndex)
-                  .map((room) => (
-                    <div
-                      className={styles.room}
-                      key={room.id}
-                      onClick={() => onDetail(room.id)}
-                    >
+            {rooms?.map((room) => (
+              <div
+                className={styles.room}
+                key={room.id}
+                onClick={() => onDetail(room.id)}
+              >
+                {room.imageUrl !== null ? (
+                    <img src={`https://localhost:8443/files/images/${room.imageUrl}`} width="300" height="200" alt="" />
+                    ) : (
                       <Image
-                        src="/vercel.svg"
+                        src='/vercel.svg'
                         alt="Vercel Logo"
                         width={300}
                         height={250}
                       />
-                      <span> {room.id}</span>
-                      <span> {room.name}</span>
-                      <span> {room.goal}</span>
-                      <span> {room.description}</span>
-                      {room.hashTags?.map((hashTag, index) => (
-                        <span key={index}># {hashTag}</span>
-                      ))}
-                    </div>
-                  ))}
+                )}
+                <span> {room.id}</span>
+                <span> {room.name}</span>
+                <span> {room.goal}</span>
+                <span> {room.description}</span>
+                {room.hashTags?.map((hashTag, index) => (
+                  <span key={index}># {hashTag}</span>
+                ))}
+              </div>
+            ))}
           </div>
           <Pagination
-            allRoomsCount={keyword === "" ? allRoomsCount : filteredRoomsCount}
-            postsPerPage={postsPerPage}
             paginate={paginate}
+            totalCount={totalPosts}
+            postsPerPage={postsPerPage}
           />
         </div>
       </div>
