@@ -17,7 +17,7 @@ function userInfo({ user }) {
         <p>id: {user.id}</p>
         <p>이름: {user.nickName}</p>
         <p>이메일: {user.email}</p>
-        <Link href="/user/mypage/userInfoEdit" as="/user">
+        <Link href="/user/edit">
           <a>
             <button>변경</button>
           </a>
