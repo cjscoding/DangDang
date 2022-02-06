@@ -69,7 +69,7 @@ public class PostServiceImpl implements PostService{
         Optional<Post> post = postRepository.findById(postId);
 
         if (!post.isPresent()) throw new NullPointerException("존재하지 않는 게시글 입니다.");
-        if (post.get().getWriter().getId() == user.getId()) throw new UnauthorizedAccessException("작성자만이 삭제할 수 있습니다.");
+        if (post.get().getWriter().getId() != user.getId()) throw new UnauthorizedAccessException("작성자만이 삭제할 수 있습니다.");
         List<Comment> comments = commentRepository.findAllByReferenceIdAndDepthAndCommentType(postId, 0, CommentType.POST);
         comments.forEach(commentRepository::recurDelete);
 

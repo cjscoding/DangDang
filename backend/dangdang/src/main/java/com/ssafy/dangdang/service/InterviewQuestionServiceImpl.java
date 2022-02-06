@@ -5,16 +5,14 @@ import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
 import com.ssafy.dangdang.exception.UnauthorizedAccessException;
 import com.ssafy.dangdang.repository.InterviewQuestionRepository;
-import com.ssafy.dangdang.util.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.ssafy.dangdang.util.ApiUtils.*;
 
@@ -39,7 +37,7 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService{
         Optional<InterviewQuestion> question = interviewQuestionRepository.findById(interviewQuestionId);
 
         if (!question.isPresent()) throw new NullPointerException("존재하지 않는 질문 입니다.");
-        if (question.get().getWriter().getId() == user.getId()) new UnauthorizedAccessException("작성자만이 삭제할 수 있습니다.");
+        if (question.get().getWriter().getId() != user.getId()) new UnauthorizedAccessException("작성자만이 삭제할 수 있습니다.");
         interviewQuestionRepository.delete(question.get());
         return success("삭제 성공");
     }
@@ -51,9 +49,41 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService{
 
     @Override
     @Transactional
-    public List<InterviewQuestionDto> getAllInterviewQustion(){
-        List<InterviewQuestion> all = interviewQuestionRepository.findAllInterviewQuestion();
-        List<InterviewQuestionDto> interviewQuestionDtos = all.stream().map(InterviewQuestionDto::of).collect(Collectors.toList());
+    public Page<InterviewQuestionDto> getAllInterviewQustion(Pageable pageable){
+        Page<InterviewQuestion> all = interviewQuestionRepository.findAllInterviewQuestion(pageable);
+        Page<InterviewQuestionDto> interviewQuestionDtos = all.map(InterviewQuestionDto::of);
+        return interviewQuestionDtos;
+    }
+
+    @Override
+    @Transactional
+    public Page<InterviewQuestionDto> getAllVisableInterviewQustion(User writer, Pageable pageable){
+        Page<InterviewQuestion> all = interviewQuestionRepository.findAllVisableInterviewQuestion(writer, pageable);
+        Page<InterviewQuestionDto> interviewQuestionDtos = all.map(InterviewQuestionDto::of);
+        return interviewQuestionDtos;
+    }
+
+    @Override
+    @Transactional
+    public void makePublic(Long interviewId){
+        Optional<InterviewQuestion> interview = interviewQuestionRepository.findById(interviewId);
+        if (!interview.isPresent()) throw new NullPointerException("존재하지 않는 질문 입니다.");
+        interview.get().makePubic();
+    }
+
+    @Override
+    @Transactional
+    public void hide(Long interviewId){
+        Optional<InterviewQuestion> interview = interviewQuestionRepository.findById(interviewId);
+        if (!interview.isPresent()) throw new NullPointerException("존재하지 않는 질문 입니다.");
+        interview.get().hide();
+    }
+
+    @Override
+    @Transactional
+    public Page<InterviewQuestionDto> getMyQuestion(User writer, Pageable pageable) {
+        Page<InterviewQuestion> all = interviewQuestionRepository.findAllByWriter(writer.getId(), pageable);
+        Page<InterviewQuestionDto> interviewQuestionDtos = all.map(InterviewQuestionDto::of);
         return interviewQuestionDtos;
     }
 

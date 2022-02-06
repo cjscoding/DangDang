@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @ToString
 @Schema(description = "댓글 정보")
 public class CommentDto {
-
     @Schema(accessMode = Schema.AccessMode.AUTO, description = "댓글 Id")
     private String id;
     @Schema(description = "댓글 내용", example = "댓글 댓글")

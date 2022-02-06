@@ -63,40 +63,41 @@ public class JoinsServiceImpl implements JoinsService {
         Optional<Study> study = studyRepository.findById(studyId);
         if(!study.isPresent()) throw new NullPointerException("존재하지 않는 스터디 입니다.");
         if (!study.get().getHost().getId().equals(host.getId())) throw new UnauthorizedAccessException("스터디장만 가입 대기자들을 확인할 수 있습니다.");
-        List<User> waitingUesrs = userRepository.findWaitingUesrs(studyId);
-        List<UserDto> waitingUserDtos = waitingUesrs.stream().map(UserDto::of).collect(Collectors.toList());
+        List<User> waitingUsers = userRepository.findWaitingUsers(studyId);
+        List<UserDto> waitingUserDtos = waitingUsers.stream().map(UserDto::of).collect(Collectors.toList());
         return waitingUserDtos;
     }
 
     @Override
     public void outStudy(User user, Long studyId) {
         Study study = studyRepository.findById(studyId).get();
-        Joins enter = joinsRepository.findJoinsByUserIdAndStudyId(user.getId(), studyId);
-
         if (study.getHost().getId().equals(user.getId())) throw new BadRequestException("스터디장은 스터디를 탈퇴할 수 없습니다.");
+        
+        Joins enter = joinsRepository.findJoinsByUserIdAndStudyId(user.getId(), studyId);
         joinsRepository.delete(enter);
     }
 
     @Override
     public void outStudy(User user, Long userId, Long studyId) {
         Study study = studyRepository.findById(studyId).get();
-        Joins enter = joinsRepository.findJoinsByUserIdAndStudyId(userId, studyId);
         if (!study.getHost().getId().equals(user.getId())) throw new UnauthorizedAccessException("스터디장만이 유저를 내보낼 수 있습니다.");
-
-
+        
+        Joins enter = joinsRepository.findJoinsByUserIdAndStudyId(userId, studyId);
         joinsRepository.delete(enter);
     }
 
     @Override
     @Transactional
-    public List<StudyDto> getStudies(User user){
-        List<StudyDto> studies = studyRepository.getStudiesJoined(user);
-        return studies;
-       }
+    public List<StudyDto> getStudies(User user, List<String> hasgTags){
+        List<Study> studies = studyRepository.getStudiesJoined(user, hasgTags);
+
+        return studies.stream().map(StudyDto::of).collect(Collectors.toList());
+    }
 
    @Override
    @Transactional
-    public Page<StudyDto> getStudiesJoinedWithPage(User user, Pageable pageable){
-        return studyRepository.getStudiesJoinedWithPage(user, pageable);
+    public Page<StudyDto> getStudiesJoinedWithPage(User user,List<String> hasgTags, Pageable pageable){
+       Page<Study> studies = studyRepository.getStudiesJoinedWithPage(user, hasgTags, pageable);
+       return studies.map(StudyDto::of) ;
     }
 }

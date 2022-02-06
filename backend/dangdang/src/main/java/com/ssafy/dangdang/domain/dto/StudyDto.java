@@ -49,6 +49,9 @@ public class StudyDto {
     @Schema(description = "스터디의 목표기업, 추후 Enum타입으로 교체될 수 있음음", nullable = true, example = "네이버 가즈아~~!")
     private String goal;
 
+    @Schema(description = "스터디 이미지 경로", example = "default.png")
+    private String imageUrl;
+
     @Schema( accessMode = Schema.AccessMode.READ_ONLY,readOnly = true, required = false, description = "스터디장, 스터디를 만든 유저", nullable = true)
     private UserDto host;
 
@@ -62,6 +65,7 @@ public class StudyDto {
 
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "스터디 상세 페이지에 달린 댓글들", nullable = true)
     private Page<CommentDto> commentDtos;
+
 
 
     public static StudyDto of(MakeStudy makeStudy) {
@@ -79,7 +83,9 @@ public class StudyDto {
 
     public static StudyDto of(Study study) {
         List<Joins> joins = study.getJoins();
-        List<UserDto> userDtoLIst = joins.stream().filter(join -> !join.getWaiting()) .map(join -> UserDto.of(join.getUser())).collect(Collectors.toList());
+        // 가입 완료된 유저만 조회
+        List<UserDto> userDtoLIst = joins.stream().filter(join -> !join.getWaiting())
+                .map(join -> UserDto.of(join.getUser())).collect(Collectors.toList());
 
 
         UserDto userDto = UserDto.of(study.getHost());
@@ -95,6 +101,7 @@ public class StudyDto {
                 .lastAccessTime(study.getLastAccessTime())
                 .openKakao(study.getOpenKakao())
                 .hashTags(hashTags)
+                .imageUrl(study.getImageUrl())
                 .number(study.getNumber())
                 .userDtos(userDtoLIst)
                 .host(userDto)

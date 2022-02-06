@@ -29,7 +29,7 @@ import static com.ssafy.dangdang.util.ApiUtils.*;
 
 @RestController
 @RequestMapping("/study")
-@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*")
+//@CrossOrigin(origins = {"http://localhost:3000"}, allowedHeaders = "*")
 @RequiredArgsConstructor
 @Slf4j
 public class PostController {
