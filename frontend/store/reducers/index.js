@@ -7,6 +7,7 @@ import videoReducer from "./videoReducer";
 import questionReducer from "./questionReducer";
 import userReducer from "./userReducer";
 import wsReducer from "./wsReducer";
+import timerReducer from "./timerReducer";
 
 const combinedReducer = combineReducers({
   roomReducer,
@@ -16,6 +17,7 @@ const combinedReducer = combineReducers({
   questionReducer,
   userReducer,
   wsReducer,
+  timerReducer,
 });
 
 const reducer = (state, action) => {

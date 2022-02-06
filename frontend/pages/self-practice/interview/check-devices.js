@@ -18,7 +18,6 @@ export async function getServerSideProps() {
 function mapStateToProps(state) {
   return {
     isQs: state.questionReducer.questions.length !== 0,
-    ws: state.wsReducer.ws,
   };
 }
 import { setQuestions } from "../../../store/actions/questionAction";
@@ -33,13 +32,6 @@ function CheckDevices({preparedQuestions, isQs, setQuestions}) {
   useEffect(() => {
     if(!isQs) {
       setQuestions(preparedQuestions);
-    }
-
-    window.onbeforeunload = function() {
-      sendMessage({
-        id : 'del',
-      });
-      ws.close();
     }
   }, [])
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { connect } from "react-redux";
 import styles from "../../../scss/self-practice/interview/add-questions.module.scss";
 
@@ -10,11 +10,10 @@ export async function getServerSideProps() {
   return {props: {preparedQuestions}};
 };
 function mapStateToProps(state) {
-    return {
-      questions: state.questionReducer.questions,
-      ws: state.wsReducer.ws,
-    };
-  }
+  return {
+    questions: state.questionReducer.questions,
+  };
+}
   
 import { addQuestion } from "../../../store/actions/questionAction";
 function mapDispatchToProps(dispatch) {
@@ -27,14 +26,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(AddQuestions);
 
 function AddQuestions({preparedQuestions, questions, addQuestion}) {
   const [questionInput, setQuestionInput] = useState("");
-  useEffect(()=>{
-    window.onbeforeunload = function() {
-      sendMessage({
-        id : 'del',
-      });
-      ws.close();
-    }
-  }, [])
   function addQuestionInput() {
     const Qinput = questionInput.trim()
     if(Qinput) {
