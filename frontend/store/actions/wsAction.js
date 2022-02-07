@@ -19,7 +19,3 @@ export const setSelectedQuestion = (selectedQuestion) => ({
   type: types.SET_SELECTED_QUESTION,
   selectedQuestion,
 });
-
-export const setQuestionToggleState = () => ({
-  type: types.SET_QUESTION_TOGGLE_STATE,
-});

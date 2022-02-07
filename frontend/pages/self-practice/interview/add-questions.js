@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import styles from "../../../scss/self-practice/interview/add-questions.module.scss";
 
@@ -26,6 +26,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(AddQuestions);
 
 function AddQuestions({preparedQuestions, questions, addQuestion}) {
   const [questionInput, setQuestionInput] = useState("");
+
+  useEffect(() => {
+    if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
+  }, [])
+
   function addQuestionInput() {
     const Qinput = questionInput.trim()
     if(Qinput) {
