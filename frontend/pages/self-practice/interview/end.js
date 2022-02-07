@@ -8,90 +8,44 @@ function mapStateToProps(state) {
     sessionId: state.wsReducer.sessionId,
     questions: state.questionReducer.questions,
     recordedQuestionIdxes: state.wsReducer.recordedQuestionIdxes,
-    cameraId: state.videoReducer.cameraId, 
-    micId: state.videoReducer.micId,
     speakerId: state.videoReducer.speakerId,
   };
 }
 export default connect(mapStateToProps, null)(EndInterview)
 
-function EndInterview({ws, sessionId, questions, recordedQuestionIdxes, cameraId, micId, speakerId}) {
+function EndInterview({ws, sessionId, questions, recordedQuestionIdxes, speakerId}) {
   useEffect(()=>{
+    if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
     const myVideo = document.querySelector("#my-video")
     myVideo.setSinkId(speakerId);
     let webRtcPeer;
-    let selectedIdx;
 
     function sendMessage(msgObj) {
       const msgStr = JSON.stringify(msgObj);
-      console.log(`SEND: ${msgStr}`);
       ws.send(msgStr);
     }
     ws.onmessage = function(message) {
       const msgObj = JSON.parse(message.data);
-      console.log(`RECEIVE: ${message.data}`);
       switch(msgObj.id) {
         case "playResponse":
           webRtcPeer.processAnswer(msgObj.sdpAnswer, function(error) {
             if (error) return console.log(`ERROR! ${error}`);
           });
           break;
-        case "playEnd":
-          // 몰라
         case "iceCandidate":
-          try{
+          if(webRtcPeer) {
             webRtcPeer.addIceCandidate(msgObj.candidate, function(error) {
               if(error) return console.log(`ERROR! ${error}`);
             })
             break;
-          }catch(error){console.log(`ERROR! ${error}`)}
+          }
         default:
           console.log(`ERROR! ${msgObj}`)
           break;
       }
     }
     function play(idx) {
-      console.log("#######################?#???#?#?#?")
-      console.log(`${WEBRTC_URL}/files/videos/${sessionId + idx}.webm`)
       myVideo.src = `${WEBRTC_URL}/files/videos/${sessionId + idx}.webm`
-    }
-    // function play(idx) {
-    //   selectedIdx = idx
-    //   const options = {
-    //     remoteVideo: myVideo,
-    //     mediaConstraints : getVideoConstraints(),
-    //     onicecandidate : onIceCandidate
-    //   }
-    //   webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function(error) {
-    //     if (error) return console.log(`ERROR! ${error}`);
-    //     webRtcPeer.generateOffer(onPlayOffer);
-    //   });
-    // }
-    // function onPlayOffer(error, offerSdp) {
-    //   if(error) return console.log(`ERROR! ${error}`)
-    //   sendMessage({
-    //     id: "play",
-    //     sdpOffer: offerSdp,
-    //     path: sessionId + selectedIdx + ".webm"
-    //   });
-    // }
-    function getVideoConstraints() {
-      const initialConstraints = { width: 320, height: 180, facingMode: "user" }
-      const cameraConstraints = {video: {...initialConstraints, deviceId: {exact: cameraId}}}
-      const micConstraints = {audio: {deviceId: {exact: micId}}}
-      const constraints = {
-        audio: true,
-        ...micId?micConstraints:{},
-        video: initialConstraints,
-        ...cameraId?cameraConstraints:{},
-      }
-      return constraints;
-    }
-    function onIceCandidate(candidate) {
-      sendMessage({
-        id: "onIceCandidate",
-        candidate : candidate
-      });
     }
 
     function download(idx) {
@@ -110,12 +64,6 @@ function EndInterview({ws, sessionId, questions, recordedQuestionIdxes, cameraId
       }
       playBtn.addEventListener("click", playCurVideo)
       downloadBtn.addEventListener("click", downloadCurVideo)
-    }
-    window.onbeforeunload = function() {
-      sendMessage({
-        id : 'del',
-      });
-      ws.close();
     }
   }, [])
   return <>
