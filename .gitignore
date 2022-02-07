@@ -536,4 +536,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+./backend/dangdang/data/files/**
+
 # End of https://www.toptal.com/developers/gitignore/api/java,intellij,react,nextjs,webstorm,linux,windows,macos,visualstudiocode,reactnative

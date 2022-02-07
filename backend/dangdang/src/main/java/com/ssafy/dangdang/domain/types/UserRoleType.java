@@ -4,8 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum UserRoleType {
-    USER("일반"),
-    ADMIN("관리자");
+    USER("ROLE_USER"),
+    MANAGER("ROLE_MANAGER"),
+    ADMIN("ROLE_ADMIN");
 
     private final String name;
 
@@ -17,7 +18,7 @@ public enum UserRoleType {
     public static class ROLES {
 
         public static final String USER = "ROLE_USER";
-
+        public static final String MANAGER = "ROLE_MANAGER";
         public static final String ADMIN = "ROLE_ADMIN";
 
     }

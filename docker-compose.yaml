@@ -1,0 +1,96 @@
+version: "3"
+
+services:
+  backend:
+    image: dbswns97/dangdang-backend:0.6
+    # build: ./backend/dangdang
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://dangdang-mysql:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul"
+      SPRING_DATASOURCE_USERNAME: "ssafy"
+      SPRING_DATASOURCE_PASSWORD: "ssafy"
+      SPRING_DATA_MONGODB_URI: "mongodb://dangdang-mongodb:27017/dangdang"
+      SPRING_REDIS_HOST: "dangdang-redis"
+      SPRING_REDIS_PORT: "6379"
+      SERVER_PORT: "8443"
+    ports:
+      - 8443:8443
+    depends_on:
+      - "dangdang-mongodb"
+      - "dangdang-mysql"
+      - "dangdang-redis"
+      - "dangdang-kms"
+    volumes:
+      - kms_data:/app/data/videos
+      # - type: bind
+      #   source: ./backend/dangdang/data/files
+      #   target: /app/data/files
+    restart: always
+    links:
+      - dangdang-mongodb
+      - dangdang-kms
+    networks:
+      - dangdang_network
+    command: "java -Dspring.profiles.active=prod -Dkms.url=ws://dangdang-kms:8888/kurento -jar /app.jar"
+
+  dangdang-mysql:
+    image: mysql:8.0.28
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "dangdang"
+      MYSQL_HOST: "%"
+      MYSQL_USER: "ssafy"
+      MYSQL_PASSWORD: "ssafy"
+    command:
+      [
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci"
+      ]
+    ports:
+      - 3307:3306
+    restart: always
+    networks:
+      - dangdang_network
+
+  dangdang-redis:
+    image: redis:6.2.6
+    command: redis-server --port 6379
+    ports:
+      - 6379:6379
+    restart: always
+    networks:
+      - dangdang_network
+
+  dangdang-mongodb:
+    image: mongo:5
+    ports:
+      - 27017:27017
+    restart: always
+    networks:
+      - dangdang_network
+    command: mongod
+
+  dangdang-kms:
+    image: kurento/kurento-media-server:latest
+    restart: always
+    volumes:
+      - kms_data:/tmp
+      # - type: bind
+      #   source: ./backend/dangdang/data/files
+      #   target: /tmp
+      # network_mode: host
+    expose:
+      - 8888
+    ports:
+      - 8888:8888
+      - 5000-5050:5000-5050/udp
+    environment:
+      - GST_DEBUG=2,Kurento*:5
+    networks:
+      - dangdang_network
+
+volumes:
+  kms_data:
+
+networks:
+  dangdang_network:
+    driver: bridge

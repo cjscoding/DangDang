@@ -1,0 +1,21 @@
+@mixin back {
+  background-color: blue;
+}
+
+@mixin what($word) {
+  @if $word == "odd" {
+    background-color: purple;
+  } @else {
+    background-color: yellow;
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin main-container {
+  max-width: 1000px;
+}
