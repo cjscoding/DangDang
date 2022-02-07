@@ -55,6 +55,10 @@ services:
       ]
     ports:
       - 3307:3306
+    volumes:
+      - type: bind
+        source: /home/ubuntu/mysql
+        target: /var/lib/mysql
     restart: always
     networks:
       - dangdang_network
@@ -73,6 +77,10 @@ services:
     ports:
       - 27017:27017
     restart: always
+    volumes:
+      - type: bind
+        source: /home/ubuntu/mongodb/data
+        target: /data/db
     networks:
       - dangdang_network
     command: mongod
