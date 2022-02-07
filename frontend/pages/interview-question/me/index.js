@@ -4,7 +4,10 @@ import { connect } from "react-redux";
 import Table from "../../../components/layout/table/table";
 import TableColumn from "../../../components/layout/table/tableColumn";
 import TableRow from "../../../components/layout/table/tableRow";
-import { getMyInterviewQuestions } from "../../../api/interviewQuestion";
+import {
+  getMyInterviewQuestions,
+  deleteInterviewQuestion,
+} from "../../../api/interviewQuestion";
 import { setMyQuestions } from "../../../store/actions/questionAction";
 
 function mapStateToProps({ questionReducer }) {
@@ -25,6 +28,10 @@ function myQuestion({ myQuestions, setMyQuestions }) {
   const headers = ["카테고리", "질문"];
   console.log(myQuestions);
   useEffect(() => {
+    getQuestion();
+  }, []);
+
+  const getQuestion = () => {
     const params = {
       page: 0,
       size: 10,
@@ -32,12 +39,26 @@ function myQuestion({ myQuestions, setMyQuestions }) {
     getMyInterviewQuestions(
       params,
       ({ data: { response } }) => {
-        console.log(response);
         setMyQuestions(response.content);
       },
       (error) => console.log(error)
     );
-  }, []);
+  };
+
+  const deleteQuestion = (id) => {
+    if (confirm("정말 삭제하시겠습니까?") === true) {
+      const params = {
+        id,
+      };
+      deleteInterviewQuestion(
+        params,
+        (response) => {
+          getQuestion();
+        },
+        (error) => console.log(error)
+      );
+    } else return;
+  };
 
   return (
     <section>
@@ -53,7 +74,15 @@ function myQuestion({ myQuestions, setMyQuestions }) {
           {myQuestions.map((myQuestion, index) => (
             <TableRow key={index}>
               <TableColumn>{myQuestion.field}</TableColumn>
-              <TableColumn>{myQuestion.question}</TableColumn>
+              <TableColumn>
+                {myQuestion.question}
+                <div>
+                  <Link href={`/interview-question/edit/${myQuestion.id}`}>
+                    <a>수정</a>
+                  </Link>
+                  <a onClick={() => deleteQuestion(myQuestion.id)}>삭제</a>
+                </div>
+              </TableColumn>
             </TableRow>
           ))}
         </Table>

@@ -13,3 +13,7 @@ export function getMyInterviewQuestions(params, success, fail) {
 export function addInterviewQuestion(params, success, fail) {
   api.post(`/interview`, params).then(success).catch(fail);
 }
+
+export function deleteInterviewQuestion(params, success, fail) {
+  api.delete(`/interview/${params.id}`, params).then(success).catch(fail);
+}
