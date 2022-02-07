@@ -50,27 +50,31 @@ function EndInterview({ws, sessionId, questions, recordedQuestionIdxes, cameraId
           break;
       }
     }
-
     function play(idx) {
-      selectedIdx = idx
-      const options = {
-        remoteVideo: myVideo,
-        mediaConstraints : getVideoConstraints(),
-        onicecandidate : onIceCandidate
-      }
-      webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function(error) {
-        if (error) return console.log(`ERROR! ${error}`);
-        webRtcPeer.generateOffer(onPlayOffer);
-      });
+      console.log("#######################?#???#?#?#?")
+      console.log(`${WEBRTC_URL}/files/videos/${sessionId + idx}.webm`)
+      myVideo.src = `${WEBRTC_URL}/files/videos/${sessionId + idx}.webm`
     }
-    function onPlayOffer(error, offerSdp) {
-      if(error) return console.log(`ERROR! ${error}`)
-      sendMessage({
-        id: "play",
-        sdpOffer: offerSdp,
-        path: sessionId + selectedIdx + ".webm"
-      });
-    }
+    // function play(idx) {
+    //   selectedIdx = idx
+    //   const options = {
+    //     remoteVideo: myVideo,
+    //     mediaConstraints : getVideoConstraints(),
+    //     onicecandidate : onIceCandidate
+    //   }
+    //   webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function(error) {
+    //     if (error) return console.log(`ERROR! ${error}`);
+    //     webRtcPeer.generateOffer(onPlayOffer);
+    //   });
+    // }
+    // function onPlayOffer(error, offerSdp) {
+    //   if(error) return console.log(`ERROR! ${error}`)
+    //   sendMessage({
+    //     id: "play",
+    //     sdpOffer: offerSdp,
+    //     path: sessionId + selectedIdx + ".webm"
+    //   });
+    // }
     function getVideoConstraints() {
       const initialConstraints = { width: 320, height: 180, facingMode: "user" }
       const cameraConstraints = {video: {...initialConstraints, deviceId: {exact: cameraId}}}

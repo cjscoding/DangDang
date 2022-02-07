@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.parameters.P;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -24,19 +26,25 @@ public class StudyServiceTest {
 
 
     @Test
+    @Transactional
     public void getStudiesJoined(){
 
         User user = userRepository.findUserByEmail("test@ssafy.com").get();
-        List<StudyDto> studies = studyRepository.getStudiesJoined(user);
+        List<Study> studies = studyRepository.getStudiesJoined(user, null);
 
         System.out.println(studies);
     }
 
     @Test
+    @Transactional
     public void getStudiesJoinedWithPage(){
 
         User user = userRepository.findUserByEmail("test@ssafy.com").get();
-        Page<StudyDto> allWithUser = studyRepository.getStudiesJoinedWithPage(user, PageRequest.of(0, 10));
+
+        List<String> hashtags = new ArrayList<>();
+        hashtags.add("naver");
+
+        Page<Study> allWithUser = studyRepository.getStudiesJoinedWithPage(user, hashtags, PageRequest.of(0, 10));
 
         System.out.println(allWithUser.getContent());
     }
@@ -48,6 +56,16 @@ public class StudyServiceTest {
         Study fetchJoinStudyById = studyRepository.findStudyById(1L);
 
         System.out.println(fetchJoinStudyById);
+    }
+
+    @Test
+    @Transactional
+    public void findStudyByHasgTags(){
+        List<String> hashtags = new ArrayList<>();
+        hashtags.add("naver");
+        Page<Study> studies = studyRepository.findStudiesByHashtags(hashtags, PageRequest.of(0, 10));
+
+        System.out.println(studies.getContent());
     }
 
 

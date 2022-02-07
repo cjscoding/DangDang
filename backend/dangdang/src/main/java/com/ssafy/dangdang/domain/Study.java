@@ -31,6 +31,8 @@ public class Study {
     //오픈카톡방 주소
     private String openKakao;
 
+    private String imageUrl;
+
 
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -93,5 +95,6 @@ public class Study {
     public void addHashTags(List<StudyHashTag> studyHashTags){
         this.hashTags = studyHashTags;
     }
+    public void addImageUrl(String path){ this.imageUrl = path;}
 
 }

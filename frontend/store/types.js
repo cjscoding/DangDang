@@ -38,6 +38,12 @@ const wsTypes = {
   SET_WEB_SOCKET_SESSION_ID: "SET_WEB_SOCKET_SESSION_ID",
   PUSH_RECORDED_QUESTION_IDX: "PUSH_RECORDED_QUESTION_IDX",
   SET_SELECTED_QUESTION: "SET_SELECTED_QUESTION",
+  SET_QUESTION_TOGGLE_STATE: "SET_QUESTION_TOGGLE_STATE",
+}
+
+const timerTypes = {
+  START_TIMER: "START_TIMER",
+  TIMER_TICK: "TIMER_TICK",
 }
 
 const types = {
@@ -47,5 +53,6 @@ const types = {
   ...questionTypes,
   ...userTypes,
   ...wsTypes,
+  ...timerTypes,
 }
 export default types;

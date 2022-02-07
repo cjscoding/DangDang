@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import MyFace from "../../../components/webRTC/MyFace";
 import ShowQuestion from "../../../components/webRTC/self-practice/ShowQuestion";
 import styles from "../../../scss/self-practice/interview/mainComponent.module.scss";
+import axios from "axios";
+import timer from "../../../components/webRTC/timer"
 
 function mapStateToProps(state) {
   return {
@@ -16,17 +18,19 @@ function mapStateToProps(state) {
     speakerId: state.videoReducer.speakerId,
   };
 }
-import { setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion } from "../../../store/actions/wsAction";
+import { setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion, setQuestionToggleState } from "../../../store/actions/wsAction";
+
 function mapDispatchToProps(dispatch) {
   return {
     setWSSessionId: (sessionId) => dispatch(setWSSessionId(sessionId)),
     pushRecordedQuestionIdx: (idx) => dispatch(pushRecordedQuestionIdx(idx)),
     setSelectedQuestion: (selectedQuestion) => dispatch(setSelectedQuestion(selectedQuestion)),
+    setQuestionToggleState: () => dispatch(setQuestionToggleState()),
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Interview);
 
-function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion}) {
+function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion, setQuestionToggleState}) {
   const router = useRouter();
   const [isWait, setIsWait] = useState(false);
   const [screenNum, setScreenNum] = useState(3);
@@ -54,12 +58,12 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
     getStream();
     function sendMessage(msgObj) {
       const msgStr = JSON.stringify(msgObj);
-      console.log(`SEND: ${msgStr}`);
+      // console.log(`SEND: ${msgStr}`);
       ws.send(msgStr);
     }
     ws.onmessage = function(message) {
       const msgObj = JSON.parse(message.data);
-      console.log(`RECEIVE: ${message.data}`);
+      // console.log(`RECEIVE: ${message.data}`);
       switch(msgObj.id) {
         case "startResponse":
           if(!sessionId) setWSSessionId(msgObj.sessionId);
@@ -85,6 +89,30 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
     }
     
     function record() {
+      // setQuestionToggleState()
+      timer.startTimer()
+      let txt=questions[questionNum2];
+      axios({
+        method:"post",
+        url:"https://kakaoi-newtone-openapi.kakao.com/v1/synthesize",
+        headers:{
+            "Content-Type":"application/xml",
+            "Authorization": "KakaoAK c420902bf013e6a215efef159a46af41",
+        },
+        data:"<speak><voice name='MAN_READ_CALM'>"+txt+"</voice></speak>",
+        responseType: 'arraybuffer',
+      }).then((res)=>{
+        // arraybuffer를 재생하는 코드 
+        const context=new AudioContext();
+        context.decodeAudioData(res.data,buffer=>{
+          const source = context.createBufferSource();
+          source.buffer = buffer;
+          source.connect(context.destination);
+          source.start(0);
+        });
+      }).catch((error)=>{
+          console.log(error);
+      })
       const options = {
         localVideo: myFace,
         mediaConstraints : getVideoConstraints(),
@@ -115,32 +143,11 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
       }
     }
 
-
-    // function play() {
-    //   hideScreen();
-    //   const options = {
-    //     remoteVideo: myFace,
-    //     mediaConstraints : getVideoConstraints(),
-    //     onicecandidate : onIceCandidate
-    //   }
-    //   webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function(error) {
-    //     if (error) return console.log(`ERROR! ${error}`);
-    //     webRtcPeer.generateOffer(onPlayOffer);
-    //   });
-    // }
-    // function onPlayOffer(error, offerSdp) {
-    //   if(error) return console.log(`ERROR! ${error}`)
-    //   sendMessage({
-    //     id: "play",
-    //     sdpOffer: offerSdp,
-    //     path: ?
-    //   });
-    // }
-
     function getVideoConstraints() {
-      const initialConstraints = { width: 320, height: 180, facingMode: "user" }
+      const initialConstraints = { width: 640, height: 360, facingMode: "user" }
       const cameraConstraints = {video: {...initialConstraints, deviceId: {exact: cameraId}}}
       const micConstraints = {audio: {deviceId: {exact: micId}}}
+
       const constraints = {
         audio: true,
         ...micId?micConstraints:{},
@@ -170,44 +177,46 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
     }
     function restartQuestion() {
       record()
-      return false;
+      return;
     }
     function saveAndNext() {
       save();
       pushRecordedQuestionIdx(questionNum2);
       if(questionNum2 === questions.length - 1) {
         router.push(`/self-practice/interview/end`);
+        return;
       }
       questionNum2 += 1
       setSelectedQuestion(questions[questionNum2])
       record();
-      return false;
+      return;
     }
     function skipQuestion() {
       if(questionNum2 === questions.length - 1) {
         router.push(`/self-practice/interview/end`);
+        return;
       }
       questionNum2 += 1
       setSelectedQuestion(questions[questionNum2])
       record();
-      return false;
+      return;
     }
-    volumeBtn.current.addEventListener("click", controlVolume);
-    restartBtn.current.addEventListener("click", restartQuestion);
-    saveBtn.current.addEventListener("click", saveAndNext);
-    skipBtn.current.addEventListener("click", skipQuestion);
-    window.onbeforeunload = function() {
-      sendMessage({
-        id : 'del',
-      });
-      ws.close();
-    }
+    // return 함수에서 .current를 사용하면 에러가 남
+    const volumeButton = volumeBtn.current;
+    const restartButton = restartBtn.current;
+    const saveButton = saveBtn.current;
+    const skipButton = skipBtn.current;
+    volumeButton.addEventListener("click", controlVolume);
+    restartButton.addEventListener("click", restartQuestion);
+    saveButton.addEventListener("click", saveAndNext);
+    skipButton.addEventListener("click", skipQuestion);
     record();
     return () => {
-      // volumeBtn.current.removeEventListener("click", controlVolume);
-      // restartBtn.current.removeEventListener("click", restartQuestion);
-      // saveBtn.current.removeEventListener("click", saveAndNext);
-      // skipBtn.current.removeEventListener("click", skipQuestion);
+      timer.stopTimer()
+      volumeButton.removeEventListener("click", controlVolume);
+      restartButton.removeEventListener("click", restartQuestion);
+      saveButton.removeEventListener("click", saveAndNext);
+      skipButton.removeEventListener("click", skipQuestion);
     }
   },[])
   return <div>
