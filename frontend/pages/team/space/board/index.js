@@ -34,9 +34,10 @@ function Board({ roomInfo, roomHost, userInfo, posts, setRoomInfo, setPosts }) {
 
   //pagination
   const [curPage, setCurPage] = useState(0);
-  const [postsPerPage] = useState(6);
+  const [postsPerPage, setPostPerPage] = useState(10);
   const [totalPosts, setTotalPosts] = useState(0);
   const paginate = (pageNumber) => setCurPage(pageNumber);
+  const onChangePostsPerPage = (event) => setPostPerPage(event.target.value);
 
   const params = {
     studyId: router.query.id,
@@ -113,6 +114,11 @@ function Board({ roomInfo, roomHost, userInfo, posts, setRoomInfo, setPosts }) {
         >
           <a>글작성</a>
         </Link>
+        <select name="" id="" onChange={onChangePostsPerPage}>
+            <option value="10">10개씩 보기</option>
+            <option value="20">20개씩 보기</option>
+            <option value="30">30개씩 보기</option>
+        </select>
         <div className={styles.table}>
           <table>
             <thead>
@@ -147,6 +153,7 @@ function Board({ roomInfo, roomHost, userInfo, posts, setRoomInfo, setPosts }) {
           </table>
         </div>
         <Pagination
+          curPage={curPage}
           paginate={paginate}
           totalCount={totalPosts}
           postsPerPage={postsPerPage}
