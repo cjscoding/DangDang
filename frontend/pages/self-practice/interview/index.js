@@ -2,37 +2,32 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
-import MyFace from "../../../components/webRTC/MyFace";
 import ShowQuestion from "../../../components/webRTC/self-practice/ShowQuestion";
 import styles from "../../../scss/self-practice/interview/mainComponent.module.scss";
-import axios from "axios";
 import timer from "../../../components/webRTC/timer"
+import getVideoConstraints from "../../../components/webRTC/getVideoConstraints";
+import { ttsService } from "../../../api/webRTC";
 
 function mapStateToProps(state) {
   return {
     ws: state.wsReducer.ws,
     sessionId: state.wsReducer.sessionId,
     questions: state.questionReducer.questions,
-    cameraId: state.videoReducer.cameraId, 
-    micId: state.videoReducer.micId,
-    speakerId: state.videoReducer.speakerId,
   };
 }
-import { setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion, setQuestionToggleState } from "../../../store/actions/wsAction";
-
+import { setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion } from "../../../store/actions/wsAction";
 function mapDispatchToProps(dispatch) {
   return {
     setWSSessionId: (sessionId) => dispatch(setWSSessionId(sessionId)),
     pushRecordedQuestionIdx: (idx) => dispatch(pushRecordedQuestionIdx(idx)),
     setSelectedQuestion: (selectedQuestion) => dispatch(setSelectedQuestion(selectedQuestion)),
-    setQuestionToggleState: () => dispatch(setQuestionToggleState()),
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Interview);
 
-function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion, setQuestionToggleState}) {
+function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion}) {
   const router = useRouter();
-  const [isWait, setIsWait] = useState(false);
+  const [isWait, setIsWait] = useState(true);
   const [screenNum, setScreenNum] = useState(3);
   const [volume, setVolume] = useState(30);
   const [isVol, setIsVol] = useState(false);
@@ -42,8 +37,10 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
   const skipBtn = useRef();
 
   useEffect(()=>{
+    if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
+
     setSelectedQuestion(questions[0])
-    let questionNum2 = 0;
+    let questionNumState = 0; // useEffect에서 사용할 questionNum 상태(useEffect안에서는 questionNum이 바뀌지 않음)
 
     let webRtcPeer;
     const myFace = document.querySelector("#my-face");
@@ -56,14 +53,13 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
       myFace.srcObject = stream
     }
     getStream();
+
     function sendMessage(msgObj) {
       const msgStr = JSON.stringify(msgObj);
-      // console.log(`SEND: ${msgStr}`);
       ws.send(msgStr);
     }
     ws.onmessage = function(message) {
       const msgObj = JSON.parse(message.data);
-      // console.log(`RECEIVE: ${message.data}`);
       switch(msgObj.id) {
         case "startResponse":
           if(!sessionId) setWSSessionId(msgObj.sessionId);
@@ -89,30 +85,8 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
     }
     
     function record() {
-      // setQuestionToggleState()
-      timer.startTimer()
-      let txt=questions[questionNum2];
-      axios({
-        method:"post",
-        url:"https://kakaoi-newtone-openapi.kakao.com/v1/synthesize",
-        headers:{
-            "Content-Type":"application/xml",
-            "Authorization": "KakaoAK c420902bf013e6a215efef159a46af41",
-        },
-        data:"<speak><voice name='MAN_READ_CALM'>"+txt+"</voice></speak>",
-        responseType: 'arraybuffer',
-      }).then((res)=>{
-        // arraybuffer를 재생하는 코드 
-        const context=new AudioContext();
-        context.decodeAudioData(res.data,buffer=>{
-          const source = context.createBufferSource();
-          source.buffer = buffer;
-          source.connect(context.destination);
-          source.start(0);
-        });
-      }).catch((error)=>{
-          console.log(error);
-      })
+      hideScreen();
+
       const options = {
         localVideo: myFace,
         mediaConstraints : getVideoConstraints(),
@@ -123,13 +97,23 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
         webRtcPeer.generateOffer(onOffer);
       });
     }
+    function onIceCandidate(candidate) {
+      sendMessage({
+        id: "onIceCandidate",
+        candidate : candidate
+      });
+    }
     function onOffer(error, offerSdp) {
       if(error) return console.log(`ERROR! ${error}`);
+      showScreen()
+      timer.startTimer();
+      ttsService(questions[questionNumState]);
+
       sendMessage({
         id: "start",
         sdpOffer: offerSdp,
         mode: "video-and-audio",
-        name: questionNum2
+        name: questionNumState
       });
     }
 
@@ -143,37 +127,18 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
       }
     }
 
-    function getVideoConstraints() {
-      const initialConstraints = { width: 640, height: 360, facingMode: "user" }
-      const cameraConstraints = {video: {...initialConstraints, deviceId: {exact: cameraId}}}
-      const micConstraints = {audio: {deviceId: {exact: micId}}}
-
-      const constraints = {
-        audio: true,
-        ...micId?micConstraints:{},
-        video: initialConstraints,
-        ...cameraId?cameraConstraints:{},
-      }
-      return constraints;
-    }
-
-    function onIceCandidate(candidate) {
-      sendMessage({
-        id: "onIceCandidate",
-        candidate : candidate
-      });
-    }
 
     function hideScreen() {
       setIsWait(true);
     }
-
     function showScreen(){
       setIsWait(false);
     }
 
+    let isVolState = isVol
     function controlVolume() {
-      setIsVol(true)
+      isVolState = !isVolState
+      setIsVol(isVolState)
     }
     function restartQuestion() {
       record()
@@ -181,23 +146,23 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
     }
     function saveAndNext() {
       save();
-      pushRecordedQuestionIdx(questionNum2);
-      if(questionNum2 === questions.length - 1) {
+      pushRecordedQuestionIdx(questionNumState);
+      if(questionNumState === questions.length - 1) {
         router.push(`/self-practice/interview/end`);
         return;
       }
-      questionNum2 += 1
-      setSelectedQuestion(questions[questionNum2])
+      questionNumState += 1
+      setSelectedQuestion(questions[questionNumState])
       record();
       return;
     }
     function skipQuestion() {
-      if(questionNum2 === questions.length - 1) {
+      if(questionNumState === questions.length - 1) {
         router.push(`/self-practice/interview/end`);
         return;
       }
-      questionNum2 += 1
-      setSelectedQuestion(questions[questionNum2])
+      questionNumState += 1
+      setSelectedQuestion(questions[questionNumState])
       record();
       return;
     }
@@ -232,7 +197,7 @@ function Interview({ws, sessionId, questions, cameraId, micId, speakerId, setWSS
       <div style={isWait||screenNum!==1?{display: "none"}:{}} className={styles.video1}><ShowQuestion /></div>
       <div style={isWait||screenNum!==2?{display: "none"}:{}} className={styles.video2}><video id="my-face"></video></div>
       <div style={isWait||screenNum!==3?{display: "none"}:{}} className={styles.video3}>면접관 얼굴 나올 예정(아래 버튼으로 화면 바꾸셈)</div>
-      <div style={!isWait?{display: "none"}:{}} className={styles.video4}>화면 기다리는 중</div>
+      <div style={!isWait?{display: "none"}:{}} className={styles.video4}><img src="/images/loading.gif" height={"100%"}/></div>
       <div className={styles.changeBtn}>
         <span onClick={() => setScreenNum(1)}>●</span>
         <span onClick={() => setScreenNum(2)}>●</span>

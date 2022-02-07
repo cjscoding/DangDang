@@ -17,6 +17,7 @@ export async function getServerSideProps() {
 };
 function mapStateToProps(state) {
   return {
+    ws: state.wsReducer.ws,
     isQs: state.questionReducer.questions.length !== 0,
   };
 }
@@ -28,8 +29,9 @@ function mapDispatchToProps(dispatch) {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(CheckDevices);
 
-function CheckDevices({preparedQuestions, isQs, setQuestions}) {
+function CheckDevices({preparedQuestions, ws, isQs, setQuestions}) {
   useEffect(() => {
+    if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
     if(!isQs) {
       setQuestions(preparedQuestions);
     }

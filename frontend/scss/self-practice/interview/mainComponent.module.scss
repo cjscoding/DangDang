@@ -37,7 +37,11 @@
       position: relative;
       height: 33.75vw;
       width: 60vw;
-      background-color: black;
+      display: flex;
+      justify-content: center;
+      // background-color: black;
+      // color: aliceblue;
+      // font-size: 3rem;
     }
     .changeBtn {
       position: absolute;

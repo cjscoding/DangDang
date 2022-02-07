@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { connect } from "react-redux";
+import getVideoConstraints from "./getVideoConstraints";
 
 function mapStateToProps(state) {
   return {
@@ -14,24 +15,18 @@ function MyFace({cameraId, micId, speakerId}) {
   const video = useRef();
   useEffect(() => {
     let stream;
-    async function getMedia(cameraId, micId) {
-      const initialConstraints = { width: 1280, height: 720, facingMode: "user" };
-      const cameraConstraints = {video: {...initialConstraints, deviceId: {exact: cameraId}}};
-      const micConstraints = {audio: {deviceId: {exact: micId}}};
+    async function getMedia() {
       try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          ...micId?micConstraints:{},
-          video: initialConstraints,
-          ...cameraId?cameraConstraints:{},
-        });
+        stream = await navigator.mediaDevices.getUserMedia(
+          getVideoConstraints()
+        );
         video.current.srcObject = stream;
       }catch(err) {
         console.log(err);
       }
     }
     if(speakerId) {
-      getMedia(cameraId, micId);
+      getMedia();
       video.current.setSinkId(speakerId);
     }
   },[cameraId, micId, speakerId])
