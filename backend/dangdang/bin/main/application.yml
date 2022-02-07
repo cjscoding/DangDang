@@ -25,8 +25,8 @@ spring:
       hibernate :
         format_sql : true
         show_sql : true
+        user_sql_comments: true # 실행되는 JPQL 보기
         dialect : org.hibernate.dialect.MySQL8Dialect
-        default_batch_fetch_size: 200
     open-in-view : false
 
   data:
@@ -41,7 +41,13 @@ spring:
     port: 6379
   # JWT Secret Key
 
-
+file :
+  upload :
+    baseLocation : "C:\\home\\ssafy\\share\\"
+    file :  "C:\\home\\ssafy\\share\\files\\"
+    video : "C:\\home\\ssafy\\share\\videos\\"
+    image: "C:\\home\\ssafy\\share\\images\\"
+    address : "https://localhost:8443/files/"
 ---
 
 spring:
@@ -64,8 +70,7 @@ spring:
         format_sql: true
         show_sql: true
         dialect : org.hibernate.dialect.MySQL8Dialect
-        default_batch_fetch_size: 200
-    open-in-view: false
+    open-in-view: true
 
   data:
     mongodb:
@@ -79,19 +84,59 @@ spring:
     port: 6379
   # JWT Secret Key
 
+file :
+  upload :
+    baseLocation : "/app/data/"
+    file :         "/app/data/files/"
+    image: "/app/data/images/"
+    video : "/app/data/videos/"
+    address : "https://localhost:8443/files/"
+
 ---
+
+
+server:
+  port: 8443
+  ssl :
+    key-store: classpath:keystore.jks
+    key-store-password: kurento
+    key-store-type: JKS
+    key-alias: kurento-selfsigned
+
 spring:
   config:
     activate:
       on-profile: common
 
-#  jpa:
-#    properties:
-#      hibernate:
-#        default_batch_fetch_size: 200
+  jpa:
+    properties:
+      hibernate:
+        default_batch_fetch_size: 200
+
 
   jwt:
     secret: eae6d34010d4fea74bcafeeef81c1f8685e4793dfe98701d30e568118b31e4e0
+
+  output:
+    ansi:
+      enabled: DETECT
+  #  mvc :
+#    static-path-pattern : /static/**
+#    hiddenmethod :
+#      filter :
+#        enabled : true
+#    view:
+#      prefix: /resources/static
+#      suffix: .html
+#  web :
+#    resources :
+#      static-locations : classpath:/static
+#      add-mappings :     true
+
+  servlet :
+    multipart :
+      max-file-size :    100MB
+      max-request-size : 100MB
 
   security:
     oauth2:
@@ -122,6 +167,7 @@ spring:
             userInfoUri: https://kapi.kakao.com/v2/user/me
             userNameAttribute: id
 
+# Exception Handelr 설정
 notification:
   mattermost:
     enabled: true # mmSender를 사용할 지 여부, false면 알림이 오지 않는다
@@ -133,6 +179,7 @@ notification:
     author-icon: # author-icon 왼쪽에 나올 아이콘의 url링크
     footer: # attachment에 하단에 나올 부분. default=현재 시간
 
+# Swagger 옵션
 springdoc:
   version: '@project.version@'
   api-docs:
@@ -157,7 +204,16 @@ logging:
     com.ssafy.dangdang: debug
     com:
       andy: trace
-    #     #HTTP 요청 확인 옵션, 개발할 때만 활성화 할것
+    org:
+      apache:
+        nodeValue: WARN
+#        coyote:
+#          http11: debug      #HTTP 요청 확인 옵션, 개발할 때만 활성화 할것
+      springframework: WARN
+      kurento:
+        nodeValue: INFO
+        tutorial: INFO
+
 #    org:
 #      springframework:
 #        security: debug

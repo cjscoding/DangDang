@@ -19,10 +19,10 @@ export default function Pagination({
   };
 
   const goNextPage = () => {
-      console.log(curPage);
-      console.log(totalPage-1);
+    console.log(curPage);
+    console.log(totalPage - 1);
     if (curPage === totalPage - 1) {
-      paginate(totalPage-1);
+      paginate(totalPage - 1);
     } else {
       paginate(curPage + 1);
     }
@@ -69,9 +69,7 @@ export default function Pagination({
         </li>
 
         <li>
-          <a onClick={() => paginate(totalPage - 1)}>
-            last
-          </a>
+          <a onClick={() => paginate(totalPage - 1)}>last</a>
         </li>
       </ul>
     </nav>

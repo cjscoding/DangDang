@@ -41,6 +41,7 @@ function Resume({
   const router = useRouter();
   const [selected, setSelected] = useState(false);
   const [resumeLen, setResumeLen] = useState(0);
+  const [curUserId, setCurUserId] = useState("");
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -64,6 +65,7 @@ function Resume({
 
   //해당 멤버의 자소서 조회
   const onShowResume = (userId) => {
+    setCurUserId(userId);
     getResume(
       userId,
       (res) => {
@@ -79,15 +81,34 @@ function Resume({
     );
   };
 
+  const getCurUserResume = () => {
+    getResume(
+      curUserId,
+      (res) => {
+        const resArray = res.data.response;
+        setResume(resArray);
+        setResumeLen(resArray.length);
+        setSelected(true);
+        console.log(res, "자소서 불러오기 성공");
+      },
+      (err) => {
+        console.log(err, "자소서 불러오기 실패");
+      }
+    );
+  };
+
+  //자소서 재로드
+  const reload = () => getCurUserResume();
+
   //자소서 등록 페이지로 이동
   const onMoveToAddResume = () => {
-      router.push({
-          pathname:"/team/space/resume/create",
-          query:{
-              id:router.query.id,
-          }
-      })
-  }
+    router.push({
+      pathname: "/team/space/resume/create",
+      query: {
+        id: router.query.id,
+      },
+    });
+  };
   return (
     <div>
       <Layout
@@ -112,7 +133,13 @@ function Resume({
               {resumeLen > 0 ? (
                 <div>
                   {curResume?.map((resume, index) => (
-                    <ResumeList resume={resume} key={index} index={index}/>
+                    <ResumeList
+                      resume={resume}
+                      comments={resume.commentDtos.content}
+                      key={index}
+                      index={index}
+                      reload={reload}
+                    />
                   ))}
                 </div>
               ) : (
