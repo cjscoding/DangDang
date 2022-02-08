@@ -1,17 +1,14 @@
 import styles from "../../../scss/team/board/comment.module.scss";
-import Reply from "./Reply";
+import Reply from "./ResumeReply";
 
 import {
-  createDetailComment,
-  updateDetailComment,
-  deleteDetailComment,
-} from "../../../api/comment";
-import { useRouter } from "next/router";
+  createResumeComment,
+  updateResumeComment,
+  deleteResumeComment,
+} from "../../../api/resume";
 import { useEffect, useState } from "react";
 
-export default function Comment({ comment, reload }) {
-  const router = useRouter();
-
+export default function Comment({ comment, reload, resumeId, userName }) {
   const [showReply, setShowReply] = useState(false);
   const [showUpdateBtn, setShowUpdateBtn] = useState(false);
   const [newComment, setNewComment] = useState(comment.content);
@@ -28,13 +25,13 @@ export default function Comment({ comment, reload }) {
   const onUploadReply = (event) => {
     event.preventDefault();
     const data = {
-      studyId: router.query.id,
+      resumeId,
       obj: {
         parentId: comment.id,
         content: event.target[0].value,
       },
     };
-    createDetailComment(
+    createResumeComment(
       data,
       (res) => {
         console.log(res, "대댓글 등록 완료");
@@ -50,10 +47,10 @@ export default function Comment({ comment, reload }) {
   //댓글 삭제
   const onDeleteComment = (id) => {
     const data = {
-      studyId: router.query.id,
+      resumeId,
       commentId: id,
     };
-    deleteDetailComment(
+    deleteResumeComment(
       data,
       (res) => {
         console.log(res, "댓글 삭제 완료");
@@ -69,13 +66,13 @@ export default function Comment({ comment, reload }) {
   const onUpdateComment = (event) => {
     event.preventDefault();
     const data = {
-      studyId: router.query.id,
+      resumeId,
       commentId: comment.id,
       obj: {
         content: newComment,
       },
     };
-    updateDetailComment(
+    updateResumeComment(
       data,
       (res) => {
         console.log(res, "댓글 수정 완료");
@@ -130,14 +127,20 @@ export default function Comment({ comment, reload }) {
       </div>
       {showReply ? (
         <div>
-          <h1>Reply</h1>
+          <h5>Reply</h5>
+          <h6> {userName}</h6>
           <form onSubmit={onUploadReply}>
             <input type="text" placeholder="reply..." />
             <button>Upload</button>
           </form>
           {comment.children?.map((reply, index) => (
             <div key={index}>
-              <Reply reply={reply} submitReload={submitReload} />
+              <Reply
+                reply={reply}
+                submitReload={submitReload}
+                resumeId={resumeId}
+                commentId={comment.id}
+              />
             </div>
           ))}
         </div>
@@ -145,3 +148,5 @@ export default function Comment({ comment, reload }) {
     </div>
   );
 }
+
+//
