@@ -10,8 +10,8 @@ services:
       - "backend"
 
   backend:
-    image: dbswns97/dangdang-backend:0.6
-    # build: ./backend/dangdang
+    # image: dbswns97/dangdang-backend:0.6
+    build: ./backend/dangdang
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://dangdang-mysql:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul"
       SPRING_DATASOURCE_USERNAME: "ssafy"
@@ -28,10 +28,10 @@ services:
       - "dangdang-redis"
       - "dangdang-kms"
     volumes:
-      - kms_data:/app/data/videos
-      # - type: bind
-      #   source: ./backend/dangdang/data/files
-      #   target: /app/data/files
+      # - kms_data:/app/data/videos
+      - type: bind
+        source: /home/ubuntu/data
+        target: /app/data
     restart: always
     links:
       - dangdang-mongodb
@@ -89,10 +89,9 @@ services:
     image: kurento/kurento-media-server:latest
     restart: always
     volumes:
-      - kms_data:/tmp
-      # - type: bind
-      #   source: ./backend/dangdang/data/files
-      #   target: /tmp
+      - type: bind
+        source: /home/ubuntu/data/videos
+        target: /tmp
       # network_mode: host
     expose:
       - 8888
