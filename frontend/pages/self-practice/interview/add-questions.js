@@ -26,7 +26,7 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion}) {
   const [allQuestions, setAllQuestions] = useState([]);
   const [myQuestions, setMyQuestions] = useState([]);
   const [qListNum, setQListNum] = useState(0);
-
+  //async 임시용임, 수정할 것임
   useEffect(async() => {
     if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
     const allQs = (await(await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/interview`,{

@@ -29,12 +29,13 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
   const router = useRouter();
   const [isWait, setIsWait] = useState(true);
   const [screenNum, setScreenNum] = useState(3);
-  const [volume, setVolume] = useState(30);
+  // const [volume, setVolume] = useState(30);
   const [isVol, setIsVol] = useState(false);
   const volumeBtn = useRef();
   const restartBtn = useRef();
   const saveBtn = useRef();
   const skipBtn = useRef();
+  const volumeBar = useRef();
 
   useEffect(()=>{
     if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
@@ -49,7 +50,7 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
     myFace.style.width = "100%";
     myFace.style.height = "100%";
     async function getStream() {
-      const stream = await navigator.mediaDevices.getUserMedia(getVideoConstraints());
+      const stream = await navigator.mediaDevices.getUserMedia(getVideoConstraints(1280, 720));
       myFace.srcObject = stream
     }
     getStream();
@@ -79,7 +80,7 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
         case "recording":
           showScreen()
           timer.startTimer();
-          ttsService(questions[questionNumState]);
+          ttsService(questions[questionNumState], volume);
           break;
         default:
           console.log(`ERROR! ${msgObj}`);
@@ -92,7 +93,7 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
 
       const options = {
         localVideo: myFace,
-        mediaConstraints : getVideoConstraints(),
+        mediaConstraints : getVideoConstraints(640, 360),
         onicecandidate : onIceCandidate
       }
       webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function(error) {
@@ -165,22 +166,31 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
       record();
       return;
     }
+    function setVolume(e) {
+      volume = e.target.value
+    }
     // return 함수에서 .current를 사용하면 에러가 남
     const volumeButton = volumeBtn.current;
     const restartButton = restartBtn.current;
     const saveButton = saveBtn.current;
     const skipButton = skipBtn.current;
+    const volVar = volumeBar.current
+    let volume = 50;
+    volVar.value = volume
     volumeButton.addEventListener("click", controlVolume);
     restartButton.addEventListener("click", restartQuestion);
     saveButton.addEventListener("click", saveAndNext);
     skipButton.addEventListener("click", skipQuestion);
+    volVar.addEventListener("change", setVolume);
     record();
+
     return () => {
       timer.stopTimer()
       volumeButton.removeEventListener("click", controlVolume);
       restartButton.removeEventListener("click", restartQuestion);
       saveButton.removeEventListener("click", saveAndNext);
       skipButton.removeEventListener("click", skipQuestion);
+      volVar.removeEventListener("change", setVolume);
     }
   },[])
   return <div>
@@ -205,7 +215,7 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
       <div className={styles.btnContainer}>
         <span>
           <button ref={volumeBtn}><i className="fas fa-volume-up"></i></button>
-          <input style={isVol?{}:{display: "none"}} type="range" min="0" max="100" step="1" value={volume} onChange={(e) => setVolume(e.target.value)}/>
+          <input style={isVol?{}:{display: "none"}} type="range" min="0" max="100" step="1" ref={volumeBar}/>
         </span>
         <button ref={restartBtn}><i className="fas fa-redo-alt"></i></button>
         <button ref={saveBtn}><i className="fas fa-save"></i></button>
