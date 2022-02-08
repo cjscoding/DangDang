@@ -4,10 +4,9 @@ import { connect } from "react-redux";
 import getVideoConstraints from "../../components/webRTC/getVideoConstraints";
 
 function mapStateToProps(state) {
-  const strId = String(state.userReducer.user.id)
   return {
     ws: state.wsReducer.ws,
-    myIdName: `${strId.length}${strId}${state.userReducer.user.nickName}`, // id길이 + id + nickName
+    myIdName: `${state.userReducer.user.id}-${state.userReducer.user.nickName}`, // id + - + nickName
   };
 }
 export default connect(mapStateToProps)(Conference);
@@ -21,9 +20,9 @@ function Conference({ws, myIdName}) {
 
     function Participant(myIdName) {
       let rtcPeer;
-      const idLen = parseInt(myIdName.slice(0, 1))
-      this.id = myIdName.slice(1, 1 + idLen)
-      this.name = myIdName.slice(1 + idLen, myIdName.length);
+      const idx = myIdName.search('-')
+      this.id = myIdName.slice(1, idx)
+      this.name = myIdName.slice(1 + idx, myIdName.length);
 
       const container = document.createElement('span');
       container.id = myIdName;
