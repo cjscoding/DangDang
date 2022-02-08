@@ -10,12 +10,52 @@
   max-width: 1000px;
 }
 
-@mixin submit-button($width) {
-    width: $width;
-    padding: 10px 0;
-    border: none;
-    border-radius: 10px;
-    color: white;
-    background-color: $dark-color;
+@mixin white-box {
+  padding: 40px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: $box-shadow;
+}
+
+@mixin filled-button($width, $color, $background-color) {
+  width: $width;
+  padding: 10px 0;
+  border: none;
+  border-radius: 10px;
+  color: $color;
+  background-color: $background-color;
+  font-weight: 800;
+  &:hover {
+    transform: scale(1.05);
+    transition: 0.2s ease;
+  }
+}
+
+@mixin unfilled-button($color) {
+  width: 80px;
+  padding: 7px 0;
+  color: $color;
+  background-color: inherit;
+  border: 1px solid $color;
+  border-radius: 7px;
+  font-size: 12px;
+  @if ($color == $text-color) {
+    opacity: 0.6;
+  }
+  &:hover {
+    opacity: 1;
     font-weight: 800;
+    cursor: pointer;
+  }
+}
+
+@mixin none-button($color) {
+  background-color: inherit;
+  border: none;
+  color: $color;
+  opacity: 0.7;
+  &:hover {
+    opacity: 1;
+    font-weight: 800;
+  }
 }

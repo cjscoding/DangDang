@@ -72,7 +72,6 @@ export default function Layout({ roomInfo, host, image }) {
               page: "info",
             },
           }}
-          as={"/team/space"}
         >
           <a className={`${curPage}` === "info" ? styles.infoMenu : ""}>
             팀 소개
@@ -86,7 +85,6 @@ export default function Layout({ roomInfo, host, image }) {
               page: "resume",
             },
           }}
-          as={"/team/space/coverletter"}
         >
           <a className={`${curPage}` === "resume" ? styles.resumeMenu : ""}>
             자기소개서
@@ -100,7 +98,6 @@ export default function Layout({ roomInfo, host, image }) {
               page: "board",
             },
           }}
-          as={"/team/space/board"}
         >
           <a className={`${curPage}` === "board" ? styles.boardMenu : ""}>
             보드
@@ -110,3 +107,5 @@ export default function Layout({ roomInfo, host, image }) {
     </div>
   );
 }
+
+//
