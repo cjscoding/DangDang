@@ -1,6 +1,6 @@
-import Pagination from "../../../components/team/board/pagination";
+import Pagination from "../../../components/layout/Pagination";
 import styles from "../../../scss/team/board/board.module.scss";
-import Title from "../../../components/layout/title";
+import Title from "../../../components/layout/Title";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -42,7 +42,7 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
 
   //pagination
   const [curPage, setCurPage] = useState(0);
-  const [postsPerPage] = useState(6);
+  const [postsPerPage] = useState(16);
   const [searchTags, setSearchTags] = useState([]);
   const paginate = (pageNumber) => setCurPage(pageNumber);
 
@@ -147,14 +147,19 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
                 onClick={() => onDetail(room.id)}
               >
                 {room.imageUrl !== null ? (
-                    <img src={`https://localhost:8443/files/images/${room.imageUrl}`} width="300" height="200" alt="" />
-                    ) : (
-                      <Image
-                        src='/vercel.svg'
-                        alt="Vercel Logo"
-                        width={300}
-                        height={250}
-                      />
+                  <img
+                    src={`https://localhost:8443/files/images/${room.imageUrl}`}
+                    width="300"
+                    height="200"
+                    alt=""
+                  />
+                ) : (
+                  <Image
+                    src="/vercel.svg"
+                    alt="Vercel Logo"
+                    width={300}
+                    height={250}
+                  />
                 )}
                 <span> {room.id}</span>
                 <span> {room.name}</span>
@@ -167,6 +172,7 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
             ))}
           </div>
           <Pagination
+            curPage={curPage}
             paginate={paginate}
             totalCount={totalPosts}
             postsPerPage={postsPerPage}

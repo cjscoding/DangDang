@@ -1,5 +1,5 @@
 import styles from "../../../scss/team/board/comment.module.scss";
-import Reply from "./replys";
+import Reply from "./Reply";
 
 import {
   createDetailComment,

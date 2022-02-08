@@ -1,6 +1,8 @@
 import styles from "../../../scss/team/space/update.module.scss";
 
-import { updateRoom, updateRoomImg } from "../../../api/studyroom";
+import { getWaitings } from "../../../api/member";
+import { getRoomInfo, updateRoom, updateRoomImg } from "../../../api/studyroom";
+import { setRoomInfo, setWaitings } from "../../../store/actions/roomAction";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { useState } from "react";
@@ -11,9 +13,16 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, null)(UpdateTeam);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setRoomInfo: (roomData) => dispatch(setRoomInfo(roomData)),
+    setWaitings: (waitings) => dispatch(setWaitings(waitings)),
+  };
+};
 
-function UpdateTeam({ roomInfo }) {
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateTeam);
+
+function UpdateTeam({ roomInfo, setRoomInfo, setWaitings }) {
   const router = useRouter();
 
   const roomInit = {
@@ -68,6 +77,33 @@ function UpdateTeam({ roomInfo }) {
           data,
           (res) => {
             console.log(res, "스터디 이미지 등록 성공");
+            getRoomInfo(
+              router.query.id,
+              (res) => {
+                const roomData = {
+                  roomInfo: res.data.response,
+                  host: res.data.response.host,
+                  members: res.data.response.userDtos,
+                  comments: res.data.response.commentDtos.content,
+                };
+                console.log(roomData);
+                setRoomInfo(roomData);
+                getWaitings(
+                  router.query.id,
+                  (res) => {
+                    const waitings = res.data.response;
+                    setWaitings(waitings);
+                    console.log(res, "가입대기명단 조회 성공!");
+                  },
+                  (err) => {
+                    console.log(err, "가입대기명단 조회에 실패하였습니다.");
+                  }
+                );
+              },
+              (err) => {
+                console.log(err, "스터디를 조회할 수 없습니다.");
+              }
+            );
           },
           (err) => {
             console.log(err, "스터디 이미지 등록 실패");

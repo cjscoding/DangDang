@@ -23,12 +23,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(SelectQuestions);
 
 function SelectQuestions({ws}) {
   useEffect(()=>{
-    window.onbeforeunload = function() {
-      sendMessage({
-        id : 'del',
-      });
+    window.addEventListener("beforeunload", ()=>{
+      const delMsg = JSON.stringify({id:"del"});
+      ws.send(delMsg);
       ws.close();
-    }
+    });
   }, [])
   return <div className={styles.selectBox}>
     <Link href="/self-practice/interview/check-devices">

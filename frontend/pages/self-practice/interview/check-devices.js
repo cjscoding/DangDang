@@ -17,8 +17,8 @@ export async function getServerSideProps() {
 };
 function mapStateToProps(state) {
   return {
-    isQs: state.questionReducer.questions.length !== 0,
     ws: state.wsReducer.ws,
+    isQs: state.questionReducer.questions.length !== 0,
   };
 }
 import { setQuestions } from "../../../store/actions/questionAction";
@@ -29,17 +29,11 @@ function mapDispatchToProps(dispatch) {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(CheckDevices);
 
-function CheckDevices({preparedQuestions, isQs, setQuestions}) {
+function CheckDevices({preparedQuestions, ws, isQs, setQuestions}) {
   useEffect(() => {
+    if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
     if(!isQs) {
       setQuestions(preparedQuestions);
-    }
-
-    window.onbeforeunload = function() {
-      sendMessage({
-        id : 'del',
-      });
-      ws.close();
     }
   }, [])
 
