@@ -1,3 +1,4 @@
+//구인게시판, 마이룸
 import types from "../types";
 
 const roomState = {

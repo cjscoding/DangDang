@@ -1,3 +1,4 @@
+//팀스페이스 내 자소서
 import types from "../types";
 
 export const setResume = (resArray) => {

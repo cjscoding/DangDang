@@ -1,5 +1,5 @@
 import styles from "../../../scss/team/board/detail.module.scss";
-import Comment from "../../../components/team/board/comment";
+import Comment from "../../../components/team/board/Comment";
 
 import { setRoomInfo } from "../../../store/actions/roomAction";
 import { getRoomInfo } from "../../../api/studyroom";

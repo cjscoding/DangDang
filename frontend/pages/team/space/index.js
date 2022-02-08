@@ -1,5 +1,5 @@
 import styles from "../../../scss/team/space/teamspace.module.scss";
-import Layout from "../../../components/team/space/layout";
+import Layout from "../../../components/team/space/Layout";
 
 import {
   removeMember,

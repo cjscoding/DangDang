@@ -1,7 +1,6 @@
 import Link from "next/link";
 
 import { createResume } from "../../../../api/resume";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 

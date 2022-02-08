@@ -1,6 +1,6 @@
 import styles from "../../../../scss/team/space/teamspace.module.scss";
-import Pagination from "../../../../components/team/board/pagination";
-import Layout from "../../../../components/team/space/layout";
+import Pagination from "../../../../components/layout/Pagination";
+import Layout from "../../../../components/team/space/Layout";
 import Link from "next/link";
 
 import { setRoomInfo } from "../../../../store/actions/roomAction";

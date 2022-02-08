@@ -1,5 +1,5 @@
 import styles from "../../../scss/team/space/resume.module.scss";
-import Comment from "./resumeComment";
+import Comment from "./ResumeComment";
 
 import { setResume } from "../../../store/actions/resumeAction";
 import {

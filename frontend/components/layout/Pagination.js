@@ -1,4 +1,4 @@
-import styles from "../../../scss/team/board/board.module.scss";
+import styles from "../../scss/team/board/board.module.scss";
 import { useEffect, useState } from "react";
 
 export default function Pagination({

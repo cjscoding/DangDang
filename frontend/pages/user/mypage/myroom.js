@@ -1,6 +1,6 @@
-import Pagination from "../../../components/team/board/pagination";
+import Pagination from "../../../components/layout/Pagination";
 import styles from "../../../scss/user/mypage.module.scss";
-import Title from "../../../components/layout/title";
+import Title from "../../../components/layout/Title";
 import Image from "next/image";
 import Link from "next/link";
 

@@ -1,3 +1,4 @@
+//팀 스페이스 내 게시판
 import types from "../types";
 
 const boardState = {

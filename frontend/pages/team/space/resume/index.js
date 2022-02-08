@@ -1,6 +1,6 @@
 import styles from "../../../../scss/team/space/teamspace.module.scss";
-import Layout from "../../../../components/team/space/layout";
-import ResumeList from "../../../../components/team/space/resumeList";
+import Layout from "../../../../components/team/space/Layout";
+import ResumeList from "../../../../components/team/space/ResumeList";
 
 import { setRoomInfo } from "../../../../store/actions/roomAction";
 import { setResume } from "../../../../store/actions/resumeAction";
