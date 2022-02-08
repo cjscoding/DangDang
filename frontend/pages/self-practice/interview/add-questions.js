@@ -1,17 +1,14 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import styles from "../../../scss/self-practice/interview/add-questions.module.scss";
 
-export async function getServerSideProps() {
-  const preparedQuestions = (await(await fetch(`${process.env.BACKEND_URL}/interview`,{
-    method: 'GET'
-  })).json()).response
-  return {props: {preparedQuestions}};
-};
 function mapStateToProps(state) {
   return {
+    ws: state.wsReducer.ws,
     questions: state.questionReducer.questions,
+    isLogin: state.userReducer.isLogin,
+    user: state.userReducer.user,
   };
 }
   
@@ -24,13 +21,26 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddQuestions); 
 
-function AddQuestions({preparedQuestions, questions, addQuestion}) {
+function AddQuestions({ws, questions, isLogin, user, addQuestion}) {
   const [questionInput, setQuestionInput] = useState("");
+  const [allQuestions, setAllQuestions] = useState([]);
+  const [myQuestions, setMyQuestions] = useState([]);
+  const [qListNum, setQListNum] = useState(0);
 
-  useEffect(() => {
+  useEffect(async() => {
     if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
-  }, [])
+    const allQs = (await(await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/interview`,{
+      method: 'GET'
+    })).json()).response.content
+    setAllQuestions(allQs);
+    if(isLogin){
+      const myQs = (await(await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/interview`,{
+        method: 'GET'
+      })).json()).response.content
+      setMyQuestions(myQs)
+    }
 
+  }, [])
   function addQuestionInput() {
     const Qinput = questionInput.trim()
     if(Qinput) {
@@ -46,13 +56,23 @@ function AddQuestions({preparedQuestions, questions, addQuestion}) {
       alert("질문을 추가해주세요!");
     }
   }
+
   return <div>
     <div className={styles.mainContainer}>
       <div className={styles.columnContainer}>
+        <div className={styles.changeBtn}>
+          <span onClick={() => setQListNum(0)}>●</span>
+          {isLogin?<span onClick={() => setQListNum(1)}>●</span>:null}
+        </div>
         <div className={styles.baseContainer}>
-          <div>
-            {preparedQuestions?.map(preparedQuestion => (
-              <h2 key={preparedQuestion.id}>{preparedQuestion.question}</h2>
+          <div style={qListNum!==0?{display: "none"}:{}}>
+            {allQuestions?.map(question => (
+              <h2 key={question.id}>{question.question}</h2>
+            ))}
+          </div>
+          <div style={qListNum!==1?{display: "none"}:{}}>
+            {myQuestions?.map(question => (
+              <h2 key={question.id}>{question.question}</h2>
             ))}
           </div>
         </div>
