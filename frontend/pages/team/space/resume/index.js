@@ -34,7 +34,6 @@ function Resume({
   roomHost,
   roomMembers,
   curResume,
-  userInfo,
   setRoomInfo,
   setResume,
 }) {
