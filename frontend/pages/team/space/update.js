@@ -209,19 +209,20 @@ function UpdateTeam({ roomInfo, setRoomInfo, setWaitings }) {
             </div>
           </form>
           <div>
-            {updateTags.map((tag, index) => (
-              <form onSubmit={onRemoveTag} key={index}>
-                <div>
-                  <input
-                    type="text"
-                    value={tag}
-                    disabled
-                    className={styles.disabled}
-                  />
-                  <button>태그 삭제</button>
-                </div>
-              </form>
-            ))}
+            {updateTags &&
+              updateTags.map((tag, index) => (
+                <form onSubmit={onRemoveTag} key={index}>
+                  <div>
+                    <input
+                      type="text"
+                      value={tag}
+                      disabled
+                      className={styles.disabled}
+                    />
+                    <button>태그 삭제</button>
+                  </div>
+                </form>
+              ))}
           </div>
           <label htmlFor="profile">프로필 사진</label>
           <input type="file" name="profile" onChange={onSetImage} />

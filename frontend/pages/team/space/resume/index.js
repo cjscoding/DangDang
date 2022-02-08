@@ -34,7 +34,6 @@ function Resume({
   roomHost,
   roomMembers,
   curResume,
-  userInfo,
   setRoomInfo,
   setResume,
 }) {
@@ -112,7 +111,7 @@ function Resume({
   return (
     <div>
       <Layout
-        name={roomInfo.name}
+        roomInfo={roomInfo}
         host={roomHost.nickName}
         createdAt={roomInfo.createdAt}
         image={roomInfo.imageUrl}

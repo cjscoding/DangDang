@@ -101,7 +101,7 @@ function TeamSpace({
       studyId: router.query.id,
       userId: event.target[0].value,
     };
-    
+
     if (event.target[0].value == hostId) {
       console.log("호스트는 탈퇴시킬 수 없습니다.");
     } else {
@@ -181,7 +181,7 @@ function TeamSpace({
   return (
     <div>
       <Layout
-        name={roomInfo.name}
+        roomInfo={roomInfo}
         host={roomHost.nickName}
         createdAt={roomInfo.createdAt}
         image={roomInfo.imageUrl}

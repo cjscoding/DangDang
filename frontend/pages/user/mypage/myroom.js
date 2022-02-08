@@ -29,14 +29,13 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
   // 팀 스페이스로 이동 로직
   const router = useRouter();
   const onDetail = (id) => {
-    router.push(
-      {
-        pathname: `/team/space`,
+    router.push({
+        pathname: "/team/space",
         query: {
           id,
+          page: "info",
         },
-      }
-      //   `/team/space`
+      },
     );
   };
 

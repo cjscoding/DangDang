@@ -1,14 +1,4 @@
-@mixin back {
-  background-color: blue;
-}
-
-@mixin what($word) {
-  @if $word == "odd" {
-    background-color: purple;
-  } @else {
-    background-color: yellow;
-  }
-}
+@import "./variables.scss";
 
 @mixin flex-center {
   display: flex;
@@ -18,4 +8,14 @@
 
 @mixin main-container {
   max-width: 1000px;
+}
+
+@mixin submit-button($width) {
+    width: $width;
+    padding: 10px 0;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    background-color: $main-color;
+    font-weight: 800;
 }
