@@ -54,7 +54,7 @@ services:
         "--collation-server=utf8mb4_unicode_ci"
       ]
     ports:
-      - 3307:3306
+      - 3306:3306
     volumes:
       - type: bind
         source: /home/ubuntu/mysql
