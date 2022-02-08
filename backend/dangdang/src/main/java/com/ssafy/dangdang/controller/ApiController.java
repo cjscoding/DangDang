@@ -37,9 +37,6 @@ public class ApiController {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "KakaoAK c420902bf013e6a215efef159a46af41");
         headers.setContentType(MediaType.APPLICATION_XML);
-//        MultiValueMap<String, String> body = new HashMap<String, String>();
-
-//        text = new String(text.getBytes(StandardCharsets.UTF_8));
         log.info("text : {}", text);
         String value = "<speak><voice name=\"MAN_READ_CALM\">" + text + "</voice></speak>";
         log.info(value);
@@ -60,12 +57,6 @@ public class ApiController {
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 
         byte [] bytes = res.getBody().getBytes(StandardCharsets.UTF_8);
-//        return ResponseEntity.ok()
-                //.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-//                .header(HttpHeaders.ACCEPT_RANGES, "bytes")
-//                .headers(res.getHeaders()).body(bytes);
-//                .header(HttpHeaders.CONTENT_TYPE, "audio/mpeg")
-//                .body( );
 
         return bytes;
     }
