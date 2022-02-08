@@ -195,7 +195,7 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
     <div className={styles.videoContainer}>
       <div style={isWait||screenNum!==1?{display: "none"}:{}} className={styles.video1}><ShowQuestion /></div>
       <div style={isWait||screenNum!==2?{display: "none"}:{}} className={styles.video2}><video id="my-face"></video></div>
-      <div style={isWait||screenNum!==3?{display: "none"}:{}} className={styles.video3}>면접관 얼굴 나올 예정(아래 버튼으로 화면 바꾸셈)</div>
+      <div style={isWait||screenNum!==3?{display: "none"}:{}} className={styles.video3}><img src="/images/누칼협.jpg" height={"100%"}/></div>
       <div style={!isWait?{display: "none"}:{}} className={styles.video4}><img src="/images/loading.gif" height={"100%"}/></div>
       <div className={styles.changeBtn}>
         <span onClick={() => setScreenNum(1)}>●</span>
