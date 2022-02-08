@@ -4,6 +4,7 @@ import com.ssafy.dangdang.config.kurento.HelloWorldRecHandler;
 import com.ssafy.dangdang.config.kurento.UserRegistry;
 import com.ssafy.dangdang.config.kurento.UserSession;
 import com.ssafy.dangdang.service.StorageService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;

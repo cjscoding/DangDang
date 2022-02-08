@@ -77,6 +77,9 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
         case "paused":
           break;
         case "recording":
+          showScreen()
+          timer.startTimer();
+          ttsService(questions[questionNumState]);
           break;
         default:
           console.log(`ERROR! ${msgObj}`);
@@ -105,10 +108,6 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
     }
     function onOffer(error, offerSdp) {
       if(error) return console.log(`ERROR! ${error}`);
-      showScreen()
-      timer.startTimer();
-      ttsService(questions[questionNumState]);
-
       sendMessage({
         id: "start",
         sdpOffer: offerSdp,

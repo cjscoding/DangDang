@@ -1,21 +1,27 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ASDF(){
   const [counts, setCount] = useState([0])
-  const [ok, setOk] = useState(true)
-  let y = 1;
 
   useEffect(() => {
-    console.log("마운트", counts[0])
-  }, [counts])
+    let countsState = [...counts]
+    const btn = document.querySelector("#btn")
+    function click() {
+      countsState = [...countsState, countsState[countsState.length - 1] + 1]
+      setCount(countsState)
+    }
+    btn.addEventListener("click", click)
+    return () => {
+      btn.removeEventListener("click", click)
+    }
+  }, [])
 
   console.log("스크립트", counts[0])
   return<div>
     {counts.map(c => {
       console.log("렌더링", c)
     })}
-    <button onClick={()=> setCount([counts[0] + 1])}>클릭</button>
-    <h1>{y}</h1>
-    <button onClick={()=> y += 1}>클릭</button><br/>
+    <button id="btn">클릭</button>
+    <h1>{counts}</h1>
   </div>
 }

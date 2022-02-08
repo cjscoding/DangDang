@@ -20,6 +20,7 @@ package com.ssafy.dangdang.config.kurento;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.ssafy.dangdang.domain.User;
 import org.kurento.client.IceCandidate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,9 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 
@@ -82,6 +86,9 @@ public class CallHandler extends TextWebSocketHandler {
           user.addCandidate(cand, jsonMessage.get("name").getAsString());
         }
         break;
+      case "chat":
+        sendMsg(user, jsonMessage, session);
+        break;
       default:
         break;
     }
@@ -100,7 +107,7 @@ public class CallHandler extends TextWebSocketHandler {
 
     Room room = roomManager.getRoom(roomName);
     final UserSession user = room.join(name, session);
-    registry.register(user);
+    registry.register(user); // user 생성해서 저장
   }
 
   private void leaveRoom(UserSession user) throws IOException {
@@ -110,4 +117,15 @@ public class CallHandler extends TextWebSocketHandler {
       roomManager.removeRoom(room);
     }
   }
+
+  private void sendMsg(UserSession user, JsonObject params, WebSocketSession session) throws IOException {
+    String contents = params.get("contents").getAsString(); // 보내야 할 메세지
+    log.info("문자 보낸 세션:" + session + " : " + contents);
+
+    // 세션이 포함되어있는 룸 찾고, 룸안에 있는 모든 참여자들에게 메세지 보냄
+    Room room=roomManager.getRoom(user.getRoomName());
+    room.roomSendMsg(session, user, contents);
+  }
+
+
 }
