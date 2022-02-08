@@ -42,18 +42,18 @@ function UpdateTeam({ roomInfo }) {
       newInfo,
     };
 
-    if(updateInfo.name === ""){
-        console.log("방 이름을 작성해주세요!");
-        return;
-    }else if(updateInfo.number === ""){
-        console.log("모집 인원 수를 작성해주세요!");
-        return;
-    }else if(updateTags.length === 0){
-        console.log("최소 하나 이상의 태그를 작성해주세요!");
-        return;
-    }else if(image === ""){
-        console.log("스터디 프로필 이미지를 첨부해주세요!");
-        return;
+    if (updateInfo.name === "") {
+      console.log("방 이름을 작성해주세요!");
+      return;
+    } else if (updateInfo.number === "") {
+      console.log("모집 인원 수를 작성해주세요!");
+      return;
+    } else if (updateTags.length === 0) {
+      console.log("최소 하나 이상의 태그를 작성해주세요!");
+      return;
+    } else if (image === "") {
+      console.log("스터디 프로필 이미지를 첨부해주세요!");
+      return;
     }
 
     updateRoom(

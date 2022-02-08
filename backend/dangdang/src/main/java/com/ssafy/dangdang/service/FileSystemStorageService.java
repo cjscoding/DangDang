@@ -123,6 +123,7 @@ public class FileSystemStorageService implements StorageService {
       File file = new File(Paths.get(fileLocation + fileName).toString());
       if(file.delete())
       log.info(file.getName() + " has deleted");
+      else log.error("존재하지 않는 파일입니다");
     } catch (SecurityException se) {
       throw new SecurityException(se.getMessage());
     }
@@ -134,6 +135,7 @@ public class FileSystemStorageService implements StorageService {
       File file = new File(Paths.get(imageLocation + fileName).toString());
       if(file.delete())
         log.info(file.getName() + " has deleted");
+      else log.error("존재하지 않는 파일입니다");
     } catch (SecurityException se) {
       throw new SecurityException(se.getMessage());
     }
@@ -145,6 +147,7 @@ public class FileSystemStorageService implements StorageService {
       File file = new File(Paths.get(videoLocation + fileName).toString());
       if(file.delete())
         log.info(file.getName() + " has deleted");
+      else log.error("존재하지 않는 파일입니다");
     } catch (SecurityException se) {
       throw new SecurityException(se.getMessage());
     }

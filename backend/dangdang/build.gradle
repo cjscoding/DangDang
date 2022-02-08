@@ -91,10 +91,11 @@ dependencies {
     compile("org.webjars:sockjs-client:1.0.2");
     compile("org.webjars:stomp-websocket:2.3.3");
 
-
+    // application/xml Converter // kakao API용
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.10.3'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-//    developmentOnly 'org.apache.tomcat.embed:tomcat-embed-jasper:10.0.14'
+    // developmentOnly 'org.apache.tomcat.embed:tomcat-embed-jasper:10.0.14'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor" //matterMost
     annotationProcessor 'org.projectlombok:lombok'
