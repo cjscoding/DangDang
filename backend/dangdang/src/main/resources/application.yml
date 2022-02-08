@@ -98,10 +98,10 @@ file :
 server:
   port: 8443
   ssl :
-    key-store: classpath:keystore.jks
-    key-store-password: kurento
-    key-store-type: JKS
-    key-alias: kurento-selfsigned
+    key-store: classpath:cert.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
+#    key-alias: kurento-selfsigned
 
 spring:
   config:
@@ -252,3 +252,4 @@ logging:
 #            tokenUri: https://graph.facebook.com/v3.0/oauth/access_token
 #            userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
 #
+
