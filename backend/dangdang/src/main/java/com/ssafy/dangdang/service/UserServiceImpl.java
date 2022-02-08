@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService{
                 .email(userDto.getEmail())
                 .nickname(userDto.getNickName())
                 .password(EncryptedPassword)
+                .imageUrl("default.jpg")
                 .role(UserRoleType.USER)
                 .build();
         userRepository.save(user);
@@ -70,6 +71,7 @@ public class UserServiceImpl implements UserService{
                 .email(userDto.getEmail())
                 .nickname(userDto.getNickName())
                 .password(encryptedPassword)
+                .imageUrl(user.getImageUrl())
                 .role(user.getRole())
                 .build();
         userRepository.save(user);

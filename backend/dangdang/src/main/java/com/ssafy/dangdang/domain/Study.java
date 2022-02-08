@@ -72,6 +72,7 @@ public class Study {
                     .hashTags(hashTags)
                     .description(studyDto.getDescription())
                     .host(user)
+                    .imageUrl("default.jpg")
                     .totalTime(0)
                     .lastAccessTime(LocalDateTime.now())
                     .build();
