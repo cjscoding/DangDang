@@ -404,7 +404,7 @@ public class HelloWorldRecHandler extends TextWebSocketHandler {
 //      log.info("filePath : {}",filePath);
       log.info("fileName : {}",fileName);
       try {
-        storageService.delete(fileName);
+        storageService.deleteVideo(fileName);
       }catch (InvalidPathException e){
           e.printStackTrace();
           log.error("잘못된 경로입니다!");
