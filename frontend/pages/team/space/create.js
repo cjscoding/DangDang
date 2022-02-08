@@ -1,5 +1,5 @@
 import styles from "../../../scss/team/board/create-room.module.scss";
-import Title from "../../../components/layout/title";
+import Title from "../../../components/layout/Title";
 import Link from "next/link";
 
 import { createRoom, addRoomImg } from "../../../api/studyroom";

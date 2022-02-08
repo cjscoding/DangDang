@@ -1,3 +1,4 @@
+//구인게시판, 마이룸
 import types from "../types";
 
 //모든 스터디 조회(+ pagination)

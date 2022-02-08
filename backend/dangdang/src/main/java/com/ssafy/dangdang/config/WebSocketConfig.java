@@ -1,9 +1,6 @@
 package com.ssafy.dangdang.config;
 
-import com.ssafy.dangdang.config.kurento.CallHandler;
-import com.ssafy.dangdang.config.kurento.HelloWorldRecHandler;
-import com.ssafy.dangdang.config.kurento.RoomManager;
-import com.ssafy.dangdang.config.kurento.UserRegistry;
+import com.ssafy.dangdang.config.kurento.*;
 import org.kurento.client.KurentoClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

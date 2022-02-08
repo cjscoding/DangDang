@@ -1,5 +1,5 @@
 import styles from "../../../scss/team/board/detail.module.scss";
-import Comment from "../../../components/team/board/comment";
+import Comment from "../../../components/team/board/Comment";
 
 import { setRoomInfo } from "../../../store/actions/roomAction";
 import { getRoomInfo } from "../../../api/studyroom";
@@ -82,7 +82,7 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
         console.log(res, "가입 완료");
       },
       (err) => {
-        console.log(err, "가입 실패");
+        console.log(err, "호스트는 이미 멤버로 등록되어 있습니다.");
       }
     );
   };

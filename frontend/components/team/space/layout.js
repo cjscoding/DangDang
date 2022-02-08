@@ -1,5 +1,6 @@
 import styles from "../../../scss/team/space/layout.module.scss";
 import Link from "next/link";
+import Image from "next/image";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";

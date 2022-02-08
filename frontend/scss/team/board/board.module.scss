@@ -50,7 +50,7 @@
   .rooms {
     display: grid;
     grid-gap: 50px;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
 
     .room {
       border: 1px solid black;
