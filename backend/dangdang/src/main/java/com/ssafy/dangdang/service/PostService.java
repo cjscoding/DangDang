@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface PostService {
+
     ApiUtils.ApiResult<PostDto> writePost(User user, PostDto postDto, Long studyId);
 
     ApiUtils.ApiResult<Post> updatePost(User user, PostDto postDto, Long studyId);
