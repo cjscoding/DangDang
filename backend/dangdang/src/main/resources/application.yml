@@ -59,7 +59,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://dangdang-mysql:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
     username: ssafy
-    password: ssafy
+    password: ssafyborissafy
 
   jpa:
     hibernate:
