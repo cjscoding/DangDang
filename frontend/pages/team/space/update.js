@@ -209,7 +209,7 @@ function UpdateTeam({ roomInfo, setRoomInfo, setWaitings }) {
             </div>
           </form>
           <div>
-            {updateTags.map((tag, index) => (
+            {updateTags && updateTags.map((tag, index) => (
               <form onSubmit={onRemoveTag} key={index}>
                 <div>
                   <input
