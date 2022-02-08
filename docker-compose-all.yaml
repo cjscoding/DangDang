@@ -47,7 +47,7 @@ services:
       MYSQL_DATABASE: "dangdang"
       MYSQL_HOST: "%"
       MYSQL_USER: "ssafy"
-      MYSQL_PASSWORD: "ssafy"
+      MYSQL_PASSWORD: "ssafyborissafy"
     command:
       [
         "--character-set-server=utf8mb4",
