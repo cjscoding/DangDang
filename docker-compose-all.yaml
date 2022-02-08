@@ -15,7 +15,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://dangdang-mysql:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul"
       SPRING_DATASOURCE_USERNAME: "ssafy"
-      SPRING_DATASOURCE_PASSWORD: "ssafy"
+      SPRING_DATASOURCE_PASSWORD: "ssafyborissafy"
       SPRING_DATA_MONGODB_URI: "mongodb://dangdang-mongodb:27017/dangdang"
       SPRING_REDIS_HOST: "dangdang-redis"
       SPRING_REDIS_PORT: "6379"
