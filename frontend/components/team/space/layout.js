@@ -5,75 +5,104 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-export default function Layout({ name, host, createdAt, image }) {
+export default function Layout({ roomInfo, host, image }) {
   const router = useRouter();
   const [studyId, setStudyId] = useState("");
+  const [curPage, setCurPage] = useState("info");
 
   useEffect(() => {
     if (!router.isReady) return;
+    console.log(router);
     setStudyId(router.query.id);
+    setCurPage(router.query.page);
   }, [router.isReady]);
 
   return (
-    <div>
-      <div className={styles.preview}>
-        {image !== null ? (
-          <img
-            src={`https://localhost:8443/files/images/${image}`}
-            width="200"
-            height="100"
-            alt=""
-          />
-        ) : (
-          <Image src="/vercel.svg" alt="Vercel Logo" width={300} height={250} />
-        )}
-        <div className={styles.details}>
-          <span>팀명 : {name}</span>
-          <span>호스트 : {host}</span>
+    <div className={styles.teamSpaceLayout}>
+      <div className={styles.teamInfoBox}>
+        <div className={styles.mainInfo}>
+          <div className={styles.image}>
+            {image !== null ? (
+              <img src={`https://localhost:8443/files/images/${image}`} />
+            ) : (
+              <Image
+                src="/vercel.svg"
+                alt="Vercel Logo"
+                width={300}
+                height={250}
+              />
+            )}
+          </div>
+
+          <div className={styles.title}>
+            <h2>{roomInfo.name}</h2>
+            <h4>{roomInfo.goal}</h4>
+            <div>
+              {roomInfo.hashTags?.map((tag) => (
+                <span key={tag}>#{tag}</span>
+              ))}
+            </div>
+            <button>연습 시작하기</button>
+          </div>
         </div>
-        <div className={styles.etc}>
+
+        <div className={styles.detailInfo}>
+          <span>개설일</span>
+          <span>{roomInfo.createdAt?.slice(0, 10)}</span>
+          <span>인원</span>
+          <span>{roomInfo.number}명</span>
+          <span>스터디장</span>
+          <span>{host}</span>
+          <span>마지막 연습</span>
           <span>
-            개설일 :{" "}
-            {createdAt
-              ? `${createdAt[0]}${createdAt[1]}${createdAt[2]}${createdAt[3]}. ${createdAt[5]}${createdAt[6]}. ${createdAt[8]}${createdAt[9]}`
-              : null}
+            {roomInfo.lastAccessTime?.slice(0, 10)}{" "}
+            {roomInfo.lastAccessTime?.slice(11, 19)}
           </span>
-          <button>스터디 시작</button>
         </div>
       </div>
-      <div className={styles.menus}>
+
+      <div className={styles.teamSpaceMenuBar}>
         <Link
           href={{
-            pathname: `/team/space`,
+            pathname: "/team/space",
             query: {
               id: studyId,
+              page: "info",
             },
           }}
-          //   as={`/team/space`}
+          as={"/team/space"}
         >
-          <a>팀 소개 | </a>
+          <a className={`${curPage}` === "info" ? styles.infoMenu : ""}>
+            팀 소개
+          </a>
         </Link>
         <Link
           href={{
-            pathname: `/team/space/resume`,
+            pathname: "/team/space/resume",
             query: {
               id: studyId,
+              page: "resume",
             },
           }}
-          //   as={`/team/space/coverletter`}
+          as={"/team/space/coverletter"}
         >
-          <a>자소서 | </a>
+          <a className={`${curPage}` === "resume" ? styles.resumeMenu : ""}>
+            자기소개서
+          </a>
         </Link>
         <Link
           href={{
-            pathname: `/team/space/board`,
+            pathname: "/team/space/board",
             query: {
               id: studyId,
+              page: "board",
             },
           }}
-          //   as={`/team/space/board`}
+          as={"/team/space/board"}
         >
-          <a>게시판</a>
+          <a className={`${curPage}` === "board" ? styles.boardMenu : ""}>
+            보드
+          </a>
         </Link>
       </div>
     </div>
