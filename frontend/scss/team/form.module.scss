@@ -45,9 +45,9 @@
         background-color: $background-color;
         border: none;
         outline: none;
-        &:focus{
-            border: 1px solid $main-color;
-            background-color: white;
+        &:focus {
+          border: 1px solid $main-color;
+          background-color: white;
         }
       }
       .answerLabel {

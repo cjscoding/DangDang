@@ -1,6 +1,7 @@
-import Link from "next/link";
+import styles from "../../../../scss/team/form.module.scss";
 
 import { createResume } from "../../../../api/resume";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 
@@ -10,26 +11,20 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    setResume: (userId) => dispatch(setResume(userId)),
-  };
-};
-
 export default connect(mapStateToProps, null)(CreateResume);
 
-function CreateResume({ userInfo }) {
+function CreateResume() {
   const router = useRouter();
+  const [answer, setAnswer] = useState("");
+  const [question, setQuestion] = useState("");
 
   const onSubmitResume = (event) => {
     event.preventDefault();
-    console.log(event.target[0].value);
-    console.log(event.target[1].value);
     const req = {
       resumeQuestionList: [
         {
-          question: event.target[0].value,
-          answer: event.target[1].value,
+          question,
+          answer,
         },
       ],
     };
@@ -37,12 +32,7 @@ function CreateResume({ userInfo }) {
       req,
       (res) => {
         console.log(res, "자소서 등록 성공");
-        router.push({
-          pathname: "/team/space/resume",
-          query: {
-            id: router.query.id,
-          },
-        });
+        onMoveResumePage();
       },
       (err) => {
         console.log(err, "자소서 등록 실패");
@@ -50,25 +40,46 @@ function CreateResume({ userInfo }) {
     );
   };
 
+  //자소서 페이지로 돌아가기
+  const onMoveResumePage = () => {
+    router.push({
+      pathname: "/team/space/resume",
+      query: {
+        id: router.query.id,
+        page: "resume",
+      },
+    });
+  };
+
   return (
-    <div>
-      <form className="question" onSubmit={onSubmitResume}>
-        <label htmlFor="question">질문</label>
-        <textarea name="question" id="" cols="30" rows="10"></textarea>
-        <label htmlFor="answer">답</label>
-        <textarea name="answer" id="" cols="30" rows="10"></textarea>
-        <button>등록</button>
-        <Link
-          href={{
-            pathname: "/team/space/resume",
-            query: {
-              id: router.query.id,
-            },
-          }}
-        >
-          <a>취소</a>
-        </Link>
+    <div className={styles.formContainer}>
+      <button onClick={onMoveResumePage} className={styles.moveBackBtn}>
+        <i class="fas fa-angle-double-left"></i> 돌아가기
+      </button>
+
+      <form>
+        <h2>자기소개서 등록</h2>
+
+        <div className={styles.contents}>
+          <label htmlFor="question">제목</label>
+          <input
+            name="question"
+            onChange={(event) => setQuestion(event.target.value)}
+            autoFocus
+          />
+
+          <label htmlFor="answer" className={styles.answerLabel}>
+            내용
+          </label>
+          <textarea
+            name="answer"
+            onChange={(event) => setAnswer(event.target.value)}
+          ></textarea>
+        </div>
       </form>
+      <button className={styles.submitBtn} onClick={onSubmitResume}>
+        등록
+      </button>
     </div>
   );
 }

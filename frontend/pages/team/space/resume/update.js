@@ -63,7 +63,7 @@ export default function ResumeUpdate() {
         <h2>자기소개서 수정</h2>
 
         <div className={styles.contents}>
-          <label htmlFor="question">질문</label>
+          <label htmlFor="question">제목</label>
           <input
             name="question"
             value={question}
@@ -72,7 +72,7 @@ export default function ResumeUpdate() {
           />
 
           <label htmlFor="answer" className={styles.answerLabel}>
-            답
+            내용
           </label>
           <textarea
             name="answer"
