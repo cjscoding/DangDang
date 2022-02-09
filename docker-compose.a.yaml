@@ -44,3 +44,5 @@ volumes:
 networks:
   dangdang_network:
     driver: bridge
+    external:
+      name: dangdang_network
