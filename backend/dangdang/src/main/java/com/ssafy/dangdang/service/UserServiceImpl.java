@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService{
         //if(!this.idCheck(userDto)) throw new ExtantUserException("존재하지 않는 유저 입니다");
 
         String encryptedPassword = user.getPassword();
-        if (userDto.getPassword() != null && userDto.getPassword().equals("")){
+        if (userDto.getPassword() != null && !userDto.getPassword().equals("")){
             String password = userDto.getPassword();
             encryptedPassword = passwordEncoder.encode(password);
         }
