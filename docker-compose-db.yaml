@@ -65,8 +65,6 @@ services:
     networks:
       - dangdang_network
 
-volumes:
-  kms_data:
 
 networks:
   dangdang_network:
