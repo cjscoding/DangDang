@@ -3,9 +3,6 @@ import { connect } from "react-redux";
 import styles from "../../../scss/self-practice/interview/select-questionlist.module.scss";
 import SockJS from "sockjs-client";
 import { WEBRTC_URL } from "../../../config"
-
-import { setQuestions } from "../../../store/actions/questionAction";
-import { connectSocket } from "../../../store/actions/wsAction";
 import { useEffect } from "react";
 
 function mapStateToProps(state) {
@@ -13,6 +10,8 @@ function mapStateToProps(state) {
     ws: state.wsReducer.ws,
   };
 }
+import { setQuestions } from "../../../store/actions/questionAction";
+import { connectSocket } from "../../../store/actions/wsAction";
 function mapDispatchToProps(dispatch) {
   const ws = new SockJS(`${WEBRTC_URL}/recording`);
   dispatch(connectSocket(ws))
