@@ -18,7 +18,7 @@ function MyFace({cameraId, micId, speakerId}) {
     async function getMedia() {
       try {
         stream = await navigator.mediaDevices.getUserMedia(
-          getVideoConstraints()
+          getVideoConstraints(1280, 720)
         );
         video.current.srcObject = stream;
       }catch(err) {
