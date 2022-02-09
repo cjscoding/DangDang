@@ -4,6 +4,7 @@ import Title from "../../../components/layout/Title";
 import Image from "next/image";
 import Link from "next/link";
 
+import { BACKEND_URL } from "../../../config";
 import { setAllRooms } from "../../../store/actions/roomAction";
 import { getAllRooms } from "../../../api/studyroom";
 import { useEffect, useState } from "react";
@@ -148,7 +149,7 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
               >
                 {room.imageUrl !== null ? (
                   <img
-                    src={`https://localhost:8443/files/images/${room.imageUrl}`}
+                    src={`${BACKEND_URL}/files/images/${room.imageUrl}`}
                     width="300"
                     height="200"
                     alt=""

@@ -1,7 +1,7 @@
 import styles from "../../../scss/team/space/layout.module.scss";
 import Link from "next/link";
 import Image from "next/image";
-import { FRONTEND_URL } from "../../../config";
+import { FRONTEND_URL, BACKEND_URL } from "../../../config";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
@@ -25,7 +25,7 @@ export default function Layout({ roomInfo, host, image }) {
         <div className={styles.mainInfo}>
           <div className={styles.image}>
             {image !== null ? (
-              <img src={`https://localhost:8443/files/images/${image}`} />
+              <img src={`${BACKEND_URL}/files/images/${image}`} />
             ) : (
               <Image
                 src="/vercel.svg"
