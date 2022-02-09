@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
 
@@ -8,6 +8,8 @@ services:
       - 3000:3000
     depends_on:
       - "backend"
+    networks:
+      - dangdang_network
 
   backend:
     # image: dbswns97/dangdang-backend:0.6
