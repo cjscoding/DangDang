@@ -28,7 +28,8 @@ fi
 
 
 echo "dangdang-${START_CONTAINER} up"
-
+# 백엔드 API 요청 URL 변경
+sudo sed -i "s/${TERMINATE_SERVER_PORT}/${START_SERVER_PORT}/" ./frontend/.env.production
 # 실행해야하는 컨테이너 docker-compose로 실행. -p는 docker-compose 프로젝트에 이름을 부여
 # -f는 docker-compose파일 경로를 지정
 sudo docker-compose -p dangdang-${START_CONTAINER} -f docker-compose.${START_CONTAINER}.yaml up -d --build
@@ -43,7 +44,7 @@ echo "change nginx server port"
 # 종료되는 포트를 새로 시작되는 포트로 값을 변경해줍니다.
 sudo sed -i "s/${TERMINATE_PORT}/${START_PORT}/" /etc/nginx/conf.d/service-url.inc
 
-sudo sed -i "s/${TERMINATE_SERVER_PORT}/${START_SERVER_PORT}/" ./frontend/.env.production
+
 
 # 새로운 포트로 nextjs 앱이 구동 되고, nginx의 포트를 변경해주었다면, nginx를 재시작해줍니다.
 echo "nginx reload.."
