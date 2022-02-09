@@ -33,6 +33,8 @@ public class CommentDto {
     private String writerNickname;
     @Schema(description = "작성자 이메일", example = "test@ssafy.com")
     private String writerEmail;
+    @Schema(description = "작성자 프로필 이미지", example = "default.jpg")
+    private String writerImageUrl;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "댓글 생성 날짜")
     private LocalDateTime createdAt;
     @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "댓글 수정 날짜")
@@ -75,6 +77,7 @@ public class CommentDto {
                     .writerId(comment.getWriterId())
                     .writerEmail(comment.getWriterEmail())
                     .writerNickname(comment.getWriterNickname())
+                    .writerImageUrl(comment.getWriterImageUrl())
                     .visable(comment.getVisable())
                     .children(commentDtos)
                     .build();
@@ -91,6 +94,7 @@ public class CommentDto {
                     .writerId(comment.getWriterId())
                     .writerEmail(comment.getWriterEmail())
                     .writerNickname(comment.getWriterNickname())
+                    .writerImageUrl(comment.getWriterImageUrl())
                     .visable(comment.getVisable())
                     .build();
     }

@@ -1,15 +1,13 @@
-version: "3.8"
+version: "3"
 
 services:
 
   frontend:
     build: ./frontend
     ports:
-      - 3000:3000
+      - 3001:3000
     depends_on:
       - "backend"
-    networks:
-      - dangdang_network
 
   backend:
     # image: dbswns97/dangdang-backend:0.6
@@ -23,7 +21,7 @@ services:
       SPRING_REDIS_PORT: "6379"
       SERVER_PORT: "8443"
     ports:
-      - 8443:8443
+      - 8444:8443
     depends_on:
       - "dangdang-mongodb"
       - "dangdang-mysql"
@@ -32,7 +30,7 @@ services:
     volumes:
       # - kms_data:/app/data/videos
       - type: bind
-        source: C:/home/ubuntu/data
+        source: /home/ubuntu/data
         target: /app/data
     restart: always
     links:
@@ -59,7 +57,7 @@ services:
       - 3306:3306
     volumes:
       - type: bind
-        source: C:/home/ubuntu/mysql
+        source: /home/ubuntu/mysql
         target: /var/lib/mysql
     restart: always
     networks:
@@ -81,7 +79,7 @@ services:
     restart: always
     volumes:
       - type: bind
-        source: C:/home/ubuntu/mongodb/data
+        source: /home/ubuntu/mongodb/data
         target: /data/db
     networks:
       - dangdang_network
@@ -92,7 +90,7 @@ services:
     restart: always
     volumes:
       - type: bind
-        source: C:/home/ubuntu/data/videos
+        source: /home/ubuntu/data/videos
         target: /tmp
       # network_mode: host
     expose:

@@ -67,6 +67,7 @@ public class CommentServiceImpl implements CommentService {
                     .writerNickname(user.getNickname())
                     .writerEmail(user.getEmail())
                     .writerId(user.getId())
+                    .writerImageUrl(user.getImageUrl())
                     .referenceId(comment.get().getReferenceId())
                     .commentType(comment.get().getCommentType())
                     .children(children)
@@ -82,6 +83,7 @@ public class CommentServiceImpl implements CommentService {
                     .writerNickname(user.getNickname())
                     .writerEmail(user.getEmail())
                     .writerId(user.getId())
+                    .writerImageUrl(user.getImageUrl())
                     .referenceId(comment.get().getReferenceId())
                     .commentType(comment.get().getCommentType())
                     .build();

@@ -50,6 +50,7 @@ public class Comment {
     private Long writerId;
     private String writerNickname;
     private String writerEmail;
+    private String writerImageUrl;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "Children_id")
@@ -121,6 +122,7 @@ public class Comment {
                     .writerNickname(user.getNickname())
                     .writerEmail(user.getEmail())
                     .writerId(user.getId())
+                    .writerImageUrl(user.getImageUrl())
                     .referenceId(commentDto.getReferenceId())
                     .commentType(commentDto.getCommentType())
                     .visable(true)

@@ -43,10 +43,12 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(handler(), "/recording").setAllowedOrigins("http://localhost:3000","http://localhost:80",
-                "https://i6c203.p.ssafy.io:3000", "http://i6c203.p.ssafy.io:3000", "https://i6c203.p.ssafy.io:80", "http://i6c203.p.ssafy.io:80").withSockJS();
-        registry.addHandler(groupCallHandler(), "/groupcall").setAllowedOrigins("http://localhost:3000", "http://localhost:80",
-                "https://i6c203.p.ssafy.io:3000", "http://i6c203.p.ssafy.io:3000", "https://i6c203.p.ssafy.io:80", "http://i6c203.p.ssafy.io:80").withSockJS();
+        registry.addHandler(handler(), "/recording").setAllowedOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:80",
+                "https://i6c203.p.ssafy.io:3000", "http://i6c203.p.ssafy.io:3000", "https://i6c203.p.ssafy.io:3001",
+                "http://i6c203.p.ssafy.io:3001", "https://i6c203.p.ssafy.io:80", "http://i6c203.p.ssafy.io:80").withSockJS();
+        registry.addHandler(groupCallHandler(), "/groupcall").setAllowedOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:80",
+                "https://i6c203.p.ssafy.io:3000", "http://i6c203.p.ssafy.io:3000", "https://i6c203.p.ssafy.io:3001",
+                "http://i6c203.p.ssafy.io:3001", "https://i6c203.p.ssafy.io:80", "http://i6c203.p.ssafy.io:80").withSockJS();
     }
 
     @Bean
