@@ -33,9 +33,6 @@ services:
         source: /home/ubuntu/data
         target: /app/data
     restart: always
-    # links:
-    #   - dangdang-mongodb
-    #   - dangdang-kms
     networks:
       - dangdang_network
     command: "java -Dspring.profiles.active=prod -Dkms.url=ws://dangdang-kms:8888/kurento -jar /app.jar"
