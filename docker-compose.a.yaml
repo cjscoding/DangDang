@@ -13,11 +13,11 @@ services:
     # image: dbswns97/dangdang-backend:0.6
     build: ./backend/dangdang
     environment:
-      SPRING_DATASOURCE_URL: "jdbc:mysql://dangdang-mysql:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://i6c203.p.ssafy.io:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul"
       SPRING_DATASOURCE_USERNAME: "ssafy"
       SPRING_DATASOURCE_PASSWORD: "ssafyborissafy"
-      SPRING_DATA_MONGODB_URI: "mongodb://dangdang-mongodb:27017/dangdang"
-      SPRING_REDIS_HOST: "dangdang-redis"
+      SPRING_DATA_MONGODB_URI: "mongodb://i6c203.p.ssafy.io:27017/dangdang"
+      SPRING_REDIS_HOST: "i6c203.p.ssafy.io"
       SPRING_REDIS_PORT: "6379"
       SERVER_PORT: "8443"
     ports:
