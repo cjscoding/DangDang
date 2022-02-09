@@ -1,0 +1,13 @@
+
+.mainContainer{
+  display: flex;
+  justify-content: space-around;
+  .faces {
+    display: inline;
+    width: 60vw;
+  }
+  .chat {
+    display: inline;
+    width: 30vw;
+  }
+}
