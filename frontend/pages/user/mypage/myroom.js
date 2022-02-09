@@ -4,6 +4,7 @@ import Title from "../../../components/layout/Title";
 import Image from "next/image";
 import Link from "next/link";
 
+import { BACKEND_URL } from "../../../config";
 import { setMyRooms } from "../../../store/actions/roomAction";
 import { getMyRooms } from "../../../api/studyroom";
 import { useEffect, useState } from "react";
@@ -29,15 +30,13 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
   // 팀 스페이스로 이동 로직
   const router = useRouter();
   const onDetail = (id) => {
-    router.push(
-      {
-        pathname: `/team/space`,
-        query: {
-          id,
-        },
-      }
-      //   `/team/space`
-    );
+    router.push({
+      pathname: "/team/space",
+      query: {
+        id,
+        page: "info",
+      },
+    });
   };
 
   //pagination
@@ -137,7 +136,7 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
                 >
                   {room.imageUrl !== null ? (
                     <img
-                      src={`https://localhost:8443/files/images/${room.imageUrl}`}
+                      src={`${BACKEND_URL}/files/images/${room.imageUrl}`}
                       width="300"
                       height="200"
                       alt=""

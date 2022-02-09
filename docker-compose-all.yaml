@@ -15,7 +15,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://dangdang-mysql:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul"
       SPRING_DATASOURCE_USERNAME: "ssafy"
-      SPRING_DATASOURCE_PASSWORD: "ssafy"
+      SPRING_DATASOURCE_PASSWORD: "ssafyborissafy"
       SPRING_DATA_MONGODB_URI: "mongodb://dangdang-mongodb:27017/dangdang"
       SPRING_REDIS_HOST: "dangdang-redis"
       SPRING_REDIS_PORT: "6379"
@@ -47,14 +47,14 @@ services:
       MYSQL_DATABASE: "dangdang"
       MYSQL_HOST: "%"
       MYSQL_USER: "ssafy"
-      MYSQL_PASSWORD: "ssafy"
+      MYSQL_PASSWORD: "ssafyborissafy"
     command:
       [
         "--character-set-server=utf8mb4",
         "--collation-server=utf8mb4_unicode_ci"
       ]
     ports:
-      - 3307:3306
+      - 3306:3306
     volumes:
       - type: bind
         source: /home/ubuntu/mysql

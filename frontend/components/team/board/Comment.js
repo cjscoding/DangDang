@@ -1,14 +1,17 @@
 import styles from "../../../scss/team/board/comment.module.scss";
-import Reply from "./ResumeReply";
+import Reply from "./Reply";
 
 import {
-  createResumeComment,
-  updateResumeComment,
-  deleteResumeComment,
-} from "../../../api/resume";
+  createDetailComment,
+  updateDetailComment,
+  deleteDetailComment,
+} from "../../../api/comment";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
-export default function Comment({ comment, reload, resumeId, userName }) {
+export default function Comment({ comment, reload }) {
+  const router = useRouter();
+
   const [showReply, setShowReply] = useState(false);
   const [showUpdateBtn, setShowUpdateBtn] = useState(false);
   const [newComment, setNewComment] = useState(comment.content);
@@ -25,13 +28,13 @@ export default function Comment({ comment, reload, resumeId, userName }) {
   const onUploadReply = (event) => {
     event.preventDefault();
     const data = {
-      resumeId,
+      studyId: router.query.id,
       obj: {
         parentId: comment.id,
         content: event.target[0].value,
       },
     };
-    createResumeComment(
+    createDetailComment(
       data,
       (res) => {
         console.log(res, "대댓글 등록 완료");
@@ -47,10 +50,10 @@ export default function Comment({ comment, reload, resumeId, userName }) {
   //댓글 삭제
   const onDeleteComment = (id) => {
     const data = {
-      resumeId,
+      studyId: router.query.id,
       commentId: id,
     };
-    deleteResumeComment(
+    deleteDetailComment(
       data,
       (res) => {
         console.log(res, "댓글 삭제 완료");
@@ -66,13 +69,13 @@ export default function Comment({ comment, reload, resumeId, userName }) {
   const onUpdateComment = (event) => {
     event.preventDefault();
     const data = {
-      resumeId,
+      studyId: router.query.id,
       commentId: comment.id,
       obj: {
         content: newComment,
       },
     };
-    updateResumeComment(
+    updateDetailComment(
       data,
       (res) => {
         console.log(res, "댓글 수정 완료");
@@ -127,20 +130,14 @@ export default function Comment({ comment, reload, resumeId, userName }) {
       </div>
       {showReply ? (
         <div>
-          <h5>Reply</h5>
-          <h6> {userName}</h6>
+          <h1>Reply</h1>
           <form onSubmit={onUploadReply}>
             <input type="text" placeholder="reply..." />
             <button>Upload</button>
           </form>
           {comment.children?.map((reply, index) => (
             <div key={index}>
-              <Reply
-                reply={reply}
-                submitReload={submitReload}
-                resumeId={resumeId}
-                commentId={comment.id}
-              />
+              <Reply reply={reply} submitReload={submitReload} />
             </div>
           ))}
         </div>
@@ -148,3 +145,5 @@ export default function Comment({ comment, reload, resumeId, userName }) {
     </div>
   );
 }
+
+//
