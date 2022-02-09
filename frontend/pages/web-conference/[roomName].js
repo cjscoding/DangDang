@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import getVideoConstraints from "../../components/webRTC/getVideoConstraints";
 import styles from "../../scss/web-conference/mainComponent.module.scss";
@@ -12,9 +12,17 @@ function mapStateToProps(state) {
 }
 export default connect(mapStateToProps)(Conference);
 function Conference({ws, myIdName}) {
+  const [mode, setMode] = useState(false) // 면접모드 true, 일반모드 false
   const chatInput = useRef();
   const chatInputBtn = useRef();
   const chatContentBox = useRef();
+  const cameraBtn = useRef();
+  const micBtn = useRef();
+  const speakerBtn = useRef();
+  const screenBtn = useRef();
+  const interviewModeBtn = useRef();
+  const normalModeBtn = useRef();
+  const exitBtn = useRef();
   const router = useRouter();
 
   useEffect(() => {
@@ -73,6 +81,49 @@ function Conference({ws, myIdName}) {
       Object.defineProperty(this, 'rtcPeer', { writable: true});
     }
 
+    function ScreenHandler() {
+      console.log('Loaded ScreenHandler', arguments);
+      // REF https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints#Properties_of_shared_screen_tracks
+      const constraints = {
+          audio: true,
+          video: {
+              width: 1980, // 최대 너비
+              height: 1080, // 최대 높이
+              frameRate: 10, // 최대 프레임
+          },
+      };
+      let localStream = null;
+  
+      // 스크린캡쳐 API를 브라우저 호환성 맞게 리턴합니다.
+      function getCrossBrowserScreenCapture() {
+          if (navigator.getDisplayMedia) {
+              return navigator.getDisplayMedia(constraints);
+          } else if (navigator.mediaDevices.getDisplayMedia) {
+              return navigator.mediaDevices.getDisplayMedia(constraints);
+          }
+      }
+  
+      // 스크린캡쳐 API를 호출합니다.
+      async function start() {
+          try {
+              localStream = await getCrossBrowserScreenCapture();
+          } catch (err) {
+              console.error('Error getDisplayMedia', err);
+          }
+  
+          return localStream;
+      }
+  
+      // 스트림의 트렉을 stop()시켜 스트림이 전송을 중지합니다.
+      function end() {
+          localStream.getTracks().forEach((track) => {
+              track.stop();
+          });
+      }
+
+      this.start = start;
+      this.end = end;
+    }
 
     function sendMessage(message) {
       const jsonMessage = JSON.stringify(message);
@@ -177,6 +228,32 @@ function Conference({ws, myIdName}) {
     const chatInputEl = chatInput.current
     const chatInputBtnEl = chatInputBtn.current
     chatInputBtnEl.addEventListener("click", sendChatMsg)
+
+    const cameraBtnEl = cameraBtn.current
+    const micBtnEl = micBtn.current
+    const speakerBtnEl = speakerBtn.current
+    const screenBtnEl = screenBtn.current
+    const interviewModeBtnEl = interviewModeBtn.current
+    const normalModeBtnEl = normalModeBtn.current
+    const exitBtnEl = exitBtn.current
+    function changeToInterviewMode() {
+      setMode(true)
+    }
+    function changeToNomalMode() {
+      setMode(false)
+    }
+    let stream;
+    async function startScreenShare() {
+      const screenHandler = new ScreenHandler();
+      stream = await screenHandler.start();
+      const screen = document.createElement("video")
+      screen.autoplay = true
+      screen.srcObject = stream
+      document.getElementById('participants').appendChild(screen);
+    }
+    normalModeBtnEl.addEventListener("click", changeToNomalMode)
+    interviewModeBtnEl.addEventListener("click", changeToInterviewMode)
+    screenBtnEl.addEventListener("click", startScreenShare)
     // 방 입장
     sendMessage({
       id : "joinRoom",
@@ -185,6 +262,9 @@ function Conference({ws, myIdName}) {
     });
     return () => {
       chatInputBtnEl.removeEventListener("click", sendChatMsg)
+      normalModeBtnEl.removeEventListener("click", changeToNomalMode)
+      interviewModeBtnEl.removeEventListener("click", changeToInterviewMode)
+      screenBtnEl.removeEventListener("click", startScreenShare)
       // 방 퇴장
       sendMessage({
         id : 'leaveRoom'
@@ -196,7 +276,18 @@ function Conference({ws, myIdName}) {
     }
   }, [])
   return <div className={styles.mainContainer}>
-    <div className={styles.faces} id="participants"></div>
+    <div className={styles.videoContainer}>
+      <div className={styles.faces} id="participants"></div>
+      <div className={styles.btnBar}>
+        <span ref={cameraBtn}><i className="fas fa-video"></i></span>
+        <span ref={micBtn}><i className="fas fa-microphone"></i></span>
+        <span ref={speakerBtn}><i className="fas fa-volume-up"></i></span>
+        <span ref={screenBtn}><i className="fas fa-tv"></i></span>
+        <span ref={interviewModeBtn} style={mode?{display: "none"}:{}}><i className="fas fa-user-tie"></i></span>
+        <span ref={normalModeBtn} style={!mode?{display: "none"}:{}}><i className="fas fa-users"></i></span>
+        <span ref={exitBtn}><i className="fas fa-times-circle"></i></span>
+      </div>
+    </div>
     <div className={styles.chat} id="chat">
       <h3>채팅창</h3>
       <div>

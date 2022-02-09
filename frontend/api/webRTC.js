@@ -31,6 +31,6 @@ export function ttsService(txt, volume) {
       source.start(0);
     });
   }).catch((error)=>{
-      console.log(error);
+    console.log(error);
   })
 }
