@@ -22,20 +22,13 @@ services:
       SERVER_PORT: "8443"
     ports:
       - 8444:8443
-    # depends_on:
-    #   - "dangdang-mongodb"
-    #   - "dangdang-mysql"
-    #   - "dangdang-redis"
-    #   - "dangdang-kms"
+
     volumes:
       # - kms_data:/app/data/videos
       - type: bind
         source: /home/ubuntu/data
         target: /app/data
     restart: always
-    # links:
-    #   - dangdang-mongodb
-    #   - dangdang-kms
     networks:
       - dangdang_network
     command: "java -Dspring.profiles.active=prod -Dkms.url=ws://dangdang-kms:8888/kurento -jar /app.jar"

@@ -23,6 +23,8 @@ public class CorsConfig {
         config.addAllowedOrigin("https://localhost:3000");
         config.addAllowedOrigin("https://localhost:3001");
         config.addAllowedOrigin("http://localhost:80"); // Access-Control-Allow-Origin  (Response에 자동으로 추가해줌)
+        config.addAllowedOrigin("http://i6c203.p.ssafy.io");
+        config.addAllowedOrigin("https://i6c203.p.ssafy.io");
         config.addAllowedOrigin("http://i6c203.p.ssafy.io:3000");
         config.addAllowedOrigin("https://i6c203.p.ssafy.io:3000");
         config.addAllowedOrigin("http://i6c203.p.ssafy.io:3001");
