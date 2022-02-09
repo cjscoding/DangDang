@@ -120,18 +120,7 @@ spring:
   output:
     ansi:
       enabled: DETECT
-  #  mvc :
-#    static-path-pattern : /static/**
-#    hiddenmethod :
-#      filter :
-#        enabled : true
-#    view:
-#      prefix: /resources/static
-#      suffix: .html
-#  web :
-#    resources :
-#      static-locations : classpath:/static
-#      add-mappings :     true
+
 
   servlet :
     multipart :
