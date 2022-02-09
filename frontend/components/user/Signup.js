@@ -58,9 +58,9 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
       <form className={styles.form} onSubmit={handleSubmit}>
         <div>
           <label htmlFor="email">
-            이메일
             <input
               id="email"
+              className={styles.email}
               type="email"
               value={values.email}
               onChange={handleChange}
@@ -71,9 +71,9 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
         </div>
         <div>
           <label htmlFor="password">
-            비밀번호
             <input
               id="password"
+              className={styles.password}
               type="password"
               value={values.password}
               onChange={handleChange}
@@ -84,9 +84,9 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
         </div>
         <div>
           <label htmlFor="nickName">
-            이름
             <input
               id="nickName"
+              className={styles.nickName}
               type="text"
               value={values.nickName}
               onChange={handleChange}
@@ -95,14 +95,16 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
             />
           </label>
         </div>
-        <button type="submit">회원가입</button>
+        <button type="submit" id={styles.submitBtn}>회원가입</button>
       </form>
       <p>
         계정이 있으세요?{" "}
         <a onClick={() => setIsLoginModal(!isLoginModal)}>로그인</a>
       </p>
-      <Button text="Google로 시작하기" />
-      <Button text="Kakao로 시작하기" />
+      {/* <Button text="Google로 시작하기" />
+      <Button text="Kakao로 시작하기" /> */}
+      <a onClick={() => socialLoginRequest("google")} target="_blank"><img src="/images/btn_google_signin_dark_normal_web.png"></img></a>
+    <a onClick={() => socialLoginRequest("kakao")}><img src="/images/kakao_login_medium_narrow.png"></img></a>
     </div>
   );
 }
