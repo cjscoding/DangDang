@@ -30,7 +30,7 @@ services:
       - dangdang-kms
     networks:
       - dangdang_network
-    command: "java -Dspring.profiles.active=prod -Dkms.url=ws://dangdang-kms:8888/kurento -jar /app.jar"
+    command: "java -Dspring.profiles.active=dev-test -Dkms.url=ws://dangdang-kms:8888/kurento -jar /app.jar"
 
   dangdang-mysql:
     image: mysql:8.0.28
@@ -39,7 +39,7 @@ services:
       MYSQL_DATABASE: "dangdang"
       MYSQL_HOST: "%"
       MYSQL_USER: "ssafy"
-      MYSQL_PASSWORD: "ssafy"
+      MYSQL_PASSWORD: "ssafyborissafy"
     command:
       [
         "--character-set-server=utf8mb4",
