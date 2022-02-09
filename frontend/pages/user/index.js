@@ -1,6 +1,6 @@
 import Link from "next/link";
 import MyRoom from "./mypage/myroom";
-import UserInfo from "./mypage/userInfo";
+import UserInfo from "./mypage/index";
 
 export default function User() {
   return (
@@ -8,9 +8,6 @@ export default function User() {
       <h1>유저페이지</h1>
       <UserInfo></UserInfo>
       <MyRoom></MyRoom>
-      {/* <Link href="/user/mypage/myroom">
-        <a>내방들이당</a>
-      </Link> */}
     </main>
   );
 }
