@@ -7,7 +7,7 @@ import {
   setIsLoginModal,
   setShowModal,
 } from "../../store/actions/userAction";
-import { signUpRequest } from "../../api/user";
+import { signUpRequest, registUserImage } from "../../api/user";
 
 function mapStateToProps({ userReducer }) {
   return {
@@ -25,6 +25,7 @@ function mapDispatchToProps(dispatch) {
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);
 
 function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
+  const [image, setImage] = useState("");
   const [values, setValues] = useState({
     email: "",
     password: "",
@@ -46,17 +47,32 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
       (response) => {
         alert("회원가입 완료!");
         console.log(response);
+        console.log(image);
+        registUserImage(
+          image,
+          (res) => {
+            console.log(res, "유저 이미지 변경 성공");
+          },
+          (err) => {
+            console.log(err, "유저 이미지 변경 실패");
+          }
+        );
         setShowModal(false);
       },
       (error) => console.log(error)
     );
   };
 
+  //유저 이미지 설정 시 state 값 변환
+  const onSetImage = (event) => setImage(event.target.files[0]);
+
   return (
     <div className={styles.body}>
       <h1>회원가입</h1>
       <form className={styles.form} onSubmit={handleSubmit}>
         <div>
+          <label htmlFor="profile">프로필 사진</label>
+          <input type="file" name="profile" onChange={onSetImage} />
           <label htmlFor="email">
             이메일
             <input
