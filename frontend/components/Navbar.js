@@ -1,12 +1,13 @@
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { logoutRequest } from "../api/user";
+import { BACKEND_URL } from "../config";
 import {
-    resetUserInfo,
-    setIsLoginModal,
-    setShowModal,
-    setIsLogin,
-    setIsMoveTeamStudy,
+  resetUserInfo,
+  setIsLoginModal,
+  setShowModal,
+  setIsLogin,
+  setIsMoveTeamStudy,
 } from "../store/actions/userAction";
 
 import Link from "next/link";
@@ -47,6 +48,7 @@ function NavBar({
   setIsMoveTeamStudy,
 }) {
   const router = useRouter();
+  
   const logOut = () => {
     logoutRequest(
       (response) => {
@@ -106,6 +108,11 @@ function NavBar({
         {isLogin ? (
           <span>
             <li>
+              <img
+                src={`${BACKEND_URL}/files/images/${user.imageUrl}`}
+                width={30}
+                height={30}
+              />
               <Link href="/user">
                 <a>{user.nickName}님 안녕하세요! (마이페이지)</a>
               </Link>
