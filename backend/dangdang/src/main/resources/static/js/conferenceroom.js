@@ -76,7 +76,7 @@ const screenHandler = new ScreenHandler();
 function onLocalStream(stream) {
     console.log('onLocalStream', stream);
     // const $video = document.querySelector('#video-'+name);
-    const $video = document.querySelector('#local-video');
+    const $video = document.querySelector('video-'+name);
     $video.srcObject = stream;
 }
 
@@ -86,7 +86,7 @@ function onLocalStream(stream) {
 
 async function startScreenShare() {
     const stream = await screenHandler.start();
-    onLocalStream(stream);
+
 
 }
 
@@ -131,6 +131,12 @@ ws.onmessage = function (message) {
     console.info('Received message: ' + message.data);
 
     switch (parsedMessage.id) {
+        case 'existingParticipantsForScreen':
+
+            break;
+        case 'newScreenArrived':
+
+            break;
         case 'existingParticipants':
             onExistingParticipants(parsedMessage);
             break;
@@ -213,17 +219,20 @@ function onExistingParticipants(msg) {
 
     const $tempVideo = document.querySelector('#local-video');
 
+    var options;
 
-    // var options = {
-    //     localVideo: video,
-    //     mediaConstraints: constraints,
-    //     onicecandidate: participant.onIceCandidate.bind(participant)
-    // }
-
-    var options = {
-        videoStream:  $tempVideo.srcObject,
-        mediaConstraints: constraints,
-        onicecandidate: participant.onIceCandidate.bind(participant)
+    if(name.equals("screen")){
+        options = {
+            videoStream:  $tempVideo.srcObject,
+            mediaConstraints: constraints,
+            onicecandidate: participant.onIceCandidate.bind(participant)
+        }
+    }else {
+        options = {
+            localVideo: video,
+            mediaConstraints: constraints,
+            onicecandidate: participant.onIceCandidate.bind(participant)
+        }
     }
 
     participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
