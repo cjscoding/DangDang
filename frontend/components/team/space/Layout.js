@@ -1,7 +1,7 @@
 import styles from "../../../scss/team/space/layout.module.scss";
 import Link from "next/link";
 import Image from "next/image";
-
+import { FRONTEND_URL, BACKEND_URL } from "../../../config";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
@@ -12,18 +12,20 @@ export default function Layout({ roomInfo, host, image }) {
 
   useEffect(() => {
     if (!router.isReady) return;
-    console.log(router);
     setStudyId(router.query.id);
     setCurPage(router.query.page);
   }, [router.isReady]);
 
+  function goToWebConference() {
+    window.open(`${FRONTEND_URL}/web-conference/check-devices/${studyId}`);
+  }
   return (
     <div className={styles.teamSpaceLayout}>
       <div className={styles.teamInfoBox}>
         <div className={styles.mainInfo}>
           <div className={styles.image}>
             {image !== null ? (
-              <img src={`https://localhost:8443/files/images/${image}`} />
+              <img src={`${BACKEND_URL}/files/images/${image}`} />
             ) : (
               <Image
                 src="/vercel.svg"
@@ -42,7 +44,7 @@ export default function Layout({ roomInfo, host, image }) {
                 <span key={tag}>#{tag}</span>
               ))}
             </div>
-            <button>연습 시작하기</button>
+            <button onClick={goToWebConference}>연습 시작하기</button>
           </div>
         </div>
 

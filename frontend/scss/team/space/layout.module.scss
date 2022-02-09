@@ -7,12 +7,9 @@
 }
 
 .teamInfoBox {
-  padding: 40px;
+  @include white-box;
   display: grid;
   grid-template-columns: 2fr 1fr;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: $box-shadow;
 }
 
 .mainInfo {
@@ -48,7 +45,7 @@
     opacity: 0.5;
   }
   button {
-    @include submit-button(200px);
+    @include filled-button(200px, white, $main-color);
   }
 }
 
