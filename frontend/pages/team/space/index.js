@@ -193,7 +193,7 @@ function TeamSpace({
 
       <div className={styles.contentBox}>
         <button onClick={onUpdatePage}>
-          <i class="fas fa-pencil-alt"></i>
+          <i className="fas fa-pencil-alt"></i>
         </button>
         <p>{roomInfo.description}</p>
       </div>
