@@ -1,13 +1,15 @@
-version: "3"
+version: "3.8"
 
 services:
 
   frontend:
     build: ./frontend
     ports:
-      - 3001:3000
+      - 3000:3000
     depends_on:
       - "backend"
+    networks:
+      - dangdang_network
 
   backend:
     # image: dbswns97/dangdang-backend:0.6
@@ -21,7 +23,7 @@ services:
       SPRING_REDIS_PORT: "6379"
       SERVER_PORT: "8443"
     ports:
-      - 8444:8443
+      - 8443:8443
     depends_on:
       - "dangdang-mongodb"
       - "dangdang-mysql"
@@ -30,7 +32,7 @@ services:
     volumes:
       # - kms_data:/app/data/videos
       - type: bind
-        source: /home/ubuntu/data
+        source: C:/home/ubuntu/data
         target: /app/data
     restart: always
     links:
@@ -39,9 +41,6 @@ services:
     networks:
       - dangdang_network
     command: "java -Dspring.profiles.active=prod -Dkms.url=ws://dangdang-kms:8888/kurento -jar /app.jar"
-
-volumes:
-  kms_data:
 
 networks:
   dangdang_network:
