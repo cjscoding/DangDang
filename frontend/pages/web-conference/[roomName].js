@@ -1,7 +1,8 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import getVideoConstraints from "../../components/webRTC/getVideoConstraints";
+import styles from "../../scss/web-conference/mainComponent.module.scss";
 
 function mapStateToProps(state) {
   return {
@@ -11,9 +12,14 @@ function mapStateToProps(state) {
 }
 export default connect(mapStateToProps)(Conference);
 function Conference({ws, myIdName}) {
+  const chatInput = useRef();
+  const chatInputBtn = useRef();
+  const chatContentBox = useRef();
   const router = useRouter();
+
   useEffect(() => {
     const roomName = router.query.roomName
+    const myName = myIdName.slice(1 + myIdName.search('-'), myIdName.length);
     // 새로고침 로직 다른거 생각중
     if(!ws) window.close();
     let participants = {};
@@ -70,30 +76,33 @@ function Conference({ws, myIdName}) {
 
     function sendMessage(message) {
       const jsonMessage = JSON.stringify(message);
-      console.log('Sending message: ' + jsonMessage);
+      console.log("Sending message: " + jsonMessage);
       ws.send(jsonMessage);
     }
     ws.onmessage = function(message) {
       const jsonMsg = JSON.parse(message.data);
-      console.log('Received message: ' + message.data);
+      console.log("Received message: " + message.data);
     
       switch (jsonMsg.id) {
-      case 'existingParticipants':
+      case "existingParticipants":
         onExistingParticipants(jsonMsg);
         break;
-      case 'newParticipantArrived':
+      case "newParticipantArrived":
         onNewParticipant(jsonMsg);
         break;
-      case 'participantLeft':
+      case "participantLeft":
         onParticipantLeft(jsonMsg);
         break;
-      case 'receiveVideoAnswer':
+      case "receiveVideoAnswer":
         receiveVideoResponse(jsonMsg);
         break;
-      case 'iceCandidate':
+      case "iceCandidate":
         participants[jsonMsg.name].rtcPeer.addIceCandidate(jsonMsg.candidate, function (error) {
           if (error) return console.log(`ERROR! ${error}`);
         });
+        break;
+      case "chat":
+        onReceiveChat(jsonMsg);
         break;
       default:
         console.log(`ERROR! ${jsonMsg}`)
@@ -138,13 +147,36 @@ function Conference({ws, myIdName}) {
         this.generateOffer (participant.offerToReceiveVideo.bind(participant));
       });
     }
-    
+
     function onParticipantLeft(jsonMsg) {
       const participant = participants[jsonMsg.name];
       participant.dispose();
       delete participants[jsonMsg.name];
     }
 
+    const chatContentBoxEl = chatContentBox.current
+    function onReceiveChat(jsonMsg) {
+      const senderIdName = jsonMsg.sessionName
+      const senderName = senderIdName.slice(1 + senderIdName.search('-'), senderIdName.length);
+      const showingMsg = `${senderName}: ${jsonMsg.contents}`
+      const showingMsgEl = document.createElement("h5")
+      showingMsgEl.innerText = showingMsg
+      chatContentBoxEl.appendChild(showingMsgEl)
+    }
+
+    function sendChatMsg() {
+      const chatMsg = chatInputEl.value.trim()
+      if(chatMsg) {
+        sendMessage({
+          id: "chat",
+          contents: chatMsg
+        })
+      }
+      chatInputEl.value = ""
+    }
+    const chatInputEl = chatInput.current
+    const chatInputBtnEl = chatInputBtn.current
+    chatInputBtnEl.addEventListener("click", sendChatMsg)
     // 방 입장
     sendMessage({
       id : "joinRoom",
@@ -152,6 +184,7 @@ function Conference({ws, myIdName}) {
       room : roomName,
     });
     return () => {
+      chatInputBtnEl.removeEventListener("click", sendChatMsg)
       // 방 퇴장
       sendMessage({
         id : 'leaveRoom'
@@ -162,7 +195,15 @@ function Conference({ws, myIdName}) {
       ws.close();
     }
   }, [])
-  return <div>
-    <div id="participants"></div>
+  return <div className={styles.mainContainer}>
+    <div className={styles.faces} id="participants"></div>
+    <div className={styles.chat} id="chat">
+      <h3>채팅창</h3>
+      <div>
+        <textarea ref={chatInput} />
+        <button ref={chatInputBtn} >전송</button>
+      </div>
+      <div ref={chatContentBox}></div>
+    </div>
   </div>
 }
