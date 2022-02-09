@@ -22,11 +22,11 @@ services:
       SERVER_PORT: "8443"
     ports:
       - 8444:8443
-    depends_on:
-      - "dangdang-mongodb"
-      - "dangdang-mysql"
-      - "dangdang-redis"
-      - "dangdang-kms"
+    # depends_on:
+    #   - "dangdang-mongodb"
+    #   - "dangdang-mysql"
+    #   - "dangdang-redis"
+    #   - "dangdang-kms"
     volumes:
       # - kms_data:/app/data/videos
       - type: bind
