@@ -111,6 +111,20 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
+    public boolean deleteUser(User user) {
+
+        //TODO: 나중에 벌크 수정 쿼리로 바꾸기
+        List<Comment> comments = commentRepository.findCommentByWriterEmail(user.getEmail());
+        comments.forEach(Comment::disappear);
+        commentRepository.saveAll(comments);
+
+        userRepository.delete(user);
+        return true;
+
+    }
+
+    @Override
     public Optional<User> findByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
