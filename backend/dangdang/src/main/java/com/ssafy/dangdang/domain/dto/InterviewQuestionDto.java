@@ -33,7 +33,7 @@ public class InterviewQuestionDto {
                 .field(writeInterview.getField())
                 .question(writeInterview.getQuestion())
                 .answer(writeInterview.getAnswer())
-                .visable(false)
+                .visable(true)
                 .build();
     }
 

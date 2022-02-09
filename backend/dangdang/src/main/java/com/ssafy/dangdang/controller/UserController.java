@@ -137,15 +137,14 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "회원 삭제 성공")
     })
     @DeleteMapping()
-    public ApiResult<String> deleteUser(@RequestBody UserDto userDto) {
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<String> deleteUser(@CurrentUser PrincipalDetails userPrincipal) {
 
-        Optional<User> user = userService.findByEmail(userDto.getEmail());
-        if (user.isPresent()){
-            log.info("user delete {}", userDto.toString());
-            if(userService.deleteUser(user.get(), userDto.getPassword())) return success("유저 삭제 성공");
-        }
 
-        throw new BadRequestException("올바른 유저 정보를 입력해주세요");
+        log.info("user delete ");
+        userService.deleteUser(userPrincipal.getUser());
+        return success("유저 삭제 성공");
+
 
     }
 
@@ -179,4 +178,3 @@ public class UserController {
 
 
 }
-

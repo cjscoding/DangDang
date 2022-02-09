@@ -22,6 +22,7 @@ public interface UserService {
     public boolean idCheck(UserDto userDto) ;
 
     public boolean deleteUser(User user, String password);
+    public boolean deleteUser(User user);
 
     public Optional<User> findByEmail(String email);
 
