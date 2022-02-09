@@ -179,63 +179,81 @@ function TeamSpace({
   };
 
   return (
-    <div>
+    <div className={styles.teamSpace}>
       <Layout
         roomInfo={roomInfo}
         host={roomHost.nickName}
         createdAt={roomInfo.createdAt}
         image={roomInfo.imageUrl}
       />
-      <div className={styles.container}>
-        <div className={styles.info}>
-          <h1>팀상세정보</h1>
-          <br />
-          <span>목표</span>
-          <span>{roomInfo.goal}</span>
-          <span>오픈카카오</span>
-          <span>{roomInfo.openKakao}</span>
-          <span>설명</span>
-          <span>{roomInfo.description}</span>
-          <span>팀원</span>
-          <div>
-            {roomMembers.map((member, index) => (
-              <span key={index}>{member.nickName}</span>
-            ))}
+
+      <button className={styles.kakaoBtn}>
+        <a href={roomInfo.openKakao}>오픈카톡</a>
+      </button>
+
+      <div className={styles.contentBox}>
+        <button onClick={onUpdatePage}>
+          <i className="fas fa-pencil-alt"></i>
+        </button>
+        <p>{roomInfo.description}</p>
+      </div>
+
+      {userId === hostId ? (
+        <div className={styles.adminContainer}>
+          <div className={styles.adminBox}>
+            <div className={styles.section}>
+              <h3>멤버관리</h3>
+              <div className={styles.memberList}>
+                {roomMembers.map((member, index) => (
+                  <form key={index} onSubmit={onRemoveMember}>
+                    <div>
+                      <img src="/vercel.svg" alt="" />
+                      <input type="hidden" value={member.id} disabled />
+                      <input
+                        type="text"
+                        key={index}
+                        value={member.nickName}
+                        disabled
+                      />
+                    </div>
+                    {member.id !== hostId ? (
+                      <button className={styles.removeMemberBtn}>
+                        강제탈퇴
+                      </button>
+                    ) : (
+                      <></>
+                    )}
+                  </form>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.section}>
+              <h3>대기명단</h3>
+              <div className={styles.waitingList}>
+                {waitingList?.map((member, index) => (
+                  <form key={index} onSubmit={onAllowJoin}>
+                    <div>
+                      <img src="/vercel.svg" alt="" />
+                      <input type="hidden" value={member.id} disabled />
+                      <input type="text" value={member.nickName} disabled />
+                    </div>
+                    <button className={styles.allowMemberBtn}>가입승인</button>
+                  </form>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.deleteBtnBox}>
+            <button onClick={() => onDeleteTeam()}>팀 삭제</button>
           </div>
         </div>
-
-        <div>
-          {userId === hostId ? (
-            <div>
-              <button onClick={onUpdatePage}>팀 수정</button>
-              <button onClick={() => onDeleteTeam()}>팀 삭제</button>
-              <h1>멤버관리</h1>
-              {roomMembers.map((member, index) => (
-                <form key={index} onSubmit={onRemoveMember}>
-                  <input type="hidden" value={member.id} disabled />
-                  <input
-                    type="text"
-                    key={index}
-                    value={member.nickName}
-                    disabled
-                  />
-                  <button>강제탈퇴</button>
-                </form>
-              ))}
-              <h1>대기명단</h1>
-              {waitingList?.map((member, index) => (
-                <form key={index} onSubmit={onAllowJoin}>
-                  <input type="hidden" value={member.id} disabled />
-                  <input type="text" value={member.nickName} disabled />
-                  <button>가입승인</button>
-                </form>
-              ))}
-            </div>
-          ) : (
-            <button onClick={onLeaveTeam}>팀 탈퇴</button>
-          )}
+      ) : (
+        <div className={styles.deleteBtnBox}>
+          <button onClick={onLeaveTeam}>팀 탈퇴</button>
         </div>
-      </div>
+      )}
     </div>
   );
 }

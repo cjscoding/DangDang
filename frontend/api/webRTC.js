@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BACKEND_URL } from "../config";
 
-export function ttsService(txt) {
+export function ttsService(txt, volume) {
   axios({
     method:"post",
     url: `${BACKEND_URL}/api/tts`,
@@ -19,10 +19,15 @@ export function ttsService(txt) {
     const arraybuffer = str2ab(res.data)
 
     const context=new AudioContext();
+    // 사운드 조절을 위해 gainNode를 추가
+    const gainNode = context.createGain()
+    gainNode.connect(context.destination)
+    // arraybuffer 재생
     context.decodeAudioData(arraybuffer,buffer=>{
       const source = context.createBufferSource();
       source.buffer = buffer;
-      source.connect(context.destination);
+      source.connect(gainNode);
+      gainNode.gain.value = volume / 100
       source.start(0);
     });
   }).catch((error)=>{
