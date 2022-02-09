@@ -1,7 +1,6 @@
 package com.ssafy.dangdang.config.security.auth;
 
 import com.ssafy.dangdang.domain.User;
-import com.ssafy.dangdang.domain.types.Email;
 import com.ssafy.dangdang.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,7 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     @Override
     public PrincipalDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findUserByEmail(Email.of(username));
+        Optional<User> user = userRepository.findUserByEmail(username);
         if(user.isEmpty()){
             throw new UsernameNotFoundException(username + " : 사용자 존재하지 않음");
         }

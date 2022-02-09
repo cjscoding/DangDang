@@ -3,7 +3,6 @@ package com.ssafy.dangdang.config.security.oauth;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
 import com.ssafy.dangdang.config.security.oauth.provider.*;
 import com.ssafy.dangdang.domain.User;
-import com.ssafy.dangdang.domain.types.Email;
 import com.ssafy.dangdang.domain.types.UserRoleType;
 import com.ssafy.dangdang.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,10 +64,10 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 //        Optional<User> userOptional =
 //                userRepository.findByProviderAndProviderId(oAuth2UserInfo.getProvider(), oAuth2UserInfo.getProviderId());
 
-        long idCount = userRepository.countUserByEmail(Email.of(oAuth2UserInfo.getEmail()));
+        long idCount = userRepository.countUserByEmail(oAuth2UserInfo.getEmail());
         User user;
         if (idCount >0) {
-            user = userRepository.findUserByEmail(Email.of(oAuth2UserInfo.getEmail())).get();
+            user = userRepository.findUserByEmail(oAuth2UserInfo.getEmail()).get();
 
 //            user = userOptional.get();
 //            // user가 존재하면 update 해주기
@@ -77,7 +76,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         } else {
             // user의 패스워드가 null이기 때문에 OAuth 유저는 일반적인 로그인을 할 수 없음.
             user = User.builder()
-                    .email(Email.of(oAuth2UserInfo.getEmail()))
+                    .email(oAuth2UserInfo.getEmail())
                     .nickname(oAuth2UserInfo.getName())
                     .role(UserRoleType.USER)
                     .provider(oAuth2UserInfo.getProvider())

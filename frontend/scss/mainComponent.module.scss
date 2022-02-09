@@ -1,13 +1,37 @@
-.container {
-  padding: 1rem;
-  border-radius: 5px;
-  width: 200px;
-  height: 80vh;
-  background-color: coral;
-  margin-right: 2rem;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  &:hover {
-    transform: translateY(-0.5rem);
-    transition: 0.4s ease;
-  }
+@import "./common/extends.scss";
+
+.selfStudy {
+  @extend %mainComponent;
+  background: url("/images/dangdang_1.png") no-repeat,
+    linear-gradient(180deg, #ffb084 0%, #e86c6c 100%);
+  background-size: 70%, auto;
+  background-position: right 1rem bottom 1.5rem, center;
+  box-shadow: 2px 8px 12px rgba(255, 153, 154, 0.25);
+}
+
+.teamStudy {
+  @extend %mainComponent;
+  background: url("/images/dangdang_2.png") no-repeat,
+    linear-gradient(180deg, #bea5f2 0%, #6e7ed6 100%);
+  background-size: 80%, auto;
+  background-position: center bottom 1.5rem, center;
+  box-shadow: 2px 8px 12px rgba(114, 129, 215, 0.25);
+}
+
+.teamBoard {
+  @extend %mainComponent;
+  background: url("/images/dangdang_3.png") no-repeat,
+    linear-gradient(180deg, #ffc772 0%, #f3ed61 100%);
+  background-size: 70%, auto;
+  background-position: left 1.2rem bottom 1.5rem, center;
+  box-shadow: 2px 8px 12px rgba(244, 220, 98, 0.25);
+}
+
+.interviewQuestion {
+  @extend %mainComponent;
+  background: url("/images/dangdang_4.png") no-repeat,
+    linear-gradient(180deg, #83c8a7 0%, #8ee66f 100%);
+  background-size: 70%, auto;
+  background-position: right 1.2rem bottom 1.5rem, center;
+  box-shadow: 2px 8px 12px rgba(142, 229, 114, 0.25);
 }

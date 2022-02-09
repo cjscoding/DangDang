@@ -1,21 +1,149 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import Signup from "./Signup";
+import { connect } from "react-redux";
+import { logoutRequest } from "../api/user";
+import {
+  resetUserInfo,
+  setIsLoginModal,
+  setShowModal,
+  setIsLogin,
+  setIsMoveTeamStudy,
+} from "../store/actions/userAction";
+import styles from "../scss/layout/navbar.module.scss";
+import Modal from "./layout/Modal";
+import Login from "./user/Login";
+import Signup from "./user/Signup";
 
-export default function NavBar() {
-  const router = useRouter();
-  const [isHidden, setIsHidden] = useState(true);
-  const toggleModals = () => {
-    setIsHidden((curr) => !curr);
+function mapStateToProps({ userReducer }) {
+  return {
+    user: userReducer.user,
+    isLogin: userReducer.isLogin,
+    isLoginModal: userReducer.isLoginModal,
   };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setShowModal: (show) => dispatch(setShowModal(show)),
+    setIsLoginModal: (isLoginModal) => dispatch(setIsLoginModal(isLoginModal)),
+    resetUserInfo: () => dispatch(resetUserInfo()),
+    setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
+    setIsMoveTeamStudy: (isMoveTeamStudy) =>
+      dispatch(setIsMoveTeamStudy(isMoveTeamStudy)),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+
+function NavBar({
+  user,
+  isLogin,
+  setIsLogin,
+  isLoginModal,
+  setShowModal,
+  setIsLoginModal,
+  resetUserInfo,
+  setIsMoveTeamStudy,
+}) {
+  const router = useRouter();
+  const logOut = () => {
+    logoutRequest(
+      (response) => {
+        localStorage.removeItem("authorization");
+        localStorage.removeItem("refreshtoken");
+
+        // 로그아웃 시 삭제해야 하는 store 값들 추가로 삭제 바람!
+        resetUserInfo();
+        setIsLogin(false);
+        router.push("/");
+      },
+      (error) => console.log(error)
+    );
+  };
+
   return (
-    <nav>
-      <Link href="/">
-        <a>Home</a>
-      </Link>
-      <span onClick={toggleModals}>회원가입</span>
-      <Signup isHidden={isHidden} />
+    <nav className={styles.navbar}>
+      <ul>
+        <li>
+          <Link href="/">
+            <a>Home</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/self-practice">
+            <a>혼자연습한당</a>
+          </Link>
+        </li>
+        <li>
+          {isLogin ? (
+            <Link href="/user/mypage/myroom">
+              <a>같이연습한당</a>
+            </Link>
+          ) : (
+            <a
+              onClick={() => {
+                setShowModal(true);
+                setIsLoginModal(true);
+                setIsMoveTeamStudy(true);
+              }}
+              tabIndex="0"
+            >
+              같이연습한당
+            </a>
+          )}
+        </li>
+        <li>
+          <Link href="/team/board">
+            <a>스터디구한당</a>
+          </Link>
+        </li>
+        <li>
+          <Link href="/interview-question">
+            <a>질문궁금하당</a>
+          </Link>
+        </li>
+        {isLogin ? (
+          <span>
+            <li>
+              <Link href="/user">
+                <a>{user.nickName}님 안녕하세요! (마이페이지)</a>
+              </Link>
+            </li>
+            <li>
+              <a tabIndex="0" onClick={logOut}>
+                로그아웃
+              </a>
+            </li>
+          </span>
+        ) : (
+          <span>
+            <li>
+              <a
+                onClick={() => {
+                  setShowModal(true);
+                  setIsLoginModal(true);
+                }}
+                tabIndex="0"
+              >
+                로그인
+              </a>
+            </li>
+            <li>
+              <a
+                onClick={() => {
+                  setShowModal(true);
+                  setIsLoginModal(false);
+                }}
+                tabIndex="0"
+              >
+                회원가입
+              </a>
+            </li>
+          </span>
+        )}
+      </ul>
+
+      <Modal>{isLoginModal ? <Login></Login> : <Signup></Signup>}</Modal>
     </nav>
   );
 }

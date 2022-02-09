@@ -1,26 +1,8 @@
-export default function Button({ text }) {
+import styles from "../../scss/layout/button.module.scss";
+export default function Button({ text, onClick }) {
   return (
-    <div>
-      <button>{text}</button>
-      <style jsx>
-        {`
-          div {
-            margin-bottom: 0.3rem;
-          }
-
-          button {
-            width: 200px;
-            padding: 0.8rem 1rem;
-            border: none;
-            border-radius: 5px;
-          }
-
-          button:hover {
-            cursor: pointer;
-            background-color: lightgray;
-          }
-        `}
-      </style>
-    </div>
+    <button className={styles.button} onClick={onClick}>
+      {text}
+    </button>
   );
 }

@@ -1,14 +1,17 @@
 package com.ssafy.dangdang.domain;
 
-import com.ssafy.dangdang.domain.types.Email;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.domain.types.UserRoleType;
-import com.ssafy.dangdang.domain.types.converter.EmailAttrConverter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +24,6 @@ import java.util.List;
 public class User{
 
     @Id
-    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -31,12 +33,13 @@ public class User{
     @Enumerated(EnumType.STRING)
     private UserRoleType role;
 
-    @Column(unique = true, length = 50)
-    @Convert(converter = EmailAttrConverter.class, attributeName = "email")
+    @Column(unique = true, length = 50, nullable = false)
+    @Email
     @NotNull
-    private Email email;
+    private String email;
 
     //@NotBlank OAuth의 경우에는 비밀번호가 필요없음
+    @JsonIgnore
     private String password;
 
     private String imageUrl;
@@ -47,8 +50,12 @@ public class User{
     private String providerId;
 
     @OneToMany(mappedBy = "user")
-    private List<Enter> enters = new ArrayList<>();
+    @JsonIgnore
+    @Builder.Default
+    private List<Joins> joins = new ArrayList<>();
 
+    @Builder.Default
+    @JsonIgnore
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 
@@ -66,7 +73,26 @@ public class User{
                 '}';
     }
 
+    public static User of(UserDto userDto){
+        return User.builder()
+                .email(userDto.getEmail())
+                .nickname(userDto.getNickName())
+                .role(userDto.getRole())
+                .build();
+
+    }
+
     public String getUsername() {
         return this.email.toString();
     }
+
+    public void raiseToManager(){
+        this.role = UserRoleType.MANAGER;
+    }
+
+    public void raiseToAdmin(){
+        this.role = UserRoleType.ADMIN;
+    }
+
+    public void addImageUrl(String path){ this.imageUrl = path;}
 }

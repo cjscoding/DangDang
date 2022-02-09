@@ -1,0 +1,73 @@
+@import "../common/variables.scss";
+
+.title {
+  text-align: center;
+  font-size: 50px;
+  margin: 30px 0;
+}
+
+.categories {
+  ul {
+    display: flex;
+    li{
+        background-color: $main-color;
+        color: white;
+        list-style: none;
+        padding: 20px;
+        font-size: 30px;
+        border-radius: 15px 15px 0 0;
+    }
+  }
+}
+
+.main{
+    padding: 50px;
+    background-color: $light-color;
+
+    .top{
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+
+        .filter{
+            font-size: 20px;
+
+            input{
+                padding: 5px 10px;
+                margin-left: 15px;
+            }
+        }
+
+        .createRoom > button{
+            padding: 5px 10px;
+            font-size: 20px;
+        }
+    }
+
+    .rooms{
+        display: grid;
+        grid-gap: 50px;
+        grid-template-columns: repeat(4, 1fr);
+
+        .room{
+            border: 1px solid black;
+            border-radius: 15px;
+            display: grid;
+            grid-template-rows: 4fr 1fr;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+
+            .keywords{
+                font-size: 20px;
+                width: 100%;
+                padding: 15px 0;
+                border-top: 1px solid black;
+
+                span{
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+}

@@ -1,80 +1,59 @@
-import { useEffect, useRef, useState } from "react"
+import Link from "next/link";
+import { useEffect } from "react"
+import { connect } from "react-redux";
+import CameraSelect from "../../../components/webRTC/devices/CameraSelect";
+import MicSelect from "../../../components/webRTC/devices/MicSelect";
+import SpeakerSelect from "../../../components/webRTC/devices/SpeakerSelect";
+import MyFace from "../../../components/webRTC/MyFace";
+import styles from "../../../scss/self-practice/interview/check-devices.module.scss";
 
+export async function getServerSideProps() {
+  const preparedQuestions = [
+      "안녕하세요",
+      "점심 맛있게 드셨어요?",
+      "다음에 봬요!"
+  ] // api요청으로 교체될 파트
+  return {props: {preparedQuestions}};
+};
+function mapStateToProps(state) {
+  return {
+    ws: state.wsReducer.ws,
+    isQs: state.questionReducer.questions.length !== 0,
+  };
+}
+import { setQuestions } from "../../../store/actions/questionAction";
+function mapDispatchToProps(dispatch) {
+  return {
+    setQuestions: (questions) => dispatch(setQuestions(questions))
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(CheckDevices);
 
-export default function CheckDevices() {
-  const [videoSize, setVideoSize] = useState(360) // 브라우저창 크기에 따라 크기 바꿀 예정
-  const video = useRef(); // 화면 송출
-  const cameraSelect = useRef();
-  const micSelect = useRef();
-  const speakerSelect = useRef();
-  
+function CheckDevices({preparedQuestions, ws, isQs, setQuestions}) {
   useEffect(() => {
-    let stream;
-    async function getDevices() {
-      try {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const cameras = devices.filter(device => device.kind === "videoinput");
-        const currentCamera = stream.getVideoTracks()[0];
-        cameras.forEach(camera => {
-          const option = document.createElement("option");
-          option.value = camera.deviceId;
-          option.innerText = camera.label;
-          if (currentCamera.label === camera.label) option.selected = true;
-          cameraSelect.current.appendChild(option);
-        });
-        const mics = devices.filter(device => device.kind === "audioinput");
-        const currentMic = stream.getAudioTracks()[0];
-        mics.forEach(mic => {
-          const option = document.createElement("option");
-          option.value = mic.deviceId;
-          option.innerText = mic.label;
-          if (currentMic.label === mic.label) option.selected = true;
-          micSelect.current.appendChild(option);
-        });
-        const speakers = devices.filter(device => device.kind === "audiooutput");
-        const currentSpeaker = speakers[0];
-        speakers.forEach(speaker => {
-          const option = document.createElement("option");
-          option.value = speaker.deviceId;
-          option.innerText = speaker.label;
-          if (currentSpeaker.label === speaker.label) option.selected = true;
-          speakerSelect.current.appendChild(option);
-        });
-      }catch(err) {
-        console.log(err);
-      }
+    if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
+    if(!isQs) {
+      setQuestions(preparedQuestions);
     }
-
-    async function getMedia(cameraId, micId, speakerId) {
-      const initialConstraints = { width: 1280, height: 720, facingMode: "user" };
-      const cameraConstraints = {video: {deviceId: {exact: cameraId}}};
-      const micConstraints = {audio: {deviceId: {exact: micId}}};
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          audio: true,
-          ...micId?micConstraints:{},
-          video: {...initialConstraints},
-          ...cameraId?cameraConstraints:{},
-        });
-        video.current.srcObject = stream;
-        if(speakerId) video.current.setSinkId(speakerId);
-        if(!cameraId && !micId && !speakerId) await getDevices();
-      }catch(err) {
-        console.log(err);
-      }
-    }
-    
-    cameraSelect.current.addEventListener("input", () => getMedia(cameraSelect.current.value, null, null));
-    micSelect.current.addEventListener("input", () => getMedia(null, micSelect.current.value, null));
-    speakerSelect.current.addEventListener("input", () => getMedia(null, null, speakerSelect.current.value));
-    getMedia();
   }, [])
-  return <>
-    <video ref={video} autoPlay playsInline width={videoSize * 16/9} height={videoSize} />
-    <div>
-      <select ref={cameraSelect} />
-      <select ref={micSelect} />
-      <select ref={speakerSelect} />
+
+  return <div className={styles.container}>
+    <div className={styles.videoContainer}>
+      <div><MyFace /></div>
+      <div className={styles.selectContainer}>
+        <label htmlFor="camera-select">카메라</label><br/>
+        <CameraSelect id="camera-select" /><br/>
+        <label htmlFor="mic-select">마이크</label><br/>
+        <MicSelect id="mic-select" /><br/>
+        <label htmlFor="speaker-select">스피커</label><br/>
+        <SpeakerSelect id="speaker-select" /><br/>
+      </div>
+      <Link href="/self-practice/interview">
+        <a className={styles.nextBtn}
+        >
+          <button><h1>NEXT</h1></button>
+        </a>
+      </Link>
     </div>
-  </>
+  </div>
 }

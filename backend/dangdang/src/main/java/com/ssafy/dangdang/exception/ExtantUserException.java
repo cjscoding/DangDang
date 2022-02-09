@@ -14,7 +14,6 @@ public class ExtantUserException extends RuntimeException {
     }
     public ExtantUserException(String message, Throwable cause) {
         super(message, cause);
-
     }
 
 

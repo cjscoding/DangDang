@@ -13,26 +13,43 @@ import com.ssafy.dangdang.config.security.oauth.PrincipalOauth2UserService;
 import com.ssafy.dangdang.repository.UserRepository;
 import com.ssafy.dangdang.util.JwtUtil;
 import com.ssafy.dangdang.util.RedisUtil;
+
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.RoleHierarchyVoter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserRepository userRepository;
 
+    private final CorsConfig corsConfig;
     private final PrincipalDetailsService principalDetailsService;
     private final PrincipalOauth2UserService principalOauth2UserService;
 
@@ -53,9 +70,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
-                //.addFilter(corsConfig.corsFilter())
-                .cors().and()
+//                .addFilter(corsConfig.corsFilter())
+                .cors()
+                .configurationSource(corsConfig.corsConfigurationSource())
+                .and()
                 .csrf().disable()
+                .headers()
+ //               .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Methods", "POST, GET, PATCH, DELETE, PUT"))
+                .and()
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
@@ -68,10 +90,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticationEntryPoint(customAuthenticationEntryPoint)
                     .and()
                 .authorizeRequests()
+
                     .antMatchers("/**").permitAll()//테스트용으로 모든 권한 열기
+//                    .antMatchers(HttpMethod.GET, "/resources/static/read.html","/resources/static/**").permitAll()
                     .antMatchers("/v3/**", "/swagger-ui.html","/swagger-ui/**").permitAll()
                     .antMatchers("/user/login", "/user").permitAll()
                     .antMatchers("/auth/**", "/oauth2/**").permitAll()
+                    .antMatchers("/user/login").authenticated()
                     //.antMatchers("/login/oauth2/code/**").permitAll()
                     .anyRequest().authenticated()
                     .and()
@@ -102,6 +127,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //    public void configureAuthentication(AuthenticationManagerBuilder builder, JwtAuthenticationProvider authenticationProvider) {
 //        builder.authenticationProvider(authenticationProvider);
 //    }
+
+    @Bean
+    public AccessDecisionManager affirmativeBased() {
+        AffirmativeBased accessDecisionManager = new AffirmativeBased(getAccessDecisionVoters());
+        accessDecisionManager.setAllowIfAllAbstainDecisions(false); // 접근 승인 거부 보류시 접근 허용은 true 접근 거부는 false
+        return accessDecisionManager;
+    }
+
+    private List<AccessDecisionVoter<?>> getAccessDecisionVoters() {
+
+
+        List<AccessDecisionVoter<? extends Object>> accessDecisionVoterList = new ArrayList<>();
+        accessDecisionVoterList.add(roleVoter());
+        return accessDecisionVoterList;
+    }
+
+    @Bean
+    public RoleHierarchyVoter roleVoter() {
+        RoleHierarchyVoter roleHierarchyVoter = new RoleHierarchyVoter(roleHierarchy());
+//        roleHierarchyVoter.setRolePrefix("ROLE_");
+        return roleHierarchyVoter;
+    }
+    @Bean
+    public RoleHierarchyImpl roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_MANAGER\n" +
+                "ROLE_MANAGER > ROLE_USER");
+        return roleHierarchy;
+    }
+
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception{

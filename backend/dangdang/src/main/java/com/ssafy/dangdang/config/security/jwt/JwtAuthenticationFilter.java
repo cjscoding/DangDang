@@ -7,11 +7,13 @@ import com.ssafy.dangdang.domain.dto.LoginRequest;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.util.JwtUtil;
 import com.ssafy.dangdang.util.RedisUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -84,14 +86,18 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 			Authentication authResult) throws IOException, ServletException {
 		
 		PrincipalDetails principalDetailis = new PrincipalDetails((User) authResult.getPrincipal());
-		log.info("Login 성공");
+		log.info("Login 성공 {}", principalDetailis.getUsername());
+
 		String jwtToken = jwtUtil.generateToken(principalDetailis.getUsername());
 
 		String refreshJwtToken = jwtUtil.generateRefreshToken(principalDetailis.getUsername());
 		redisUtil.setDataExpire(refreshJwtToken, principalDetailis.getUsername(), JwtUtil.REFRESH_EXPIRATION_TIME);
-		
+		log.debug(JwtUtil.HEADER_STRING +jwtToken);
+		log.debug(JwtUtil.REFRESH_HEADER_STRING + refreshJwtToken);
+
 		response.addHeader(JwtUtil.HEADER_STRING, JwtUtil.TOKEN_PREFIX+jwtToken);
 		response.addHeader(JwtUtil.REFRESH_HEADER_STRING, JwtUtil.REFRESH_TOKEN_PREFIX+refreshJwtToken);
+		///chain.doFilter(request, response);
 	}
 
 //	private Boolean containsAuthorizationToken(HttpServletRequest request) {

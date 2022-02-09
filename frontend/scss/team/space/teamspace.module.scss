@@ -1,0 +1,31 @@
+.container {
+  padding: 50px;
+}
+
+//index
+.info {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+}
+
+// coverletter
+
+.coverletter {
+  padding: 50px;
+  display: flex;
+  font-size: 30px;
+  justify-content: space-around;
+
+  .member{
+      ul{
+          li{
+              list-style: none;
+          }
+      }
+  }
+}
+
+//board
+.createBtn{
+    float: right;
+}
