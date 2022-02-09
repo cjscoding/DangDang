@@ -35,7 +35,7 @@ function Layout({ children, user, setUserInfo, setIsLogin }) {
         email: "",
         nickName: "",
       };
-
+      
       if (JSON.stringify(user) === JSON.stringify(initialState)) {
         getUserInfo(
           ({ data: { response } }) => {
@@ -43,6 +43,7 @@ function Layout({ children, user, setUserInfo, setIsLogin }) {
               id: response.id,
               email: response.email,
               nickName: response.nickName,
+              imageUrl: response.imageUrl,
             };
             setUserInfo(userInfo);
           },
