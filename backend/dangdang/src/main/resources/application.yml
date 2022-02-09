@@ -3,6 +3,7 @@ spring:
     group:
       dev: common, dev
       prod: common, prod
+      dev-test: common, dev-test
 
 ---
 
@@ -94,6 +95,49 @@ file :
 
 ---
 
+spring:
+  config:
+    activate:
+      on-profile: dev-test
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://dangdang-mysql:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+    username: ssafy
+    password: ssafyborissafy
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    generate-ddl: false
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect : org.hibernate.dialect.MySQL8Dialect
+    open-in-view: true
+
+  data:
+    mongodb:
+      uri: mongodb://dangdang-mongodb:27017/dangdang
+
+
+  session:
+    store-type: REDIS
+  redis:
+    host: dangdang-redis
+    port: 6379
+  # JWT Secret Key
+
+file :
+  upload :
+    baseLocation : "/app/data/"
+    file :         "/app/data/files/"
+    image: "/app/data/images/"
+    video : "/app/data/videos/"
+    address : "https://localhost:8443/files/"
+
+---
 
 server:
   port: 8443
