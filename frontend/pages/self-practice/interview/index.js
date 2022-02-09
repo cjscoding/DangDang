@@ -214,12 +214,12 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
       </div>
       <div className={styles.btnContainer}>
         <span>
-          <button ref={volumeBtn}><i className="fas fa-volume-up"></i></button>
+          <span ref={volumeBtn}><i className="fas fa-volume-up"></i></span>
           <input style={isVol?{}:{display: "none"}} type="range" min="0" max="100" step="1" ref={volumeBar}/>
         </span>
-        <button ref={restartBtn}><i className="fas fa-redo-alt"></i></button>
-        <button ref={saveBtn}><i className="fas fa-save"></i></button>
-        <button ref={skipBtn}><i className="fas fa-arrow-right"></i></button>
+        <span ref={restartBtn}><i className="fas fa-redo-alt"></i></span>
+        <span ref={saveBtn}><i className="fas fa-save"></i></span>
+        <span ref={skipBtn}><i className="fas fa-arrow-right"></i></span>
       </div>
     </div>
   </div>

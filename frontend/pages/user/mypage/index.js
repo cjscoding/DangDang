@@ -1,8 +1,9 @@
 import Link from "next/link";
-import Router from "next/router";
 
 import { connect } from "react-redux";
 import { leaveDangDang } from "../../../api/user";
+import { BACKEND_URL } from "../../../config";
+import { useRouter } from "next/router";
 
 function mapStateToProps({ userReducer }) {
   return {
@@ -13,15 +14,16 @@ function mapStateToProps({ userReducer }) {
 export default connect(mapStateToProps)(userInfo);
 
 function userInfo({ user }) {
-    //회원 탈퇴
+  const router = useRouter();
+
+  //회원 탈퇴
   const onLeaveDangDang = () => {
     leaveDangDang(
-      req,
       (res) => {
         console.log(res, "당당 탈퇴 성공");
-        Router.push({
-            pathname:"/"
-        })
+        router.push({
+          pathname: "/",
+        });
       },
       (err) => {
         console.log(err, "당당 탈퇴 실패");
@@ -32,6 +34,12 @@ function userInfo({ user }) {
   return (
     <section>
       <div className="profileImage">
+        <span>profile: </span>
+        <img
+          src={`${BACKEND_URL}/files/images/${user.imageUrl}`}
+          width={200}
+          height={100}
+        />
       </div>
       <div className="profile">
         <p>id: {user.id}</p>

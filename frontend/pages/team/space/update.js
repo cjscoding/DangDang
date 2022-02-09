@@ -119,6 +119,7 @@ function UpdateTeam({ roomInfo, setRoomInfo, setWaitings }) {
       pathname: `/team/space`,
       query: {
         id: roomInfo.id,
+        page:"info"
       },
     });
   };

@@ -1,13 +1,20 @@
 import Link from "next/link";
+
 import { connect } from "react-redux";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { BACKEND_URL } from "../../config";
 import {
   setUserInfo,
   setIsLogin,
   resetUserInfo,
 } from "../../store/actions/userAction";
-import { modifyUserInfo, logoutRequest } from "../../api/user";
+import {
+  modifyUserInfo,
+  logoutRequest,
+  updateUserImage,
+  getUserInfo,
+} from "../../api/user";
 
 function mapStateToProps({ userReducer }) {
   return {
@@ -27,10 +34,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(userInfoEdit);
 
 function userInfoEdit({ user, setUserInfo, resetUserInfo, setIsLogin }) {
   const router = useRouter();
+  const [image, setImage] = useState(user.imageUrl);
+  const [imageUpdateStatus, setImageUpdateStatus] = useState(false);
   const [values, setValues] = useState({
     id: user.id,
     email: user.email,
     nickName: user.nickName,
+    imageUrl: user.imageUrl,
     password: "",
   });
 
@@ -42,22 +52,49 @@ function userInfoEdit({ user, setUserInfo, resetUserInfo, setIsLogin }) {
     setValues(nextValues);
   };
 
+  const getAndModifyUserData = () => {
+    getUserInfo(
+      (res) => {
+        console.log(res, "유저 정보 조회 성공");
+        modifyUserInfo(
+          values,
+          ({ data: { response } }) => {
+            const userInfo = {
+              id: user.id,
+              email: response.email,
+              nickName: response.nickName,
+              imageUrl: res.data.response.imageUrl,
+            };
+            setUserInfo(userInfo);
+            router.push("/user");
+          },
+          (error) => console.log(error)
+        );
+        setImageUpdateStatus(false);
+      },
+      (err) => {
+        console.log(err, "유저 정보 조회 실패");
+      }
+    );
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     if (user.email === values.email) {
-      modifyUserInfo(
-        values,
-        ({ data: { response } }) => {
-          const userInfo = {
-            id: user.id,
-            email: response.email,
-            nickName: response.nickName,
-          };
-          setUserInfo(userInfo);
-          router.push("/user");
-        },
-        (error) => console.log(error)
-      );
+      if (imageUpdateStatus) {
+        updateUserImage(
+          image,
+          (res) => {
+            console.log(res, "유저 이미지 변경 성공");
+            getAndModifyUserData();
+          },
+          (err) => {
+            console.log(err, "유저 이미지 변경 실패");
+          }
+        );
+      } else {
+        getAndModifyUserData();
+      }
     } else {
       logoutRequest((response) => {
         modifyUserInfo(
@@ -81,55 +118,78 @@ function userInfoEdit({ user, setUserInfo, resetUserInfo, setIsLogin }) {
     }
   };
 
+  //유저 이미지 변경 모드로 전환
+  const onChangeImage = () => setImageUpdateStatus(true);
+  //유저 이미지 변경 시 state 값 변환
+  const onSetImage = (event) => setImage(event.target.files[0]);
+
   return (
-    <form method="POST" onSubmit={handleSubmit}>
-      <div>
-        <label>
-          이메일:
-          <input
-            id="email"
-            type="email"
-            value={values.email}
-            onChange={handleChange}
-            placeholder="변경할 이메일을 입력하세요"
-            required
+    <div>
+      {imageUpdateStatus ? (
+        <div className="profileImage">
+          <label htmlFor="profile">프로필 사진</label>
+          <input type="file" name="profile" onChange={onSetImage} />
+        </div>
+      ) : (
+        <div className="profileImage">
+          <span>profile: </span>
+          <img
+            src={`${BACKEND_URL}/files/images/${user.imageUrl}`}
+            width={200}
+            height={100}
           />
-        </label>
-      </div>
-      <div>
-        <label>
-          비밀번호:
-          <input
-            id="password"
-            type="password"
-            value={values.password}
-            onChange={handleChange}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          이름:
-          <input
-            id="nickName"
-            type="text"
-            value={values.nickName}
-            onChange={handleChange}
-            placeholder="변경할 이름을 입력하세요"
-            required
-          />
-        </label>
-      </div>
-      {/* <Link href="/user"> */}
-      <a>
-        <button type="submit">확인</button>
-      </a>
-      {/* </Link> */}
-      <Link href="/user">
+          <button onClick={onChangeImage}>이미지 변경</button>
+        </div>
+      )}
+      <form method="POST" onSubmit={handleSubmit}>
+        <div>
+          <label>
+            이메일:
+            <input
+              id="email"
+              type="email"
+              value={values.email}
+              onChange={handleChange}
+              placeholder="변경할 이메일을 입력하세요"
+              required
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            비밀번호:
+            <input
+              id="password"
+              type="password"
+              value={values.password}
+              onChange={handleChange}
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            이름:
+            <input
+              id="nickName"
+              type="text"
+              value={values.nickName}
+              onChange={handleChange}
+              placeholder="변경할 이름을 입력하세요"
+              required
+            />
+          </label>
+        </div>
+        {/* <Link href="/user"> */}
         <a>
-          <button>취소</button>
+          <button type="submit">확인</button>
         </a>
-      </Link>
-    </form>
+        {/* </Link> */}
+        <Link href="/user">
+          <a>
+            <button>취소</button>
+          </a>
+        </Link>
+      </form>
+    </div>
   );
 }

@@ -64,6 +64,7 @@ function Login({
               id: response.id,
               email: response.email,
               nickName: response.nickName,
+              imageUrl: response.imageUrl,
             };
             setUserInfo(userInfo);
             if (isMoveTeamStudy) router.push("/user/mypage/myroom");
