@@ -1,3 +1,5 @@
+import styles from "../../../../scss/team/form.module.scss";
+
 import { updateResume } from "../../../../api/resume";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -52,25 +54,37 @@ export default function ResumeUpdate() {
   };
 
   return (
-    <div>
-      <button onClick={onMoveResumePage}>취소</button>
-      <form onSubmit={onSubmitUpdated}>
-        <label htmlFor="question">질문</label>
-        <input
-          name="question"
-          value={question}
-          onChange={(event) => setQuestion(event.target.value)}
-        />
-        <label htmlFor="answer">답</label>
-        <textarea
-          name="answer"
-          value={answer}
-          onChange={(event) => setAnswer(event.target.value)}
-        ></textarea>
-        <div className="btns">
-          <button>수정완료</button>
+    <div className={styles.formContainer}>
+      <button onClick={onMoveResumePage} className={styles.moveBackBtn}>
+        <i class="fas fa-angle-double-left"></i> 돌아가기
+      </button>
+
+      <form>
+        <h2>자기소개서 수정</h2>
+
+        <div className={styles.contents}>
+          <label htmlFor="question">질문</label>
+          <input
+            name="question"
+            value={question}
+            onChange={(event) => setQuestion(event.target.value)}
+            autoFocus
+          />
+
+          <label htmlFor="answer" className={styles.answerLabel}>
+            답
+          </label>
+          <textarea
+            name="answer"
+            value={answer}
+            onChange={(event) => setAnswer(event.target.value)}
+          ></textarea>
         </div>
       </form>
+
+      <button className={styles.submitBtn} onClick={onSubmitUpdated}>
+        수정
+      </button>
     </div>
   );
 }
