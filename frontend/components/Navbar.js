@@ -1,14 +1,15 @@
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { logoutRequest } from "../api/user";
 import {
-  resetUserInfo,
-  setIsLoginModal,
-  setShowModal,
-  setIsLogin,
-  setIsMoveTeamStudy,
+    resetUserInfo,
+    setIsLoginModal,
+    setShowModal,
+    setIsLogin,
+    setIsMoveTeamStudy,
 } from "../store/actions/userAction";
+
+import Link from "next/link";
 import styles from "../scss/layout/navbar.module.scss";
 import Modal from "./layout/Modal";
 import Login from "./user/Login";

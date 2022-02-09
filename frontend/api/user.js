@@ -33,3 +33,15 @@ export function getUserInfo(success, fail) {
 export function modifyUserInfo(params, success, fail) {
   api.patch(`/user`, params).then(success).catch(fail);
 }
+
+//회원 탈퇴
+export const leaveDangDang = async (success, fail) =>
+  await api.delete("/user").then(success).catch(fail);
+
+//회원 이미지 등록
+export const registUserImage = async (req, success, fail) =>
+  await api.post("/user/image", req).then(success).catch(fail);
+
+//회원 이미지 수정
+export const updateUserImage = async (req, success, fail) =>
+  await api.patch("/user/image", req).then(success).catch(fail);
