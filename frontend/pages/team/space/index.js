@@ -12,6 +12,7 @@ import { getRoomInfo, removeRoom } from "../../../api/studyroom";
 import { connect } from "react-redux";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { BACKEND_URL } from "../../../config";
 
 const mapStateToProps = (state) => {
   return {
@@ -207,7 +208,11 @@ function TeamSpace({
                 {roomMembers.map((member, index) => (
                   <form key={index} onSubmit={onRemoveMember}>
                     <div>
-                      <img src="/vercel.svg" alt="" />
+                      <img
+                        src={`${BACKEND_URL}/files/images/${userInfo.imageUrl}`}
+                        width={30}
+                        height={30}
+                      />
                       <input type="hidden" value={member.id} disabled />
                       <input
                         type="text"
@@ -234,7 +239,11 @@ function TeamSpace({
                 {waitingList?.map((member, index) => (
                   <form key={index} onSubmit={onAllowJoin}>
                     <div>
-                      <img src="/vercel.svg" alt="" />
+                      <img
+                        src={`${BACKEND_URL}/files/images/${userInfo.imageUrl}`}
+                        width={30}
+                        height={30}
+                      />
                       <input type="hidden" value={member.id} disabled />
                       <input type="text" value={member.nickName} disabled />
                     </div>

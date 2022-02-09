@@ -2,9 +2,17 @@
 .mainContainer{
   display: flex;
   justify-content: space-around;
-  .faces {
+  .videoContainer {
     display: inline;
     width: 60vw;
+    .faces {
+      display: inline;
+    }
+    .btnBar {
+      display: inline;
+      display: flex;
+      justify-content: space-between;
+    }
   }
   .chat {
     display: inline;
