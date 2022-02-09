@@ -57,7 +57,7 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://dangdang-mysql:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://i6c203.p.ssafy.io:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
     username: ssafy
     password: ssafyborissafy
 
@@ -74,13 +74,13 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://dangdang-mongodb:27017/dangdang
+      uri: mongodb://i6c203.p.ssafy.io:27017/dangdang
 
 
   session:
     store-type: REDIS
   redis:
-    host: dangdang-redis
+    host: i6c203.p.ssafy.io
     port: 6379
   # JWT Secret Key
 
