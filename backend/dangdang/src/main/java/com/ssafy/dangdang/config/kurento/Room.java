@@ -65,8 +65,8 @@ public class Room implements Closeable {
   public UserSession join(String userName, WebSocketSession session) throws IOException {
     log.info("ROOM {}: adding participant {}", this.name, userName);
     final UserSession participant = new UserSession(userName, this.name, session, this.pipeline);
-    joinRoom(participant);
-    participants.put(participant.getName(), participant);
+    joinRoom(participant);  // 기존에 방에 있던 참가자들에게 'newParticipantArrived'라는 메세지를 보내줌
+    participants.put(participant.getName(), participant); // 방금 들어온 참가자 추가
     sendParticipantNames(participant);
     return participant;
   }
@@ -122,7 +122,9 @@ public class Room implements Closeable {
     }
 
   }
-
+  
+  
+  // 새로 참가한 유저에게 다른 모든 참가자들의 이름을 "existingParticipants"라는 메세지로 보내줌.
   public void sendParticipantNames(UserSession user) throws IOException {
 
     final JsonArray participantsArray = new JsonArray();
@@ -136,8 +138,7 @@ public class Room implements Closeable {
     final JsonObject existingParticipantsMsg = new JsonObject();
     existingParticipantsMsg.addProperty("id", "existingParticipants");
     existingParticipantsMsg.add("data", participantsArray);
-    log.debug("PARTICIPANT {}: sending a list of {} participants", user.getName(),
-        participantsArray.size());
+    log.debug("PARTICIPANT {}: sending a list of {} participants", user.getName(), participantsArray.size());
     user.sendMessage(existingParticipantsMsg);
   }
 

@@ -1,3 +1,4 @@
+
 /*
  * (C) Copyright 2014-2016 Kurento (http://kurento.org/)
  *
@@ -15,11 +16,14 @@
  *
  */
 
+import ScreenHandler from "./screen-handler.js";
+
 var ws = new SockJS('https://' + location.host + '/recording');
 var videoInput;
 var videoOutput;
 var webRtcPeer;
 var state;
+var localVideo;
 
 var rpath; //녹화 파일 이름
 var saveName; //프론트로부터 받은 저장할 파일 이름
@@ -32,8 +36,10 @@ const IN_PLAY = 4;
 
 window.onload = function() {
 	console = new Console();
+	initialize();
 	console.log('Page loaded ...');
 	videoInput = document.getElementById('videoInput');
+	localVideo= document.getElementById('local-video');
 	videoOutput = document.getElementById('videoOutput');
 	setState(NO_CALL);
 }
@@ -144,9 +150,13 @@ function start(name) {
 	showSpinner(videoInput);
 	console.log('Creating WebRtcPeer and generating local sdp offer ...');
 
+	// var options = {
+	// 		localVideo : videoInput,
+	// 		mediaConstraints : getConstraints(),
+	// 		onicecandidate : onIceCandidate
+	// }
 	var options = {
-			localVideo : videoInput,
-			mediaConstraints : getConstraints(),
+			videoStream : localVideo,
 			onicecandidate : onIceCandidate
 	}
 
@@ -309,3 +319,40 @@ $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
 	event.preventDefault();
 	$(this).ekkoLightbox();
 });
+
+
+/*!
+ *
+ * WebRTC Lab
+ * @author dodortus (dodortus@gmail.com / codejs.co.kr)
+ *
+ */
+const screenHandler = new ScreenHandler();
+
+/**
+ * 로컬 스트림 핸들링
+ * @param stream
+ */
+function onLocalStream(stream) {
+	console.log('onLocalStream', stream);
+
+	const $video = document.querySelector('#local-video');
+	$video.srcObject = stream;
+}
+
+/**
+ * screenHandler를 통해 스크린 API를 호출합니다.
+ */
+async function startScreenShare() {
+	console.log("제발 클릭이라도 좀 돼라!");
+	const stream = await screenHandler.start();
+	onLocalStream(stream);
+}
+
+/**
+ * 초기 이벤트 바인딩
+ */
+function initialize() {
+	document.querySelector('#btn-start').addEventListener('click', startScreenShare);
+	console.log("실행은 했니?");
+}
