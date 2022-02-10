@@ -13,7 +13,7 @@
         "@types/sockjs-client": "^1.5.1",
         "@zeit/next-sass": "^1.0.1",
         "axios": "^0.25.0",
-        "next": "^12.0.8",
+        "next": "^12.0.10",
         "next-redux-wrapper": "^7.0.5",
         "node-sass": "^6.0.0",
         "react": "^17.0.2",
