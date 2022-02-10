@@ -78,20 +78,25 @@ export default function ResumeUpdate() {
       </button>
 
       <form>
-        <label htmlFor="title">제목</label>
-        <input
-          type="text"
-          name="title"
-          value={post.title}
-          onChange={onChangeValue}
-        />
-        <label htmlFor="content">내용</label>
-        <textarea
-          type="text"
-          name="content"
-          value={post.content}
-          onChange={onChangeValue}
-        />
+        <h2>게시글 수정</h2>
+
+        <div className={styles.contents}>
+          <label htmlFor="title">제목</label>
+          <input
+            type="text"
+            name="title"
+            value={post.title}
+            onChange={onChangeValue}
+            autoFocus
+          />
+          <label htmlFor="content" className={styles.answerLabel}>내용</label>
+          <textarea
+            type="text"
+            name="content"
+            value={post.content}
+            onChange={onChangeValue}
+          />
+        </div>
       </form>
 
       <button className={styles.submitBtn} onClick={onUpdatePost}>
