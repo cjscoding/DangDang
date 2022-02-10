@@ -9,6 +9,6 @@ export default connect(mapStateToProps, null)(ShowQuestion)
 
 function ShowQuestion({seconds}){
   return <>
-    <h1>{parseInt(seconds / 60)}분 {seconds % 60}초</h1>
+    <span>{parseInt(seconds / 60)}분 {seconds % 60}초</span>
   </>
 }
