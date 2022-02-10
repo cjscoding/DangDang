@@ -34,7 +34,7 @@ export default function createPost() {
   //게시판 페이지로 돌아가기
   const onMoveBoardPage = () => {
     router.push({
-      pathname: "/team/space/resume",
+      pathname: "/team/space/board",
       query: {
         id: router.query.id,
         page: "board",
