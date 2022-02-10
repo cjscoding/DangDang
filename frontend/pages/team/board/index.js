@@ -1,7 +1,6 @@
 import Pagination from "../../../components/layout/Pagination";
 import styles from "../../../scss/team/board/board.module.scss";
 import Title from "../../../components/layout/Title";
-import Image from "next/image";
 import Link from "next/link";
 
 import { BACKEND_URL } from "../../../config";
@@ -141,31 +140,23 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
             >
               <div className={styles.imgBox}>
                 {room.imageUrl !== null && room.imageUrl !== "default.jpg" ? (
-                  <img
-                    src={`${BACKEND_URL}/files/images/${room.imageUrl}`}
-                    width="300"
-                    height="200"
-                    alt=""
-                  />
+                  <img src={`${BACKEND_URL}/files/images/${room.imageUrl}`} />
                 ) : (
-                  <img
-                    src="/images/dangdang_1.png"
-                    width="300"
-                    height="200"
-                    alt=""
-                  />
+                  <img src="/images/dangdang_1.png" />
                 )}
               </div>
 
               <div className={styles.details}>
                 <div className={styles.mainDetails}>
                   <span className={styles.roomName}>{room.name}</span>
-                  <span className={styles.roomNumber}><i class="fas fa-user-friends"></i> {room.number}</span>
+                  <span className={styles.roomNumber}>
+                    <i class="fas fa-user-friends"></i> {room.number}
+                  </span>
                 </div>
 
                 <div className={styles.tagBox}>
-                  {room.hashTags?.map((hashTag, index) => (
-                    <span key={index}># {hashTag} </span>
+                  {room.hashTags?.map((hashTag) => (
+                    <span key={hashTag}># {hashTag} </span>
                   ))}
                 </div>
               </div>
