@@ -41,6 +41,9 @@
   border: 1px solid $color;
   border-radius: 7px;
   font-size: 12px;
+  i{
+      color: $color;
+  }
   @if ($color == $text-color) {
     opacity: 0.6;
   }
