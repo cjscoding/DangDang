@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { useEffect } from "react"
+import { useRouter } from "next/router";
+import { useEffect, useRef } from "react"
 import { connect } from "react-redux";
 import CameraSelect from "../../../components/webRTC/devices/CameraSelect";
 import MicSelect from "../../../components/webRTC/devices/MicSelect";
@@ -30,10 +31,21 @@ function mapDispatchToProps(dispatch) {
 export default connect(mapStateToProps, mapDispatchToProps)(CheckDevices);
 
 function CheckDevices({preparedQuestions, ws, isQs, setQuestions}) {
+  const nextBtn = useRef();
+  const router = useRouter();
   useEffect(() => {
     if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
     if(!isQs) {
       setQuestions(preparedQuestions);
+    }
+
+    function goTointerview() {
+      router.push("/self-practice/interview");
+    }
+    const nextBtnEl = nextBtn.current
+    nextBtnEl.addEventListener("click", goTointerview)
+    return () => {
+      nextBtnEl.removeEventListener("click", goTointerview)
     }
   }, [])
 
@@ -48,12 +60,7 @@ function CheckDevices({preparedQuestions, ws, isQs, setQuestions}) {
         <label htmlFor="speaker-select">스피커</label><br/>
         <SpeakerSelect id="speaker-select" /><br/>
       </div>
-      <Link href="/self-practice/interview">
-        <a className={styles.nextBtn}
-        >
-          <button><h1>NEXT</h1></button>
-        </a>
-      </Link>
+      <button ref={nextBtn} className={styles.nextBtn}><h1>NEXT</h1></button>
     </div>
   </div>
 }

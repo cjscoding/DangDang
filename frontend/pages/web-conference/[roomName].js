@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
+import CameraSelect from "../../components/webRTC/devices/CameraSelect";
 import getVideoConstraints from "../../components/webRTC/getVideoConstraints";
 import styles from "../../scss/web-conference/mainComponent.module.scss";
 
@@ -8,14 +9,18 @@ function mapStateToProps(state) {
   return {
     ws: state.wsReducer.ws,
     myIdName: `${state.userReducer.user.id}-${state.userReducer.user.nickName}`, // id + - + nickName
+    cameraId: state.videoReducer.cameraId
   };
 }
 export default connect(mapStateToProps)(Conference);
-function Conference({ws, myIdName}) {
+function Conference({ws, myIdName, cameraId}) {
+  const [me, setMe] = useState(null)
   const [mode, setMode] = useState(false) // 면접모드 true, 일반모드 false
+  const [screenMode, setScreenMode] = useState(false)
   const chatInput = useRef();
   const chatInputBtn = useRef();
   const chatContentBox = useRef();
+  const screenBox = useRef();
   const cameraBtn = useRef();
   const micBtn = useRef();
   const speakerBtn = useRef();
@@ -35,7 +40,7 @@ function Conference({ws, myIdName}) {
     function Participant(myIdName) {
       let rtcPeer;
       const idx = myIdName.search('-')
-      this.id = myIdName.slice(1, idx)
+      this.id = myIdName.slice(0, idx)
       this.name = myIdName.slice(1 + idx, myIdName.length);
 
       const container = document.createElement('span');
@@ -49,7 +54,17 @@ function Conference({ws, myIdName}) {
       container.appendChild(video);
       container.appendChild(span);
       container.style = "display: flex; flex-direction: column; align-items: center;"
-
+      // if(this.id) {
+      //   document.getElementById('participants').appendChild(container);
+      // }else {
+      //   // const screen = document.createElement("video")
+      //   // screen.autoplay = true
+      //   // screen.srcObject = stream
+      //   screenBox.current.appendChild(video);
+      //   video.style.height = "100%"
+      //   video.style.width = "100%"
+      //   setScreenMode(true);
+      // }
       document.getElementById('participants').appendChild(container);
     
       this.getElement = function() {
@@ -169,7 +184,9 @@ function Conference({ws, myIdName}) {
       });
     }
     function onExistingParticipants(jsonMsg) {
+      // if(stream) return shareScreen(jsonMsg);
       const participant = new Participant(myIdName);
+      setMe(participant);
       participants[myIdName] = participant;
     
       const options = {
@@ -185,6 +202,7 @@ function Conference({ws, myIdName}) {
     }
     
     function receiveVideo(senderIdName) {
+      // if(senderIdName === "-screen") return receiveScreen(senderIdName);
       const participant = new Participant(senderIdName);
       participants[senderIdName] = participant;
 
@@ -246,19 +264,65 @@ function Conference({ws, myIdName}) {
     async function startScreenShare() {
       const screenHandler = new ScreenHandler();
       stream = await screenHandler.start();
-      const screen = document.createElement("video")
-      screen.autoplay = true
-      screen.srcObject = stream
-      document.getElementById('participants').appendChild(screen);
+      // const screen = document.createElement("video")
+      // screen.autoplay = true
+      // screen.srcObject = stream
+      // screenBox.current.appendChild(screen);
+      // screen.style.height = "100%"
+      // screen.style.width = "100%"
+      // setScreenMode(true);
+      sendMessage({
+        id: "joinRoom",
+        name: "-screen",
+        room: roomName
+      })
     }
+    function shareScreen(jsonMsg) {
+      const participant = new Participant("-screen")
+      participants["-screen"] = participant
+      console.log(screen)
+      const options = {
+        videoStream: stream,
+        mediaConstraints: {
+          audio: true,
+          video: {
+            mandatory: {
+              maxWidth: 320,
+              maxFrameRate: 15,
+              minFrameRate: 15
+            }
+          }
+        },
+        onicecandidate: participant.onIceCandidate.bind(participant)
+      }
+      participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function(error) {
+        if(error) return console.log(`ERROR! ${error}`);
+        this.generateOffer (participant.offerToReceiveVideo.bind(participant));
+      });
+      jsonMsg.data.forEach(receiveVideo);
+    }
+    function receiveScreen(senderIdName) {
+      const participant = new Participant(senderIdName)
+      participants[senderIdName] = participant
+      const options = {
+        remoteVideo: participant.getVideoElement(),
+        onicecandidate: participant.onIceCandidate.bind(participant)
+      }
+    
+      participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function(error) {
+        if(error) return console.log(`ERROR! ${error}`);
+        this.generateOffer(participant.offerToReceiveVideo.bind(participant));
+      });
+    }
+
     normalModeBtnEl.addEventListener("click", changeToNomalMode)
     interviewModeBtnEl.addEventListener("click", changeToInterviewMode)
     screenBtnEl.addEventListener("click", startScreenShare)
     // 방 입장
     sendMessage({
-      id : "joinRoom",
-      name : myIdName,
-      room : roomName,
+      id: "joinRoom",
+      name: myIdName,
+      room: roomName,
     });
     return () => {
       chatInputBtnEl.removeEventListener("click", sendChatMsg)
@@ -275,8 +339,17 @@ function Conference({ws, myIdName}) {
       ws.close();
     }
   }, [])
+  useEffect(async() => {
+    if(me) {
+      console.log(me.rtcPeer.getLocalStream())
+      // me.rtcPeer.getLocalStream() = await navigator.mediaDevices.getUserMedia(
+      //   getVideoConstraints(480, 270)
+      // );
+    }
+  }, [cameraId])
   return <div className={styles.mainContainer}>
     <div className={styles.videoContainer}>
+      <div ref={screenBox} style={!screenMode?{display: "none"}:{width: "60vw", height:"33.75vw"}}></div>
       <div className={styles.faces} id="participants"></div>
       <div className={styles.btnBar}>
         <span ref={cameraBtn}><i className="fas fa-video"></i></span>
@@ -296,5 +369,6 @@ function Conference({ws, myIdName}) {
       </div>
       <div ref={chatContentBox}></div>
     </div>
+    <CameraSelect />
   </div>
 }
