@@ -1,4 +1,5 @@
 import styles from "../../../scss/team/form.module.scss";
+import Title from "../../../components/layout/Title";
 
 import { getWaitings } from "../../../api/member";
 import { getRoomInfo, updateRoom, updateRoomImg } from "../../../api/studyroom";
@@ -172,6 +173,8 @@ function UpdateTeam({ roomInfo, setRoomInfo, setWaitings }) {
 
   return (
     <div className={styles.formContainer}>
+      <Title title="Update Room"></Title>
+
       <button onClick={onMoveInfoPage} className={styles.moveBackBtn}>
         <i className="fas fa-angle-double-left"></i> 돌아가기
       </button>

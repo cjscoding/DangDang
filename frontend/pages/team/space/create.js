@@ -1,4 +1,4 @@
-import styles from "../../../scss/team/board/create-room.module.scss";
+import styles from "../../../scss/team/form.module.scss";
 import Title from "../../../components/layout/Title";
 import Link from "next/link";
 
@@ -31,18 +31,18 @@ export default function CreateRoom() {
       hashTags: roomTags,
     };
 
-    if(roomInfo.name === ""){
-        console.log("방 이름을 작성해주세요!");
-        return;
-    }else if(roomInfo.number === ""){
-        console.log("모집 인원 수를 작성해주세요!");
-        return;
-    }else if(roomTags.length === 0){
-        console.log("최소 하나 이상의 태그를 작성해주세요!");
-        return;
-    }else if(image === ""){
-        console.log("스터디 프로필 이미지를 첨부해주세요!");
-        return;
+    if (roomInfo.name === "") {
+      console.log("방 이름을 작성해주세요!");
+      return;
+    } else if (roomInfo.number === "") {
+      console.log("모집 인원 수를 작성해주세요!");
+      return;
+    } else if (roomTags.length === 0) {
+      console.log("최소 하나 이상의 태그를 작성해주세요!");
+      return;
+    } else if (image === "") {
+      console.log("스터디 프로필 이미지를 첨부해주세요!");
+      return;
     }
 
     createRoom(
@@ -108,85 +108,120 @@ export default function CreateRoom() {
   //studyroom image
   const onSetImage = (event) => setImage(event.target.files[0]);
 
+  //go back
+  const onMoveStudyBoardPage = () => {
+    router.push({
+      pathname: `/team/space`,
+      query: {
+        id: roomInfo.id,
+        page: "info",
+      },
+    });
+  };
+
   return (
-    <div className={styles.container}>
+    <div className={styles.formContainer}>
       <Title title="Create Room"></Title>
-      <h1>방 생성</h1>
 
-      <div className={styles.info}>
-        <span>이름</span>
-        <input
-          type="text"
-          name="name"
-          value={roomInfo.name}
-          onChange={onChange}
-        />
+      <button onClick={onMoveStudyBoardPage} className={styles.moveBackBtn}>
+        <i className="fas fa-angle-double-left"></i> 돌아가기
+      </button>
 
-        <span>모집인원</span>
-        <input
-          type="number"
-          name="number"
-          value={roomInfo.number}
-          onChange={onChange}
-        />
+      <div className={styles.form}>
+        <h2>팀 정보 등록</h2>
 
-        <span>목표</span>
-        <input
-          type="text"
-          name="goal"
-          value={roomInfo.goal}
-          onChange={onChange}
-        />
+        <div className={styles.updateContents}>
+          <label htmlFor="name">팀명</label>
+          <input
+            type="text"
+            name="name"
+            value={roomInfo.name}
+            onChange={onChange}
+            placeholder="팀명을 입력해주세요"
+            autoFocus
+          />
 
-        <span>오카방 주소</span>
-        <input
-          type="text"
-          name="openKakao"
-          value={roomInfo.openKakao}
-          onChange={onChange}
-        />
+          <label htmlFor="goal">목표</label>
+          <input
+            type="text"
+            name="goal"
+            value={roomInfo.goal}
+            placeholder="목표를 입력해주세요"
+            onChange={onChange}
+          />
 
-        <span>팀 소개</span>
-        <textarea
-          cols="30"
-          rows="10"
-          name="description"
-          value={roomInfo.description}
-          onChange={onChange}
-        ></textarea>
+          <label htmlFor="description" className={styles.descLabel}>
+            설명
+          </label>
+          <textarea
+            type="text"
+            name="description"
+            value={roomInfo.description}
+            onChange={onChange}
+            placeholder="설명을 입력해주세요"
+          />
 
-        <label>태그</label>
-        <form onSubmit={onAddTag} className={styles.tagForm}>
-          <div>
-            <input type="text" />
-            <button>태그 추가</button>
+          <label htmlFor="number">모집인원</label>
+          <div className={styles.input}>
+            <input
+              type="text"
+              name="number"
+              value={roomInfo.number}
+              onChange={onChange}
+            />
+            <span>명</span>
           </div>
-        </form>
-        <div></div>
-        <div>
-          {roomTags?.map((tag, index) => (
-            <form onSubmit={onRemoveTag} key={index}>
-              <div>
-                <input type="text" value={tag} disabled />
-                <button>x</button>
-              </div>
-            </form>
-          ))}
+
+          <label htmlFor="openKakao">오픈카톡</label>
+          <input
+            type="text"
+            name="openKakao"
+            value={roomInfo.openKakao}
+            onChange={onChange}
+            placeholder="오픈카톡 주소를 입력해주세요"
+          />
+
+          <label htmlFor="hashTags">태그</label>
+          <form onSubmit={onAddTag}>
+            <div className={styles.tagInput}>
+              <input type="text" placeholder="태그를 입력해주세요" />
+              <button>
+                <i className="fas fa-plus"></i>
+              </button>
+            </div>
+          </form>
+
+          <div></div>
+          <div className={styles.tagsBox}>
+            {roomTags &&
+              roomTags.map((tag) => (
+                <form onSubmit={onRemoveTag} key={tag}>
+                  <input type="text" value={tag} disabled hidden />
+                  <span>{tag}</span>
+                  <button>x</button>
+                </form>
+              ))}
+          </div>
+
+          <label>프로필사진</label>
+          <div className={styles.profileContainer}>
+            <input
+              type="file"
+              id="inputFile"
+              onChange={onSetImage}
+              style={{ display: "none" }}
+            />
+            <span>{image ? image.name : null}</span>
+            <label className={styles.inputFileButton} htmlFor="inputFile">
+              등록
+            </label>
+          </div>
         </div>
-        <label htmlFor="profile">프로필 사진</label>
-        <input type="file" name="profile" onChange={onSetImage} />
       </div>
 
-      <div className={styles.btns}>
-        <button className="cancelBtn">
-          <Link href="/team/board">
-            <a>취소</a>
-          </Link>
-        </button>
-        <button className="createBtn" onClick={onSubmit}>
-          생성
-        </button>
-      </div>
+      <button className={styles.submitBtn} onClick={onSubmit}>
+        생성
+      </button>
     </div>
   );
 }
