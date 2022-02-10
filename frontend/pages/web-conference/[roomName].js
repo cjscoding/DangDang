@@ -2,6 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import CameraSelect from "../../components/webRTC/devices/CameraSelect";
+import MicSelect from "../../components/webRTC/devices/MicSelect";
 import getVideoConstraints from "../../components/webRTC/getVideoConstraints";
 import styles from "../../scss/web-conference/mainComponent.module.scss";
 
@@ -9,12 +10,14 @@ function mapStateToProps(state) {
   return {
     ws: state.wsReducer.ws,
     myIdName: `${state.userReducer.user.id}-${state.userReducer.user.nickName}`, // id + - + nickName
-    cameraId: state.videoReducer.cameraId
+    cameraId: state.videoReducer.cameraId,
+    micId: state.videoReducer.micId
   };
 }
 export default connect(mapStateToProps)(Conference);
-function Conference({ws, myIdName, cameraId}) {
+function Conference({ws, myIdName, cameraId, micId}) {
   const [me, setMe] = useState(null)
+  const [you, setYou] = useState(null)
   const [mode, setMode] = useState(false) // 면접모드 true, 일반모드 false
   const [screenMode, setScreenMode] = useState(false)
   const chatInput = useRef();
@@ -30,9 +33,16 @@ function Conference({ws, myIdName, cameraId}) {
   const exitBtn = useRef();
   const router = useRouter();
 
+  function sendMessage(message) {
+    const jsonMessage = JSON.stringify(message);
+    console.log("Sending message: " + jsonMessage);
+    ws.send(jsonMessage);
+  }
+
   useEffect(() => {
     const roomName = router.query.roomName
     const myName = myIdName.slice(1 + myIdName.search('-'), myIdName.length);
+    let meState = null
     // 새로고침 로직 다른거 생각중
     if(!ws) window.close();
     let participants = {};
@@ -140,11 +150,6 @@ function Conference({ws, myIdName, cameraId}) {
       this.end = end;
     }
 
-    function sendMessage(message) {
-      const jsonMessage = JSON.stringify(message);
-      console.log("Sending message: " + jsonMessage);
-      ws.send(jsonMessage);
-    }
     ws.onmessage = function(message) {
       const jsonMsg = JSON.parse(message.data);
       console.log("Received message: " + message.data);
@@ -185,20 +190,33 @@ function Conference({ws, myIdName, cameraId}) {
     }
     function onExistingParticipants(jsonMsg) {
       // if(stream) return shareScreen(jsonMsg);
-      const participant = new Participant(myIdName);
-      setMe(participant);
-      participants[myIdName] = participant;
-    
-      const options = {
-        localVideo: participant.getVideoElement(),
-        mediaConstraints: getVideoConstraints(480, 270),
-        onicecandidate: participant.onIceCandidate.bind(participant)
+      if(!meState){
+        const participant = new Participant(myIdName);
+        participants[myIdName] = participant;
+        
+        const options = {
+          localVideo: participant.getVideoElement(),
+          mediaConstraints: getVideoConstraints(480, 270),
+          onicecandidate: participant.onIceCandidate.bind(participant)
+        }
+        participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function(error) {
+          if(error) return console.log(`ERROR! ${error}`);
+          this.generateOffer (participant.offerToReceiveVideo.bind(participant));
+        });
+        jsonMsg.data.forEach(receiveVideo);
+        meState = participant
+        setMe(meState);
+      }else {
+        const options = {
+          localVideo: meState.getVideoElement(),
+          mediaConstraints: getVideoConstraints(480, 270),
+          onicecandidate: meState.onIceCandidate.bind(meState)
+        }
+        meState.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function(error) {
+          if(error) return console.log(`ERROR! ${error}`);
+          this.generateOffer (meState.offerToReceiveVideo.bind(meState));
+        });
       }
-      participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function(error) {
-        if(error) return console.log(`ERROR! ${error}`);
-        this.generateOffer (participant.offerToReceiveVideo.bind(participant));
-      });
-      jsonMsg.data.forEach(receiveVideo);
     }
     
     function receiveVideo(senderIdName) {
@@ -213,8 +231,9 @@ function Conference({ws, myIdName, cameraId}) {
     
       participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options, function(error) {
         if(error) return console.log(`ERROR! ${error}`);
-        this.generateOffer (participant.offerToReceiveVideo.bind(participant));
+        this.generateOffer(participant.offerToReceiveVideo.bind(participant));
       });
+      setYou(participant)
     }
 
     function onParticipantLeft(jsonMsg) {
@@ -341,12 +360,16 @@ function Conference({ws, myIdName, cameraId}) {
   }, [])
   useEffect(async() => {
     if(me) {
-      console.log(me.rtcPeer.getLocalStream())
-      // me.rtcPeer.getLocalStream() = await navigator.mediaDevices.getUserMedia(
-      //   getVideoConstraints(480, 270)
-      // );
+      const newStream = await navigator.mediaDevices.getUserMedia(
+        getVideoConstraints(480, 270)
+      );
+      const videoSender = me.rtcPeer.peerConnection.getSenders().find(sender => sender.track.kind === "video")
+      const audioSender = me.rtcPeer.peerConnection.getSenders().find(sender => sender.track.kind === "audio")
+      videoSender.replaceTrack(newStream.getVideoTracks()[0])
+      audioSender.replaceTrack(newStream.getAudioTracks()[0])
+      me.getVideoElement().srcObject = newStream
     }
-  }, [cameraId])
+  }, [cameraId, micId])
   return <div className={styles.mainContainer}>
     <div className={styles.videoContainer}>
       <div ref={screenBox} style={!screenMode?{display: "none"}:{width: "60vw", height:"33.75vw"}}></div>
@@ -360,6 +383,8 @@ function Conference({ws, myIdName, cameraId}) {
         <span ref={normalModeBtn} style={!mode?{display: "none"}:{}}><i className="fas fa-users"></i></span>
         <span ref={exitBtn}><i className="fas fa-times-circle"></i></span>
       </div>
+      <CameraSelect />
+      <MicSelect />
     </div>
     <div className={styles.chat} id="chat">
       <h3>채팅창</h3>
@@ -369,6 +394,5 @@ function Conference({ws, myIdName, cameraId}) {
       </div>
       <div ref={chatContentBox}></div>
     </div>
-    <CameraSelect />
   </div>
 }

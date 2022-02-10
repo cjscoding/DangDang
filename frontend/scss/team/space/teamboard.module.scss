@@ -1,0 +1,61 @@
+@import "../../common/variables.scss";
+@import "../../common/mixins.scss";
+
+.teamBoard {
+  display: flex;
+  flex-direction: column;
+  padding: 80px 150px;
+  .registerBtn {
+    @include filled-button(200px, white, $main-color);
+    align-self: flex-end;
+    text-align: center;
+  }
+}
+
+.container {
+  @include white-box;
+  margin: 30px 0;
+  padding: 0;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 50px;
+    select {
+      width: 200px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 7px;
+      outline: none;
+      opacity: 0.7;
+      background-color: $line-color;
+    }
+  }
+  .table {
+    border-top: $division-line;
+    border-bottom: $division-line;
+    .postHeader{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        padding: 15px 0;
+        text-align: center;
+        opacity: 0.5;
+    }
+    .postList{
+        .postRow{
+            &:nth-child(odd){
+                background-color: $background-color;
+            }
+            padding: 15px 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            text-align: center;
+            .title{
+                &:hover{
+                    color: $main-color;
+                }
+            }
+        }
+    }
+  }
+}
