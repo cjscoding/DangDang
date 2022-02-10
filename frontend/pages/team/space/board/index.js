@@ -1,4 +1,4 @@
-import styles from "../../../../scss/team/space/teamspace.module.scss";
+import styles from "../../../../scss/team/space/teamboard.module.scss";
 import Pagination from "../../../../components/layout/Pagination";
 import Layout from "../../../../components/team/space/Layout";
 import Link from "next/link";
@@ -29,7 +29,7 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(Board);
 
-function Board({ roomInfo, roomHost, userInfo, posts, setRoomInfo, setPosts }) {
+function Board({ roomInfo, roomHost, posts, setRoomInfo, setPosts }) {
   const router = useRouter();
 
   //pagination
@@ -95,63 +95,64 @@ function Board({ roomInfo, roomHost, userInfo, posts, setRoomInfo, setPosts }) {
   }, [curPage]);
 
   return (
-    <div>
+    <div className={styles.teamBoard}>
       <Layout
         roomInfo={roomInfo}
         host={roomHost.nickName}
         createdAt={roomInfo.createdAt}
         image={roomInfo.imageUrl}
       />
+      <Link
+        href={{
+          pathname: "/team/space/board/create",
+          query: {
+            id: router.query.id,
+          },
+        }}
+      >
+        <a className={styles.registerBtn}>글 작성하기</a>
+      </Link>
       <div className={styles.container}>
-        <h1>회사정보공유페이지</h1>
-        <Link
-          href={{
-            pathname: "/team/space/board/create",
-            query: {
-              id: router.query.id,
-            },
-          }}
-        >
-          <a>글작성</a>
-        </Link>
-        <select name="" id="" onChange={onChangePostsPerPage}>
+        <div className={styles.header}>
+          <h3>정보를 공유해 주세요!</h3>
+          <select onChange={onChangePostsPerPage}>
             <option value="10">10개씩 보기</option>
             <option value="20">20개씩 보기</option>
             <option value="30">30개씩 보기</option>
-        </select>
-        <div className={styles.table}>
-          <table>
-            <thead>
-              <tr className="">
-                <th className="">제목</th>
-                <th>작성자</th>
-                <th>작성일</th>
-              </tr>
-            </thead>
-            <tbody>
-              {posts?.map((post, index) => (
-                <tr key={index}>
-                  <td>
-                    <Link
-                      href={{
-                        pathname: "/team/space/board/post",
-                        query: {
-                          id: router.query.id,
-                          post: JSON.stringify({ post }),
-                        },
-                      }}
-                      as={`/team/space/board/post/${router.query.id}`}
-                    >
-                      <a>{post.title}</a>
-                    </Link>
-                  </td>
-                  <td>{post.writer.nickName}</td>
-                  <td>{post.createdAt.slice(0, 10)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          </select>
         </div>
+
+        <div className={styles.table}>
+          <div className={styles.postHeader}>
+            <span>작성일</span>
+            <span>제목</span>
+            <span>작성자</span>
+          </div>
+
+          <div className={styles.postList}>
+            {posts?.map((post) => (
+              <div className={styles.postRow} key={post.id}>
+                <span>{post.createdAt.slice(0, 10)}</span>
+                <span>
+                  <Link
+                    href={{
+                      pathname: "/team/space/board/post",
+                      query: {
+                        id: router.query.id,
+                        post: JSON.stringify({ post }),
+                      },
+                    }}
+                    as={`/team/space/board/post/${router.query.id}`}
+                  >
+                    <a className={styles.title}>{post.title}</a>
+                  </Link>
+                </span>
+                <span>{post.writer.nickName}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <Pagination
           curPage={curPage}
           paginate={paginate}
