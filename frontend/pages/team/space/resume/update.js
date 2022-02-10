@@ -1,41 +1,43 @@
 import styles from "../../../../scss/team/form.module.scss";
 
-import { createResume } from "../../../../api/resume";
+import { updateResume } from "../../../../api/resume";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { connect } from "react-redux";
-import { useState } from "react";
 
-const mapStateToProps = (state) => {
-  return {
-    userInfo: state.userReducer.user,
-  };
-};
-
-export default connect(mapStateToProps, null)(CreateResume);
-
-function CreateResume() {
+export default function ResumeUpdate() {
   const router = useRouter();
   const [answer, setAnswer] = useState("");
   const [question, setQuestion] = useState("");
 
-  const onSubmitResume = (event) => {
+  useEffect(() => {
+    if (!router.isReady) return;
+    setQuestion(router.query.question);
+    setAnswer(router.query.answer);
+  }, [router.isReady]);
+
+  //자소서 수정
+  const onSubmitUpdated = (event) => {
     event.preventDefault();
-    const req = {
-      resumeQuestionList: [
-        {
-          question,
-          answer,
-        },
-      ],
+    const data = {
+      resumeId: router.query.resumeId,
+      req: {
+        resumeQuestionList: [
+          {
+            id: router.query.questionId,
+            question,
+            answer,
+          },
+        ],
+      },
     };
-    createResume(
-      req,
+    updateResume(
+      data,
       (res) => {
-        console.log(res, "자소서 등록 성공");
+        console.log(res, "자소서 갱신 성공");
         onMoveResumePage();
       },
       (err) => {
-        console.log(err, "자소서 등록 실패");
+        console.log(err, "자소서 갱신 실패");
       }
     );
   };
@@ -58,12 +60,13 @@ function CreateResume() {
       </button>
 
       <form>
-        <h2>자기소개서 등록</h2>
+        <h2>자기소개서 수정</h2>
 
         <div className={styles.contents}>
           <label htmlFor="question">제목</label>
           <input
             name="question"
+            value={question}
             onChange={(event) => setQuestion(event.target.value)}
             autoFocus
           />
@@ -73,12 +76,14 @@ function CreateResume() {
           </label>
           <textarea
             name="answer"
+            value={answer}
             onChange={(event) => setAnswer(event.target.value)}
           ></textarea>
         </div>
       </form>
-      <button className={styles.submitBtn} onClick={onSubmitResume}>
-        등록
+
+      <button className={styles.submitBtn} onClick={onSubmitUpdated}>
+        수정
       </button>
     </div>
   );

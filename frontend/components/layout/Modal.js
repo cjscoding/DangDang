@@ -52,7 +52,7 @@ function Modal({ showModal, setShowModal, children }) {
         <div className={styles.modal}>
           <div className={styles.close}>
             <a href="#" onClick={setShowModal}>
-              [ X ]
+              <i className="fas fa-times"></i>
             </a>
           </div>
           <div className={styles.modalBody}>{children}</div>

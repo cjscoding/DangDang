@@ -4,12 +4,12 @@ import Comment from "./ResumeComment";
 import { setResume } from "../../../store/actions/resumeAction";
 import {
   getResume,
-  updateResume,
   deleteResume,
   createResumeComment,
 } from "../../../api/resume";
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const mapStateToProps = (state) => {
   return {
@@ -26,14 +26,11 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(mapStateToProps, mapDispatchToProps)(ResumeList);
 
 function ResumeList({ userInfo, setResume, resume, comments, index, reload }) {
+  const router = useRouter();
   const [questionId] = useState(resume.resumeQuestionList[0].id);
   const [resumeId] = useState(resume.id);
-  const [question, setQuestion] = useState(
-    resume.resumeQuestionList[0].question
-  );
-  const [answer, setAnswer] = useState(resume.resumeQuestionList[0].answer);
-  const [isUpdate, setIsUpdate] = useState(false);
-  const [showComment, onShowComment] = useState(false);
+  const [question] = useState(resume.resumeQuestionList[0].question);
+  const [answer] = useState(resume.resumeQuestionList[0].answer);
   const [commentList, setCommentList] = useState([]);
 
   useEffect(() => {
@@ -41,40 +38,12 @@ function ResumeList({ userInfo, setResume, resume, comments, index, reload }) {
     setCommentList(comments);
   }, [comments]);
 
-  //자소서 수정
-  const onSubmitUpdated = (event) => {
-    event.preventDefault();
-    const data = {
-      resumeId,
-      req: {
-        resumeQuestionList: [
-          {
-            id: questionId,
-            question,
-            answer,
-          },
-        ],
-      },
-    };
-    updateResume(
-      data,
-      (res) => {
-        console.log(res, "자소서 갱신 성공");
-        setIsUpdate(false);
-        reload();
-      },
-      (err) => {
-        console.log(err, "자소서 갱신 실패");
-      }
-    );
-  };
-
   //자소서 삭제
   const onDeleteResume = () => {
     deleteResume(
       resumeId,
       (res) => {
-        console.log(res, "자소서 삭제 성공");
+        alert("자소서 삭제 성공");
         getResume(
           userInfo.id,
           (res) => {
@@ -116,72 +85,60 @@ function ResumeList({ userInfo, setResume, resume, comments, index, reload }) {
     event.target[0].value = "";
   };
 
-  const deliverReload = () => reload();
-  return (
-    <div className={styles.resumeOneItem}>
-      <div>
-        {isUpdate ? (
-          <form onSubmit={onSubmitUpdated}>
-            <label htmlFor="question">질문</label>
-            <input
-              name="question"
-              value={question}
-              onChange={(event) => setQuestion(event.target.value)}
-            />
-            <label htmlFor="answer">답</label>
-            <input
-              name="answer"
-              value={answer}
-              onChange={(event) => setAnswer(event.target.value)}
-            />
-            <div className="btns">
-              <button>수정완료</button>
-              <button onClick={() => setIsUpdate(!isUpdate)}>취소</button>
-              <button onClick={() => onShowComment(!showComment)}>댓글</button>
-            </div>
-          </form>
-        ) : (
-          <div>
-            <div>
-              <h4>
-                Q{index + 1} : {question}
-              </h4>
-              <p>
-                A{index + 1} : {answer}
-              </p>
-            </div>
+  //자소서 수정 페이지로 이동
+  const onMoveToUpdate = () => {
+    router.push(
+      {
+        pathname: "/team/space/resume/update",
+        query: {
+          id: router.query.id,
+          questionId,
+          resumeId,
+          question,
+          answer,
+        },
+      },
+      "/team/space/resume/update"
+    );
+  };
 
-            <div className="btns">
-              <button onClick={() => setIsUpdate(!isUpdate)}>수정</button>
-              <button onClick={onDeleteResume}>삭제</button>
-              <button onClick={() => onShowComment(!showComment)}>
-                댓글보기
-              </button>
-            </div>
+  const deliverReload = () => reload();
+
+  return (
+    <div className={styles.resumeItem}>
+      <div className={styles.resumeContent}>
+        <div className={styles.question}>
+          <h3>{`Q${index + 1} : ${question}`}</h3>
+
+          <div className={styles.btnBox}>
+            <button onClick={onMoveToUpdate}>
+              <i className="fas fa-pen"></i>
+            </button>
+            <button onClick={onDeleteResume}>
+              <i className="fas fa-trash"></i>
+            </button>
           </div>
-        )}
-        {showComment ? (
-          <div>
-            <h3>New Comment</h3>
-            <div className={styles.user}>
-              <span className="author"> {userInfo.nickName}</span>
-            </div>
-            <form onSubmit={onUploadComment}>
-              <input type="text" placeholder="comment..." />
-              <button>Upload</button>
-            </form>
-            <h4>Comments</h4>
-            {commentList.map((comment) => (
+        </div>
+        <p>{answer}</p>
+      </div>
+
+      <div className={styles.commentBox}>
+        <form onSubmit={onUploadComment}>
+          <input type="text" placeholder="댓글을 남겨주세요..." />
+          <button>등록</button>
+        </form>
+        {commentList.length > 0
+          ? commentList.map((comment) => (
               <Comment
                 key={comment.id}
                 comment={comment}
                 reload={deliverReload}
                 resumeId={resumeId}
                 userName={userInfo.nickName}
+                userImage={userInfo.imageUrl}
               />
-            ))}
-          </div>
-        ) : null}
+            ))
+          : null}
       </div>
     </div>
   );

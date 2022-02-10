@@ -71,14 +71,14 @@
   }
   .infoMenu {
     font-weight: 800;
-    border-bottom: 2px solid red;
+    border-bottom: 2px solid $red-color;
   }
   .resumeMenu {
     font-weight: 800;
-    border-bottom: 2px solid rgb(242, 204, 53);
+    border-bottom: 2px solid $yellow-color;
   }
   .boardMenu {
     font-weight: 800;
-    border-bottom: 2px solid green;
+    border-bottom: 2px solid $purple-color;
   }
 }

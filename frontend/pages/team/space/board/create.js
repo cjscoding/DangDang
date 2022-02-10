@@ -1,17 +1,21 @@
-import { useRouter } from "next/router";
-import Link from "next/link";
+import styles from "../../../../scss/team/form.module.scss";
+
 import { addPost } from "../../../../api/board";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
 export default function createPost() {
   const router = useRouter();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
 
   const onSubmitPost = (event) => {
     event.preventDefault();
     const data = {
       studyId: router.query.id,
       req: {
-        title: event.target[0].value,
-        content: event.target[1].value,
+        title,
+        content,
       },
     };
     console.log(data);
@@ -19,12 +23,7 @@ export default function createPost() {
       data,
       (res) => {
         console.log(res, "글 게시 성공");
-        router.push({
-          pathname: "/team/space/board",
-          query: {
-            id: router.query.id,
-          },
-        });
+        onMoveBoardPage();
       },
       (err) => {
         console.log(err, "글 게시 실패");
@@ -32,27 +31,49 @@ export default function createPost() {
     );
   };
 
+  //게시판 페이지로 돌아가기
+  const onMoveBoardPage = () => {
+    router.push({
+      pathname: "/team/space/resume",
+      query: {
+        id: router.query.id,
+        page: "board",
+      },
+    });
+  };
+
   return (
-    <div>
+    <div className={styles.formContainer}>
+      <button onClick={onMoveBoardPage} className={styles.moveBackBtn}>
+        <i className="fas fa-angle-double-left"></i> 돌아가기
+      </button>
+
       <form onSubmit={onSubmitPost}>
-        <label htmlFor="question">질문</label>
-        <textarea name="question" id="" cols="30" rows="10"></textarea>
-        <label htmlFor="answer">답</label>
-        <textarea name="answer" id="" cols="30" rows="10"></textarea>
-        <div className="btns">
-          <button>등록</button>
-          <Link
-            href={{
-              pathname: "/team/space/board",
-              query: {
-                id: router.query.id,
-              },
-            }}
-          >
-            <a>취소</a>
-          </Link>
+        <h2>게시글 작성</h2>
+
+        <div className={styles.contents}>
+          <label htmlFor="question">제목</label>
+          <input
+            name="title"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            autoFocus
+          />
+
+          <label htmlFor="answer" className={styles.answerLabel}>
+            내용
+          </label>
+          <textarea
+            name="content"
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+          ></textarea>
         </div>
       </form>
+
+      <button className={styles.submitBtn} onClick={onSubmitPost}>
+        등록
+      </button>
     </div>
   );
 }
