@@ -57,7 +57,22 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion}) {
     }
   }
 
-  return <div>
+  return <div className={styles.body}>
+    <div className={styles.pindicator}>
+      <div className={styles.bullet}>
+        <span className={styles.icon}>1</span>
+        <div className={styles.text}>Step 1</div>
+      </div>
+      <div className={styles.bullet}>
+        <span className={styles.iconcur}><span>2</span></span>
+        <div className={styles.text}>Step 2</div>
+      </div>
+      <div className={styles.bullet}>
+        <span className={styles.icon}>3</span>
+        <div className={styles.text}>Step 3</div>
+      </div>
+    </div>
+    <h1>연습에 사용할 질문을 골라주세요.</h1>
     <div className={styles.mainContainer}>
       <div className={styles.columnContainer}>
         <div className={styles.changeBtn}>
@@ -77,7 +92,7 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion}) {
           </div>
         </div>
         <div className={styles.addContainer}>
-          <textarea value={questionInput} onChange={(event) => {setQuestionInput(event.target.value)}}></textarea>
+          <input value={questionInput} onChange={(event) => {setQuestionInput(event.target.value)}} placeholder="나만의 질문을 입력해주세요!"></input>
           <button onClick={addQuestionInput}>면접질문추가</button>
         </div>
       </div>
@@ -88,7 +103,7 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion}) {
       </div>
     </div>
     <Link href="/self-practice/interview/check-devices">
-      <a><button onClick={alertBlank}><h1>선택 완료</h1></button></a>
+      <button onClick={alertBlank} id={styles.submitBtn}>다음 단계로</button>
     </Link>
   </div>
 }
