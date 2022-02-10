@@ -92,7 +92,7 @@ function Board({ roomInfo, roomHost, posts, setRoomInfo, setPosts }) {
         console.log(err, "공유글 조회 실패");
       }
     );
-  }, [curPage]);
+  }, [curPage, postsPerPage]);
 
   return (
     <div className={styles.teamBoard}>
@@ -102,6 +102,7 @@ function Board({ roomInfo, roomHost, posts, setRoomInfo, setPosts }) {
         createdAt={roomInfo.createdAt}
         image={roomInfo.imageUrl}
       />
+
       <Link
         href={{
           pathname: "/team/space/board/create",
@@ -112,6 +113,7 @@ function Board({ roomInfo, roomHost, posts, setRoomInfo, setPosts }) {
       >
         <a className={styles.registerBtn}>글 작성하기</a>
       </Link>
+
       <div className={styles.container}>
         <div className={styles.header}>
           <h3>정보를 공유해 주세요!</h3>
