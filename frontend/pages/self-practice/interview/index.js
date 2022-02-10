@@ -197,22 +197,30 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
   <div className={styles.closeBtnBox}>
     <Link href="/self-practice/interview/end">
       <a>
-        <button className={styles.closeBtn}>종료</button>
+        <button className={styles.closeBtn}><i className="fas fa-time"></i></button>
       </a>
     </Link>
   </div>
   <div className={styles.container}>
-    <div className={styles.videoContainer}>
-      <div style={isWait||screenNum!==1?{display: "none"}:{}} className={styles.video1}><ShowQuestion /></div>
-      <div style={isWait||screenNum!==2?{display: "none"}:{}} className={styles.video2}><video id="my-face"></video></div>
-      <div style={isWait||screenNum!==3?{display: "none"}:{}} className={styles.video3}><img src="/images/누칼협.jpg" height={"100%"}/></div>
-      <div style={!isWait?{display: "none"}:{}} className={styles.video4}><img src="/images/loading.gif" height={"100%"}/></div>
-      <div className={styles.changeBtn}>
-        <span onClick={() => setScreenNum(1)}>●</span>
-        <span onClick={() => setScreenNum(2)}>●</span>
-        <span onClick={() => setScreenNum(3)}>●</span>
-      </div>
-      <div className={styles.btnContainer}>
+    <div className={styles.interviewContainer}>
+      <div className={styles.top}>
+        <div className={styles.selectContainer}>
+          <div className={styles.changeBtn}>
+            <span onClick={() => setScreenNum(1)} className={styles.tooltip}><i className="fas fa-question"></i><span>질문 다시 보기</span></span>
+            <span onClick={() => setScreenNum(2)} className={styles.tooltip}><i className="fas fa-eye"></i><span>내 얼굴 보기</span></span>
+            <span onClick={() => setScreenNum(3)} className={styles.tooltip}><i className="fas fa-user"></i><span>면접관 얼굴 보기</span></span>
+          </div>
+        </div>
+        <div className={styles.videoContainer}>
+          <div className={styles.video}>
+            <div style={isWait||screenNum!==1?{display: "none"}:{}} className={styles.video1}><ShowQuestion /></div>
+            <div style={isWait||screenNum!==2?{display: "none"}:{}} className={styles.video2}><video id="my-face"></video></div>
+            <div style={isWait||screenNum!==3?{display: "none"}:{}} className={styles.video3}><img src="/images/누칼협.jpg" height={"100%"}/></div>
+            <div style={!isWait?{display: "none"}:{}} className={styles.video4}><img src="/images/loading.gif" height={"100%"}/></div>
+          </div>
+        </div>
+       </div>
+       <div className={styles.btnContainer}>
         <span>
           <span ref={volumeBtn}><i className="fas fa-volume-up"></i></span>
           <input style={isVol?{}:{display: "none"}} type="range" min="0" max="100" step="1" ref={volumeBar}/>
