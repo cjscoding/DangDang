@@ -56,7 +56,7 @@ export default function ResumeUpdate() {
   return (
     <div className={styles.formContainer}>
       <button onClick={onMoveResumePage} className={styles.moveBackBtn}>
-        <i class="fas fa-angle-double-left"></i> 돌아가기
+        <i className="fas fa-angle-double-left"></i> 돌아가기
       </button>
 
       <form>

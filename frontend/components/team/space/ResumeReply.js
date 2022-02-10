@@ -85,10 +85,10 @@ export default function Reply({ reply, submitReload, resumeId, commentId }) {
 
           <div className={styles.btnBox}>
             <button type="submit">
-              <i class="fas fa-check"></i>
+              <i className="fas fa-check"></i>
             </button>
             <button type="button" onClick={toggleUpdate}>
-              <i class="fas fa-times"></i>
+              <i className="fas fa-times"></i>
             </button>
           </div>
         </form>
@@ -110,10 +110,10 @@ export default function Reply({ reply, submitReload, resumeId, commentId }) {
 
           <div className={styles.btnBox}>
             <button onClick={toggleUpdate}>
-              <i class="fas fa-pen"></i>
+              <i className="fas fa-pen"></i>
             </button>
             <button onClick={() => onDeleteReply(reply.id)}>
-              <i class="fas fa-trash"></i>
+              <i className="fas fa-trash"></i>
             </button>
           </div>
         </div>

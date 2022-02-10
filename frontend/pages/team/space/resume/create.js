@@ -1,9 +1,9 @@
 import styles from "../../../../scss/team/form.module.scss";
 
 import { createResume } from "../../../../api/resume";
-import { useState } from "react";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
+import { useState } from "react";
 
 const mapStateToProps = (state) => {
   return {
@@ -54,7 +54,7 @@ function CreateResume() {
   return (
     <div className={styles.formContainer}>
       <button onClick={onMoveResumePage} className={styles.moveBackBtn}>
-        <i class="fas fa-angle-double-left"></i> 돌아가기
+        <i className="fas fa-angle-double-left"></i> 돌아가기
       </button>
 
       <form>

@@ -112,10 +112,10 @@ function ResumeList({ userInfo, setResume, resume, comments, index, reload }) {
 
           <div className={styles.btnBox}>
             <button onClick={onMoveToUpdate}>
-              <i class="fas fa-pen"></i>
+              <i className="fas fa-pen"></i>
             </button>
             <button onClick={onDeleteResume}>
-              <i class="fas fa-trash"></i>
+              <i className="fas fa-trash"></i>
             </button>
           </div>
         </div>

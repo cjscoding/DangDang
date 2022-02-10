@@ -120,13 +120,13 @@ export default function Comment({
 
             <div className={styles.btnBox}>
               <button type="button" onClick={toggleReply}>
-                <i class="fas fa-reply"></i>
+                <i className="fas fa-reply"></i>
               </button>
               <button type="submit">
-                <i class="fas fa-check"></i>
+                <i className="fas fa-check"></i>
               </button>
               <button type="button" onClick={toggleUpdate}>
-                <i class="fas fa-times"></i>
+                <i className="fas fa-times"></i>
               </button>
             </div>
           </form>
@@ -145,13 +145,13 @@ export default function Comment({
 
             <div className={styles.btnBox}>
               <button onClick={toggleReply}>
-                <i class="fas fa-reply"></i>
+                <i className="fas fa-reply"></i>
               </button>
               <button onClick={toggleUpdate}>
-                <i class="fas fa-pen"></i>
+                <i className="fas fa-pen"></i>
               </button>
               <button onClick={() => onDeleteComment(comment.id)}>
-                <i class="fas fa-trash"></i>
+                <i className="fas fa-trash"></i>
               </button>
             </div>
           </div>
