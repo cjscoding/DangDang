@@ -16,6 +16,7 @@ function mapStateToProps(state) {
   };
 }
 import { setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion } from "../../../store/actions/wsAction";
+import Timer from "../../../components/webRTC/self-practice/Timer";
 function mapDispatchToProps(dispatch) {
   return {
     setWSSessionId: (sessionId) => dispatch(setWSSessionId(sessionId)),
@@ -201,6 +202,7 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
       </a>
     </Link>
   </div>
+  <Timer/>
   <div className={styles.container}>
     <div className={styles.interviewContainer}>
       <div className={styles.top}>
