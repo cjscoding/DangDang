@@ -125,6 +125,9 @@
   visibility: visible;
 }
 /*--*/
+.tooltipdown{
+  position: relative;
+}
 .tooltipdown span{
   visibility: hidden;       /* 이벤트가 없으면 툴팁 영역을 숨김 */
   width: 300px;  
@@ -136,9 +139,9 @@
   padding: 5px 0;
   position: absolute;       /* 절대 위치를 사용 */
   z-index: 1;
-  top: 86%;
-  left: 65%;
-  // margin-left: -80px;
+  top: 120%;
+  left: 50%;
+  margin-left: -150px;
 }
 .tooltipdown span::after{
   content: " ";             /* 정사각형 영역 사용 */

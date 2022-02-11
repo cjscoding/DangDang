@@ -13,6 +13,7 @@
         "@types/sockjs-client": "^1.5.1",
         "@zeit/next-sass": "^1.0.1",
         "axios": "^0.25.0",
+        "kurento-utils": "^6.16.0",
         "next": "^12.0.10",
         "next-redux-wrapper": "^7.0.5",
         "node-sass": "^6.0.0",
