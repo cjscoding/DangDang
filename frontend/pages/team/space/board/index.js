@@ -101,18 +101,9 @@ function Board({ roomInfo, roomHost, posts, setRoomInfo, setPosts }) {
         host={roomHost.nickName}
         createdAt={roomInfo.createdAt}
         image={roomInfo.imageUrl}
+        href={"/team/space/board/create"}
+        btnText="글 작성하기"
       />
-
-      <Link
-        href={{
-          pathname: "/team/space/board/create",
-          query: {
-            id: router.query.id,
-          },
-        }}
-      >
-        <a className={styles.registerBtn}>글 작성하기</a>
-      </Link>
 
       <div className={styles.container}>
         <div className={styles.header}>

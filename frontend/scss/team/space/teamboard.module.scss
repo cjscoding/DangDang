@@ -6,11 +6,6 @@
     padding: 80px 0;
     display: flex;
   flex-direction: column;
-  .registerBtn {
-    @include filled-button(200px, white, $main-color);
-    align-self: flex-end;
-    text-align: center;
-  }
 }
 
 .container {

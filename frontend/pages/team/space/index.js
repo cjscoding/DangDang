@@ -186,11 +186,9 @@ function TeamSpace({
         host={roomHost.nickName}
         createdAt={roomInfo.createdAt}
         image={roomInfo.imageUrl}
+        href={roomInfo.openKakao}
+        btnText="오픈카톡"
       />
-
-      <button className={styles.kakaoBtn}>
-        <a href={roomInfo.openKakao}>오픈카톡</a>
-      </button>
 
       <div className={styles.contentBox}>
         <button onClick={onUpdatePage}>

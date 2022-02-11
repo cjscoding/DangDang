@@ -9,13 +9,17 @@
 }
 
 .registBtn {
-  @include filled-button(200px, $background-color, $main-color);
-  margin-bottom: 30px;
+  @include filled-button(200px, white, $main-color);
   align-self: flex-end;
+  a {
+    color: white;
+  }
 }
+
 .resumeContainer {
   display: flex;
   justify-content: space-between;
+  margin-top: 30px;
 }
 
 .memberListBox {

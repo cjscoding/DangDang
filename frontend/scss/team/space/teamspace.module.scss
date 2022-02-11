@@ -8,11 +8,6 @@
   flex-direction: column;
 }
 
-.kakaoBtn {
-  @include filled-button(200px, $text-color, $kakao-color);
-  align-self: flex-end;
-}
-
 .contentBox {
   @include white-box;
   margin: 30px 0;
