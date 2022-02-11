@@ -24,15 +24,10 @@ export default function Layout({ roomInfo, host, image }) {
       <div className={styles.teamInfoBox}>
         <div className={styles.mainInfo}>
           <div className={styles.image}>
-            {image !== null ? (
+            {image !== null && image !== "default.jpg" ? (
               <img src={`${BACKEND_URL}/files/images/${image}`} />
             ) : (
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                width={300}
-                height={250}
-              />
+              <img src="/images/dangdang_1.png" />
             )}
           </div>
 
