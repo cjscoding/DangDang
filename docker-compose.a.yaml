@@ -8,6 +8,8 @@ services:
       - 3000:3000
     depends_on:
       - "backend"
+    networks:
+      - dangdang_network
 
   backend:
     # image: dbswns97/dangdang-backend:0.6
@@ -31,7 +33,6 @@ services:
     networks:
       - dangdang_network
     command: "java -Dspring.profiles.active=prod -Dkms.url=ws://i6c203.p.ssafy.io:8888/kurento -jar /app.jar"
-
 
 volumes:
   kms_data:
