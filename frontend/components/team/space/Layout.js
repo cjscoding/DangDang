@@ -33,7 +33,7 @@ export default function Layout({ roomInfo, host, image, href, btnText }) {
           <div className={styles.title}>
             <h2>{roomInfo.name}</h2>
             <h4>{roomInfo.goal}</h4>
-            <div>
+            <div className={styles.hashTags}>
               {roomInfo.hashTags?.map((tag) => (
                 <span key={tag}>#{tag}</span>
               ))}
