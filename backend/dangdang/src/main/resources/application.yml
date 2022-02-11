@@ -53,7 +53,7 @@ file :
 
 server:
   ssl :
-    key-store: /etc/letsencrypt/live/i6c203.p.ssafy.io/keystore.p12
+    key-store: classpath:keystore.p12
     key-store-password: boribori
     key-store-type: PKCS12
     key-alias: dangdang
