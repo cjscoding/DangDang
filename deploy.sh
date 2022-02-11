@@ -34,7 +34,7 @@ sudo sed -i "s/${TERMINATE_SERVER_PORT}/${START_SERVER_PORT}/" ./frontend/.env.p
 # -f는 docker-compose파일 경로를 지정
 sudo docker-compose -p dangdang-${START_CONTAINER} -f docker-compose.${START_CONTAINER}.yaml up -d --build
 
-sleep 60 # 실행되었으면 60초 대기 #spring boot가 테스트쿼리를 많이 날려서 오래걸립니다.
+sleep 5 # 실행되었으면 5초 대기 
 
 echo "next start!"
 echo "change nginx server port"

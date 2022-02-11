@@ -168,6 +168,25 @@ public class Room implements Closeable {
     }
   }
 
+  public void roomSendMode(WebSocketSession session, UserSession sendParticipant, String position) throws IOException {
+    final JsonObject newParticipantMsg = new JsonObject();
+    newParticipantMsg.addProperty("id", "mode");
+    newParticipantMsg.addProperty("position", position);
+//    newParticipantMsg.addProperty("sessionId", sendParticipant.getId());
+    newParticipantMsg.addProperty("name", sendParticipant.getName());
+
+    final List<String> participantsList = new ArrayList<>(participants.values().size());
+
+    for (final UserSession participant : participants.values()) {
+      try {
+        participant.sendMessage(newParticipantMsg);
+      } catch (final IOException e) {
+        log.debug("ROOM {}: participant {} could not be responded", name, participant.getName(), e);
+      }
+      participantsList.add(participant.getName());
+    }
+  }
+
   @Override
   public void close() {
     for (final UserSession user : participants.values()) {
