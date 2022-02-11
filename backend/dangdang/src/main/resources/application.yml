@@ -6,6 +6,11 @@ spring:
       dev-test: common, dev-test
 
 ---
+server:
+  ssl :
+    key-store: classpath:cert.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
 
 spring:
   config:
@@ -53,10 +58,9 @@ file :
 
 server:
   ssl :
-    key-store: classpath:keystore.p12
+    key-store: classpath:dangdang.jks
     key-store-password: boribori
-    key-store-type: PKCS12
-    # key-alias: dangdang
+    key-password: boribori
 
 spring:
   config:
@@ -101,6 +105,11 @@ file :
     address : "https://localhost:8443/files/"
 
 ---
+server:
+  ssl :
+    key-store: classpath:cert.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
 
 spring:
   config:
@@ -148,10 +157,10 @@ file :
 
 server:
   port: 8443
-  ssl :
-    key-store: classpath:cert.p12
-    key-store-password: 123456
-    key-store-type: PKCS12
+#  ssl :
+#    key-store: classpath:cert.p12
+#    key-store-password: 123456
+#    key-store-type: PKCS12
 #    key-alias: kurento-selfsigned
 
 spring:
