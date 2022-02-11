@@ -25,13 +25,13 @@
   width: 100%;
   margin-top: 2rem;
   input {
-    // background: #EFF3F7 url(https://cssdeck.com/uploads/media/items/8/8bcLQqF.png) no-repeat;
     width: 284px;
     height: 47px;
     box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.15);
     border-radius: 5px;
     padding: 1rem;
     padding-left:3rem;
+    background-color: #EFF3F6;
     // transition: background-color 0.3s;
     margin-bottom: 1rem;
     border: 1px;
@@ -47,12 +47,13 @@
 // .password{
 //   background-position: 10px -53px
 // }
-#label{
+.label{
   position: relative;
-}
-
-#span{
-  position:absolute;
+  .span{
+    position: absolute;
+    left: 14px;
+    top: 1px;
+  }
 }
 
 #dangdang{

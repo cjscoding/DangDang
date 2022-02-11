@@ -71,9 +71,10 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
       <h1>회원가입</h1>
       <form className={styles.form} onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="profile">프로필 사진</label>
-          <input type="file" name="profile" onChange={onSetImage} />
-          <label htmlFor="email">
+          {/* <label htmlFor="profile">프로필 사진</label>
+          <input type="file" name="profile" onChange={onSetImage} /> */}
+          <label htmlFor="email" className={styles.label}>
+            <span className={styles.span}><i className="fas fa-envelope"></i></span>
             <input
               id="email"
               className={styles.email}
@@ -86,7 +87,8 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
           </label>
         </div>
         <div>
-          <label htmlFor="password">
+          <label htmlFor="password" className={styles.label}>
+            <span className={styles.span}><i className="fas fa-lock"></i></span>
             <input
               id="password"
               className={styles.password}
@@ -99,7 +101,8 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
           </label>
         </div>
         <div>
-          <label htmlFor="nickName">
+          <label htmlFor="nickName" className={styles.label}>
+            <span className={styles.span}><i className="fas fa-user"></i></span>
             <input
               id="nickName"
               className={styles.nickName}

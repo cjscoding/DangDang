@@ -64,7 +64,7 @@ function CheckDevices({preparedQuestions, ws, isQs, setQuestions}) {
         <div className={styles.text}>Step 3</div>
       </div>
     </div>
-    <h1>카메라와 마이크 설정을 확인해주세요.</h1>
+    <span className={styles.title}>카메라와 마이크 설정을 확인해주세요.</span>
     <div className={styles.videoContainer}>
       <div><MyFace /></div>
       <div className={styles.selectContainer}>

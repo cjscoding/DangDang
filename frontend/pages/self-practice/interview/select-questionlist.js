@@ -43,7 +43,7 @@ function SelectQuestions({ws}) {
         <div className={styles.text}>Step 3</div>
       </div>
     </div>
-      <h1>질문 유형을 선택해주세요.</h1>
+      <span className={styles.title}>질문 유형을 선택해주세요.</span>
     <div className={styles.selectBox}>
     <Link href="/self-practice/interview/check-devices">
       <a>
@@ -51,7 +51,7 @@ function SelectQuestions({ws}) {
           <i className="fas fa-question fa-2x"></i>
           <br></br>
           <h2>기본 질문</h2>
-          <p><span>당당!</span>이 엄선한<br></br>
+          <p><span id={styles.dangdang}>당당!</span>이 엄선한<br></br>
           면접 필수 질문 세트</p>
         </div>
       </a>
