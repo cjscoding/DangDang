@@ -140,6 +140,7 @@ public class Comment {
                     .writerNickname(user.getNickname())
                     .writerEmail(user.getEmail())
                     .writerId(user.getId())
+                    .writerImageUrl(user.getImageUrl())
                     .visable(true)
                     .referenceId(commentDto.getReferenceId())
                     .commentType(commentDto.getCommentType())
