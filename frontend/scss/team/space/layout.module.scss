@@ -63,24 +63,40 @@
 }
 
 .teamSpaceMenuBar {
-  padding: 20px;
-  padding-left: 0;
   display: flex;
-  a {
-    padding: 10px 0;
-    margin: 0 10px;
-    text-align: center;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  .menuBar{
+      display: flex;
+      align-items: center;
+      a {
+        padding: 10px;
+        margin: 0 5px;
+        text-align: center;
+      }
+      .infoMenu {
+        font-weight: 800;
+        border-bottom: 2px solid $red-color;
+      }
+      .resumeMenu {
+        font-weight: 800;
+        border-bottom: 2px solid $yellow-color;
+      }
+      .boardMenu {
+        font-weight: 800;
+        border-bottom: 2px solid $purple-color;
+      }
   }
-  .infoMenu {
-    font-weight: 800;
-    border-bottom: 2px solid $red-color;
-  }
-  .resumeMenu {
-    font-weight: 800;
-    border-bottom: 2px solid $yellow-color;
-  }
-  .boardMenu {
-    font-weight: 800;
-    border-bottom: 2px solid $purple-color;
+}
+
+.kakaoBtn {
+  @include filled-button(200px, $text-color, $kakao-color);
+}
+
+.registBtn {
+  @include filled-button(200px, white, $main-color);
+  a{
+      color: white;
   }
 }

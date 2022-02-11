@@ -65,10 +65,14 @@ export default function Reply({ reply, submitReload, resumeId, commentId }) {
         <form onSubmit={onUpdateReply} className={styles.commentToggle}>
           <div className={styles.userInfo}>
             <div className={styles.imgBox}>
-              <img
-                src={`${BACKEND_URL}/files/images/${reply.writerImageUrl}`}
-                alt=""
-              />
+              {reply.writerImageUrl !== null &&
+              reply.writerImageUrl !== "default.jpg" ? (
+                <img
+                  src={`${BACKEND_URL}/files/images/${reply.writerImageUrl}`}
+                />
+              ) : (
+                <img src="/images/dangdang_1.png" />
+              )}
             </div>
             <span>{reply.writerNickname}</span>
           </div>
@@ -96,10 +100,14 @@ export default function Reply({ reply, submitReload, resumeId, commentId }) {
         <div className={styles.commentToggle}>
           <div className={styles.userInfo}>
             <div className={styles.imgBox}>
-              <img
-                src={`${BACKEND_URL}/files/images/${reply.writerImageUrl}`}
-                alt=""
-              />
+            {reply.writerImageUrl !== null &&
+              reply.writerImageUrl !== "default.jpg" ? (
+                <img
+                  src={`${BACKEND_URL}/files/images/${reply.writerImageUrl}`}
+                />
+              ) : (
+                <img src="/images/dangdang_1.png" />
+              )}
             </div>
             <span>{reply.writerNickname}</span>
           </div>

@@ -107,18 +107,22 @@ function Resume({
         host={roomHost.nickName}
         createdAt={roomInfo.createdAt}
         image={roomInfo.imageUrl}
+        href={"/team/space/resume/create"}
+        btnText="자기소개서 등록하기"
       />
 
-      <button onClick={onMoveToAddResume} className={styles.registBtn}>
-        자기소개서 등록하기
-      </button>
       <div className={styles.resumeContainer}>
         <div className={styles.memberListBox}>
           <h4>팀원 목록이당</h4>
           {roomMembers?.map((member) => (
             <div key={member.id} className={styles.member}>
               <div className={styles.imgBox}>
-                <img src={`${BACKEND_URL}/files/images/${member.imageUrl}`} />
+                {member.imageUrl !== null &&
+                member.imageUrl !== "default.jpg" ? (
+                  <img src={`${BACKEND_URL}/files/images/${member.imageUrl}`} />
+                ) : (
+                  <img src="/images/dangdang_1.png" />
+                )}
               </div>
               {member.id === curUserId ? (
                 <button

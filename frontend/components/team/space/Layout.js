@@ -1,11 +1,10 @@
 import styles from "../../../scss/team/space/layout.module.scss";
 import Link from "next/link";
-import Image from "next/image";
 import { FRONTEND_URL, BACKEND_URL } from "../../../config";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-export default function Layout({ roomInfo, host, image }) {
+export default function Layout({ roomInfo, host, image, href, btnText }) {
   const router = useRouter();
   const [studyId, setStudyId] = useState("");
   const [curPage, setCurPage] = useState("info");
@@ -59,45 +58,67 @@ export default function Layout({ roomInfo, host, image }) {
       </div>
 
       <div className={styles.teamSpaceMenuBar}>
-        <Link
-          href={{
-            pathname: "/team/space",
-            query: {
-              id: studyId,
-              page: "info",
-            },
-          }}
-        >
-          <a className={`${curPage}` === "info" ? styles.infoMenu : ""}>
-            팀 소개
-          </a>
-        </Link>
-        <Link
-          href={{
-            pathname: "/team/space/resume",
-            query: {
-              id: studyId,
-              page: "resume",
-            },
-          }}
-        >
-          <a className={`${curPage}` === "resume" ? styles.resumeMenu : ""}>
-            자기소개서
-          </a>
-        </Link>
-        <Link
-          href={{
-            pathname: "/team/space/board",
-            query: {
-              id: studyId,
-              page: "board",
-            },
-          }}
-        >
-          <a className={`${curPage}` === "board" ? styles.boardMenu : ""}>
-            보드
-          </a>
-        </Link>
+        <div className={styles.menuBar}>
+          <Link
+            href={{
+              pathname: "/team/space",
+              query: {
+                id: studyId,
+                page: "info",
+              },
+            }}
+          >
+            <a className={`${curPage}` === "info" ? styles.infoMenu : ""}>
+              팀 소개
+            </a>
+          </Link>
+          <Link
+            href={{
+              pathname: "/team/space/resume",
+              query: {
+                id: studyId,
+                page: "resume",
+              },
+            }}
+          >
+            <a className={`${curPage}` === "resume" ? styles.resumeMenu : ""}>
+              자기소개서
+            </a>
+          </Link>
+
+          <Link
+            href={{
+              pathname: "/team/space/board",
+              query: {
+                id: studyId,
+                page: "board",
+              },
+            }}
+          >
+            <a className={`${curPage}` === "board" ? styles.boardMenu : ""}>
+              보드
+            </a>
+          </Link>
+        </div>
+
+        {`${curPage}` === "info" ? (
+          <button className={styles.kakaoBtn}>
+            <a href={href}>{btnText}</a>
+          </button>
+        ) : (
+          <button className={styles.registBtn}>
+            <Link
+              href={{
+                pathname: `${href}`,
+                query: {
+                  id: studyId,
+                },
+              }}
+            >
+              <a>{btnText}</a>
+            </Link>
+          </button>
+        )}
       </div>
     </div>
   );
