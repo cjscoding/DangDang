@@ -33,7 +33,7 @@ services:
     restart: always
     networks:
       - dangdang_network
-    command: "java -Dspring.profiles.active=prod -Dkms.url=ws://i6c203.p.ssafy.io:8888/kurento -jar /app.jar"
+    command: "java -Dspring.profiles.active=prod -Dkms.url=wss://i6c203.p.ssafy.io:8433/kurento -jar /app.jar"
 
 volumes:
   kms_data:
