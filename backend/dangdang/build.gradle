@@ -19,7 +19,7 @@ querydsl {
 }
 
 sourceSets {
-    main.java.srcDir querydslDir srcDirs("src/main/resources/profiles")
+    main.java.srcDir querydslDir srcDirs("src/main/resources") srcDirs("src/main/resources/profiles")
 }
 compileQuerydsl{
     options.annotationProcessorPath = configurations.querydsl
@@ -86,8 +86,6 @@ dependencies {
     implementation 'org.kurento:kurento-client:6.16.3'
     implementation 'org.kurento:kurento-utils-js:6.15.0'
     implementation 'commons-io:commons-io:2.11.0'
-
-    implementation 'org.eclipse.jetty:jetty-server:11.0.8'
 
     // sockJS, Stomp 라이브러리
     compile("org.webjars:sockjs-client:1.0.2");

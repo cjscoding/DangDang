@@ -7,7 +7,6 @@ import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.LoginRequest;
 import com.ssafy.dangdang.domain.dto.SignUp;
 import com.ssafy.dangdang.domain.dto.UserDto;
-import com.ssafy.dangdang.exception.BadRequestException;
 import com.ssafy.dangdang.service.StorageService;
 import com.ssafy.dangdang.service.UserService;
 import com.ssafy.dangdang.util.JwtUtil;
@@ -29,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.ssafy.dangdang.util.ApiUtils.*;
