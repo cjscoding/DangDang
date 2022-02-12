@@ -88,12 +88,15 @@ services:
     command: mongod
 
   dangdang-kms:
-    image: kurento/kurento-media-server:latest
+    image: kurento/kurento-media-server:6.16
     restart: always
     volumes:
       - type: bind
         source: C:/home/ubuntu/data/videos
         target: /tmp
+      - type: bind
+        source: C:/home/ubuntu/kurento
+        target: /etc/kurento
       # network_mode: host
     expose:
       - 8888
