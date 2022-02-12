@@ -10,7 +10,7 @@ import {
   setIsMoveTeamStudy,
 } from "../../store/actions/userAction";
 import { getToken, getUserInfo } from "../../api/user";
-import { BACKEND_URL } from "../../config";
+import { BACKEND_URL, FRONTEND_URL } from "../../config";
 
 function mapStateToProps({ userReducer }) {
   return {
@@ -83,7 +83,7 @@ function Login({
   };
 
   const socialLoginRequest = (provider) => {
-    window.location.href = `${BACKEND_URL}/oauth2/authorize/${provider}?redirect_uri=http://localhost:3000/user/oauth2/redirect?destination=${router.pathname}`;
+    window.location.href = `${BACKEND_URL}/oauth2/authorize/${provider}?redirect_uri=${FRONTEND_URL}/user/oauth2/redirect?destination=${router.pathname}`;
   };
 
   return (
