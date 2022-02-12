@@ -30,6 +30,8 @@ public class KurentoController {
 
     private final StorageService storageService;
 
+
+
     @GetMapping("/download/{name}")
     public ResponseEntity<Resource> download(HttpServletResponse response, @PathVariable("name") String name) throws IOException {
         Resource resource = storageService.loadVideoAsResource(name);
