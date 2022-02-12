@@ -6,11 +6,9 @@ import com.ssafy.dangdang.domain.InterviewQuestion;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
 import com.ssafy.dangdang.domain.dto.WriteInterview;
+import com.ssafy.dangdang.service.InterviewBookmarkService;
 import com.ssafy.dangdang.service.InterviewQuestionService;
-import com.ssafy.dangdang.util.ApiUtils;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +31,7 @@ import static com.ssafy.dangdang.util.ApiUtils.*;
 public class InterviewQuestionController {
 
     private final InterviewQuestionService interviewQuestionService;
-
+    private final InterviewBookmarkService bookmarkService;
 
     @Operation(summary = "면접 질문 등록")
     @ApiResponses( value = {
@@ -105,6 +102,45 @@ public class InterviewQuestionController {
         InterviewQuestionDto createdQuestion = interviewQuestionService.writeQuestion(userPrincipal.getUser(), interviewQuestionDto);
         return success(createdQuestion);
 
+    }
+
+    @Operation(summary = "면접 질문 북마크 등록")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "면접 질문 북마크 등록 성공")
+    })
+    @PostMapping("/bookmark/{interviewId}")
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<String> makeBookmark(
+            @CurrentUser PrincipalDetails userPrincipal,
+            @PathVariable Long interviewId){
+      bookmarkService.makeBookmark(userPrincipal.getUser(), interviewId);
+        return success("Bookmark 등록 성공!");
+
+    }
+
+    @Operation(summary = "면접 질문 북마크 삭제")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "면접 질문 북마크 삭제 성공")
+    })
+    @DeleteMapping("/bookmark/{interviewId}")
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<String> deleteBookmark(
+            @CurrentUser PrincipalDetails userPrincipal,
+            @PathVariable Long interviewId){
+        bookmarkService.delete(userPrincipal.getUser(), interviewId);
+        return success("Bookmark 삭제 성공!");
+    }
+
+    @Operation(summary = "면접 질문 북마크 조회")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "면접 질문 북마크 조회 성공")
+    })
+    @GetMapping("/bookmark")
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<List<InterviewQuestionDto>> getBookmarks(
+            @CurrentUser PrincipalDetails userPrincipal){
+        List<InterviewQuestionDto> interviewBookmarks = bookmarkService.getInterviewBookmarks(userPrincipal.getUser());
+        return success(interviewBookmarks);
     }
 
 }
