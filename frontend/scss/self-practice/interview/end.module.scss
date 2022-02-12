@@ -48,6 +48,8 @@
       }
     }
     .recordComp{
+      overflow-y: auto;
+      overflow-x: hidden;
       padding: 35px;
       width:40%;
       height:100%;
@@ -55,7 +57,7 @@
       .recordList{
         margin-bottom: 10px;
         span{
-          font-size: 1.3rem;
+          font-size: 1.1rem;
           margin-right: 1rem;
         }
         button{
