@@ -87,6 +87,8 @@ dependencies {
     implementation 'org.kurento:kurento-utils-js:6.15.0'
     implementation 'commons-io:commons-io:2.11.0'
 
+    implementation 'org.eclipse.jetty:jetty-server:11.0.8'
+
     // sockJS, Stomp 라이브러리
     compile("org.webjars:sockjs-client:1.0.2");
     compile("org.webjars:stomp-websocket:2.3.3");
