@@ -131,10 +131,16 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
           onExistingParticipants(jsonMsg);
           break;
         case "newParticipantArrived":
-          if(myIdName === appliedUser) {
+          if(myIdName === screenShareAppliedUser) {
             sendMessage({
               id: "mode",
-              position: screenShareTryState?`screenShareTry-${appliedUser}`:`notScreenShareTry-${appliedUser}`
+              position: screenShareTryState?`screenShareTry`:`notScreenShareTry`
+            })
+          }
+          if(myIdName === volunteerUser) {
+            sendMessage({
+              id: "mode",
+              position: "volunteer"
             })
           }
           onNewParticipant(jsonMsg);
@@ -230,24 +236,34 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
             return navigator.mediaDevices.getDisplayMedia(constraints);
         }
       }
-  
       // 스크린캡쳐 API를 호출합니다.
       async function start() {
         try {
           localStream = await getCrossBrowserScreenCapture();
         } catch (err) {
-          console.error('Error getDisplayMedia', err);
+          console.log(`CANCEL! ${err}`);
         }
         return localStream;
       }
-  
       // 스트림의 트렉을 stop()시켜 스트림이 전송을 중지합니다.
       function end() {
+        screenShareTryState = false
+        setScreenShareTry(screenShareTryState);
+        screenShareState = false
+        sendMessage({
+          id: "mode",
+          position: `notScreenShare`
+        })
+        stream = null;
+        screenMessage({
+          id: "leaveRoom"
+        });
+        screenWs.close();
+
         localStream.getTracks().forEach((track) => {
             track.stop();
         });
       }
-
       this.start = start;
       this.end = end;
     }
@@ -257,6 +273,7 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
       // console.log("Sending message: " + jsonMessage);
       screenWs.send(jsonMessage);
     }
+
     let screen;
     function existingScreens(jsonMsg) {
       screen = new Participant(`screen-${myIdName}`, false);
@@ -268,48 +285,57 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
         },
         onicecandidate: screen.onIceCandidate.bind(screen),
       }
-      // const options = {
-      //   localVideo: screen.getVideoElement(),
-      //   mediaConstraints: getVideoConstraints(480, 270),
-      //   onicecandidate: screen.onIceCandidate.bind(screen)
-      // }
+
       screen.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options, function(error) {
         if(error) return console.log(`ERROR! ${error}`);
         this.generateOffer(screen.offerToReceiveVideo.bind(screen));
       });
     }
 
-    let appliedUser = "";
+    let screenShareAppliedUser = "";
+    let volunteerUser = "";
     function onMode(jsonMsg) {
-      const idx = jsonMsg.position.search('-')
-      const position = jsonMsg.position.slice(0, idx)
-      appliedUser = jsonMsg.position.slice(1 + idx, jsonMsg.position.length);
-      console.log(position, appliedUser)
-      if(appliedUser !== myIdName) {
-        switch(position) {
+      if(jsonMsg.name !== myIdName) {
+        switch(jsonMsg.position) {
           case "screenShareTry":
+            screenShareAppliedUser = jsonMsg.name
             screenShareTryState = true
             break
           case "notScreenShareTry":
+            screenShareAppliedUser = jsonMsg.name
             screenShareTryState = false
             break
           case "screenShare":
+            screenShareAppliedUser = jsonMsg.name
             screenShareState = true
             screenShareTryState = true
             break
           case "notScreenShare":
+            screenShareAppliedUser = jsonMsg.name
             screenShareState = false
             screenShareTryState = false
+            break
+          case "normal":
+            volunteerUser = ""
+            modeState = false
+            setMode(modeState)
+            break
+          case "volunteer":
+            volunteerUser = jsonMsg.name
+            modeState = true
+            setMode(modeState)
             break
           default:
             console.log(`ERROR! ${jsonMsg.mode}`)
         }
+        console.log(volunteerUser)
         setScreenShareTry(screenShareTryState);
       }
     }
 
     let stream;
     let screenWs;
+    let screenHandler;
     let screenShareState = false
     let screenShareTryState = false
     async function startScreenShare() {
@@ -318,19 +344,20 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
         screenShareTryState = true
         sendMessage({
           id: "mode",
-          position: `screenShareTry-${myIdName}`
+          position: `screenShareTry`
         })
-        appliedUser = myIdName
-        const screenHandler = new ScreenHandler();
+        screenShareAppliedUser = myIdName
+        screenHandler = new ScreenHandler();
         stream = await screenHandler.start();
         if(stream) {
           if(!screenShareState) {
+            stream.oninactive = () => screenHandler.end()
             // screenShareTryState = false
             setScreenShareTry(false);
             screenShareState = true
             sendMessage({
               id: "mode",
-              position: `screenShare-${myIdName}`
+              position: `screenShare`
             })
             screenMessage({
               id: "joinRoom",
@@ -358,6 +385,10 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
                     if (error) return console.log(`ERROR! ${error}`);
                   });
                   break;
+                case "chat":
+                  break;
+                case "mode":
+                  break;
                 default:
                   console.log(`ERROR! ${jsonMsg}`)
               }
@@ -369,23 +400,12 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
           screenShareTryState = false
           sendMessage({
             id: "mode",
-            position: `notScreenShareTry-${myIdName}`
+            position: `notScreenShareTry`
           })
           screenWs.close();
         }
       }else {
-        screenShareTryState = false
-        setScreenShareTry(screenShareTryState);
-        screenShareState = false
-        sendMessage({
-          id: "mode",
-          position: `notScreenShare-${myIdName}`
-        })
-        stream = null;
-        screenMessage({
-          id: "leaveRoom"
-        });
-        screenWs.close();
+        screenHandler.end()
       }
     }
 
@@ -424,6 +444,11 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
     let modeState = false;
     function changeMode() {
       modeState = !modeState
+      if(modeState) {
+        volunteerUser = myIdName
+      }else {
+        volunteerUser = ""
+      }
       setMode(modeState)
       sendMessage({
         id: "mode",
@@ -439,11 +464,11 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
       room: roomName,
     });
 
-    window.addEventListener("beforeunload", () => {
+    function beforeunload() {
       if(stream) {
         sendMessage({
           id: "mode",
-          position: `notScreenShare-${myIdName}`
+          position: `notScreenShare`
         })
         screenMessage({
           id: "leaveRoom"
@@ -453,30 +478,18 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
       sendMessage({
         id: "leaveRoom"
       });
+      ws.close()
       for (let key in participants) {
         participants[key].dispose();
       }
-    })
+    }
+    window.addEventListener("beforeunload", beforeunload)
     return () => {
       chatInputBtnEl.removeEventListener("click", sendChatMsg)
       screenBtnEl.removeEventListener("click", startScreenShare)
       // 방 퇴장
-      if(stream) {
-        sendMessage({
-          id: "mode",
-          position: `notScreenShare-${myIdName}`
-        })
-        screenMessage({
-          id: "leaveRoom"
-        });
-        screenWs.close();
-      }
-      sendMessage({
-        id: "leaveRoom"
-      });
-      for (let key in participants) {
-        participants[key].dispose();
-      }
+      window.removeEventListener("beforeunload", beforeunload)
+      // beforeunload()
     }
   }, [])
 

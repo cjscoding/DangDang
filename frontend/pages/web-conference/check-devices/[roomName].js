@@ -26,9 +26,13 @@ export default connect(mapStateToProps, mapDispatchToProps)(CheckDevices);
 function CheckDevices({ws}) {
   const router = useRouter()
   useEffect(() => {
-    window.addEventListener("beforeunload", ()=>{
-      ws.close();
-    });
+    function beforeunload() {
+      ws.close()
+    }
+    window.addEventListener("beforeunload", beforeunload);
+    return () => {
+      window.removeEventListener("beforeunload", beforeunload);
+    }
   }, [])
   return <div className={styles.container}>
       <div className={styles.videoContainer}>
