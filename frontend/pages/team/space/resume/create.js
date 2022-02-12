@@ -65,6 +65,7 @@ function CreateResume() {
           <input
             name="question"
             onChange={(event) => setQuestion(event.target.value)}
+            placeholder="제목을 입력해주세요..."
             autoFocus
           />
 
@@ -74,6 +75,7 @@ function CreateResume() {
           <textarea
             name="answer"
             onChange={(event) => setAnswer(event.target.value)}
+            placeholder="내용을 입력해주세요..."
           ></textarea>
         </div>
       </form>

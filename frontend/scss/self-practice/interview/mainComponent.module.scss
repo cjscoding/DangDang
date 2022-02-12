@@ -52,10 +52,15 @@
           width:100%;
           height:100%;
           .video1 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+            overflow-x: hidden;
             background-color: #EFF3F6;
             margin:auto;
             text-align: center;
-            padding: 15vw 0px;
+            padding: 30px 30px;
             height: 100%;
             width: 100%;
           }
@@ -88,7 +93,7 @@
     }
   }
   .btnContainer {
-    padding-left: 3rem;
+    padding-left: 7rem;
     padding-right: 3.3rem;
     padding-bottom: 1.5rem;
     margin-top: 1rem;
@@ -96,6 +101,7 @@
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
+    font-size: 1.3rem;
   }
 }
 .tooltip span{
@@ -125,7 +131,11 @@
   visibility: visible;
 }
 /*--*/
+.tooltipdown{
+  position: relative;
+}
 .tooltipdown span{
+  font-size: .9rem;
   visibility: hidden;       /* 이벤트가 없으면 툴팁 영역을 숨김 */
   width: 300px;  
   height:32px;           /* 툴팁 영역의 넓이를 설정 */
@@ -136,9 +146,9 @@
   padding: 5px 0;
   position: absolute;       /* 절대 위치를 사용 */
   z-index: 1;
-  top: 86%;
-  left: 65%;
-  // margin-left: -80px;
+  top: 120%;
+  left: 50%;
+  margin-left: -150px;
 }
 .tooltipdown span::after{
   content: " ";             /* 정사각형 영역 사용 */

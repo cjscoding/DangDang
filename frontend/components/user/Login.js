@@ -92,9 +92,9 @@ function Login({
       <h4>로그인이 필요한 서비스입니다.<br/> 로그인하고 <span id={styles.dangdang}>당당!</span>의 모든 서비스를 이용해 보세요!</h4>
       <form className={styles.form} method="post" onSubmit={handleSubmit}>
         <div>
-          <span className={styles.span}><i className="fa-thin fa-envelope"></i></span>
+          {/* <span className={styles.span}><i className="fa-thin fa-envelope"></i></span> */}
           <label htmlFor="email" className={styles.label}>
-            {/* <i className="fas fa-angry"></i> */}
+            <span className={styles.span}><i className="fas fa-envelope"></i></span>
             <input
               id="email"
               type="email"
@@ -106,7 +106,8 @@ function Login({
           </label>
         </div>
         <div>
-          <label htmlFor="password">
+          <label htmlFor="password" className={styles.label}>
+            <span className={styles.span}><i className="fas fa-lock"></i></span>
             <input
               id="password"
               type="password"

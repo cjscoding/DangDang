@@ -14,7 +14,7 @@ export default function Comment({
   reload,
   resumeId,
   userName,
-  userImage,
+  userImage
 }) {
   const [showReply, setShowReply] = useState(false);
   const [showUpdateBtn, setShowUpdateBtn] = useState(false);
@@ -26,6 +26,7 @@ export default function Comment({
 
   useEffect(() => {
     setNewComment(comment.content);
+    console.log(comment);
   }, [comment]);
 
   //대댓글 등록
@@ -102,9 +103,16 @@ export default function Comment({
           <form onSubmit={onUpdateComment} className={styles.commentToggle}>
             <div className={styles.userInfo}>
               <div className={styles.imgBox}>
-                <img src={`${BACKEND_URL}/files/images/${comment.writerImageUrl}`} alt="" />
+                {userImage !== null &&
+                userImage !== "default.jpg" ? (
+                  <img
+                    src={`${BACKEND_URL}/files/images/${userImage}`}
+                  />
+                ) : (
+                  <img src="/images/dangdang_1.png" />
+                )}
               </div>
-              <span>{comment.writerNickname}</span>
+              <span>{userName}</span>
             </div>
 
             <div className={styles.contentBox}>
@@ -134,9 +142,16 @@ export default function Comment({
           <div className={styles.commentToggle}>
             <div className={styles.userInfo}>
               <div className={styles.imgBox}>
-                <img src={`${BACKEND_URL}/files/images/${userImage}`} alt="" />
+                {userImage !== null &&
+                userImage !== "default.jpg" ? (
+                  <img
+                    src={`${BACKEND_URL}/files/images/${userImage}`}
+                  />
+                ) : (
+                  <img src="/images/dangdang_1.png" />
+                )}
               </div>
-              <span>{comment.writerNickname}</span>
+              <span>{userName}</span>
             </div>
 
             <div className={styles.contentBox}>
@@ -180,5 +195,3 @@ export default function Comment({
     </div>
   );
 }
-
-//

@@ -57,6 +57,7 @@ export default function createPost() {
             name="title"
             value={title}
             onChange={(event) => setTitle(event.target.value)}
+            placeholder="제목을 작성해주세요..."
             autoFocus
           />
 
@@ -67,6 +68,7 @@ export default function createPost() {
             name="content"
             value={content}
             onChange={(event) => setContent(event.target.value)}
+            placeholder="내용을 작성해주세요..."
           ></textarea>
         </div>
       </form>

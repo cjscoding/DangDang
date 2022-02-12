@@ -134,8 +134,8 @@ function ResumeList({ userInfo, setResume, resume, comments, index, reload }) {
                 comment={comment}
                 reload={deliverReload}
                 resumeId={resumeId}
-                userName={userInfo.nickName}
-                userImage={userInfo.imageUrl}
+                userName={comment.writerNickname}
+                userImage={comment.writerImageUrl}
               />
             ))
           : null}

@@ -38,10 +38,15 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  overflow: hidden;
   h2 {
     color: $main-color;
   }
-  div {
+  .hashTags {
+    height: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
     opacity: 0.5;
   }
   button {
@@ -62,23 +67,40 @@
 }
 
 .teamSpaceMenuBar {
-  padding: 20px;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  .menuBar {
+    display: flex;
+    align-items: center;
+    a {
+      padding: 10px;
+      margin: 0 5px;
+      text-align: center;
+    }
+    .infoMenu {
+      font-weight: 800;
+      border-bottom: 2px solid $red-color;
+    }
+    .resumeMenu {
+      font-weight: 800;
+      border-bottom: 2px solid $yellow-color;
+    }
+    .boardMenu {
+      font-weight: 800;
+      border-bottom: 2px solid $purple-color;
+    }
+  }
+}
+
+.kakaoBtn {
+  @include filled-button(200px, $text-color, $kakao-color);
+}
+
+.registBtn {
+  @include filled-button(200px, white, $main-color);
   a {
-    padding: 10px 0;
-    margin: 0 10px;
-    text-align: center;
-  }
-  .infoMenu {
-    font-weight: 800;
-    border-bottom: 2px solid $red-color;
-  }
-  .resumeMenu {
-    font-weight: 800;
-    border-bottom: 2px solid $yellow-color;
-  }
-  .boardMenu {
-    font-weight: 800;
-    border-bottom: 2px solid $purple-color;
+    color: white;
   }
 }

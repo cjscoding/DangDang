@@ -1,6 +1,8 @@
 import { useEffect } from "react";
+import styles from "../../../scss/self-practice/interview/end.module.scss";
 import { connect } from "react-redux";
 import { WEBRTC_URL } from "../../../config"
+
 
 function mapStateToProps(state) {
   return {
@@ -66,17 +68,31 @@ function EndInterview({ws, sessionId, questions, recordedQuestionIdxes, speakerI
       downloadBtn.addEventListener("click", downloadCurVideo)
     }
   }, [])
-  return <>
-    <h1>면접끝</h1>
-    <video controls autoPlay width={"480px"} height={"360px"} id="my-video" />
-    {questions.map((question, idx) => {
-      if(recordedQuestionIdxes.some(recordedIdx => recordedIdx===idx)) {
-        return <div key={idx}>
-          <h4>{question}</h4>
-          <button id={`${idx}-play`}><i className="fas fa-play"></i></button>
-          <button id={`${idx}-download`}><i className="fas fa-download"></i></button>
-        </div>
-      }
-    })}
-  </>
+  return <div className={styles.body}>
+    <h1>면접이 종료되었습니다.</h1>
+    <div className={styles.btn}>
+        <button>전체 다운로드</button>
+    </div>
+    <div className={styles.comp}>
+      <div className={styles.videoComp}>
+        <video controls autoPlay width={"480px"} height={"360px"} id="my-video" />
+      </div>
+      <div className={styles.recordComp}>
+        {/* <div className={styles.recordCompTop}>
+            <button>전체 다운로드</button>
+        </div> */}
+        {questions.map((question, idx) => {
+          if(recordedQuestionIdxes.some(recordedIdx => recordedIdx===idx)) {
+            return <div className={styles.recordList}>
+            <div key={idx}>
+              <span>질문 {idx+1}. {question}</span>
+              <button id={`${idx}-play`}><i className="fas fa-play"></i></button>
+              <button id={`${idx}-download`}><i className="fas fa-download"></i></button>
+            </div>
+            </div>
+          }
+        })}
+      </div>
+    </div>
+  </div>
 }
