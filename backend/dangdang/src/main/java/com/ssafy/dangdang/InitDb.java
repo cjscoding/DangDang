@@ -35,6 +35,7 @@ public class InitDb {
         initService.writeInterviewQuestion();
         initService.writePost();
         initService.writeComment();
+        initService.makebookmarks();
     }
 
     //위 init()함수에 아래 내용을 전부 포함해도 된다고 생각할 수 있지만,
@@ -51,11 +52,11 @@ public class InitDb {
         private final ResumeService resumeService;
         private final InterviewQuestionService interviewQuestionService;
         private final PostService postService;
-
         private final StudyHashTagRepository hashTagRepository;
-
         private final CommentService commentService;
         private final CommentRepository commentRepository;
+        private final InterviewBookmarkService interviewBookmarkService;
+
         public void signUpUsers(){
             UserDto userDto = new UserDto();
 
@@ -73,7 +74,6 @@ public class InitDb {
                 userService.signUpUser(userDto);
             }
         }
-
 
         public void createStudy(){
             User user = userService.findByEmail("test@ssafy.com").get();
@@ -104,7 +104,6 @@ public class InitDb {
 
             }
         }
-
 
         public void join(){
 //            User user = userService.findByEmail("test@ssafy.com").get();
@@ -255,6 +254,14 @@ public class InitDb {
 
 
 
+        }
+
+        public void makebookmarks(){
+            User user = userService.findByEmail("test@ssafy.com").get();
+
+            for (long i=1;i<=5;i++){
+                interviewBookmarkService.makeBookmark(user, i);
+            }
         }
 
     }

@@ -2,14 +2,11 @@ package com.ssafy.dangdang.controller;
 
 import com.ssafy.dangdang.config.security.CurrentUser;
 import com.ssafy.dangdang.config.security.auth.PrincipalDetails;
-import com.ssafy.dangdang.domain.Resume;
 import com.ssafy.dangdang.domain.dto.*;
-import com.ssafy.dangdang.domain.projection.ResumeMapping;
 import com.ssafy.dangdang.domain.types.CommentType;
 import com.ssafy.dangdang.service.CommentService;
 import com.ssafy.dangdang.service.ResumeService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
 import java.util.List;
-import java.util.Optional;
 
 import static com.ssafy.dangdang.util.ApiUtils.*;
 

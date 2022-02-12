@@ -1,9 +1,7 @@
 package com.ssafy.dangdang.resume;
 
 import com.ssafy.dangdang.domain.Resume;
-import com.ssafy.dangdang.domain.ResumeQuestion;
 import com.ssafy.dangdang.domain.dto.ResumeDto;
-import com.ssafy.dangdang.domain.projection.ResumeMapping;
 import com.ssafy.dangdang.repository.ResumeRepository;
 import com.ssafy.dangdang.service.ResumeService;
 import org.hibernate.Hibernate;

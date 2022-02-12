@@ -1,6 +1,12 @@
 
-spring:
+server:
+  ssl :
+    key-store: classpath:cert.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
 
+
+spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
@@ -106,3 +112,28 @@ notification:
     author-name: # attachment의 상단에 나오는 이름
     author-icon: # author-icon 왼쪽에 나올 아이콘의 url링크
     footer: # attachment에 하단에 나올 부분. default=현재 시간
+
+file:
+  upload:
+    baseLocation: "C:\\home\\ssafy\\share\\"
+    file: "C:\\home\\ssafy\\share\\files\\"
+    video: "C:\\home\\ssafy\\share\\videos\\"
+    image: "C:\\home\\ssafy\\share\\images\\"
+    address: "https://localhost:8443/files/"
+
+springdoc:
+  version: '@project.version@'
+  api-docs:
+    path: /v3/api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    display-query-params-without-oauth2: true
+    persistAuthorization: true
+  paths-to-match:
+    - /**
+    - /test/**
