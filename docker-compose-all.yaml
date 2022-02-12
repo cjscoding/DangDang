@@ -87,7 +87,7 @@ services:
     command: mongod
 
   dangdang-kms:
-    image: kurento/kurento-media-server:latest
+    image: kurento/kurento-media-server:6.16
     restart: always
     volumes:
       - type: bind

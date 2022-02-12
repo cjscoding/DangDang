@@ -54,14 +54,16 @@ services:
       - type: bind
         source: /home/ubuntu/data/videos
         target: /tmp
-      - type: bind
-        source: /home/ubuntu/kurento
-        target: /etc/kurento
+      # - type: bind
+      #   source: /home/ubuntu/kurento
+      #   target: /etc/kurento
       # network_mode: host
     expose:
       - 8888
+      - 8433
     ports:
       - 8888:8888
+      - 8433:8433
       - 5000-5050:5000-5050/udp
     environment:
       - GST_DEBUG=2,Kurento*:5
