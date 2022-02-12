@@ -40,7 +40,7 @@ services:
       - dangdang-kms
     networks:
       - dangdang_network
-    command: "java -Dspring.profiles.active=prod -Dkms.url=ws://dangdang-kms:8888/kurento -jar /app.jar"
+    command: "java -Dspring.profiles.active=prod -Dkms.url=wss://dangdang-kms:8888/kurento -jar /app.jar"
 
 networks:
   dangdang_network:
