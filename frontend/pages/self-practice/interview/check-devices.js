@@ -49,7 +49,7 @@ function CheckDevices({preparedQuestions, ws, isQs, setQuestions}) {
     }
   }, [])
 
-  return <div className={styles.container}>
+  return <div className={styles.body}>
     <div className={styles.pindicator}>
       <div className={styles.bullet}>
         <span className={styles.icon}>1</span>
