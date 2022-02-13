@@ -8,9 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-import static com.querydsl.jpa.JPAExpressions.select;
 
-import static com.querydsl.jpa.JPAExpressions.selectDistinct;
 import static com.ssafy.dangdang.domain.QJoins.joins;
 import static com.ssafy.dangdang.domain.QStudy.study;
 import static com.ssafy.dangdang.domain.QStudyHashTag.studyHashTag;
@@ -95,9 +93,6 @@ public class StudyRepositorySupportImpl extends Querydsl4RepositorySupport imple
                 .from(studyHashTag)
                 .where( studyHashTag.hashTag.in(hashtags))) ;
     }
-
-
-
 
 
 

@@ -1,3 +1,4 @@
+import getStreamPermission from "../../components/webRTC/getStreamPermission";
 import styles from "../../scss/self-practice/mainComponent.module.scss";
 
 export default function SelfPractice() {
@@ -12,7 +13,7 @@ export default function SelfPractice() {
       <div className={styles.btnContainer}>
         <button className={styles.mainBtn}
           onClick={() => {
-            window.open(`${window.location.href}/interview/select-questionlist`);
+            getStreamPermission("/self-practice/interview/select-questionlist")
           }}
         >
           연습 시작하기

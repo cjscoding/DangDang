@@ -7,7 +7,6 @@ import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.LoginRequest;
 import com.ssafy.dangdang.domain.dto.SignUp;
 import com.ssafy.dangdang.domain.dto.UserDto;
-import com.ssafy.dangdang.exception.BadRequestException;
 import com.ssafy.dangdang.service.StorageService;
 import com.ssafy.dangdang.service.UserService;
 import com.ssafy.dangdang.util.JwtUtil;
@@ -29,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.UUID;
 
 import static com.ssafy.dangdang.util.ApiUtils.*;
@@ -137,15 +135,14 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "회원 삭제 성공")
     })
     @DeleteMapping()
-    public ApiResult<String> deleteUser(@RequestBody UserDto userDto) {
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<String> deleteUser(@CurrentUser PrincipalDetails userPrincipal) {
 
-        Optional<User> user = userService.findByEmail(userDto.getEmail());
-        if (user.isPresent()){
-            log.info("user delete {}", userDto.toString());
-            if(userService.deleteUser(user.get(), userDto.getPassword())) return success("유저 삭제 성공");
-        }
 
-        throw new BadRequestException("올바른 유저 정보를 입력해주세요");
+        log.info("user delete ");
+        userService.deleteUser(userPrincipal.getUser());
+        return success("유저 삭제 성공");
+
 
     }
 
@@ -179,4 +176,3 @@ public class UserController {
 
 
 }
-

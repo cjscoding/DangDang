@@ -1,0 +1,45 @@
+version: "3"
+
+services:
+
+  frontend:
+    build: ./frontend
+    ports:
+      - 3001:3000
+    depends_on:
+      - "backend"
+    networks:
+      - dangdang_network
+
+  backend:
+    # image: dbswns97/dangdang-backend:0.6
+    build: ./backend/dangdang
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://i6c203.p.ssafy.io:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul"
+      SPRING_DATASOURCE_USERNAME: "ssafy"
+      SPRING_DATASOURCE_PASSWORD: "ssafyborissafy"
+      SPRING_DATA_MONGODB_URI: "mongodb://i6c203.p.ssafy.io:27017/dangdang"
+      SPRING_REDIS_HOST: "i6c203.p.ssafy.io"
+      SPRING_REDIS_PORT: "6379"
+      SERVER_PORT: "8443"
+    ports:
+      - 8444:8443
+
+    volumes:
+      # - kms_data:/app/data/videos
+      - type: bind
+        source: /home/ubuntu/data
+        target: /app/data
+    restart: always
+    networks:
+      - dangdang_network
+    command: "java -Dspring.profiles.active=prod -Dkms.url=wss://i6c203.p.ssafy.io:8433/kurento -jar /app.jar"
+
+volumes:
+  kms_data:
+
+networks:
+  dangdang_network:
+    driver: bridge
+    external:
+      name: dangdang_network

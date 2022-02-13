@@ -89,6 +89,8 @@ public class CallHandler extends TextWebSocketHandler {
       case "chat":
         sendMsg(user, jsonMessage, session);
         break;
+      case "mode":
+        sendMode(user, jsonMessage, session);
       default:
         break;
     }
@@ -97,6 +99,7 @@ public class CallHandler extends TextWebSocketHandler {
   @Override
   public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
     UserSession user = registry.removeBySession(session);
+    if(user != null)
     roomManager.getRoom(user.getRoomName()).leave(user);
   }
 
@@ -125,6 +128,15 @@ public class CallHandler extends TextWebSocketHandler {
     // 세션이 포함되어있는 룸 찾고, 룸안에 있는 모든 참여자들에게 메세지 보냄
     Room room=roomManager.getRoom(user.getRoomName());
     room.roomSendMsg(session, user, contents);
+  }
+
+  private void sendMode(UserSession user, JsonObject params, WebSocketSession session) throws IOException {
+    String position = params.get("position").getAsString(); // 보내야 할 메세지
+    log.info("mode 보낸 세션:" + session + " : " + position);
+
+    // 세션이 포함되어있는 룸 찾고, 룸안에 있는 모든 참여자들에게 메세지 보냄
+    Room room=roomManager.getRoom(user.getRoomName());
+    room.roomSendMode(session, user, position);
   }
 
 

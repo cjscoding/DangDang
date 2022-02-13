@@ -1,9 +1,19 @@
-version: "3"
+version: "3.8"
 
 services:
+
+  frontend:
+    build: ./frontend
+    ports:
+      - 3000:3000
+    depends_on:
+      - "backend"
+    networks:
+      - dangdang_network
+
   backend:
-    image: skdltm117/dangdang-test:0.2
-    # build: ./backend/dangdang
+    # image: dbswns97/dangdang-backend:0.6
+    build: ./backend/dangdang
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://dangdang-mysql:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul"
       SPRING_DATASOURCE_USERNAME: "ssafy"
@@ -20,10 +30,10 @@ services:
       - "dangdang-redis"
       - "dangdang-kms"
     volumes:
-      - kms_data:/app/data/videos
-      # - type: bind
-      #   source: ./backend/dangdang/data/files
-      #   target: /app/data/files
+      # - kms_data:/app/data/videos
+      - type: bind
+        source: C:/home/ubuntu/data
+        target: /app/data
     restart: always
     links:
       - dangdang-mongodb
@@ -46,7 +56,11 @@ services:
         "--collation-server=utf8mb4_unicode_ci"
       ]
     ports:
-      - 3307:3306
+      - 3306:3306
+    volumes:
+      - type: bind
+        source: C:/home/ubuntu/mysql
+        target: /var/lib/mysql
     restart: always
     networks:
       - dangdang_network
@@ -65,6 +79,10 @@ services:
     ports:
       - 27017:27017
     restart: always
+    volumes:
+      - type: bind
+        source: C:/home/ubuntu/mongodb/data
+        target: /data/db
     networks:
       - dangdang_network
     command: mongod
@@ -73,10 +91,12 @@ services:
     image: kurento/kurento-media-server:latest
     restart: always
     volumes:
-      - kms_data:/tmp
-      # - type: bind
-      #   source: ./backend/dangdang/data/files
-      #   target: /tmp
+      - type: bind
+        source: C:/home/ubuntu/data/videos
+        target: /tmp
+      - type: bind
+        source: C:/home/ubuntu/kurento
+        target: /etc/kurento
       # network_mode: host
     expose:
       - 8888

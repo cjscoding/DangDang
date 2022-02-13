@@ -11,7 +11,6 @@ import com.ssafy.dangdang.domain.types.CommentType;
 import com.ssafy.dangdang.service.CommentService;
 import com.ssafy.dangdang.service.PostService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;

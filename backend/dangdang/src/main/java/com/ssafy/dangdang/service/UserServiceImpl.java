@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService{
         //if(!this.idCheck(userDto)) throw new ExtantUserException("존재하지 않는 유저 입니다");
 
         String encryptedPassword = user.getPassword();
-        if (userDto.getPassword() != null && userDto.getPassword().equals("")){
+        if (userDto.getPassword() != null && !userDto.getPassword().equals("")){
             String password = userDto.getPassword();
             encryptedPassword = passwordEncoder.encode(password);
         }
@@ -107,6 +107,20 @@ public class UserServiceImpl implements UserService{
                 return true;
             }
             return false;
+
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteUser(User user) {
+
+        //TODO: 나중에 벌크 수정 쿼리로 바꾸기
+        List<Comment> comments = commentRepository.findCommentByWriterEmail(user.getEmail());
+        comments.forEach(Comment::disappear);
+        commentRepository.saveAll(comments);
+
+        userRepository.delete(user);
+        return true;
 
     }
 

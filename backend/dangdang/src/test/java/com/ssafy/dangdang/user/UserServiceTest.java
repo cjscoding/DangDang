@@ -1,5 +1,6 @@
 package com.ssafy.dangdang.user;
 
+
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.repository.UserRepository;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
 
 @SpringBootTest
 public class UserServiceTest {

@@ -19,7 +19,7 @@ querydsl {
 }
 
 sourceSets {
-    main.java.srcDir querydslDir srcDirs("src/main/resources/profiles")
+    main.java.srcDir querydslDir srcDirs("src/main/resources") srcDirs("src/main/resources/profiles")
 }
 compileQuerydsl{
     options.annotationProcessorPath = configurations.querydsl
