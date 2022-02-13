@@ -3,18 +3,18 @@ import Link from "next/link";
 import { connect } from "react-redux";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { BACKEND_URL } from "../../config";
+import { BACKEND_URL } from "../../../config";
 import {
   setUserInfo,
   setIsLogin,
   resetUserInfo,
-} from "../../store/actions/userAction";
+} from "../../../store/actions/userAction";
 import {
   modifyUserInfo,
   logoutRequest,
   updateUserImage,
   getUserInfo,
-} from "../../api/user";
+} from "../../../api/user";
 
 function mapStateToProps({ userReducer }) {
   return {
@@ -66,7 +66,7 @@ function userInfoEdit({ user, setUserInfo, resetUserInfo, setIsLogin }) {
               imageUrl: res.data.response.imageUrl,
             };
             setUserInfo(userInfo);
-            router.push("/user");
+            router.push("/user/mypage");
           },
           (error) => console.log(error)
         );
