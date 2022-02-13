@@ -44,7 +44,7 @@ function userInfo({ user }) {
 
           <Link href="/user/mypage/edit">
             <button>
-              <i class="fas fa-pen"></i>
+              <i className="fas fa-pen"></i>
             </button>
           </Link>
         </div>
