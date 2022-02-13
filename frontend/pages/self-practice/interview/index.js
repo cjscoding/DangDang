@@ -9,13 +9,15 @@ import getVideoConstraints from "../../../components/webRTC/getVideoConstraints"
 import { ttsService } from "../../../api/webRTC";
 
 function mapStateToProps(state) {
+  const questions = state.questionReducer.questions.map(question => question.question)
   return {
     ws: state.wsReducer.ws,
     sessionId: state.wsReducer.sessionId,
-    questions: state.questionReducer.questions,
+    questions
   };
 }
 import { setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion } from "../../../store/actions/wsAction";
+import Timer from "../../../components/webRTC/self-practice/Timer";
 function mapDispatchToProps(dispatch) {
   return {
     setWSSessionId: (sessionId) => dispatch(setWSSessionId(sessionId)),
@@ -195,31 +197,40 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
   },[])
   return <div>
   <div className={styles.closeBtnBox}>
+    <span><Timer/></span>
     <Link href="/self-practice/interview/end">
       <a>
-        <button className={styles.closeBtn}>종료</button>
+       <span className={styles.closeBtn}><i className="fas fa-times"></i></span>
       </a>
     </Link>
   </div>
   <div className={styles.container}>
-    <div className={styles.videoContainer}>
-      <div style={isWait||screenNum!==1?{display: "none"}:{}} className={styles.video1}><ShowQuestion /></div>
-      <div style={isWait||screenNum!==2?{display: "none"}:{}} className={styles.video2}><video id="my-face"></video></div>
-      <div style={isWait||screenNum!==3?{display: "none"}:{}} className={styles.video3}><img src="/images/누칼협.jpg" height={"100%"}/></div>
-      <div style={!isWait?{display: "none"}:{}} className={styles.video4}><img src="/images/loading.gif" height={"100%"}/></div>
-      <div className={styles.changeBtn}>
-        <span onClick={() => setScreenNum(1)}>●</span>
-        <span onClick={() => setScreenNum(2)}>●</span>
-        <span onClick={() => setScreenNum(3)}>●</span>
-      </div>
-      <div className={styles.btnContainer}>
+    <div className={styles.interviewContainer}>
+      <div className={styles.top}>
+        <div className={styles.selectContainer}>
+          <div className={styles.changeBtn}>
+            <span onClick={() => setScreenNum(1)} className={styles.tooltip}><i className="fas fa-question"></i><span className={styles.icon}>질문 다시 보기</span></span>
+            <span onClick={() => setScreenNum(2)} className={styles.tooltip}><i className="fas fa-eye"></i><span className={styles.icon}>내 얼굴 보기</span></span>
+            <span onClick={() => setScreenNum(3)} className={styles.tooltip}><i className="fas fa-user"></i><span className={styles.icon}>면접관 얼굴 보기</span></span>
+          </div>
+        </div>
+        <div className={styles.videoContainer}>
+          <div className={styles.video}>
+            <div style={isWait||screenNum!==1?{display: "none"}:{}} className={styles.video1}><ShowQuestion /></div>
+            <div style={isWait||screenNum!==2?{display: "none"}:{}} className={styles.video2}><video id="my-face"></video></div>
+            <div style={isWait||screenNum!==3?{display: "none"}:{}} className={styles.video3}><img src="/images/ljy-removebg-preview.png" /></div>
+            <div style={!isWait?{display: "none"}:{}} className={styles.video4}><img src="/images/loading.gif" /></div>
+          </div>
+        </div>
+       </div>
+       <div className={styles.btnContainer}>
         <span>
           <span ref={volumeBtn}><i className="fas fa-volume-up"></i></span>
           <input style={isVol?{}:{display: "none"}} type="range" min="0" max="100" step="1" ref={volumeBar}/>
         </span>
-        <span ref={restartBtn}><i className="fas fa-redo-alt"></i></span>
-        <span ref={saveBtn}><i className="fas fa-save"></i></span>
-        <span ref={skipBtn}><i className="fas fa-arrow-right"></i></span>
+        <span ref={restartBtn} ><i className="fas fa-redo-alt"></i></span>
+        <span ref={saveBtn} ><i className="fas fa-check"></i></span>
+        <span ref={skipBtn} className={styles.tooltipdown}><i className="fas fa-arrow-right"></i><span className={styles.icon}>스킵한 질문은 영상이 저장되지 않습니다.</span></span>
       </div>
     </div>
   </div>

@@ -21,6 +21,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import net.minidev.json.JSONArray;
 import org.kurento.client.Continuation;
 import org.kurento.client.MediaPipeline;
 import org.slf4j.Logger;
@@ -189,6 +190,21 @@ public class Room implements Closeable {
             }
             participantsList.add(participant.getName());
         }
+    }
+
+    public void roomSendMembers(WebSocketSession session, UserSession sendParticipant, String position) throws IOException {
+        final JsonObject newParticipantMsg = new JsonObject();
+        newParticipantMsg.addProperty("id", "members");
+        final List<String> participantsList = new ArrayList<>(participants.values().size());
+        JSONArray jsonArray=new JSONArray();
+
+        for (final UserSession participant : participants.values()) {
+            jsonArray.add(participant.getName());
+            participantsList.add(participant.getName());
+        }
+
+        newParticipantMsg.addProperty("members",jsonArray.toJSONString());
+        sendParticipant.sendMessage(newParticipantMsg);
     }
     
     @Override

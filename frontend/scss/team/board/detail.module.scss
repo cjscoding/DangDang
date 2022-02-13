@@ -1,50 +1,75 @@
-.info {
+@import "../../common/variables.scss";
+@import "../../common/mixins.scss";
+@import "../space/layout.module.scss";
+@import "../board/comment.module.scss";
+@import "../board/reply.module.scss";
+
+.container {
+  width: 1000px;
+}
+
+.mainContainer {
+  @include white-box;
+  padding: 80px;
+  margin: 80px 0;
+  .infoBox {
     display: grid;
-    grid-gap: 20px;
-    grid-template-columns: 1fr 3fr;
-    font-size: 30px;
-    margin: 45px 0;
-    padding: 0;
-  
-    * {
-      &:nth-child(odd) {
-        text-align: center;
+    grid-template-columns: 2fr 1fr;
+    .mainInfo {
+      border-right: none;
+      display: grid;
+      grid-template-columns: 1fr 5fr;
+      .image {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        box-shadow: $box-shadow;
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+        }
       }
     }
-  
-    input, 
-    textarea{
-        padding: 20px;
-    }
-  
-    .tagForm {
+    .btns {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-  
-      div{
-          display: flex;
-      }
-  
-      button {
-        padding: 5px 15px;
-        width: 100px;
-        margin-left: 10px;
-      }
-  
-      input {
-        padding: 5px 15px;
-        width: 100%;
-      }
-  
-      p{
-          margin-top: 10px;
-      }
+      align-items: flex-end;
     }
   }
+}
 
-  .comment{
-      .user{
-          display: flex;
-      }
+.registBtn{
+    margin-bottom: 7px;
+}
+.kakaoBtn{
+    margin-top: 7px;
+}
+
+.introduction {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  span {
+    padding: 20px 30px;
+    background-color: $line-color;
+    border-left: 7px solid $red-color;
+    font-weight: 700;
   }
+  p {
+    margin: 50px 0;
+  }
+}
+
+.commentTitle{
+    text-align: center;
+    border-top: $division-line;
+    padding: 50px 0;
+}
+
+.backBtnBox{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 100px;
+}

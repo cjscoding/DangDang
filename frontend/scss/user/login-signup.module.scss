@@ -3,10 +3,72 @@
 .body {
   @include flex-center;
   flex-direction: column;
+  h4{
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: normal;
+  }
+  p{
+    font-size: 14px;
+    margin-bottom: 1rem;
+    a {
+      color:#6BBFCA;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  }
 }
 
 .form {
   @include flex-center;
   flex-direction: column;
   width: 100%;
+  margin-top: 2rem;
+  input {
+    width: 284px;
+    height: 47px;
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    padding: 1rem;
+    padding-left:3rem;
+    background-color: #EFF3F6;
+    // transition: background-color 0.3s;
+    margin-bottom: 1rem;
+    border: 1px;
+  }
+  input::placeholder {
+    color: #A3A3A3;
+  }
+}
+// .email{
+//   background-position: 10px 10px;
+// }
+
+// .password{
+//   background-position: 10px -53px
+// }
+.label{
+  position: relative;
+  .span{
+    position: absolute;
+    left: 14px;
+    top: 1px;
+  }
+}
+
+#dangdang{
+  color : #4EB7E4;
+}
+
+#submitBtn{
+  font-weight: bold;
+  margin-top: 1rem;
+  width: 284px;
+  height: 47px;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
+  background-color: #6BBFCA;
+  color:white;
+  margin-bottom: 1rem;
+  border: 1px;
 }

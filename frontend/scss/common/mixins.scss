@@ -11,6 +11,7 @@
 }
 
 @mixin white-box {
+  height: fit-content;
   padding: 40px;
   background-color: white;
   border-radius: 10px;
@@ -21,13 +22,15 @@
   width: $width;
   padding: 10px 0;
   border: none;
-  border-radius: 10px;
+  border-radius: 7px;
   color: $color;
   background-color: $background-color;
-  font-weight: 800;
+  font-size: 15px;
+  font-weight: 700;
   &:hover {
     transform: scale(1.05);
     transition: 0.2s ease;
+    cursor: pointer;
   }
 }
 
@@ -39,6 +42,9 @@
   border: 1px solid $color;
   border-radius: 7px;
   font-size: 12px;
+  i {
+    color: $color;
+  }
   @if ($color == $text-color) {
     opacity: 0.6;
   }
@@ -57,5 +63,19 @@
   &:hover {
     opacity: 1;
     font-weight: 800;
+    cursor: pointer;
+    color: $main-color;
+  }
+}
+
+@mixin image-container($size) {
+  width: $size;
+  height: $size;
+  margin-right: $size - 15px;
+  border-radius: 50%;
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
   }
 }

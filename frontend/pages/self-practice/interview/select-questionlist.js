@@ -28,22 +28,45 @@ function SelectQuestions({ws}) {
       ws.close();
     });
   }, [])
-  return <div className={styles.selectBox}>
+  return <div className={styles.body}>
+    <div className={styles.pindicator}>
+      <div className={styles.bullet}>
+        <span className={styles.iconcur}><span>1</span></span>
+        <div className={styles.text}>Step 1</div>
+      </div>
+      <div className={styles.bullet}>
+        <span className={styles.icon}>2</span>
+        <div className={styles.text}>Step 2</div>
+      </div>
+      <div className={styles.bullet}>
+        <span className={styles.icon}>3</span>
+        <div className={styles.text}>Step 3</div>
+      </div>
+    </div>
+      <span className={styles.title}>질문 유형을 선택해주세요.</span>
+    <div className={styles.selectBox}>
     <Link href="/self-practice/interview/check-devices">
       <a>
         <div className={styles.borderBox}>
-          <h1>기본 질문</h1>
-          <p>최첨단 알고리즘을 사용해, 질문을 엄선했습니다.</p>
+          <i className="fas fa-question fa-2x"></i>
+          <br></br>
+          <h2>기본 질문</h2>
+          <p><span id={styles.dangdang}>당당!</span>이 엄선한<br></br>
+          면접 필수 질문 세트</p>
         </div>
       </a>
     </Link>
     <Link href="/self-practice/interview/add-questions">
       <a>
         <div className={styles.borderBox}>
-          <h1>질문 선택</h1>
-          <p>원하는 질문들을 직접 선택하여, 면접을 연습해보세요!</p>
+          <i className="fas fa-file fa-2x"></i>
+          <br></br>
+          <h2>질문 선택</h2>
+          <p>원하는 질문을 선택해서<br></br>
+          면접을 연습해 보세요</p>
         </div>
       </a>
     </Link>
+    </div>
   </div>
 }

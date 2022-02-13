@@ -1,24 +1,150 @@
 @import "../main.scss";
+@import "../../common/mixins.scss";
+@import "../../common/variables.scss";
 
-.container {
-  display: flex;
-  justify-content: center;
+.body {
+  @include flex-center;
+  width: 1000px;
+  flex-direction: column;
+  .title{
+    font-size: 1.8rem;
+    margin-top:1.3rem;
+    font-weight: bold;
+    color:#6BBFCA;
+  }
   .videoContainer {
+    margin-top:1.3rem;
     display: flex;
     flex-direction: column;
-    align-items:flex-start;
-    video {
-      width: 60vw;
+    // align-items:flex-start;
+    div{
+      margin:auto;
+      video {
+        width: 50vw;
+        border-radius: 10px;
+      }
     }
     .selectContainer {
-      select {
-        width: 30vw;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      div{
+        padding-left: 2rem;
+        width: 33.3%;
+        position: relative;
+        margin:auto;
+        .span{
+          margin: 0 0 auto;
+          position: absolute;
+          left: 43px;
+          top: 35px;
+          color: gray;
+        }
+        select {
+          padding-left:25px;
+          box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.10);
+          border-radius: 5px;
+          background-color: #ffffff;
+          border: 1px;
+          width: 90%;
+          height: 50px;
+        }
       }
     }
   }
 }
+.pindicator {
+  background-color: $background-color;
+  display: flex;
+  margin: 2rem auto 0;
+  width: 18rem;
+}
+.pindicator .bullet {
+  flex: 1;
+  position: relative;
+  text-align: center;
+  transform-style: preserve-3d;
+}
+.pindicator .bullet::before,
+.pindicator .bullet::after {
+  content: '';
+  display: block;
+  position: absolute;
+  height: .2rem;
+  top: 1rem;
+  transform: translate3d(0,0,-1px);
+}
+.pindicator .bullet::before {
+  background-color: lightgray;
+  width: 100%;
+}
+.pindicator .bullet::after {
+  background-color: black;
+  transition: opacity .25s ease-out;
+  opacity: 0;
+  width: 100%;
+}
+.pindicator .bullet:first-child::before,
+.pindicator .bullet:first-child::after {
+  left: 50%;
+  width: 50%;
+}
+.pindicator .bullet:last-child::before,
+.pindicator .bullet:last-child::after {
+  width: 50%;
+}
 
-.nextBtn {
+.pindicator .icon {
+  background-color: lightgray;
+  border-radius: 100%;
+  color: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  display: inline-block;
+  height: 2em;
+  line-height: 2;
+  text-align: center;
+  transition: background-color .25s ease-out;
+  width: 2em;
+  span{
+    color:white;
+    font-weight: bold;
+  }
+}
+.pindicator .iconcur {
+  background-color: #7281D7;
+  border-radius: 100%;
+  color: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  display: inline-block;
+  height: 2em;
+  line-height: 2;
+  text-align: center;
+  transition: background-color .25s ease-out;
+  width: 2em;
+  span{
+    color:white;
+    font-weight: bold;
+  }
+}
+.pindicator .text {
+  color: lightgray;
+  font-size: .75rem;
   margin-top: 1rem;
-  margin-left: auto;
+  text-transform: uppercase;
+  transition: background-color .25s ease-out;
+}
+.nextBtn {
+  font-weight: bold;
+  margin: auto;
+  margin-top: 2rem;
+  width: 284px;
+  height: 47px;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
+  background-color: #6BBFCA;
+  color:white;
+  margin-bottom: 1rem;
+  border: 1px;
 }
