@@ -1,4 +1,4 @@
-import styles from "../../scss/team/form.module.scss";
+import styles from "../../scss/interview-question/form.module.scss";
 import Link from "next/link";
 
 import { addInterviewQuestion } from "../../api/interviewQuestion";
@@ -10,12 +10,14 @@ export default connect()(addQuestion);
 
 function addQuestion() {
   const router = useRouter();
+
   const options = ["공통", "기술", "인성", "기타"];
   const [values, setValues] = useState({
     field: options[0],
     question: "",
     answer: "",
   });
+
   const handleChange = ({ target: { id, value } }) => {
     const nextValues = {
       ...values,
@@ -37,49 +39,56 @@ function addQuestion() {
   };
 
   return (
-    <div>
-      <h2>내 질문 등록하기</h2>
-
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="field">
-            분류
-            <select id="field" onChange={handleChange}>
-              {options.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-        <div>
-          <label htmlFor="question">
-            질문
-            <input
-              id="question"
-              type="text"
-              value={values.question}
-              onChange={handleChange}
-              required
-            />
-          </label>
-        </div>
-        <div>
-          <label htmlFor="answer">
-            답
-            <textarea
-              id="answer"
-              value={values.answer}
-              onChange={handleChange}
-            />
-          </label>
-        </div>
-        <button type="submit">등록하기</button>
-      </form>
+    <div className={styles.formContainer}>
       <Link href="/interview-question/me">
-        <a>목록으로</a>
+        <a className={styles.moveBackBtn}>
+          <i className="fas fa-angle-double-left"></i> 목록으로
+        </a>
       </Link>
+
+      <form>
+        <h2>내 질문 등록하기</h2>
+
+        <div className={styles.contents}>
+          <label htmlFor="field" className={styles.alignCenter}>
+            분류
+          </label>
+          <select id="field" onChange={handleChange}>
+            {options.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+
+          <label htmlFor="question" className={styles.alignCenter}>
+            질문
+          </label>
+          <input
+            id="question"
+            type="text"
+            value={values.question}
+            onChange={handleChange}
+            placeholder="질문을 입력해주세요..."
+            autoFocus
+            required
+          />
+
+          <label htmlFor="answer" className={styles.answerLabel}>
+            답변
+          </label>
+          <textarea
+            id="answer"
+            value={values.answer}
+            placeholder="답변을 입력해주세요..."
+            onChange={handleChange}
+          />
+        </div>
+      </form>
+
+      <button className={styles.submitBtn} onClick={handleSubmit}>
+        등록
+      </button>
     </div>
   );
 }
