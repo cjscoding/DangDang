@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import styles from "../../../scss/self-practice/interview/end.module.scss";
 import { connect } from "react-redux";
 import { WEBRTC_URL } from "../../../config"
-
+import multiDownload from 'multi-download';
 
 function mapStateToProps(state) {
   const questions = state.questionReducer.questions.map(question => question.question)
@@ -47,18 +47,20 @@ function EndInterview({ws, sessionId, questions, recordedQuestionIdxes, speakerI
       myVideo.src = `${WEBRTC_URL}/files/videos/${sessionId + idx}.webm`
     }
     async function download(idx) {
-      const element = document.createElement('a');
-      element.setAttribute('href',`${WEBRTC_URL}/kurento/download/${sessionId}${idx}.webm`);
-      element.setAttribute('download', `${sessionId}${idx}.webm`);
-      document.body.appendChild(element);
-      element.click();
+      // const element = document.createElement('a');
+      // element.setAttribute('href',`${WEBRTC_URL}/kurento/download/${sessionId}${idx}.webm`);
+      // element.setAttribute('download', `${sessionId}${idx}.webm`);
+      // document.body.appendChild(element);
+      // element.click();
       // document.body.removeChild(element);
-      // window.open(`${WEBRTC_URL}/kurento/download/${sessionId}${idx}.webm`);
+      window.open(`${WEBRTC_URL}/kurento/download/${sessionId}${idx}.webm`);
     }
-    function allDownload() {
+    function allDownload(e) {
+      const urls = []
       for(let idx of recordedQuestionIdxes) {
-        download(idx)
+        urls.push(`${WEBRTC_URL}/kurento/download/${sessionId}${idx}.webm`)
       }
+      multiDownload(urls)
     }
     for(let idx of recordedQuestionIdxes) {
       const playId = idx + "-play"

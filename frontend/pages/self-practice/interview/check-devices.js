@@ -10,9 +10,9 @@ import styles from "../../../scss/self-practice/interview/check-devices.module.s
 
 export async function getServerSideProps() {
   const preparedQuestions = [
-      "안녕하세요",
-      "점심 맛있게 드셨어요?",
-      "하나의 쓰기 스레드와 여러 읽기 스레드가 존재할 때 사용되어야 하는 Java의 동기화 기능은 무엇이고 어떻게 동작하게 되는지 설명해주세요."
+      {field: "미확인", question: "안녕하세요"},
+      {field: "미확인", question: "점심 맛있게 드셨어요?"},
+      {field: "미확인", question: "하나의 쓰기 스레드와 여러 읽기 스레드가 존재할 때 사용되어야 하는 Java의 동기화 기능은 무엇이고 어떻게 동작하게 되는지 설명해주세요."},
   ] // api요청으로 교체될 파트
   return {props: {preparedQuestions}};
 };
