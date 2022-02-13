@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
+import { getInterviewQuestions, getMyInterviewQuestions } from "../../../api/interviewQuestion";
+import Pagination from "../../../components/layout/Pagination";
 import styles from "../../../scss/self-practice/interview/add-questions.module.scss";
 
 function mapStateToProps(state) {
@@ -12,35 +14,57 @@ function mapStateToProps(state) {
   };
 }
   
-import { addQuestion } from "../../../store/actions/questionAction";
+import { addQuestion, removeQuestion } from "../../../store/actions/questionAction";
 function mapDispatchToProps(dispatch) {
   return {
-    addQuestion: (question) => dispatch(addQuestion(question))
+    addQuestion: (question) => dispatch(addQuestion(question)),
+    removeQuestion: (idx) => dispatch(removeQuestion(idx))
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddQuestions); 
 
-function AddQuestions({ws, questions, isLogin, user, addQuestion}) {
+function AddQuestions({ws, questions, isLogin, user, addQuestion, removeQuestion}) {
   const [questionInput, setQuestionInput] = useState("");
   const [allQuestions, setAllQuestions] = useState([]);
   const [myQuestions, setMyQuestions] = useState([]);
   const [qListNum, setQListNum] = useState(0);
+  const [curPage, setCurPage] = useState(0);
+  const [postsPerPage] = useState(10);
+  const [totalPosts, setTotalPosts] = useState(100);
+  const paginate = (pageNumber) => setCurPage(pageNumber);
   //async 임시용임, 수정할 것임
-  useEffect(async() => {
+  useEffect(() => {
     if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
-    const allQs = (await(await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/interview`,{
-      method: 'GET'
-    })).json()).response.content
-    setAllQuestions(allQs);
-    if(isLogin){
-      const myQs = (await(await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/interview`,{
-        method: 'GET'
-      })).json()).response.content
-      setMyQuestions(myQs)
+    switch(qListNum) {
+      case 0:
+        getInterviewQuestions({
+          page: curPage,
+          size: postsPerPage
+        }, ({data: {response}}) => {
+          setAllQuestions(response.content)
+          setTotalPosts(response.totalElements)
+        }, (error) => {
+          console.log(error)
+        })
+        break
+      case 1:
+        if(!isLogin) break;
+        getMyInterviewQuestions({
+          page: curPage,
+          size: postsPerPage
+        }, ({data: {response}}) => {
+          setMyQuestions(response.content)
+          setTotalPosts(response.totalElements)
+        }, (error) => {
+          console.log(error)
+        })
+        break
+      default:
+        break
     }
+  }, [curPage])
 
-  }, [])
   function addQuestionInput() {
     const Qinput = questionInput.trim()
     if(Qinput) {
@@ -56,7 +80,37 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion}) {
       alert("질문을 추가해주세요!");
     }
   }
-
+  function changeQuetionList(num) {
+    setCurPage(0)
+    setQListNum(num)
+    switch(num) {
+      case 0:
+        getInterviewQuestions({
+          page: 0,
+          size: postsPerPage
+        }, ({data: {response}}) => {
+          setAllQuestions(response.content)
+          setTotalPosts(response.totalElements)
+        }, (error) => {
+          console.log(error)
+        })
+        break
+      case 1:
+        if(!isLogin) break;
+        getMyInterviewQuestions({
+          page: 0,
+          size: postsPerPage
+        }, ({data: {response}}) => {
+          setMyQuestions(response.content)
+          setTotalPosts(response.totalElements)
+        }, (error) => {
+          console.log(error)
+        })
+        break
+      default:
+        break
+    }
+  }
   return <div className={styles.body}>
     <div className={styles.pindicator}>
       <div className={styles.bullet}>
@@ -76,21 +130,27 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion}) {
     <div className={styles.mainContainer}>
       <div className={styles.columnContainer}>
         <div className={styles.changeBtn}>
-          <span onClick={() => setQListNum(0)}>●</span>
-          {isLogin?<span onClick={() => setQListNum(1)}>●</span>:null}
+          <button onClick={() => changeQuetionList(0)}>●</button>
+          {isLogin?<button onClick={() => changeQuetionList(1)}>●</button>:null}
         </div>
         <div className={styles.baseContainer}>
           <div style={qListNum!==0?{display: "none"}:{}}>
             {allQuestions?.map(question => (
-              <h2 key={question.id}>{question.question}</h2>
+              <h2 key={question.id}>{question.question} <button onClick={()=>addQuestion(question.question)}>추가</button></h2>
             ))}
           </div>
           <div style={qListNum!==1?{display: "none"}:{}}>
             {myQuestions?.map(question => (
-              <h2 key={question.id}>{question.question}</h2>
+              <h2 key={question.id}>{question.question} <button onClick={()=>addQuestion(question.question)}>추가</button></h2>
             ))}
           </div>
         </div>
+        <Pagination
+          curPage={curPage}
+          paginate={paginate}
+          totalCount={totalPosts}
+          postsPerPage={postsPerPage}
+        />
         <div className={styles.addContainer}>
           <input value={questionInput} onChange={(event) => {setQuestionInput(event.target.value)}} placeholder="나만의 질문을 입력해주세요!"></input>
           <button onClick={addQuestionInput}>면접질문추가</button>
@@ -98,7 +158,7 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion}) {
       </div>
       <div className={styles.selectedContainer}>
         {questions?.map((question, idx) => (
-          <h1 key={idx}>{question}</h1>
+          <h1 key={idx}>{question} <button onClick={()=>removeQuestion(idx)}>X</button></h1>
         ))}
       </div>
     </div>

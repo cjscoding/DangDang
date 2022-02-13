@@ -7,7 +7,7 @@ export function getInterviewQuestions(params, success, fail) {
 }
 
 export function getMyInterviewQuestions(params, success, fail) {
-  api.get(`/interview/mine`, params).then(success).catch(fail);
+  api.get(`/interview/mine`, {params}).then(success).catch(fail);
 }
 
 export function addInterviewQuestion(params, success, fail) {

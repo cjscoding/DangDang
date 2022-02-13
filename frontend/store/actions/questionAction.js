@@ -5,6 +5,11 @@ export const addQuestion = (question) => ({
   question,
 });
 
+export const removeQuestion = (idx) => ({
+  type: types.REMOVE_QUESTION,
+  idx,
+});
+
 export const setQuestions = (questions) => ({
   type: types.SET_QUESTIONS,
   questions,
