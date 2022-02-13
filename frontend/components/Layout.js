@@ -2,7 +2,7 @@ import Head from "next/head";
 import { connect } from "react-redux";
 import { setUserInfo, setIsLogin } from "../store/actions/userAction";
 import { getUserInfo } from "../api/user";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styles from "../scss/layout/layout.module.scss";
 import NavBar from "./Navbar";
 import Footer from "./layout/footer";
@@ -23,6 +23,7 @@ function mapDispatchToProps(dispatch) {
 export default connect(mapStateToProps, mapDispatchToProps)(Layout);
 
 function Layout({ children, user, setUserInfo, setIsLogin }) {
+  const router = useRouter();
   useEffect(() => {
     if (
       typeof window !== "undefined" &&
@@ -55,7 +56,6 @@ function Layout({ children, user, setUserInfo, setIsLogin }) {
     }
   }, [user]);
 
-  const router = useRouter();
   return (
     <>
       <Head>
@@ -64,7 +64,12 @@ function Layout({ children, user, setUserInfo, setIsLogin }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.bodyWrapper}>
-        {router.pathname === "/" ? null : <NavBar />}
+        {
+          router.pathname === "/" || 
+          router.pathname.slice(0, 16) === "/web-conference/" || 
+          router.pathname.slice(0, 15) === "/self-practice/"
+          ? null : <NavBar /> 
+        }
         <div className={styles.mainContainer}>{children}</div>
         <Footer></Footer>
       </div>

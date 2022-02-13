@@ -23,6 +23,11 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
   const [me, setMe] = useState(null)
   const [mode, setMode] = useState(false) // 면접모드 true, 일반모드 false
   const [screenShareTry, setScreenShareTry] = useState(false)
+
+  const [cameraSelectShow, setCameraSelectShow] = useState(false)
+  const [micSelectShow, setMicSelectShow] = useState(false)
+  const [speakerSelectShow, setSpeakerSelectShow] = useState(false)
+
   const chatInput = useRef();
   const chatInputBtn = useRef();
   const chatContentBox = useRef();
@@ -32,6 +37,8 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
   const screenBtn = useRef();
   const changeModeBtn = useRef();
   const exitBtn = useRef();
+  const cameraSelectDiv = useRef();
+
   const router = useRouter();
 
   useEffect(() => {
@@ -327,6 +334,7 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
             break
           default:
             console.log(`ERROR! ${jsonMsg.mode}`)
+            break
         }
         console.log(volunteerUser)
         setScreenShareTry(screenShareTryState);
@@ -415,9 +423,17 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
       console.log(senderIdName)
       const senderName = senderIdName.slice(1 + senderIdName.search('-'), senderIdName.length);
       const showingMsg = `${senderName}: ${jsonMsg.contents}`
-      const showingMsgEl = document.createElement("h5")
-      showingMsgEl.innerText = showingMsg
+      const name = document.createElement("h4")
+      name.innerText = senderName + '\u00a0'
+      name.style.display = "inline"
+      const text = document.createElement("p")
+      text.innerText = `: ${jsonMsg.contents}`
+      text.style.display = "inline"
+      const showingMsgEl = document.createElement("div")
+      showingMsgEl.appendChild(name)
+      showingMsgEl.appendChild(text)
       chatContentBoxEl.appendChild(showingMsgEl)
+      chatContentBoxEl.scrollTop = chatContentBoxEl.scrollHeight
     }
 
     function sendChatMsg() {
@@ -452,6 +468,53 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
     const changeModeBtnEl = changeModeBtn.current
     const exitBtnEl = exitBtn.current
 
+    let cameraShowState = false
+    let micShowState = false
+    let speakerShowState = false
+    function allSelectShowFalse() {
+      cameraShowState = false
+      micShowState = false
+      speakerShowState = false
+      setCameraSelectShow(cameraShowState)
+      setMicSelectShow(micShowState)
+      setSpeakerSelectShow(speakerShowState)
+    }
+    function cameraSelectToggle() {
+      cameraShowState = !cameraShowState
+      micShowState = false
+      speakerShowState = false
+      setCameraSelectShow(cameraShowState)
+      setMicSelectShow(micShowState)
+      setSpeakerSelectShow(micShowState)
+    }
+    function micSelectToggle() {
+      cameraShowState = false
+      micShowState = !micShowState
+      speakerShowState = false
+      setCameraSelectShow(cameraShowState)
+      setMicSelectShow(micShowState)
+      setSpeakerSelectShow(speakerShowState)
+    }
+    function speakerSelectToggle() {
+      cameraShowState = false
+      micShowState = false
+      speakerShowState = !speakerShowState
+      setCameraSelectShow(cameraShowState)
+      setMicSelectShow(micShowState)
+      setSpeakerSelectShow(speakerShowState)
+    }
+    cameraBtnEl.addEventListener("click", cameraSelectToggle)
+    micBtnEl.addEventListener("click", micSelectToggle)
+    speakerBtnEl.addEventListener("click", speakerSelectToggle)
+
+    function exitRoom() {
+      if(confirm("정말 나가시겠습니까?")) {
+        window.close()
+      }
+    }
+    exitBtnEl.addEventListener("click", exitRoom)
+    exitBtnEl.addEventListener("click", allSelectShowFalse)
+
     let modeState = false;
     function changeMode() {
       modeState = !modeState
@@ -468,6 +531,8 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
     }
     changeModeBtnEl.addEventListener("click", changeMode)
     screenBtnEl.addEventListener("click", startScreenShare)
+    changeModeBtnEl.addEventListener("click", allSelectShowFalse)
+    screenBtnEl.addEventListener("click", allSelectShowFalse)
     // 방 입장
     sendMessage({
       id: "joinRoom",
@@ -495,13 +560,21 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
       }
     }
     window.addEventListener("beforeunload", beforeunload)
+    // console.log(cameraSelectDiv.current.childNodes[0])
     return () => {
       chatInputBtnEl.removeEventListener("click", sendChatMsg)
       chatInputEl.removeEventListener("keypress", enterInput)
       screenBtnEl.removeEventListener("click", startScreenShare)
+      changeModeBtnEl.removeEventListener("click", allSelectShowFalse)
+      screenBtnEl.removeEventListener("click", allSelectShowFalse)
+      cameraBtnEl.removeEventListener("click", cameraSelectToggle)
+      micBtnEl.removeEventListener("click", micSelectToggle)
+      speakerBtnEl.removeEventListener("click", speakerSelectToggle)
+      exitBtnEl.removeEventListener("click", exitRoom)
+      exitBtnEl.removeEventListener("click", allSelectShowFalse)
       // 방 퇴장
       window.removeEventListener("beforeunload", beforeunload)
-      // beforeunload()
+      beforeunload()
     }
   }, [])
 
@@ -529,31 +602,46 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
     }
   },[speakerId])
   return <div className={styles.mainContainer}>
-    <div className={styles.videoContainer}>
-      <div id="screens" ></div>
-      <div className={styles.faces} id="participants"></div>
-      <div className={styles.btnBar}>
-        <span ref={cameraBtn}><i className="fas fa-video"></i></span>
-        <span ref={micBtn}><i className="fas fa-microphone"></i></span>
-        <span ref={speakerBtn}><i className="fas fa-volume-up"></i></span>
-        <button disabled={screenShareTry} ref={screenBtn}><i className="fas fa-tv"></i></button>
-        <span ref={changeModeBtn} >
-          <span style={mode?{display: "none"}:{}}><i className="fas fa-user-tie"></i></span>
-          <span style={!mode?{display: "none"}:{}}><i className="fas fa-users"></i></span>
-        </span>
-        <span ref={exitBtn}><i className="fas fa-times-circle"></i></span>
+    <div className={styles.mainSection}>
+      <div className={styles.videoContainer}>
+        <div id="screens" ></div>
+        <div className={styles.faces} id="participants"></div>
       </div>
-      <CameraSelect />
-      <MicSelect />
-      <SpeakerSelect />
+      <div  className={styles.subContainer}>
+        <span className={`${styles.selectedMenuBtn} ${styles.chatMenuBtn}`}>채팅창</span>
+        <span className={` ${styles.letterMenuBtn}`}>자소서</span>
+        <span className={` ${styles.scoreMenuBtn}`}>채점표</span>
+        <div className={styles.chatContainer} id="chat">
+          <div ref={chatContentBox} className={styles.chat}></div>
+          <div className={styles.chatInput}>
+            <input ref={chatInput} />
+            <button ref={chatInputBtn} ><i className="fas fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div className={styles.chat} id="chat">
-      <h3>채팅창</h3>
-      <div>
-        <textarea ref={chatInput} />
-        <button ref={chatInputBtn} >전송</button>
-      </div>
-      <div ref={chatContentBox}></div>
+    <div className={styles.btnBar}>
+      <span>
+        <span ref={cameraBtn}><i className="fas fa-video"></i></span>
+        <div style={cameraSelectShow?{}:{display: "none"}} ref={cameraSelectDiv}><CameraSelect /></div>
+      </span>
+      <span>
+        <span ref={micBtn}><i className="fas fa-microphone"></i></span>
+        <div style={micSelectShow?{}:{display: "none"}}><MicSelect /></div>
+      </span>
+      <span>
+        <span ref={speakerBtn}><i className="fas fa-volume-up"></i></span>
+        <div style={speakerSelectShow?{}:{display: "none"}}><SpeakerSelect /></div>
+      </span>
+      <span>
+        <span style={screenShareTry?{display: "none"}:{}} ref={screenBtn}><i className="fas fa-chalkboard"></i></span>
+        <span style={!screenShareTry?{display: "none"}:{}} className={styles.nonCursor}><i className="fas fa-chalkboard-teacher"></i></span>
+      </span>
+      <span ref={changeModeBtn} >
+        <span style={mode?{display: "none"}:{}}><i className="fas fa-user-tie"></i></span>
+        <span style={!mode?{display: "none"}:{}}><i className="fas fa-users"></i></span>
+      </span>
+      <span ref={exitBtn}><i className="fas fa-times-circle"></i></span>
     </div>
   </div>
 }

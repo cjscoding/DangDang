@@ -144,10 +144,12 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
     }
     function restartQuestion() {
       record()
+      timer.stopTimer()
       return;
     }
     function saveAndNext() {
       save();
+      timer.stopTimer()
       pushRecordedQuestionIdx(questionNumState);
       if(questionNumState === questions.length - 1) {
         router.push(`/self-practice/interview/end`);
@@ -159,6 +161,7 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
       return;
     }
     function skipQuestion() {
+      timer.stopTimer()
       if(questionNumState === questions.length - 1) {
         router.push(`/self-practice/interview/end`);
         return;
