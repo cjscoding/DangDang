@@ -129,29 +129,36 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion, removeQuestion
     <span className={styles.title}>연습에 사용할 질문을 골라주세요.</span>
     <div className={styles.mainContainer}>
       <div className={styles.rowContainer}>
-        <div className={styles.changeBtn}>
+        {/* <div className={styles.changeBtn}>
           <button onClick={() => changeQuetionList(0)}>●</button>
           {isLogin?<button onClick={() => changeQuetionList(1)}>●</button>:null}
-        </div>
+        </div> */}
         <div className={styles.ContainerL}>
           <div className={styles.QuestionContainer}>
-          <div className={styles.QuestionTitle}><span>면접 질문 리스트</span></div>
+          <div className={styles.QuestionTitle}> 
+            <span>면접 질문 리스트 <span className={styles.changeBtn}>
+            <button onClick={() => changeQuetionList(0)}>●</button>
+            {isLogin?<button onClick={() => changeQuetionList(1)}>●</button>:null}
+            </span></span>
+          </div>
           <div className={styles.QuestionList}>
             <div style={qListNum!==0?{display: "none"}:{}}>
               {allQuestions?.map(question => (
-                <h2 key={question.id}>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}>추가</button></h2>
+                <div className={styles.question}>
+                  <span key={question.id}>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}><i className="fas fa-plus"></i></button></span>
+                </div>
               ))}
             </div>
-            <div style={qListNum!==1?{display: "none"}:{}}>
+            <div style={qListNum!==1?{display: "none"}:{}} className={styles.question}>
               {myQuestions?.map(question => (
-                <h2 key={question.id}>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}>추가</button></h2>
+                <span key={question.id}>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}><i className="fas fa-plus"></i></button></span>
               ))}
             </div>
           </div>
           </div>
           <div className={styles.addContainer}>
             <input value={questionInput} onChange={(event) => {setQuestionInput(event.target.value)}} placeholder="나만의 질문을 입력해주세요!"></input>
-            <button onClick={()=>addQuestionInput("미확인", questionInput)}>면접질문추가</button>
+            <button onClick={()=>addQuestionInput("미확인", questionInput)}><i className="fas fa-paper-plane"></i></button>
           </div>
           <div className={styles.pagination}>
             <Pagination
@@ -167,7 +174,9 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion, removeQuestion
             <div className={styles.selectedTitle}><span>내가 선택한 질문</span><div id={styles.total}>총 {questions.length}개</div> </div>
             <div className={styles.selectedList}>
               {questions?.map((question, idx) => (
-                <h1 key={idx}>{question.field} | {question.question} <button onClick={()=>removeQuestion(idx)}>X</button></h1>
+                <div className={styles.question}>
+                  <span key={idx}>{question.field} | {question.question} <button onClick={()=>removeQuestion(idx)}><i className="fas fa-times"></i></button></span>
+                </div>
               ))}
             </div>
           </div>
