@@ -1,4 +1,4 @@
-// import styles from "../../scss/team/board/reply.module.scss";
+import styles from "../../../scss/team/board/detail.module.scss";
 
 import { updateDetailComment, deleteDetailComment } from "../../../api/comment";
 import { useRouter } from "next/router";
@@ -60,33 +60,69 @@ export default function Reply({ reply, submitReload }) {
   };
 
   return (
-    <div className="reply">
+    <div className={styles.replyContent}>
       {showUpdateBtn ? (
-        <form onSubmit={onUpdateReply}>
-          <div className="content">
-            <span>이름 : {reply.writerNickname}</span>
-            <label htmlFor="content">내용</label>
+        <form onSubmit={onUpdateReply} className={styles.commentToggle}>
+          <div className={styles.userInfo}>
+            <div className={styles.imgBox}>
+              {reply.writerImageUrl !== null &&
+              reply.writerImageUrl !== "default.jpg" ? (
+                <img
+                  src={`${BACKEND_URL}/files/images/${reply.writerImageUrl}`}
+                />
+              ) : (
+                <img src="/images/dangdang_1.png" />
+              )}
+            </div>
+            <span>{reply.writerNickname}</span>
+          </div>
+
+          <div className={styles.contentBox}>
             <input
               type="text"
               name="content"
               value={newReply}
               onChange={onChangeReply}
+              autoFocus
             />
           </div>
-          <div>
-            <button type="submit">수정완료</button>
+
+          <div className={styles.btnBox}>
+            <button type="submit">
+              <i className="fas fa-check"></i>
+            </button>
             <button type="button" onClick={toggleUpdate}>
-              취소
+              <i className="fas fa-times"></i>
             </button>
           </div>
         </form>
       ) : (
-        <div>
-          <span>이름 : {reply.writerNickname}</span>
-          <span>내용 : {reply.content}</span>
-          <div>
-            <button onClick={toggleUpdate}>수정</button>
-            <button onClick={() => onDeleteReply(reply.id)}>삭제</button>
+        <div className={styles.commentToggle}>
+          <div className={styles.userInfo}>
+            <div className={styles.imgBox}>
+              {reply.writerImageUrl !== null &&
+              reply.writerImageUrl !== "default.jpg" ? (
+                <img
+                  src={`${BACKEND_URL}/files/images/${reply.writerImageUrl}`}
+                />
+              ) : (
+                <img src="/images/dangdang_1.png" />
+              )}
+            </div>
+            <span>{reply.writerNickname}</span>
+          </div>
+
+          <div className={styles.contentBox}>
+            <p>{reply.content}</p>
+          </div>
+
+          <div className={styles.btnBox}>
+            <button onClick={toggleUpdate}>
+              <i className="fas fa-pen"></i>
+            </button>
+            <button onClick={() => onDeleteReply(reply.id)}>
+              <i className="fas fa-trash"></i>
+            </button>
           </div>
         </div>
       )}

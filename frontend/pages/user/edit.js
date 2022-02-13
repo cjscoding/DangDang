@@ -163,7 +163,6 @@ function userInfoEdit({ user, setUserInfo, resetUserInfo, setIsLogin }) {
               type="password"
               value={values.password}
               onChange={handleChange}
-              required
             />
           </label>
         </div>

@@ -2,30 +2,38 @@ import { useEffect, useRef } from "react"
 import { connect } from "react-redux";
 
 import { setCamera } from "../../../store/actions/videoAction";
+function mapStateToProps(state) {
+  return {
+    cameraId: state.videoReducer.cameraId, 
+  };
+}
 function mapDispatchToProps(dispatch) {
  return {
   setCamera: (cameraId) => dispatch(setCamera(cameraId)),
  }
 }
-export default connect(null, mapDispatchToProps)(CameraSelect);
+export default connect(mapStateToProps, mapDispatchToProps)(CameraSelect);
 
-function CameraSelect({setCamera}) {
+function CameraSelect({cameraId, setCamera}) {
   const cameraSelectRef = useRef();
   useEffect(() => {
     const cameraSelect = cameraSelectRef.current
     async function getCamera() {
       try {
         const devices = await navigator.mediaDevices.enumerateDevices();
-        let currentCamera;
+        let currentCameraId;
+        if(cameraId) currentCameraId = cameraId
         devices.forEach(device => {
           if(device.kind === "videoinput") {
             const option = document.createElement("option");
             option.value = device.deviceId;
             option.innerText = device.label;
-            if(!currentCamera) {
-              currentCamera = device;
+            if(!currentCameraId) {
+              currentCameraId = device.deviceId;
               option.selected = true;
-              setCamera(option.value)
+              setCamera(currentCameraId)
+            }else if(currentCameraId === device.deviceId) {
+              option.selected = true;
             }
             cameraSelect.appendChild(option);
           }

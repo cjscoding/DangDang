@@ -1,7 +1,6 @@
 import Pagination from "../../../components/layout/Pagination";
 import styles from "../../../scss/team/board/board.module.scss";
 import Title from "../../../components/layout/Title";
-import Image from "next/image";
 import Link from "next/link";
 
 import { BACKEND_URL } from "../../../config";
@@ -43,7 +42,7 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
 
   //pagination
   const [curPage, setCurPage] = useState(0);
-  const [postsPerPage] = useState(16);
+  const [postsPerPage] = useState(9);
   const [searchTags, setSearchTags] = useState([]);
   const paginate = (pageNumber) => setCurPage(pageNumber);
 
@@ -93,92 +92,84 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
   }, [searchTags, curPage]);
 
   return (
-    <div>
+    <div className={styles.studyBoard}>
       <Title title="Board"></Title>
-      <h1 className={styles.title}>스터디 구한당</h1>
 
-      <div className="container">
-        <div className={styles.categories}>
-          <ul>
-            <li>All</li>
-            <li>FrontEnd</li>
-            <li>BackEnd</li>
-          </ul>
-        </div>
+      <h1 className={styles.title}># 스터디구한당</h1>
 
-        <div className={styles.main}>
-          <div className={styles.top}>
-            <div className={styles.filter}>
-              <input
-                type="text"
-                onKeyUp={onAddTag}
-                placeholder="키워드 검색..."
-              />
-              <div>
-                tag :{" "}
-                {searchTags.map((tag) => (
-                  <div key={tag}>
-                    {tag}{" "}
-                    <button value={tag} onClick={onRemoveTag}>
-                      x
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className={styles.createRoom}>
-              <button>
-                <Link href="/user/mypage/myroom">
-                  <a>내방 보러가기</a>
-                </Link>
-              </button>
-              <button>
-                <Link href="/team/space/create">
-                  <a>방 생성</a>
-                </Link>
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.rooms}>
-            {rooms?.map((room) => (
-              <div
-                className={styles.room}
-                key={room.id}
-                onClick={() => onDetail(room.id)}
-              >
-                {room.imageUrl !== null ? (
-                  <img
-                    src={`${BACKEND_URL}/files/images/${room.imageUrl}`}
-                    width="300"
-                    height="200"
-                    alt=""
-                  />
-                ) : (
-                  <Image
-                    src="/vercel.svg"
-                    alt="Vercel Logo"
-                    width={300}
-                    height={250}
-                  />
-                )}
-                <span> {room.id}</span>
-                <span> {room.name}</span>
-                <span> {room.goal}</span>
-                <span> {room.description}</span>
-                {room.hashTags?.map((hashTag, index) => (
-                  <span key={index}># {hashTag}</span>
-                ))}
-              </div>
-            ))}
-          </div>
-          <Pagination
-            curPage={curPage}
-            paginate={paginate}
-            totalCount={totalPosts}
-            postsPerPage={postsPerPage}
+      <div className={styles.boardContainer}>
+        <div className={styles.topBar}>
+          <input
+            type="text"
+            onKeyUp={onAddTag}
+            placeholder="검색어를 입력하고 엔터키를 눌러주세요..."
           />
+
+          <div className={styles.btns}>
+            <button className={styles.createBtn}>
+              <Link href="/team/space/create">
+                <a>방 생성하기</a>
+              </Link>
+            </button>
+
+            <button className={styles.goMyRoomBtn}>
+              <Link href="/user/mypage/myroom">
+                <a>내 방으로</a>
+              </Link>
+            </button>
+          </div>
         </div>
+
+        <div className={styles.tagContainer}>
+          {searchTags.map((tag) => (
+            <div key={tag} className={styles.tagItem}>
+              {tag}{" "}
+              <button value={tag} onClick={onRemoveTag}>
+                x
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div className={styles.rooms}>
+          {rooms?.map((room) => (
+            <div
+              className={styles.room}
+              key={room.id}
+              onClick={() => onDetail(room.id)}
+            >
+              <div className={styles.imgBox}>
+                {room.imageUrl !== null && room.imageUrl !== "default.jpg" ? (
+                  <img src={`${BACKEND_URL}/files/images/${room.imageUrl}`} />
+                ) : (
+                  <img src="/images/dangdang_1.png" />
+                )}
+              </div>
+
+              <div className={styles.details}>
+                <div className={styles.mainDetails}>
+                  <span className={styles.roomName}>{room.name}</span>
+                  <span className={styles.roomNumber}>
+                    <i className="fas fa-user-friends"></i> {room.number}
+                  </span>
+                </div>
+
+                <div className={styles.tagBox}>
+                  {room.hashTags?.map((hashTag) => (
+                    <span key={hashTag}># {hashTag} </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <Pagination
+          curPage={curPage}
+          paginate={paginate}
+          totalCount={totalPosts}
+          postsPerPage={postsPerPage}
+        />
       </div>
     </div>
   );
