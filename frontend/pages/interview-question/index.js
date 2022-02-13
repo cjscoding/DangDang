@@ -58,12 +58,12 @@ function interviewQuestion({ isLogin, questions, setQuestions }) {
         <div className={styles.btns}>
           {isLogin ? (
             <Link href="/interview-question/me">
-              <button className={styles.goMyQuestionBtn}>내 질문 보기</button>
+              <button className={styles.isNotButton}>내 질문 보기</button>
             </Link>
           ) : null}
 
           <Link href="/self-practice">
-            <button className={styles.goPracticeBtn}>연습 시작하기</button>
+            <button className={styles.isButton}>연습 시작하기</button>
           </Link>
         </div>
       </div>

@@ -1,4 +1,5 @@
-import styles from "../../scss/team/form.module.scss";
+import styles from "../../scss/interview-question/form.module.scss";
+import Link from "next/link";
 
 import { updateInterviewQuestion } from "../../api/interviewQuestion";
 import { useEffect, useState } from "react";
@@ -37,11 +38,11 @@ export default function ResumeUpdate() {
     updateInterviewQuestion(
       data,
       (res) => {
-        console.log(res, "글 수정 성공");
-        onMoveViewPage();
+        console.log(res, "질문 수정 성공");
+        router.push("/interview-question/me");
       },
       (err) => {
-        console.log(err, "글 수정 실패");
+        console.log(err, "질문 수정 실패");
       }
     );
   };
@@ -58,18 +59,13 @@ export default function ResumeUpdate() {
     setMyQuestion(newQuestion);
   };
 
-  //내 질문보기 페이지로 돌아가기
-  const onMoveViewPage = () => {
-    router.push({
-      pathname: "/interview-question/me",
-    });
-  };
-
   return (
     <div className={styles.formContainer}>
-      <button onClick={onMoveViewPage} className={styles.moveBackBtn}>
-        <i className="fas fa-angle-double-left"></i> 돌아가기
-      </button>
+      <Link href="/interview-question/me">
+        <a className={styles.moveBackBtn}>
+          <i className="fas fa-angle-double-left"></i> 목록으로
+        </a>
+      </Link>
 
       <form>
         <h2>내 질문 수정</h2>
@@ -93,17 +89,18 @@ export default function ResumeUpdate() {
             name="question"
             value={myQuestion.question}
             onChange={onChangeValue}
+            placeholder="질문을 입력해주세요..."
             autoFocus
+            required
           />
 
-          <label htmlFor="answer" className={styles.answerLabel}>
-            답
-          </label>
+          <label htmlFor="answer">답변</label>
           <textarea
             type="text"
             name="answer"
             value={myQuestion.answer}
             onChange={onChangeValue}
+            placeholder="답변을 입력해주세요..."
           />
         </div>
       </form>
