@@ -29,6 +29,15 @@ function myQuestion({ myQuestions, setMyQuestions }) {
   const paginate = (pageNumber) => setCurPage(pageNumber);
 
   useEffect(() => {
+    getQuestions();
+  }, [curPage]);
+
+  const reload = () => {
+    setCurPage(0);
+    getQuestions();
+  };
+
+  const getQuestions = () => {
     const params = {
       page: curPage,
       size: postsPerPage,
@@ -42,7 +51,7 @@ function myQuestion({ myQuestions, setMyQuestions }) {
       },
       (error) => console.log(error)
     );
-  }, [curPage]);
+  };
 
   return (
     <section>
@@ -72,6 +81,7 @@ function myQuestion({ myQuestions, setMyQuestions }) {
             <QuestionListRow
               question={question}
               myQuestionMode={true}
+              reload={reload}
               key={question.id}
             />
           ))}
