@@ -1,12 +1,15 @@
 import { useEffect } from "react";
+import styles from "../../../scss/self-practice/interview/end.module.scss";
 import { connect } from "react-redux";
 import { WEBRTC_URL } from "../../../config"
+import multiDownload from 'multi-download';
 
 function mapStateToProps(state) {
+  const questions = state.questionReducer.questions.map(question => question.question)
   return {
     ws: state.wsReducer.ws,
     sessionId: state.wsReducer.sessionId,
-    questions: state.questionReducer.questions,
+    questions,
     recordedQuestionIdxes: state.wsReducer.recordedQuestionIdxes,
     speakerId: state.videoReducer.speakerId,
   };
@@ -20,10 +23,6 @@ function EndInterview({ws, sessionId, questions, recordedQuestionIdxes, speakerI
     myVideo.setSinkId(speakerId);
     let webRtcPeer;
 
-    function sendMessage(msgObj) {
-      const msgStr = JSON.stringify(msgObj);
-      ws.send(msgStr);
-    }
     ws.onmessage = function(message) {
       const msgObj = JSON.parse(message.data);
       switch(msgObj.id) {
@@ -47,9 +46,21 @@ function EndInterview({ws, sessionId, questions, recordedQuestionIdxes, speakerI
     function play(idx) {
       myVideo.src = `${WEBRTC_URL}/files/videos/${sessionId + idx}.webm`
     }
-
-    function download(idx) {
+    async function download(idx) {
+      // const element = document.createElement('a');
+      // element.setAttribute('href',`${WEBRTC_URL}/kurento/download/${sessionId}${idx}.webm`);
+      // element.setAttribute('download', `${sessionId}${idx}.webm`);
+      // document.body.appendChild(element);
+      // element.click();
+      // document.body.removeChild(element);
       window.open(`${WEBRTC_URL}/kurento/download/${sessionId}${idx}.webm`);
+    }
+    function allDownload(e) {
+      const urls = []
+      for(let idx of recordedQuestionIdxes) {
+        urls.push(`${WEBRTC_URL}/kurento/download/${sessionId}${idx}.webm`)
+      }
+      multiDownload(urls)
     }
     for(let idx of recordedQuestionIdxes) {
       const playId = idx + "-play"
@@ -65,18 +76,34 @@ function EndInterview({ws, sessionId, questions, recordedQuestionIdxes, speakerI
       playBtn.addEventListener("click", playCurVideo)
       downloadBtn.addEventListener("click", downloadCurVideo)
     }
+    const allDownloadBtn = document.getElementById("allDownloadBtn")
+    allDownloadBtn.addEventListener("click", allDownload)
   }, [])
-  return <>
-    <h1>면접끝</h1>
-    <video controls autoPlay width={"480px"} height={"360px"} id="my-video" />
-    {questions.map((question, idx) => {
-      if(recordedQuestionIdxes.some(recordedIdx => recordedIdx===idx)) {
-        return <div key={idx}>
-          <h4>{question}</h4>
-          <button id={`${idx}-play`}><i className="fas fa-play"></i></button>
-          <button id={`${idx}-download`}><i className="fas fa-download"></i></button>
-        </div>
-      }
-    })}
-  </>
+  return <div className={styles.body}>
+    <h1>면접이 종료되었습니다.</h1>
+    <div className={styles.btn}>
+        <button id="allDownloadBtn">전체 다운로드</button>
+    </div>
+    <div className={styles.comp}>
+      <div className={styles.videoComp}>
+        <video controls autoPlay width={"480px"} height={"360px"} id="my-video" />
+      </div>
+      <div className={styles.recordComp}>
+        {/* <div className={styles.recordCompTop}>
+            <button>전체 다운로드</button>
+        </div> */}
+        {questions.map((question, idx) => {
+          if(recordedQuestionIdxes.some(recordedIdx => recordedIdx===idx)) {
+            return <div key={idx} className={styles.recordList}>
+            <div>
+              <span>질문 {idx+1}. {question}</span>
+              <button id={`${idx}-play`}><i className="fas fa-play"></i></button>
+              <button id={`${idx}-download`}><i className="fas fa-download"></i></button>
+            </div>
+            </div>
+          }
+        })}
+      </div>
+    </div>
+  </div>
 }
