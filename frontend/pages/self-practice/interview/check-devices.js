@@ -29,10 +29,10 @@ function mapDispatchToProps(dispatch) {
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(CheckDevices);
-
 function CheckDevices({preparedQuestions, ws, isQs, setQuestions}) {
   const nextBtn = useRef();
   const router = useRouter();
+
   useEffect(() => {
     if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
     if(!isQs) {
