@@ -126,45 +126,54 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion, removeQuestion
         <div className={styles.text}>Step 3</div>
       </div>
     </div>
-    <h1>연습에 사용할 질문을 골라주세요.</h1>
+    <span className={styles.title}>연습에 사용할 질문을 골라주세요.</span>
     <div className={styles.mainContainer}>
-      <div className={styles.columnContainer}>
+      <div className={styles.rowContainer}>
         <div className={styles.changeBtn}>
           <button onClick={() => changeQuetionList(0)}>●</button>
           {isLogin?<button onClick={() => changeQuetionList(1)}>●</button>:null}
         </div>
-        <h3>면접 질문 리스트</h3>
-        <div className={styles.baseContainer}>
-          <div style={qListNum!==0?{display: "none"}:{}}>
-            {allQuestions?.map(question => (
-              <h2 key={question.id}>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}>추가</button></h2>
-            ))}
+        <div className={styles.ContainerL}>
+          <div className={styles.QuestionContainer}>
+          <div className={styles.QuestionTitle}><span>면접 질문 리스트</span></div>
+          <div className={styles.QuestionList}>
+            <div style={qListNum!==0?{display: "none"}:{}}>
+              {allQuestions?.map(question => (
+                <h2 key={question.id}>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}>추가</button></h2>
+              ))}
+            </div>
+            <div style={qListNum!==1?{display: "none"}:{}}>
+              {myQuestions?.map(question => (
+                <h2 key={question.id}>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}>추가</button></h2>
+              ))}
+            </div>
           </div>
-          <div style={qListNum!==1?{display: "none"}:{}}>
-            {myQuestions?.map(question => (
-              <h2 key={question.id}>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}>추가</button></h2>
-            ))}
+          </div>
+          <div className={styles.addContainer}>
+            <input value={questionInput} onChange={(event) => {setQuestionInput(event.target.value)}} placeholder="나만의 질문을 입력해주세요!"></input>
+            <button onClick={()=>addQuestionInput("미확인", questionInput)}>면접질문추가</button>
+          </div>
+          <div className={styles.pagination}>
+            <Pagination
+            curPage={curPage}
+            paginate={paginate}
+            totalCount={totalPosts}
+            postsPerPage={postsPerPage}
+            />
           </div>
         </div>
-        <Pagination
-          curPage={curPage}
-          paginate={paginate}
-          totalCount={totalPosts}
-          postsPerPage={postsPerPage}
-        />
-        <div className={styles.addContainer}>
-          <input value={questionInput} onChange={(event) => {setQuestionInput(event.target.value)}} placeholder="나만의 질문을 입력해주세요!"></input>
-          <button onClick={()=>addQuestionInput("미확인", questionInput)}>면접질문추가</button>
+        <div className={styles.ContainerR}>
+          <div className={styles.selectedContainer}>
+            <div className={styles.selectedTitle}><span>내가 선택한 질문</span><div id={styles.total}>총 {questions.length}개</div> </div>
+            <div className={styles.selectedList}>
+              {questions?.map((question, idx) => (
+                <h1 key={idx}>{question.field} | {question.question} <button onClick={()=>removeQuestion(idx)}>X</button></h1>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-      <h3>내가 선택한 질문</h3>
-      <h3>총 {questions.length}개</h3>
-      <div className={styles.selectedContainer}>
-        {questions?.map((question, idx) => (
-          <h1 key={idx}>{question.field} | {question.question} <button onClick={()=>removeQuestion(idx)}>X</button></h1>
-        ))}
-      </div>
-    </div>
+    </div>  
     <Link href="/self-practice/interview/check-devices">
       <button onClick={alertBlank} id={styles.submitBtn}>다음 단계로</button>
     </Link>

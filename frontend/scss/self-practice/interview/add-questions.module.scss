@@ -1,67 +1,105 @@
 @import "../main.scss";
 @import "../../common/mixins.scss";
 @import "../../common/variables.scss";
-
+@import "../../layout/pagination.module.scss";
 .body {
   @include flex-center;
   flex-direction: column;
-  margin-top:.3rem;
-  h1{
-    margin-top:2rem;
+  height: 100vh;
+  margin-top:2rem;
+  .title{
+    font-size: 1.8rem;
+    margin-top:1.6rem;
+    font-weight: bold;
     color:#6BBFCA;
   }
 }
 
 .mainContainer {
-  @include flex-center;
   margin-top:3rem;
-  display: flex;
-  justify-content: space-evenly;
-  flex-direction: row;
-  .columnContainer {
-    .baseContainer {
-      overflow:scroll;
-      padding: 0 auto;
-      width: 375px;
-      height: 368px;
-      margin-right: 50px;
-      margin-left: 50px;
-      background: $background-color;
-      box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
-      border-radius: 12px;
-    }
-    .addContainer {
-      width: 375px;
-      height: 100px;
-      // border: 5px solid #764abc;
-      // color: #764abc;
-      // padding: 0 auto;
-      input {
-        padding: 1rem;
-        width: 375px;
-        height: 40px;
-        font-size: 1rem;
+  .rowContainer {
+    display: flex;
+    flex-direction: row;
+    .ContainerL {
+      width: 400px;
+      // height: 600px;
+      background-color: red;
+      padding-right: 10px;
+      .QuestionContainer{
+        padding: 20px;
+        width: 100%;
+        height: 85%;
         background: $background-color;
         box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
-        border-radius: 10px;
-        border: 1px;
+        border-radius: 12px;
+        .QuestionTitle{
+          width: 100%;
+          height: 10%;
+          background-color: beige;
+          span{
+            font-size: 1.2rem;
+            font-weight: bold;
+          }
+        }
+        .QuestionList{
+          width: 100%;
+          height: 90%;
+          background-color: blue;
+        }
       }
-      button {
-        margin-top: 0;
-        width: 375px;
+      .addContainer {
+        direction: flex;
+        flex-direction: row;
+        height: 10%;
+        input {
+          padding: 1rem;
+          width: 90%;
+          height: 100%;
+          font-size: 1rem;
+          background: $background-color;
+          box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
+          border-radius: 10px;
+          border: 1px;
+        }
+        button {
+          float: right;
+          width: 10%;
+          height: 100%;
+        }
       }
     }
-  }
-  .selectedContainer {
-    overflow: scroll;
-    padding: 0 auto;
-    width: 375px;
-    height: 368px;
-    margin-right: 50px;
-    margin-left: 50px;
-    background: $background-color;
-    box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
-    border-radius: 12px;
+    .ContainerR {
+      padding-left: 10px;
+      width: 400px;
+      height: 600px;
+      background-color: blue;
+      .selectedContainer{
+        padding: 20px;
+        width: 100%;
+        height: 100%;
+        background: $background-color;
+        box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
+        border-radius: 12px;
+        .selectedTitle{
+          width: 100%;
+          height: 10%;
+          background-color: beige;
+          span{
+            font-size: 1.2rem;
+            font-weight: bold;
+          }
+          #total{
+            float:right;
+          }
+        }
+        .selectedList{
+          width: 100%;
+          height: 90%;
+          background-color: blue;
+        }
+        
+      }
+    }
   }
 }
 
@@ -159,4 +197,11 @@
   color:white;
   margin-bottom: 1rem;
   border: 1px;
+}
+
+.pagination{
+  height: 5%;
+}
+.nav{
+    padding: 0px;
 }
