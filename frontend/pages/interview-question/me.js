@@ -1,4 +1,5 @@
 import QuestionListRow from "../../components/interview-question/QuestionListRow";
+import styles from "../../scss/interview-question/main.module.scss";
 import Pagination from "../../components/layout/Pagination";
 import Link from "next/link";
 
@@ -54,46 +55,71 @@ function myQuestion({ myQuestions, setMyQuestions }) {
   };
 
   return (
-    <section>
-      <Link href="/interview-question">
-        <a>모든 질문 보기</a>
-      </Link>
-      <Link href="/interview-question/add">
-        <a>내 질문 등록하기</a>
-      </Link>
+    <div className={styles.mainContainer}>
+      <h1># 내 질문이당</h1>
+
+      <div className={styles.topBar}>
+        <input
+          type="text"
+          placeholder="검색어를 입력하고 엔터키를 눌러주세요..."
+        />
+
+        <div className={styles.btns}>
+          <Link href="/interview-question">
+            <a className={styles.isNotButton}>모든 질문 보기</a>
+          </Link>
+
+          <Link href="/interview-question/create">
+            <button className={styles.isButton}>내 질문 등록하기</button>
+          </Link>
+        </div>
+      </div>
+
       {Array.isArray(myQuestions) && myQuestions.length === 0 ? (
-        <div>
-          아직 등록한 나만의 질문이 없어요. "내 질문 등록하기"를 눌러 나만의
-          질문을 등록해보세요!
+        <div className={styles.noQuestions}>
+          <span>아직 등록한 질문이 없어요 ㅜ.ㅜ</span>
+          <p>
+            <strong>
+              <Link href="/interview-question/create">
+                <a>내 질문 등록하기</a>
+              </Link>
+            </strong>
+            에서 나만의 질문을 등록해보세요!
+          </p>
         </div>
       ) : (
-        <div>
-          <div>
+        <div className={styles.container}>
+          <div className={styles.header}>
             <select>
-              <option value="분류">분류</option>
               <option value="공통">공통</option>
+              <option value="기술">기술</option>
               <option value="인성">인성</option>
+              <option value="기타">기타</option>
             </select>
             <span>질문</span>
           </div>
 
-          {myQuestions?.map((question) => (
-            <QuestionListRow
-              question={question}
-              myQuestionMode={true}
-              reload={reload}
-              key={question.id}
-            />
-          ))}
+          <div className={styles.table}>
+            {myQuestions?.map((question) => (
+              <QuestionListRow
+                question={question}
+                myQuestionMode={true}
+                reload={reload}
+                key={question.id}
+              />
+            ))}
+          </div>
 
-          <Pagination
-            curPage={curPage}
-            paginate={paginate}
-            totalCount={totalPosts}
-            postsPerPage={postsPerPage}
-          />
+          <div className={styles.pagination}>
+            <Pagination
+              curPage={curPage}
+              paginate={paginate}
+              totalCount={totalPosts}
+              postsPerPage={postsPerPage}
+            />
+          </div>
         </div>
       )}
-    </section>
+    </div>
   );
 }

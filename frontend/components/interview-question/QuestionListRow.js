@@ -50,19 +50,21 @@ export default function QuestionListRow({ question, myQuestionMode, reload }) {
           <span>Q. {question.question}</span>
 
           <div className={styles.btns}>
-            <button onClick={() => setShowAnswer(!showAnswer)}>
-              <i className="fas fa-angle-down"></i>
-            </button>
             {myQuestionMode ? (
               <div>
                 <button onClick={onMoveUpdatePage}>
                   <i className="fas fa-pen"></i>
                 </button>
+                
                 <button onClick={deleteQuestion}>
                   <i className="fas fa-trash"></i>
                 </button>
               </div>
             ) : null}
+
+            <button onClick={() => setShowAnswer(!showAnswer)}>
+              <i className="fas fa-angle-down"></i>
+            </button>
           </div>
         </div>
       </div>

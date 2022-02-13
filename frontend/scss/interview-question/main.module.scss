@@ -30,14 +30,14 @@
     }
   }
   .btns {
-    .goMyQuestionBtn {
+    .isNotButton {
       @include none-button($text-color);
       opacity: 1;
       font-size: 15px;
       font-weight: 600;
       margin-right: 30px;
     }
-    .goPracticeBtn {
+    .isButton {
       @include filled-button(200px, white, $main-color);
       a {
         color: white;
@@ -73,4 +73,19 @@
   .pagination{
       padding: 40px 0;
   }
+}
+
+.noQuestions{
+    @include white-box;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    a{
+        &:hover{
+            color: $main-color;
+        }
+    }
 }
