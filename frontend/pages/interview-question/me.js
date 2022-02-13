@@ -2,13 +2,10 @@ import QuestionListRow from "../../components/interview-question/QuestionListRow
 import Pagination from "../../components/layout/Pagination";
 import Link from "next/link";
 
+import { getMyInterviewQuestions } from "../../api/interviewQuestion";
 import { setMyQuestions } from "../../store/actions/questionAction";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import {
-  getMyInterviewQuestions,
-  deleteInterviewQuestion,
-} from "../../api/interviewQuestion";
 
 function mapStateToProps({ questionReducer }) {
   return {
@@ -47,21 +44,6 @@ function myQuestion({ myQuestions, setMyQuestions }) {
     );
   }, [curPage]);
 
-  const deleteQuestion = (id) => {
-    if (confirm("정말 삭제하시겠습니까?") === true) {
-      const params = {
-        id,
-      };
-      deleteInterviewQuestion(
-        params,
-        (response) => {
-          getQuestion();
-        },
-        (error) => console.log(error)
-      );
-    } else return;
-  };
-
   return (
     <section>
       <Link href="/interview-question">
@@ -87,7 +69,11 @@ function myQuestion({ myQuestions, setMyQuestions }) {
           </div>
 
           {myQuestions?.map((question) => (
-            <QuestionListRow question={question} key={question.id} />
+            <QuestionListRow
+              question={question}
+              myQuestionMode={true}
+              key={question.id}
+            />
           ))}
 
           <Pagination
