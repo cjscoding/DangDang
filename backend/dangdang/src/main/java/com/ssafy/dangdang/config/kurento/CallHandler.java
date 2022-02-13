@@ -91,6 +91,10 @@ public class CallHandler extends TextWebSocketHandler {
         break;
       case "mode":
         sendMode(user, jsonMessage, session);
+        break;
+      case "members":
+        sendMembers(user, jsonMessage, session);
+        break;
       default:
         break;
     }
@@ -137,6 +141,16 @@ public class CallHandler extends TextWebSocketHandler {
     // 세션이 포함되어있는 룸 찾고, 룸안에 있는 모든 참여자들에게 메세지 보냄
     Room room=roomManager.getRoom(user.getRoomName());
     room.roomSendMode(session, user, position);
+  }
+
+  // roomName에 포함된 모든 멤버들 return
+  private void sendMembers(UserSession user, JsonObject params, WebSocketSession session) throws IOException {
+    String roomName = params.get("roomName").getAsString(); // 보내야 할 메세지
+    log.info("roomName 보낸 세션:" + session + " : " + roomName);
+
+    // roomName과 같은 room 찾고, session에게 roomName에 포함된 멤버 정보 보냄
+    Room room=roomManager.getRoom(roomName);
+    room.roomSendMembers(session, user, roomName);
   }
 
 
