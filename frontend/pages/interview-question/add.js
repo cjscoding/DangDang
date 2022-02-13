@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { useState } from "react";
-import { connect } from "react-redux";
-import { useRouter } from "next/router";
+
 import { addInterviewQuestion } from "../../api/interviewQuestion";
+import { useRouter } from "next/router";
+import { connect } from "react-redux";
+import { useState } from "react";
 
 export default connect()(addQuestion);
 
