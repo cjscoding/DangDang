@@ -9,10 +9,11 @@ import getVideoConstraints from "../../../components/webRTC/getVideoConstraints"
 import { ttsService } from "../../../api/webRTC";
 
 function mapStateToProps(state) {
+  const questions = state.questionReducer.questions.map(question => question.question)
   return {
     ws: state.wsReducer.ws,
     sessionId: state.wsReducer.sessionId,
-    questions: state.questionReducer.questions,
+    questions
   };
 }
 import { setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion } from "../../../store/actions/wsAction";

@@ -1,7 +1,8 @@
 import types from "../types";
 
-export const addQuestion = (question) => ({
+export const addQuestion = (field, question) => ({
   type: types.ADD_QUESTION,
+  field,
   question,
 });
 

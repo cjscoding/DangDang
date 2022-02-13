@@ -21,7 +21,7 @@ export function ttsService(txt, volume) {
 
     const context=new AudioContext();
     // 사운드 조절을 위해 gainNode를 추가
-    console.log(store.getState().videoReducer.speakerId)
+    // console.log(store.getState().videoReducer.speakerId)
     const gainNode = context.createGain()
     gainNode.connect(context.destination)
     // arraybuffer 재생

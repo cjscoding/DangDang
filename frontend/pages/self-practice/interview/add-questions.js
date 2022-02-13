@@ -17,7 +17,7 @@ function mapStateToProps(state) {
 import { addQuestion, removeQuestion } from "../../../store/actions/questionAction";
 function mapDispatchToProps(dispatch) {
   return {
-    addQuestion: (question) => dispatch(addQuestion(question)),
+    addQuestion: (field, question) => dispatch(addQuestion(field, question)),
     removeQuestion: (idx) => dispatch(removeQuestion(idx))
   }
 }
@@ -65,10 +65,10 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion, removeQuestion
     }
   }, [curPage])
 
-  function addQuestionInput() {
-    const Qinput = questionInput.trim()
-    if(Qinput) {
-      addQuestion(Qinput);
+  function addQuestionInput(field, question) {
+    const trimedQuestion = question.trim()
+    if(trimedQuestion) {
+      addQuestion(field, trimedQuestion);
     }else {
       alert("값을 입력해주세요");
     }
@@ -133,15 +133,16 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion, removeQuestion
           <button onClick={() => changeQuetionList(0)}>●</button>
           {isLogin?<button onClick={() => changeQuetionList(1)}>●</button>:null}
         </div>
+        <h3>면접 질문 리스트</h3>
         <div className={styles.baseContainer}>
           <div style={qListNum!==0?{display: "none"}:{}}>
             {allQuestions?.map(question => (
-              <h2 key={question.id}>{question.question} <button onClick={()=>addQuestion(question.question)}>추가</button></h2>
+              <h2 key={question.id}>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}>추가</button></h2>
             ))}
           </div>
           <div style={qListNum!==1?{display: "none"}:{}}>
             {myQuestions?.map(question => (
-              <h2 key={question.id}>{question.question} <button onClick={()=>addQuestion(question.question)}>추가</button></h2>
+              <h2 key={question.id}>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}>추가</button></h2>
             ))}
           </div>
         </div>
@@ -153,12 +154,14 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion, removeQuestion
         />
         <div className={styles.addContainer}>
           <input value={questionInput} onChange={(event) => {setQuestionInput(event.target.value)}} placeholder="나만의 질문을 입력해주세요!"></input>
-          <button onClick={addQuestionInput}>면접질문추가</button>
+          <button onClick={()=>addQuestionInput("미확인", questionInput)}>면접질문추가</button>
         </div>
       </div>
+      <h3>내가 선택한 질문</h3>
+      <h3>총 {questions.length}개</h3>
       <div className={styles.selectedContainer}>
         {questions?.map((question, idx) => (
-          <h1 key={idx}>{question} <button onClick={()=>removeQuestion(idx)}>X</button></h1>
+          <h1 key={idx}>{question.field} | {question.question} <button onClick={()=>removeQuestion(idx)}>X</button></h1>
         ))}
       </div>
     </div>
