@@ -1,3 +1,5 @@
+import styles from "../../scss/interview-question/questionListRow.module.scss";
+
 import { deleteInterviewQuestion } from "../../api/interviewQuestion";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -40,17 +42,19 @@ export default function QuestionListRow({ question, myQuestionMode, reload }) {
   };
 
   return (
-    <div>
-      <div>
+    <div className={styles.questionListRow}>
+      <div className={styles.questionArea}>
         <span>{question.field}</span>
-        <div>
+
+        <div className={styles.contents}>
           <span>Q. {question.question}</span>
-          <div className="btns">
+
+          <div className={styles.btns}>
             <button onClick={() => setShowAnswer(!showAnswer)}>
               <i className="fas fa-angle-down"></i>
             </button>
             {myQuestionMode ? (
-              <div className="btns">
+              <div>
                 <button onClick={onMoveUpdatePage}>
                   <i className="fas fa-pen"></i>
                 </button>
@@ -64,7 +68,7 @@ export default function QuestionListRow({ question, myQuestionMode, reload }) {
       </div>
 
       {showAnswer ? (
-        <div>
+        <div className={styles.answerArea}>
           <div></div>
           <span>A. {question.answer}</span>
         </div>

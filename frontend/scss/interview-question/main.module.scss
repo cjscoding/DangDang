@@ -1,16 +1,76 @@
+@import "../common/variables.scss";
 @import "../common/mixins.scss";
 
-.container {
-  @include flex-center();
-  flex-direction: column;
-}
-
-.table {
-  td {
-    padding-right: 1rem;
+.mainContainer {
+  width: 1000px;
+  padding: 80px 0;
+  h1 {
+    color: $main-color;
+    text-align: center;
+    margin-bottom: 100px;
   }
 }
 
-.menuContainer {
-  @include flex-center;
+.topBar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 30px 0;
+  input {
+    width: 300px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: $line-color;
+    outline: none;
+    &:focus {
+      border: 1px solid $main-color;
+      background-color: white;
+    }
+  }
+  .btns {
+    .goMyQuestionBtn {
+      @include none-button($text-color);
+      opacity: 1;
+      font-size: 15px;
+      font-weight: 600;
+      margin-right: 30px;
+    }
+    .goPracticeBtn {
+      @include filled-button(200px, white, $main-color);
+      a {
+        color: white;
+      }
+    }
+  }
+}
+
+.container {
+  @include white-box;
+  margin: 30px 0;
+  padding: 0;
+  .header {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    padding: 30px 50px;
+    opacity: 0.6;
+    select {
+      border: none;
+      outline: none;
+      background-color: inherit;
+      font-size: 15px;
+    }
+    span {
+      text-align: center;
+      font-size: 15px;
+    }
+  }
+  .table {
+    border-top: $division-line;
+    border-bottom: $division-line;
+  }
+  .pagination{
+      padding: 40px 0;
+  }
 }

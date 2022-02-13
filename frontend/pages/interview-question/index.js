@@ -46,49 +46,53 @@ function interviewQuestion({ isLogin, questions, setQuestions }) {
   }, [curPage]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.mainContainer}>
       <h1># 질문궁금하당</h1>
 
-      <div className={styles.menuContainer}>
-        <div>
-          <input type="text" placeholder="검색" />
-          <button>검색</button>
-        </div>
-        <div>
+      <div className={styles.topBar}>
+        <input
+          type="text"
+          placeholder="검색어를 입력하고 엔터키를 눌러주세요..."
+        />
+
+        <div className={styles.btns}>
           {isLogin ? (
             <Link href="/interview-question/me">
-              <button>내 질문 보기</button>
+              <button className={styles.goMyQuestionBtn}>내 질문 보기</button>
             </Link>
           ) : null}
 
           <Link href="/self-practice">
-            <a>
-              <button>연습 시작하기</button>
-            </a>
+            <button className={styles.goPracticeBtn}>연습 시작하기</button>
           </Link>
         </div>
       </div>
 
-      <div>
-        <div>
-          <select>
-            <option value="분류">분류</option>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <select value="분류">
             <option value="공통">공통</option>
+            <option value="기술">기술</option>
             <option value="인성">인성</option>
+            <option value="기타">기타</option>
           </select>
           <span>질문</span>
         </div>
 
-        {questions?.map((question) => (
-          <QuestionListRow question={question} key={question.id} />
-        ))}
+        <div className={styles.table}>
+          {questions?.map((question) => (
+            <QuestionListRow question={question} key={question.id} />
+          ))}
+        </div>
 
-        <Pagination
-          curPage={curPage}
-          paginate={paginate}
-          totalCount={totalPosts}
-          postsPerPage={postsPerPage}
-        />
+        <div className={styles.pagination}>
+          <Pagination
+            curPage={curPage}
+            paginate={paginate}
+            totalCount={totalPosts}
+            postsPerPage={postsPerPage}
+          />
+        </div>
       </div>
     </div>
   );

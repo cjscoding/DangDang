@@ -1,3 +1,4 @@
+import styles from "../../scss/team/form.module.scss";
 import Link from "next/link";
 
 import { addInterviewQuestion } from "../../api/interviewQuestion";
@@ -27,18 +28,18 @@ function addQuestion() {
     event.preventDefault();
     addInterviewQuestion(
       values,
-      (response) => {
-        console.log(response);
-        alert("질문 등록 성공!");
-        router.push("/interview-question");
+      (res) => {
+        console.log(res, "질문 등록 성공");
+        router.push("/interview-question/me");
       },
-      (error) => console.log(error)
+      (err) => console.log(err, "질문 등록 실패")
     );
   };
 
   return (
     <div>
-      내 질문 등록하기
+      <h2>내 질문 등록하기</h2>
+
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="field">
@@ -76,7 +77,9 @@ function addQuestion() {
         </div>
         <button type="submit">등록하기</button>
       </form>
-      <Link href="/interview-question/me">목록으로</Link>
+      <Link href="/interview-question/me">
+        <a>목록으로</a>
+      </Link>
     </div>
   );
 }
