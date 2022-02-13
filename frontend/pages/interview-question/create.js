@@ -47,12 +47,10 @@ function addQuestion() {
       </Link>
 
       <form>
-        <h2>내 질문 등록하기</h2>
+        <h2>내 질문 등록</h2>
 
         <div className={styles.contents}>
-          <label htmlFor="field" className={styles.alignCenter}>
-            분류
-          </label>
+          <label htmlFor="field">분류</label>
           <select id="field" onChange={handleChange}>
             {options.map((option) => (
               <option key={option} value={option}>
@@ -61,9 +59,7 @@ function addQuestion() {
             ))}
           </select>
 
-          <label htmlFor="question" className={styles.alignCenter}>
-            질문
-          </label>
+          <label htmlFor="question">질문</label>
           <input
             id="question"
             type="text"
@@ -74,9 +70,7 @@ function addQuestion() {
             required
           />
 
-          <label htmlFor="answer" className={styles.answerLabel}>
-            답변
-          </label>
+          <label htmlFor="answer">답변</label>
           <textarea
             id="answer"
             value={values.answer}
