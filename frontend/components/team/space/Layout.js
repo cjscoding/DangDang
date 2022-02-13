@@ -3,6 +3,7 @@ import Link from "next/link";
 import { FRONTEND_URL, BACKEND_URL } from "../../../config";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import getStreamPermission from "../../webRTC/getStreamPermission";
 
 export default function Layout({ roomInfo, host, image, href, btnText }) {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function Layout({ roomInfo, host, image, href, btnText }) {
   }, [router.isReady]);
 
   function goToWebConference() {
-    window.open(`${FRONTEND_URL}/web-conference/check-devices/${studyId}`);
+    getStreamPermission(`/web-conference/check-devices/${studyId}`)
   }
   return (
     <div className={styles.teamSpaceLayout}>
