@@ -430,9 +430,20 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
       }
       chatInputEl.value = ""
     }
+    function enterInput(event) {
+      switch(event.key) {
+        case "Enter":
+          event.preventDefault();
+          sendChatMsg()
+          break
+        default:
+          break;
+      }
+    }
     const chatInputEl = chatInput.current
     const chatInputBtnEl = chatInputBtn.current
     chatInputBtnEl.addEventListener("click", sendChatMsg)
+    chatInputEl.addEventListener("keypress", enterInput)
 
     const cameraBtnEl = cameraBtn.current
     const micBtnEl = micBtn.current
@@ -486,6 +497,7 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
     window.addEventListener("beforeunload", beforeunload)
     return () => {
       chatInputBtnEl.removeEventListener("click", sendChatMsg)
+      chatInputEl.removeEventListener("keypress", enterInput)
       screenBtnEl.removeEventListener("click", startScreenShare)
       // 방 퇴장
       window.removeEventListener("beforeunload", beforeunload)
