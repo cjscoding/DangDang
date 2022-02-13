@@ -143,7 +143,7 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
                   <div className={styles.mainDetails}>
                     <span className={styles.roomName}>{room.name}</span>
                     <span className={styles.roomNumber}>
-                      <i class="fas fa-user-friends"></i> {room.number}
+                      <i className="fas fa-user-friends"></i> {room.number}
                     </span>
                   </div>
 

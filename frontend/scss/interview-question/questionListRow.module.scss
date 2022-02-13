@@ -1,0 +1,44 @@
+@import "../common/variables.scss";
+@import "../common/mixins.scss";
+
+.questionListRow {
+  border-bottom: $division-line;
+  display: flex;
+  flex-direction: column;
+  .questionArea,
+  .answerArea {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    padding: 15px 0;
+    gap: 50px;
+    &:first-child {
+      text-align: center;
+    }
+  }
+  .answerArea {
+    border-top: $division-line;
+    background-color: $background-color;
+    span {
+      padding: 5px 50px;
+    }
+  }
+  .contents {
+    span {
+      padding: 5px 0;
+    }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    font-weight: 700;
+    .btns {
+      button {
+        @include none-button($text-color);
+        font-size: 20px;
+      }
+    }
+  }
+  &:last-child {
+    border-bottom: none;
+  }
+}

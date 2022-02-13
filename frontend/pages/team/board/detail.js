@@ -132,7 +132,7 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
                 ))}
               </div>
               <h4>
-                <i class="fas fa-user-friends"></i> {roomHost.nickName} 외{" "}
+                <i className="fas fa-user-friends"></i> {roomHost.nickName} 외{" "}
                 {roomInfo.number}명
               </h4>
             </div>
