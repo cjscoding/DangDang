@@ -96,4 +96,11 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService{
         return interviewQuestionDtos;
     }
 
+    @Override
+    public Page<InterviewQuestionDto> getMyQuestion(User writer, WriteInterview searchParam, Pageable pageable) {
+        Page<InterviewQuestion> all = interviewQuestionRepository.searchMine(writer, searchParam, pageable);
+        Page<InterviewQuestionDto> interviewQuestionDtos = all.map(InterviewQuestionDto::of);
+        return interviewQuestionDtos;
+    }
+
 }

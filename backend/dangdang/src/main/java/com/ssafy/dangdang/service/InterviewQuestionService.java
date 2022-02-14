@@ -38,4 +38,6 @@ public interface InterviewQuestionService {
 
     Page<InterviewQuestionDto> getMyQuestion(User writer, Pageable pageable);
 
+    Page<InterviewQuestionDto> getMyQuestion(User writer, WriteInterview searchParam, Pageable pageable);
+
 }
