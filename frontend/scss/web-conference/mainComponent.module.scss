@@ -10,7 +10,7 @@
     display: flex;
     justify-content:flex-start;
     align-items:center;
-    min-width: 600px;
+    min-width: 1200px;
     .videoContainer {
       display: flex;
       flex-direction: column;
@@ -19,7 +19,7 @@
       align-items: center;
       height: 80vh;
       min-height: 40rem;
-      min-width: calc(600px - 24rem);
+      min-width: calc(1200px - 24rem);
       .screens {
         span{
           display: inline-flex;

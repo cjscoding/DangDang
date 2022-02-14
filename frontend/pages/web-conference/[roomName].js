@@ -72,13 +72,23 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
         video.style.minHeight = "28.5rem"
         video.style.minWidth = "50.667rem"
       }else {
-        video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
-        video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
-        video.style.maxHeight = "calc(40vh - 1.5rem)"
-        video.style.maxWidth = "calc(71.111vh - 2.667rem"
-        video.style.minHeight = "8.5rem"
-        video.style.minWidth = "15.111rem"
-        video.style.borderRadius = "1rem"
+        if(screenShareState) {
+          video.style.width = "calc(35.556vh - 3.556rem)"
+          video.style.height = "calc(20vh - 2rem)"
+          video.style.maxHeight = "calc(19.688vh - 2.344rem)"
+          video.style.maxWidth = "calc(35vh - 4.16rem)"
+          video.style.minHeight = "8.5rem"
+          video.style.minWidth = "15.111rem"
+          video.style.borderRadius = "0.6rem"
+        }else {
+          video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
+          video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
+          video.style.maxHeight = "calc(40vh - 1.5rem)"
+          video.style.maxWidth = "calc(71.111vh - 2.667rem"
+          video.style.minHeight = "8.5rem"
+          video.style.minWidth = "15.111rem"
+          video.style.borderRadius = "1rem"
+        }
       }
       video.style.border = "2px"
       video.style.borderStyle = "solid"
@@ -164,6 +174,12 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
               id: "mode",
               position: screenShareTryState?`screenShareTry`:`notScreenShareTry`
             })
+            if(screenShareState) {
+              sendMessage({
+                id: "mode",
+                position: `screenShare`
+              })
+            }
           }
           if(myIdName === volunteerUser) {
             sendMessage({
@@ -634,14 +650,13 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
       const participantsEl = document.getElementById("participants")
       for(let videoContainer of participantsEl.childNodes) {
         const video = videoContainer.firstChild
-        console.log(video)
         video.style.width = "calc(35.556vh - 3.556rem)"
         video.style.height = "calc(20vh - 2rem)"
         video.style.maxHeight = "calc(19.688vh - 2.344rem)"
         video.style.maxWidth = "calc(35vh - 4.16rem)"
         video.style.minHeight = "8.5rem"
         video.style.minWidth = "15.111rem"
-        video.style.borderRadius = "1rem"
+        video.style.borderRadius = "0.6rem"
       }
     }else {
       const participantsEl = document.getElementById("participants")
@@ -651,8 +666,8 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
         video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
         video.style.maxHeight = "calc(40vh - 1.5rem)"
         video.style.maxWidth = "calc(71.111vh - 2.667rem"
-        video.style.minHeight = "calc(281.25px - 7.3125rem - 1.5rem)"
-        video.style.minWidth = "calc(500px - 12rem - 1rem - 2.667rem)"
+        video.style.minHeight = "8.5rem"
+        video.style.minWidth = "15.111rem"
         video.style.borderRadius = "1rem"
       }
     }
