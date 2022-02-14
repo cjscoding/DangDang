@@ -11,7 +11,7 @@ export default connect()(addQuestion);
 function addQuestion() {
   const router = useRouter();
 
-  const options = ["공통", "기술", "인성", "기타"];
+  const options = ["공통", "기술", "인성", "기타", "IT", "금융", "회계", "디자인"];
   const [values, setValues] = useState({
     field: options[0],
     question: "",

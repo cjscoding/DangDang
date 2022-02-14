@@ -14,6 +14,7 @@ export default function ResumeUpdate() {
     answer: "",
   };
   const [myQuestion, setMyQuestion] = useState(initData);
+  const options = ["공통", "기술", "인성", "기타", "IT", "금융", "회계", "디자인"];
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -30,6 +31,7 @@ export default function ResumeUpdate() {
       interviewQuestionId: router.query.id,
       req: {
         field: myQuestion.field,
+        job: "IT",//임시
         question: myQuestion.question,
         answer: myQuestion.answer,
       },
@@ -77,10 +79,11 @@ export default function ResumeUpdate() {
             onChange={onChangeValue}
             value={myQuestion.field}
           >
-            <option value="공통">공통</option>
-            <option value="기술">기술</option>
-            <option value="인성">인성</option>
-            <option value="기타">기타</option>
+            {options.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
           </select>
 
           <label htmlFor="question">질문</label>

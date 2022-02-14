@@ -29,9 +29,25 @@ function myQuestion({ myQuestions, setMyQuestions }) {
   const [totalPosts, setTotalPosts] = useState(0);
   const paginate = (pageNumber) => setCurPage(pageNumber);
 
+  const [field, setField] = useState("공통");
+  const [question, setQuestion] = useState("");
+  const options = [
+    "공통",
+    "기술",
+    "인성",
+    "기타",
+    "IT",
+    "금융",
+    "회계",
+    "디자인",
+  ];
+
   useEffect(() => {
     getQuestions();
-  }, [curPage]);
+  }, [
+    curPage,
+    // ,field, question
+  ]);
 
   const reload = () => {
     setCurPage(0);
@@ -40,6 +56,8 @@ function myQuestion({ myQuestions, setMyQuestions }) {
 
   const getQuestions = () => {
     const params = {
+    //   field,
+    //   question,
       page: curPage,
       size: postsPerPage,
     };
@@ -54,6 +72,13 @@ function myQuestion({ myQuestions, setMyQuestions }) {
     );
   };
 
+  const setKeyword = (event) => {
+    event.preventDefault();
+    if (event.key === "Enter") {
+      setQuestion(event.target.value);
+    }
+  };
+
   return (
     <div className={styles.mainContainer}>
       <h1># 내 질문이당</h1>
@@ -62,6 +87,7 @@ function myQuestion({ myQuestions, setMyQuestions }) {
         <input
           type="text"
           placeholder="검색어를 입력하고 엔터키를 눌러주세요..."
+          onKeyUp={setKeyword}
         />
 
         <div className={styles.btns}>
@@ -90,11 +116,12 @@ function myQuestion({ myQuestions, setMyQuestions }) {
       ) : (
         <div className={styles.container}>
           <div className={styles.header}>
-            <select>
-              <option value="공통">공통</option>
-              <option value="기술">기술</option>
-              <option value="인성">인성</option>
-              <option value="기타">기타</option>
+            <select onChange={(event) => setField(event.target.value)}>
+              {options.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
             </select>
             <span>질문</span>
           </div>
