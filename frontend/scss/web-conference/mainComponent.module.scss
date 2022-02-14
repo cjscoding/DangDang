@@ -11,7 +11,12 @@
       display: inline;
       width: calc(90vw - 24rem);
       .faces {
-        display: inline;
+        display: flex;
+        span{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
       }
     }
     .subContainer {

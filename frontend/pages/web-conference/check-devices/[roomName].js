@@ -27,12 +27,6 @@ function CheckDevices({ws}) {
   const nextBtn = useRef();
   const router = useRouter()
   useEffect(() => {
-    function goToConference() {
-      router.push(`/web-conference/${router.query.roomName}`);
-    }
-    const nextBtnEl = nextBtn.current
-    nextBtnEl.addEventListener("click", goToConference)
-
     function beforeunload() {
       ws.close()
     }
@@ -49,9 +43,18 @@ function CheckDevices({ws}) {
     }
     return () => {
       window.removeEventListener("beforeunload", beforeunload);
-      nextBtnEl.removeEventListener("click", goToConference)
     }
   }, [])
+  useEffect(()=>{
+    function goToConference() {
+      router.push(`/web-conference/${router.query.roomName}`);
+    }
+    const nextBtnEl = nextBtn.current
+    nextBtnEl.addEventListener("click", goToConference)
+    return () => {
+      nextBtnEl.removeEventListener("click", goToConference)
+    }
+  }, [router])
 
   return <div className={styles.body}>
       <span className={styles.title}>카메라와 마이크 설정을 확인해주세요.</span>
