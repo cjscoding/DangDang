@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import styles from "../../../scss/self-practice/interview/end.module.scss";
 import { connect } from "react-redux";
 import { WEBRTC_URL } from "../../../config"
@@ -17,6 +17,7 @@ function mapStateToProps(state) {
 export default connect(mapStateToProps, null)(EndInterview)
 
 function EndInterview({ws, sessionId, questions, recordedQuestionIdxes, speakerId}) {
+  const endBtn = useRef()
   useEffect(()=>{
     if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
     const myVideo = document.querySelector("#my-video")
@@ -76,10 +77,22 @@ function EndInterview({ws, sessionId, questions, recordedQuestionIdxes, speakerI
       playBtn.addEventListener("click", playCurVideo)
       downloadBtn.addEventListener("click", downloadCurVideo)
     }
+    const endBtnEl = endBtn.current
+    function endInterview() {
+      if(confirm("종료하시겠습니까?")) {
+        window.close();
+      }
+    }
+    endBtnEl.addEventListener("click", endInterview)
     const allDownloadBtn = document.getElementById("allDownloadBtn")
     allDownloadBtn.addEventListener("click", allDownload)
+    return () => {
+      endBtnEl.removeEventListener("click", endInterview)
+      allDownloadBtn.removeEventListener("click", allDownload)
+    }
   }, [])
   return <div className={styles.body}>
+    <span className={styles.endBtn} ref={endBtn}><i class="fas fa-times"></i></span>
     <h1>면접이 종료되었습니다.</h1>
     <div className={styles.btn}>
         <button id="allDownloadBtn">전체 다운로드</button>

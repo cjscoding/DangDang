@@ -4,7 +4,15 @@
 
 .body {
   @include flex-center;
+  position: relative;
   flex-direction: column;
+  .endBtn{
+    position: absolute;
+    top: 1rem;
+    right: 2rem;
+    font-size: 2rem;
+    cursor: pointer;
+  }
   h1{
     margin-top:3rem;
     color:#6BBFCA;
