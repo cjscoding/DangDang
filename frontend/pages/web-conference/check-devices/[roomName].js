@@ -37,6 +37,16 @@ function CheckDevices({ws}) {
       ws.close()
     }
     window.addEventListener("beforeunload", beforeunload);
+
+    setTimeout(()=>{
+      const msg = JSON.stringify({id: "members", roomName: 1})
+      ws.send(msg)
+      console.log("메시지 보냈다!!")
+    }, 2000)
+    ws.onmessage = function(msg) {
+      console.log("메시지 받았다!")
+      console.log(msg)
+    }
     return () => {
       window.removeEventListener("beforeunload", beforeunload);
       nextBtnEl.removeEventListener("click", goToConference)

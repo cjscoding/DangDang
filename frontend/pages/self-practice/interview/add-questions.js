@@ -43,7 +43,7 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion, removeQuestion
           size: postsPerPage
         }, ({data: {response}}) => {
           setAllQuestions(response.content)
-          setTotalPosts(response.totalElements)
+          setTotalPosts(response.totalElements *5)
         }, (error) => {
           console.log(error)
         })
