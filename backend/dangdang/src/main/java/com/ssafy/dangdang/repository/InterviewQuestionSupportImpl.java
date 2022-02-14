@@ -5,6 +5,8 @@ import com.ssafy.dangdang.domain.InterviewQuestion;
 
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.WriteInterview;
+import com.ssafy.dangdang.domain.types.InterviewField;
+import com.ssafy.dangdang.domain.types.InterviewJob;
 import com.ssafy.dangdang.repository.support.Querydsl4RepositorySupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,12 +39,14 @@ public class InterviewQuestionSupportImpl extends Querydsl4RepositorySupport imp
                         .join(interviewQuestion.writer, user).fetchJoin()
                         .where( isVisable().or(userEq(writer)),
                                 fieldEq(searchParam.getField()),
+                                jobEq(searchParam.getJob()),
                                 questionContains(searchParam.getQuestion()),
                                 answerContains(searchParam.getAnswer()) ),
                 countQuery -> countQuery
                         .selectFrom(interviewQuestion)
                         .where( isVisable().or(userEq(writer)),
                                 fieldEq(searchParam.getField()),
+                                jobEq(searchParam.getJob()),
                                 questionContains(searchParam.getQuestion()),
                                 answerContains(searchParam.getAnswer()) )
         );
@@ -50,7 +54,10 @@ public class InterviewQuestionSupportImpl extends Querydsl4RepositorySupport imp
     }
 
     private BooleanExpression fieldEq(String field){
-        return field != null ? interviewQuestion.field.eq(field) : null;
+        return field != null ? interviewQuestion.field.eq(InterviewField.valueOf(field)) : null;
+    }
+    private BooleanExpression jobEq(String job){
+        return job != null ? interviewQuestion.job.eq(InterviewJob.valueOf(job)) : null;
     }
     private BooleanExpression questionContains(String question){
         return question != null ? interviewQuestion.question.contains(question) : null;
