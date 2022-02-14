@@ -1,15 +1,16 @@
 import types from "../types";
 
 const timerState = {
-  seconds: 0,
+  startTIme: + new Date(),
+  curTime: + new Date()
 };
 
 const timerReducer = (state = timerState, action) => {
   switch (action.type) {
     case types.START_TIMER:
-      return { ...state, seconds: 0 };
+      return { ...state, startTIme: + new Date() };
     case types.TIMER_TICK:
-      return { ...state, seconds: state.seconds + 1 };
+      return { ...state, curTime: + new Date() };
     default:
       return state;
   }

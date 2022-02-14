@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import ShowQuestion from "../../../components/webRTC/self-practice/ShowQuestion";
 import styles from "../../../scss/self-practice/interview/mainComponent.module.scss";
-import timer from "../../../components/webRTC/timer"
+import timer from "../../../components/webRTC/timerfunction"
+import Timer from "../../../components/webRTC/Timer";
 import getVideoConstraints from "../../../components/webRTC/getVideoConstraints";
 import { ttsService } from "../../../api/webRTC";
 
@@ -17,7 +18,6 @@ function mapStateToProps(state) {
   };
 }
 import { setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion } from "../../../store/actions/wsAction";
-import Timer from "../../../components/webRTC/self-practice/Timer";
 function mapDispatchToProps(dispatch) {
   return {
     setWSSessionId: (sessionId) => dispatch(setWSSessionId(sessionId)),
@@ -200,7 +200,7 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
   },[])
   return <div>
   <div className={styles.closeBtnBox}>
-    <span><Timer/></span>
+    <span className={styles.timer}><Timer/></span>
     <Link href="/self-practice/interview/end">
       <a>
        <span className={styles.closeBtn}><i className="fas fa-times"></i></span>
