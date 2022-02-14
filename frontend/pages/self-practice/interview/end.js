@@ -92,7 +92,7 @@ function EndInterview({ws, sessionId, questions, recordedQuestionIdxes, speakerI
     }
   }, [])
   return <div className={styles.body}>
-    <span className={styles.endBtn} ref={endBtn}><i class="fas fa-times"></i></span>
+    <span className={styles.endBtn} ref={endBtn}><i className="fas fa-times"></i></span>
     <h1>면접이 종료되었습니다.</h1>
     <div className={styles.btn}>
         <button id="allDownloadBtn">전체 다운로드</button>
