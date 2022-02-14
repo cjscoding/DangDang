@@ -146,12 +146,14 @@ function Board({ roomInfo, roomHost, posts, setRoomInfo, setPosts }) {
           </div>
         </div>
 
-        <Pagination
-          curPage={curPage}
-          paginate={paginate}
-          totalCount={totalPosts}
-          postsPerPage={postsPerPage}
-        />
+        <div className={styles.pagination}>
+          <Pagination
+            curPage={curPage}
+            paginate={paginate}
+            totalCount={totalPosts}
+            postsPerPage={postsPerPage}
+          />
+        </div>
       </div>
     </div>
   );
