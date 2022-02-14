@@ -199,11 +199,11 @@ spring:
               - email
               - profile
           kakao:
-            clientId: d0e1d1d6605d4b3d337a63aaec0f97b8
-            clientSecret: 5YEnwcnW8HrVfvHBjH4VMFVTkd6h3zFY
-            clientAuthenticationMethod: post
+            clientId: 7c8379bee663c5cf6ca890219992785e
+            clientSecret: JeSYwbJ4ZBfDj3SP5BpTnNBzJv66H7Ar
+            clientAuthenticationMethod: POST
             authorizationGrantType: authorization_code
-            redirectUri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
             scope:
               - profile_nickname
               - profile_image
