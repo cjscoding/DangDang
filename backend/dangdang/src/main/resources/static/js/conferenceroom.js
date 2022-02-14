@@ -33,8 +33,10 @@ $(document).ready(function (){
 
 	$('#see').on('click', function(e) {
 		alert("누름!");let inputmsg = $('input#msg').val();
+		let n=document.getElementById('name').value;
 		var message = {
 			id : 'members',
+			name : n,
 			roomName : 1
 		}
 		sendMessage(message);
@@ -78,6 +80,10 @@ ws.onmessage = function(message) {
 	case 'members':
 		console.log("members 프론트가 받음 ======================");
 		console.log(message.data + '\n'); //채팅창에 보일 내용
+		break;
+	case 'duplicateName':
+		console.log("이름 중복!");
+		// 페이지 못넘어가게 막기
 		break;
 	default:
 		console.error('Unrecognized message', parsedMessage);
