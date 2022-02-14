@@ -84,8 +84,17 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         URI clientRedirectUri = URI.create(uri);
         List<String> redirects =  new ArrayList<>();
         redirects.add("http://localhost:3000/oauth2/redirect");
-        redirects.add("myandroidapp://oauth2/redirect");
-        redirects.add("myiosapp://oauth2/redirect");
+        redirects.add("http://localhost:3001/oauth2/redirect");
+        redirects.add("https://localhost:3000/oauth2/redirect");
+        redirects.add("https://localhost:3001/oauth2/redirect");
+        redirects.add("https://i6c203.p.ssafy.io:3000/oauth2/redirect");
+        redirects.add("https://i6c203.p.ssafy.io:3001/oauth2/redirect");
+        redirects.add("https://i6c203.p.ssafy.io:80/oauth2/redirect");
+        redirects.add("https://i6c203.p.ssafy.io/oauth2/redirect");
+        redirects.add("http://i6c203.p.ssafy.io:3000/oauth2/redirect");
+        redirects.add("http://i6c203.p.ssafy.io:3001/oauth2/redirect");
+        redirects.add("http://i6c203.p.ssafy.io:80/oauth2/redirect");
+        redirects.add("http://i6c203.p.ssafy.io/oauth2/redirect");
 
         return redirects
                 .stream()

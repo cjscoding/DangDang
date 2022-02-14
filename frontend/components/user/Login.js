@@ -89,12 +89,18 @@ function Login({
   return (
     <div className={styles.body}>
       <h1>로그인</h1>
-      <h4>로그인이 필요한 서비스입니다.<br/> 로그인하고 <span id={styles.dangdang}>당당!</span>의 모든 서비스를 이용해 보세요!</h4>
+      <h4>
+        로그인이 필요한 서비스입니다.
+        <br /> 로그인하고 <span id={styles.dangdang}>당당!</span>의 모든
+        서비스를 이용해 보세요!
+      </h4>
       <form className={styles.form} method="post" onSubmit={handleSubmit}>
         <div>
           {/* <span className={styles.span}><i className="fa-thin fa-envelope"></i></span> */}
           <label htmlFor="email" className={styles.label}>
-            <span className={styles.span}><i className="fas fa-envelope"></i></span>
+            <span className={styles.span}>
+              <i className="fas fa-envelope"></i>
+            </span>
             <input
               id="email"
               type="email"
@@ -107,7 +113,9 @@ function Login({
         </div>
         <div>
           <label htmlFor="password" className={styles.label}>
-            <span className={styles.span}><i className="fas fa-lock"></i></span>
+            <span className={styles.span}>
+              <i className="fas fa-lock"></i>
+            </span>
             <input
               id="password"
               type="password"
@@ -118,14 +126,20 @@ function Login({
             />
           </label>
         </div>
-        <button type="submit" id={styles.submitBtn}>로그인</button>
+        <button type="submit" id={styles.submitBtn}>
+          로그인
+        </button>
       </form>
       <p>
         아직 회원이 아니세요?{" "}
         <a onClick={() => setIsLoginModal(!isLoginModal)}>회원가입</a>
       </p>
-    <a onClick={() => socialLoginRequest("google")} target="_blank"><img src="/images/btn_google_signin_dark_normal_web.png"></img></a>
-    <a onClick={() => socialLoginRequest("kakao")}><img src="/images/kakao_login_medium_narrow.png"></img></a>
+      <a onClick={() => socialLoginRequest("google")} target="_blank">
+        <img src="/images/btn_google_signin_dark_normal_web.png"></img>
+      </a>
+      <a onClick={() => socialLoginRequest("kakao")}>
+        <img src="/images/kakao_login_medium_narrow.png"></img>
+      </a>
 
       {/* <Button
         text="Google로 로그인"

@@ -1,6 +1,8 @@
 package com.ssafy.dangdang.domain;
 
 import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
+import com.ssafy.dangdang.domain.types.InterviewField;
+import com.ssafy.dangdang.domain.types.InterviewJob;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +22,12 @@ public class InterviewQuestion {
     private Long id;
 
     @Column(length = 25)
-    private String field;
+    @Enumerated(EnumType.STRING)
+    private InterviewField field;
+
+    @Column(length = 25)
+    @Enumerated(EnumType.STRING)
+    private InterviewJob job;
 
     @Column(length = 300)
     private String question;
@@ -40,7 +47,8 @@ public class InterviewQuestion {
                 .id(interviewQuestionDto.getId())
                 .question(interviewQuestionDto.getQuestion())
                 .answer(interviewQuestionDto.getAnswer())
-                .field(interviewQuestionDto.getField())
+                .field(InterviewField.valueOf(interviewQuestionDto.getField()))
+                .job(InterviewJob.valueOf(interviewQuestionDto.getJob()))
                 .visable(interviewQuestionDto.isVisable())
                 .writer(user)
                 .build();
