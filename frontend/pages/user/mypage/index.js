@@ -7,10 +7,8 @@ import { useRouter } from "next/router";
 import { connect } from "react-redux";
 
 function mapStateToProps({ userReducer }) {
-  const isImgUrlBackendServer = userReducer.user.imageUrl?userReducer.user.imageUrl.slice(0, 5) === "https":true
   return {
     user: userReducer.user,
-    isImgUrlBackendServer,
   };
 }
 
@@ -36,11 +34,7 @@ function userInfo({ user, isImgUrlBackendServer }) {
   return (
     <div className={styles.myPageContainer}>
       <div className={styles.imageBox}>
-        {
-          isImgUrlBackendServer?
-          <img src={`${BACKEND_URL}/files/images/${user.imageUrl}`} />:
-          <img src={`${user.imageUrl}`} />
-        }
+        <img src={`${user.imageUrl}`} />
       </div>
 
       <div className={styles.info}>
