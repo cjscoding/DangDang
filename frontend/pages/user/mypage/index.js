@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { connect } from "react-redux";
 
 function mapStateToProps({ userReducer }) {
-  const isImgUrlBackendServer = userReducer.user.imageUrl?userReducer.user.imageUrl.slice(0, 5) === "https":true
+  const isImgUrlBackendServer = userReducer.user.imageUrl?userReducer.user.imageUrl.slice(0, 5) !== "https":true
   return {
     user: userReducer.user,
     isImgUrlBackendServer,
