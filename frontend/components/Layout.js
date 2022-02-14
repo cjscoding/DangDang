@@ -24,37 +24,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(Layout);
 
 function Layout({ children, user, setUserInfo, setIsLogin }) {
   const router = useRouter();
-  useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      localStorage.getItem("authorization") &&
-      localStorage.getItem("refreshtoken")
-    ) {
-      setIsLogin(true);
-      const initialState = {
-        id: "",
-        email: "",
-        nickName: "",
-      };
-      
-      if (JSON.stringify(user) === JSON.stringify(initialState)) {
-        getUserInfo(
-          ({ data: { response } }) => {
-            const userInfo = {
-              id: response.id,
-              email: response.email,
-              nickName: response.nickName,
-              imageUrl: response.imageUrl,
-            };
-            setUserInfo(userInfo);
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
-      }
-    }
-  }, [user]);
 
   return (
     <>
