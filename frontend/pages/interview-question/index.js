@@ -30,20 +30,35 @@ function interviewQuestion({ isLogin, questions, setQuestions }) {
   const [totalPosts, setTotalPosts] = useState(0);
   const paginate = (pageNumber) => setCurPage(pageNumber);
 
+  const [field, setField] = useState("공통");
+  const [question, setQuestion] = useState("");
+
   useEffect(() => {
+    console.log(field);
+    console.log(question);
     const params = {
+      field,
+      question,
       page: curPage,
       size: postsPerPage,
     };
     getInterviewQuestions(
       params,
       ({ data: { response } }) => {
+        console.log(response);
         setQuestions(response.content);
         setTotalPosts(response.totalElements);
       },
       (error) => console.log(error)
     );
-  }, [curPage]);
+  }, [curPage, field, question]);
+
+  const setKeyword = (event) => {
+    event.preventDefault();
+    if (event.key === "Enter") {
+      setQuestion(event.target.value);
+    }
+  };
 
   return (
     <div className={styles.mainContainer}>
@@ -53,6 +68,7 @@ function interviewQuestion({ isLogin, questions, setQuestions }) {
         <input
           type="text"
           placeholder="검색어를 입력하고 엔터키를 눌러주세요..."
+          onKeyUp={setKeyword}
         />
 
         <div className={styles.btns}>
@@ -70,11 +86,11 @@ function interviewQuestion({ isLogin, questions, setQuestions }) {
 
       <div className={styles.container}>
         <div className={styles.header}>
-          <select value="분류">
-            <option value="공통">공통</option>
-            <option value="기술">기술</option>
-            <option value="인성">인성</option>
-            <option value="기타">기타</option>
+          <select onChange={(event) => setField(event.target.value)}>
+              <option value="공통">공통</option>
+              <option value="인성">인성</option>
+              <option value="기술">IT</option>
+              <option value="기타">기타</option>
           </select>
           <span>질문</span>
         </div>
