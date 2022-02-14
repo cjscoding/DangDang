@@ -3,6 +3,7 @@ import { combineReducers } from "redux";
 import roomReducer from "./roomReducer";
 import resumeReducer from "./resumeReducer";
 import boardReducer from "./boardReducer";
+import adminReducer from "./adminReducer";
 import videoReducer from "./videoReducer";
 import questionReducer from "./questionReducer";
 import userReducer from "./userReducer";
@@ -13,6 +14,7 @@ const combinedReducer = combineReducers({
   roomReducer,
   resumeReducer,
   boardReducer,
+  adminReducer,
   videoReducer,
   questionReducer,
   userReducer,

@@ -30,6 +30,7 @@ export default function ResumeUpdate() {
       interviewQuestionId: router.query.id,
       req: {
         field: myQuestion.field,
+        job: "IT", //임시
         question: myQuestion.question,
         answer: myQuestion.answer,
       },
@@ -78,8 +79,8 @@ export default function ResumeUpdate() {
             value={myQuestion.field}
           >
             <option value="공통">공통</option>
-            <option value="기술">기술</option>
             <option value="인성">인성</option>
+            <option value="기술">IT</option>
             <option value="기타">기타</option>
           </select>
 
