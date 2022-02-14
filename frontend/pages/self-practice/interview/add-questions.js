@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
-import { getInterviewQuestions, getMyInterviewQuestions } from "../../../api/interviewQuestion";
+import { getInterviewQuestions, getMyInterviewQuestions, getMyBookmarkQuestions } from "../../../api/interviewQuestion";
 import Pagination from "../../../components/layout/Pagination";
 import styles from "../../../scss/self-practice/interview/add-questions.module.scss";
 
@@ -28,14 +28,43 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion, removeQuestion
   const [questionInput, setQuestionInput] = useState("");
   const [allQuestions, setAllQuestions] = useState([]);
   const [myQuestions, setMyQuestions] = useState([]);
-  const [qListNum, setQListNum] = useState(0);
+  const [bookmarkQuestions, setBookmartQuestions] = useState([]);
+  const [qListNum, setQListNum] = useState(-1);
+  const qKind = useRef();
   const [curPage, setCurPage] = useState(0);
   const [postsPerPage] = useState(10);
   const [totalPosts, setTotalPosts] = useState(100);
   const paginate = (pageNumber) => setCurPage(pageNumber);
-  //async 임시용임, 수정할 것임
+  
   useEffect(() => {
     if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
+    const qKindEl = qKind.current
+    const option0 = document.createElement("option");
+    option0.value = 0
+    option0.innerText = "전체 질문"
+    option0.selected = true
+    qKindEl.appendChild(option0);
+    if(isLogin) {
+      const option1 = document.createElement("option");
+      option1.value = 1
+      option1.innerText = "등록한 질문"
+      qKindEl.appendChild(option1);
+      const option2 = document.createElement("option");
+      option2.value = 2
+      option2.innerText = "즐겨찾기 질문"
+      qKindEl.appendChild(option2);
+    }
+    setQListNum(0)
+    function changeQListNum(event) {
+      setQListNum(parseInt(event.target.value))
+    }
+    qKindEl.addEventListener("change", changeQListNum)
+    return () => {
+      qKindEl.removeEventListener("change", changeQListNum)
+    }
+  }, [])
+
+  useEffect(() => {
     switch(qListNum) {
       case 0:
         getInterviewQuestions({
@@ -60,30 +89,25 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion, removeQuestion
           console.log(error)
         })
         break
+      case 2:
+        if(!isLogin) break;
+        getMyBookmarkQuestions({
+          page: curPage,
+          size: postsPerPage
+        }, ({data: {response}}) => {
+          setBookmartQuestions(response.content)
+          setTotalPosts(response.totalElements)
+        }, (error) => {
+          console.log(error)
+        })
+        break
       default:
         break
     }
   }, [curPage])
-
-  function addQuestionInput(field, question) {
-    const trimedQuestion = question.trim()
-    if(trimedQuestion) {
-      addQuestion(field, trimedQuestion);
-    }else {
-      alert("값을 입력해주세요");
-    }
-    setQuestionInput("");
-  }
-  function alertBlank(event) {
-    if(questions.length === 0) {
-      event.preventDefault();
-      alert("질문을 추가해주세요!");
-    }
-  }
-  function changeQuetionList(num) {
+  useEffect(() => {
     setCurPage(0)
-    setQListNum(num)
-    switch(num) {
+    switch(qListNum) {
       case 0:
         getInterviewQuestions({
           page: 0,
@@ -107,10 +131,39 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion, removeQuestion
           console.log(error)
         })
         break
+      case 2:
+        if(!isLogin) break;
+        getMyBookmarkQuestions({
+          page: 0,
+          size: postsPerPage
+        }, ({data: {response}}) => {
+          setBookmartQuestions(response.content)
+          setTotalPosts(response.totalElements)
+        }, (error) => {
+          console.log(error)
+        })
+        break
       default:
         break
     }
+  }, [qListNum])
+
+  function addQuestionInput(field, question) {
+    const trimedQuestion = question.trim()
+    if(trimedQuestion) {
+      addQuestion(field, trimedQuestion);
+    }else {
+      alert("값을 입력해주세요");
+    }
+    setQuestionInput("");
   }
+  function alertBlank(event) {
+    if(questions.length === 0) {
+      event.preventDefault();
+      alert("질문을 추가해주세요!");
+    }
+  }
+
   return <div className={styles.body}>
     <div className={styles.pindicator}>
       <div className={styles.bullet}>
@@ -136,22 +189,29 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion, removeQuestion
         <div className={styles.ContainerL}>
           <div className={styles.QuestionContainer}>
           <div className={styles.QuestionTitle}> 
-            <span>면접 질문 리스트 <span className={styles.changeBtn}>
-            <button onClick={() => changeQuetionList(0)}>●</button>
-            {isLogin?<button onClick={() => changeQuetionList(1)}>●</button>:null}
-            </span></span>
+            <span>면접 질문 리스트</span>
+            <select ref={qKind} />
           </div>
           <div className={styles.QuestionList}>
             <div style={qListNum!==0?{display: "none"}:{}}>
               {allQuestions?.map(question => (
-                <div className={styles.question}>
-                  <span key={question.id}>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}><i className="fas fa-plus"></i></button></span>
+                <div key={question.id} className={styles.question}>
+                  <span>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}><i className="fas fa-plus"></i></button></span>
                 </div>
               ))}
             </div>
-            <div style={qListNum!==1?{display: "none"}:{}} className={styles.question}>
+            <div style={qListNum!==1?{display: "none"}:{}}>
               {myQuestions?.map(question => (
-                <span key={question.id}>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}><i className="fas fa-plus"></i></button></span>
+                <div key={question.id} className={styles.question}>
+                  <span>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}><i className="fas fa-plus"></i></button></span>
+                </div>
+              ))}
+            </div>
+            <div style={qListNum!==2?{display: "none"}:{}}>
+              {bookmarkQuestions?.map(question => (
+                <div key={question.id} className={styles.question}>
+                  <span>{question.field} | {question.question} <button onClick={()=>addQuestion(question.field, question.question)}><i className="fas fa-plus"></i></button></span>
+                </div>
               ))}
             </div>
           </div>

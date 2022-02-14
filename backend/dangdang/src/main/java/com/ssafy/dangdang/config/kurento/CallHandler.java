@@ -92,9 +92,10 @@ public class CallHandler extends TextWebSocketHandler {
       case "mode":
         sendMode(user, jsonMessage, session);
         break;
-      case "members":
-        sendMembers(user, jsonMessage, session);
-        break;
+//      case "members":
+//        // session이 없으므로 새로 만들어줌
+//        sendMembers(jsonMessage, session);
+//        break;
       default:
         break;
     }
@@ -113,6 +114,16 @@ public class CallHandler extends TextWebSocketHandler {
     log.info("PARTICIPANT {}: trying to join room {}", name, roomName);
 
     Room room = roomManager.getRoom(roomName);
+    // 같은 이름 중복 확인 작업
+    for(UserSession s : room.getParticipants()){
+      if(s.getName().equals(name)){
+        log.info("------------같은 이름 있음---------");
+        final JsonObject newMsg = new JsonObject();
+        newMsg.addProperty("id", "duplicateName");
+        session.sendMessage(new TextMessage(newMsg.toString()));
+        return;
+      }
+    }
     final UserSession user = room.join(name, session);
     registry.register(user); // user 생성해서 저장
   }
@@ -144,14 +155,26 @@ public class CallHandler extends TextWebSocketHandler {
   }
 
   // roomName에 포함된 모든 멤버들 return
-  private void sendMembers(UserSession user, JsonObject params, WebSocketSession session) throws IOException {
-    String roomName = params.get("roomName").getAsString(); // 보내야 할 메세지
-    log.info("roomName 보낸 세션:" + session + " : " + roomName);
-
-    // roomName과 같은 room 찾고, session에게 roomName에 포함된 멤버 정보 보냄
-    Room room=roomManager.getRoom(roomName);
-    room.roomSendMembers(session, user, roomName);
-  }
+//  private void sendMembers(JsonObject params, WebSocketSession session) throws IOException {
+//    String roomName = params.get("roomName").getAsString(); // 보내야 할 메세지
+//    String name = params.get("name").getAsString(); // 보내야 할 메세지
+//    log.info("roomName 보낸 세션:" + session + " : " + roomName);
+//
+////    // 임시 방 만들어서 거기서 처리해줌
+////    Room room = roomManager.getRoom("tempRoom");
+////    final UserSession user = room.join(session.getId(), session);
+////    registry.register(user); // user 생성해서 저장
+//
+//    UserSession user=new UserSession(name,"temp",session,null);
+//    registry.register(user);
+//    // roomName과 같은 room 찾고, session에게 roomName에 포함된 멤버 정보 보냄
+//    Room room=roomManager.getRoom(roomName);
+//    room.roomSendMembers(session, user, roomName);
+//
+//    // 멤버 정보 보내고 임시 방 나감
+//    leaveRoom(user);
+//
+//  }
 
 
 }

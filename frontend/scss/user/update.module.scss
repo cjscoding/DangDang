@@ -1,0 +1,71 @@
+@import "../common/variables.scss";
+@import "../common/mixins.scss";
+
+.updateContainer {
+  width: 1000px;
+  display: flex;
+  flex-direction: column;
+  margin: 50px 0 100px 0;
+  .backBtn {
+    @include none-button($text-color);
+    font-size: 20px;
+    font-weight: 500;
+    align-self: flex-start;
+  }
+  .formContainer {
+    margin: 50px;
+    @include white-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h2 {
+      text-align: center;
+      color: $main-color;
+      font-weight: 700;
+      margin: 50px 0 80px 0;
+    }
+
+    .info {
+      display: grid;
+      grid-template-columns: 1fr 6fr;
+      gap: 30px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 70px;
+
+      input {
+        padding: 20px;
+        border-radius: 7px;
+        background-color: $background-color;
+        border: none;
+        outline: none;
+        &:focus {
+          border: 1px solid $main-color;
+          background-color: white;
+        }
+      }
+    }
+
+    .profileContainer {
+      display: flex;
+      align-items: center;
+      span{
+          margin-right: 15px;
+      }
+      .inputFileButton {
+        @include filled-button(70px, white, $main-color);
+        font-size: 13px;
+        text-align: center;
+      }
+    }
+
+    .updateBtn {
+      position: absolute;
+      left: 350px;
+      bottom: -100px;
+      @include filled-button(200px, white, $main-color);
+    }
+  }
+}

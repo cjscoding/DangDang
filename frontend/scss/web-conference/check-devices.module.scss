@@ -1,23 +1,70 @@
+@import "./main.scss";
+@import "../common/mixins.scss";
+@import "../common/variables.scss";
 
-.container {
-  display: flex;
-  justify-content: center;
+.body {
+  @include flex-center;
+  width: 1000px;
+  flex-direction: column;
+  .title{
+    font-size: 1.8rem;
+    margin-top:1.3rem;
+    font-weight: bold;
+    color:#6BBFCA;
+  }
   .videoContainer {
+    margin-top:1.3rem;
     display: flex;
     flex-direction: column;
-    align-items:flex-start;
-    video {
-      width: 60vw;
+    // align-items:flex-start;
+    div{
+      margin:auto;
+      video {
+        width: 50vw;
+        border-radius: 10px;
+      }
     }
     .selectContainer {
-      select {
-        width: 30vw;
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      div{
+        padding-left: 2rem;
+        width: 33.3%;
+        position: relative;
+        margin:auto;
+        .span{
+          margin: 0 0 auto;
+          position: absolute;
+          left: 43px;
+          top: 35px;
+          color: gray;
+        }
+        select {
+          padding-left:25px;
+          box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.10);
+          border-radius: 5px;
+          background-color: #ffffff;
+          border: 1px;
+          width: 90%;
+          height: 50px;
+          cursor: pointer;
+        }
       }
     }
   }
 }
-
 .nextBtn {
-  margin-top: 1rem;
-  margin-left: auto;
+  font-weight: bold;
+  margin: auto;
+  margin-top: 2rem;
+  width: 284px;
+  height: 47px;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
+  background-color: #6BBFCA;
+  color:white;
+  margin-bottom: 1rem;
+  border: 1px;
+  cursor: pointer;
 }

@@ -18,7 +18,6 @@ const userReducer = (state = initialState, action) => {
     case types.SET_ISLOGIN:
       return { ...state, isLogin: action.isLogin };
     case types.SET_USERINFO:
-        console.log(action.userInfo);
       return { ...state, user: { ...action.userInfo } };
     case types.SET_SHOWMODAL:
       return { ...state, showModal: action.show };

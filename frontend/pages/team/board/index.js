@@ -164,12 +164,14 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
           ))}
         </div>
 
-        <Pagination
-          curPage={curPage}
-          paginate={paginate}
-          totalCount={totalPosts}
-          postsPerPage={postsPerPage}
-        />
+        <div className={styles.pagination}>
+          <Pagination
+            curPage={curPage}
+            paginate={paginate}
+            totalCount={totalPosts}
+            postsPerPage={postsPerPage}
+          />
+        </div>
       </div>
     </div>
   );

@@ -117,7 +117,7 @@ function NavBar({
                 width={30}
                 height={30}
               /> */}
-              <Link href="/user">
+              <Link href="/user/mypage">
                 <a>마이페이지</a>
               </Link>
             </li>
