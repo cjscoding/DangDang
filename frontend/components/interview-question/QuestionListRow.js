@@ -44,7 +44,7 @@ export default function QuestionListRow({ question, myQuestionMode, reload }) {
   return (
     <div className={styles.questionListRow}>
       <div className={styles.questionArea}>
-        <span>{question.field}</span>
+        <span>{question.field === "기술" ? "IT" : question.field}</span>
 
         <div className={styles.contents}>
           <span>Q. {question.question}</span>

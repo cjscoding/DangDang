@@ -1,21 +1,158 @@
+@import "../common/mixins.scss";
 
-.mainContainer{
+
+.mainContainer {
+  margin-top: 2.5rem;
   display: flex;
-  justify-content: space-around;
-  .videoContainer {
-    display: inline;
-    width: 60vw;
-    .faces {
-      display: inline;
-    }
-    .btnBar {
-      display: inline;
+  flex-direction: column;
+  align-items: center;
+  .mainSection {
+    display: flex;
+    justify-content:flex-start;
+    align-items:center;
+    min-width: 1200px;
+    .videoContainer {
       display: flex;
-      justify-content: space-between;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-content: center;
+      align-items: center;
+      height: 80vh;
+      min-height: 40rem;
+      min-width: calc(1200px - 24rem);
+      .screens {
+        span{
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+      .faces {
+        width: calc(90vw - 24rem);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        align-content: center;
+        align-items: center;
+        span{
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+        }
+      }
+    }
+    .subContainer {
+      padding: 20px;
+      width: 24rem;
+      min-height: 40rem;
+      height: 80vh;
+      background: white;
+      box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
+      border-radius: 12px;
+      .chatMenuBtn {
+        font-size: 1.3rem;
+        border: 2px;
+        border-style: solid;
+        border-top-left-radius: 0.5rem;
+      }
+      .memoMenuBtn {
+        font-size: 1.3rem;
+        border: 2px;
+        border-left: 0;
+        border-right: 2px;
+        border-style: solid;
+      }
+      .letterMenuBtn {
+        font-size: 1.3rem;
+        border: 2px;
+        border-left: 0;
+        border-right: 0;
+        border-style: solid;
+      }
+      .scoreMenuBtn {
+        font-size: 1.3rem;
+        border: 2px;
+        border-style: solid;
+        border-top-right-radius: 0.5rem;
+      }
+      .selectedMenuBtn {
+        border-bottom-color: white;
+      }
+      .chatContainer{
+        width: 100%;
+        min-height: calc(40rem - 40px - 2rem);
+        height: calc(80vh - 40px - 2rem);
+        border: 2px;
+        border-style: solid;
+        border-top-right-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+        .chat {
+          width: 100%;
+          height: calc(100% - 3rem);
+          overflow-y: auto;
+          overflow-x: hidden;
+        }
+        .chatInput {
+          direction: flex;
+          flex-direction: row;
+          height: 3rem;
+          padding-top: .5rem;
+          input {
+            padding: 1rem;
+            width: 90%;
+            height: 100%;
+            font-size: 1rem;
+            background: white;
+            // box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
+            border-radius: 10px 0 0 10px;
+            border: 1px;
+            background-color:gainsboro;
+          }
+          button {
+            background:  white;
+            border-radius: 0 10px 10px 0px;
+            box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
+            float: right;
+            width: 10%;
+            height: 100%;
+            outline: none;
+            border: 1px;
+            background-color:gainsboro;
+            cursor: pointer;
+          }
+        }
+      }
     }
   }
-  .chat {
-    display: inline;
-    width: 30vw;
+  .btnBar {
+    margin-top: 2rem;
+    width: 80vw;
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 1.5rem;
+    span {
+      cursor: pointer;
+      position: relative;
+      div{
+        position: absolute;
+        top: -3.5rem;
+        padding-left: 2rem;
+        width: 20rem;
+        margin:auto;
+        select {
+          padding-left:25px;
+          box-shadow: 0px 0px 7px rgba(0, 0, 0, 0.10);
+          border-radius: 5px;
+          background-color: #ffffff;
+          border: 1px;
+          width: 90%;
+          height: 50px;
+        }
+      }
+    }
+    .nonCursor {
+      cursor: not-allowed;
+    }
   }
 }

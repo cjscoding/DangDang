@@ -1,9 +1,10 @@
+import styles from "../../../scss/user/mypage.module.scss";
 import Link from "next/link";
 
-import { connect } from "react-redux";
 import { leaveDangDang } from "../../../api/user";
 import { BACKEND_URL } from "../../../config";
 import { useRouter } from "next/router";
+import { connect } from "react-redux";
 
 function mapStateToProps({ userReducer }) {
   return {
@@ -13,9 +14,8 @@ function mapStateToProps({ userReducer }) {
 
 export default connect(mapStateToProps)(userInfo);
 
-function userInfo({ user }) {
+function userInfo({ user, isImgUrlBackendServer }) {
   const router = useRouter();
-
   //회원 탈퇴
   const onLeaveDangDang = () => {
     leaveDangDang(
@@ -32,26 +32,30 @@ function userInfo({ user }) {
   };
 
   return (
-    <section>
-      <div className="profileImage">
-        <span>profile: </span>
-        <img
-          src={`${BACKEND_URL}/files/images/${user.imageUrl}`}
-          width={200}
-          height={100}
-        />
+    <div className={styles.myPageContainer}>
+      <div className={styles.imageBox}>
+        <img src={`${user.imageUrl}`} />
       </div>
-      <div className="profile">
-        <p>id: {user.id}</p>
-        <p>이름: {user.nickName}</p>
-        <p>이메일: {user.email}</p>
-        <Link href="/user/edit">
-          <a>
-            <button>변경</button>
-          </a>
+
+      <div className={styles.info}>
+        <div className={styles.top}>
+          <p>{user.nickName}</p>
+
+          <Link href="/user/mypage/edit">
+            <button>
+              <i className="fas fa-pen"></i>
+            </button>
+          </Link>
+        </div>
+
+        <p className={styles.email}>{user.email}</p>
+
+        <Link href="/user/mypage/myroom">
+          <a className={styles.linkBtn}>내 스터디 보기</a>
         </Link>
-        <button onClick={onLeaveDangDang}>당당탈퇴</button>
       </div>
-    </section>
+
+      <button onClick={onLeaveDangDang} className={styles.noButton}>회원 탈퇴</button>
+    </div>
   );
 }

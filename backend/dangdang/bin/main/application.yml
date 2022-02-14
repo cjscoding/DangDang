@@ -3,8 +3,14 @@ spring:
     group:
       dev: common, dev
       prod: common, prod
+      dev-test: common, dev-test
 
 ---
+server:
+  ssl :
+    key-store: classpath:cert.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
 
 spring:
   config:
@@ -50,10 +56,65 @@ file :
     address : "https://localhost:8443/files/"
 ---
 
+server:
+  ssl :
+    key-store: classpath:dangdang.jks
+    key-store-password: boribori
+    key-password: boribori
+
 spring:
   config:
     activate:
       on-profile: prod
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://i6c203.p.ssafy.io:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+    username: ssafy
+    password: ssafyborissafy
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    generate-ddl: false
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect : org.hibernate.dialect.MySQL8Dialect
+    open-in-view: true
+
+  data:
+    mongodb:
+      uri: mongodb://i6c203.p.ssafy.io:27017/dangdang
+
+
+  session:
+    store-type: REDIS
+  redis:
+    host: i6c203.p.ssafy.io
+    port: 6379
+  # JWT Secret Key
+
+file :
+  upload :
+    baseLocation : "/app/data/"
+    file :         "/app/data/files/"
+    image: "/app/data/images/"
+    video : "/app/data/videos/"
+    address : "https://localhost:8443/files/"
+
+---
+server:
+  ssl :
+    key-store: classpath:cert.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
+
+spring:
+  config:
+    activate:
+      on-profile: dev-test
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -94,13 +155,12 @@ file :
 
 ---
 
-
 server:
   port: 8443
-  ssl :
-    key-store: classpath:cert.p12
-    key-store-password: 123456
-    key-store-type: PKCS12
+#  ssl :
+#    key-store: classpath:cert.p12
+#    key-store-password: 123456
+#    key-store-type: PKCS12
 #    key-alias: kurento-selfsigned
 
 spring:
@@ -120,18 +180,7 @@ spring:
   output:
     ansi:
       enabled: DETECT
-  #  mvc :
-#    static-path-pattern : /static/**
-#    hiddenmethod :
-#      filter :
-#        enabled : true
-#    view:
-#      prefix: /resources/static
-#      suffix: .html
-#  web :
-#    resources :
-#      static-locations : classpath:/static
-#      add-mappings :     true
+
 
   servlet :
     multipart :

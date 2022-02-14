@@ -12,6 +12,11 @@ const teamSpace = {
   GET_STUDYPOST: "GET_STUDYPOST",
 };
 
+const adminTypes = {
+  GET_QUESTIONS: "GET_QUESTIONS",
+  GET_USERS: "GET_USERS",
+};
+
 const videoTypes = {
   SET_VIDEO: "SET_VIDEO",
   SET_CAMERA: "SET_CAMERA",
@@ -51,10 +56,12 @@ const timerTypes = {
 const types = {
   ...teamBoard,
   ...teamSpace,
+  ...adminTypes,
   ...videoTypes,
   ...questionTypes,
   ...userTypes,
   ...wsTypes,
   ...timerTypes,
 };
+
 export default types;

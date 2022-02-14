@@ -4,16 +4,15 @@ import Link from "next/link";
 import { addInterviewQuestion } from "../../api/interviewQuestion";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default connect()(addQuestion);
 
 function addQuestion() {
   const router = useRouter();
 
-  const options = ["공통", "기술", "인성", "기타"];
   const [values, setValues] = useState({
-    field: options[0],
+    field: "",
     question: "",
     answer: "",
   });
@@ -38,6 +37,16 @@ function addQuestion() {
     );
   };
 
+  useEffect(() => {
+    const fieldSelectEl = document.getElementById("field")
+    fieldSelectEl.firstChild.selected = true
+    const nextValues = {
+      ...values,
+      field: fieldSelectEl.firstChild.value
+    }
+    setValues(nextValues);
+  }, [])
+  
   return (
     <div className={styles.formContainer}>
       <Link href="/interview-question/me">
@@ -52,11 +61,10 @@ function addQuestion() {
         <div className={styles.contents}>
           <label htmlFor="field">분류</label>
           <select id="field" onChange={handleChange}>
-            {options.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
+            <option value="공통">공통</option>
+            <option value="인성">인성</option>
+            <option value="기술">IT</option>
+            <option value="기타">기타</option>
           </select>
 
           <label htmlFor="question">질문</label>

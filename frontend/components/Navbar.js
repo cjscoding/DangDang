@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { logoutRequest } from "../api/user";
-import { BACKEND_URL } from "../config";
 import {
   resetUserInfo,
   setIsLoginModal,
@@ -111,13 +110,15 @@ function NavBar({
         </div>
         {isLogin ? (
           <div className={styles.user}>
+            {user.role === "USER" ? null : (
+              <li>
+                <Link href="/admin">
+                  <a>관리자페이지</a>
+                </Link>
+              </li>
+            )}
             <li>
-              {/* <img
-                src={`${BACKEND_URL}/files/images/${user.imageUrl}`}
-                width={30}
-                height={30}
-              /> */}
-              <Link href="/user">
+              <Link href="/user/mypage">
                 <a>마이페이지</a>
               </Link>
             </li>

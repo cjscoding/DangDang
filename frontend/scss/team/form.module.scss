@@ -193,9 +193,11 @@
 .profileContainer {
   display: flex;
   align-items: center;
+  span {
+    margin-right: 15px;
+  }
   .inputFileButton {
     @include filled-button(70px, white, $main-color);
     font-size: 13px;
-    margin-left: 15px;
   }
 }
