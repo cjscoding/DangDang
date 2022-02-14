@@ -3,6 +3,7 @@ package com.ssafy.dangdang.service;
 import com.ssafy.dangdang.domain.InterviewQuestion;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
+import com.ssafy.dangdang.domain.dto.WriteInterview;
 import com.ssafy.dangdang.util.ApiUtils;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,9 @@ public interface InterviewQuestionService {
 
     @Transactional
     Page<InterviewQuestionDto> getAllVisableInterviewQustion(User writer, Pageable pageable);
+
+    @Transactional
+    Page<InterviewQuestionDto> searchInterviewQuestion(User writer, WriteInterview searchParam, Pageable pageable);
 
     void makePublic(Long interviewId);
 
