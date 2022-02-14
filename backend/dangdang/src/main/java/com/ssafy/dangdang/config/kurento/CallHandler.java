@@ -149,14 +149,16 @@ public class CallHandler extends TextWebSocketHandler {
     String roomName = params.get("roomName").getAsString(); // 보내야 할 메세지
     log.info("roomName 보낸 세션:" + session + " : " + roomName);
 
-    // 임시 세션 만들어줌
-    Room room = roomManager.getRoom("1000");
+    // 임시 방 만들어서 거기서 처리해줌
+    Room room = roomManager.getRoom("tempRoom");
     final UserSession user = room.join(session.getId(), session);
     registry.register(user); // user 생성해서 저장
 
     // roomName과 같은 room 찾고, session에게 roomName에 포함된 멤버 정보 보냄
     room=roomManager.getRoom(roomName);
     room.roomSendMembers(session, user, roomName);
+
+    // 멤버 정보 보내고 임시 방 나감
     leaveRoom(user);
 
   }
