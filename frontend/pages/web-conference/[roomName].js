@@ -4,8 +4,8 @@ import { connect } from "react-redux";
 import CameraSelect from "../../components/webRTC/devices/CameraSelect";
 import MicSelect from "../../components/webRTC/devices/MicSelect";
 import SpeakerSelect from "../../components/webRTC/devices/SpeakerSelect";
-import Timer from "../../components/webRTC/self-practice/Timer";
-import timer from "../../components/webRTC/timer"
+import Timer from "../../components/webRTC/Timer";
+import timer from "../../components/webRTC/timerfunction"
 import getVideoConstraints from "../../components/webRTC/getVideoConstraints";
 import styles from "../../scss/web-conference/mainComponent.module.scss";
 import SockJS from "sockjs-client";
