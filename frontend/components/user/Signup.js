@@ -8,6 +8,8 @@ import {
   setShowModal,
 } from "../../store/actions/userAction";
 import { signUpRequest, registUserImage } from "../../api/user";
+import { BACKEND_URL, FRONTEND_URL } from "../../config"
+import { useRouter } from "next/router";
 
 function mapStateToProps({ userReducer }) {
   return {
@@ -31,6 +33,7 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
     password: "",
     nickName: "",
   });
+  const router = useRouter();
 
   const handleChange = ({ target: { id, value } }) => {
     const nextValues = {
@@ -63,6 +66,9 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
     );
   };
 
+  const socialLoginRequest = (provider) => {
+    window.location.href = `${BACKEND_URL}/oauth2/authorize/${provider}?redirect_uri=${FRONTEND_URL}/user/oauth2/redirect?destination=${router.pathname}`;
+  };
   //유저 이미지 설정 시 state 값 변환
   const onSetImage = (event) => setImage(event.target.files[0]);
 
@@ -123,7 +129,7 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
       {/* <Button text="Google로 시작하기" />
       <Button text="Kakao로 시작하기" /> */}
       <a onClick={() => socialLoginRequest("google")} target="_blank"><img src="/images/btn_google_signin_dark_normal_web.png"></img></a>
-    <a onClick={() => socialLoginRequest("kakao")}><img src="/images/kakao_login_medium_narrow.png"></img></a>
+      <a onClick={() => socialLoginRequest("kakao")}><img src="/images/kakao_login_medium_narrow.png"></img></a>
     </div>
   );
 }

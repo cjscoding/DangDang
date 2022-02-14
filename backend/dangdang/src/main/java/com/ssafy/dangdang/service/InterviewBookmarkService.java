@@ -2,6 +2,8 @@ package com.ssafy.dangdang.service;
 
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -11,6 +13,6 @@ public interface InterviewBookmarkService {
 
     public void delete(User user, Long interviewId);
 
-    public List<InterviewQuestionDto> getInterviewBookmarks(User user);
+    public Page<InterviewQuestionDto> getInterviewBookmarks(User user, Pageable pageable);
 
 }
