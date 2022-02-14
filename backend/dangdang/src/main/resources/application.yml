@@ -75,7 +75,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     generate-ddl: false
     properties:
       hibernate:
