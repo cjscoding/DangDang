@@ -63,6 +63,13 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
       video.id = 'video-' + IdName;
       video.autoplay = true;
       video.controls = false;
+      video.style.height = "100%"
+      // video.style.minHeight = "180px"
+      if(this.id === "screen") {
+        video.style.width = "calc(90vw - 24rem)"
+      }else {
+        video.style.width = "calc((90vw - 24rem) / 4)"
+      }
       if(video.sinkId !== speakerId) video.setSinkId(speakerId)
       container.appendChild(video);
       container.appendChild(span);
@@ -72,6 +79,7 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
         // pass
       }else if(this.id === "screen") {
         document.getElementById('screens').appendChild(container);
+        span.innerText = this.name.slice(1 + this.name.search('-'), this.name.length) + "'s screen";
       }else {
         document.getElementById('participants').appendChild(container);
       }
@@ -288,7 +296,7 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
         videoStream: stream,
         mediaConstraints: {
           audio: true,
-          video: { mandatory: { maxWidth: 320, maxFrameRate: 15, minFrameRate: 15 } }
+          video: { mandatory: { maxWidth: 320, maxFrameRate: 10, minFrameRate: 10 } }
         },
         onicecandidate: screen.onIceCandidate.bind(screen),
       }
