@@ -61,6 +61,20 @@ public class InterviewQuestionController {
         return success(interviewQuestionService.getAllVisableInterviewQustion(writer, pageable));
     }
 
+    @Operation(summary = "면접 질문 검색", description= "카테고리, 제목, 내용을 이용하여 검색, 파라미터에 담지 않는 값은 적용되지 않음")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "면접 질문 검색 성공")
+    })
+    @GetMapping("/search")
+    public ApiResult<Page<InterviewQuestionDto>> searchInterviewQuestion(@CurrentUser PrincipalDetails userPrincipal,
+                                                                         @ParameterObject WriteInterview searchParam,
+                                                                               @ParameterObject Pageable pageable){
+        log.info("searchParam: {}",searchParam);
+        User writer = null;
+        if (userPrincipal != null) writer = userPrincipal.getUser();
+        return success(interviewQuestionService.searchInterviewQuestion(writer, searchParam, pageable));
+    }
+
     @Operation(summary = "내가 등록한 면접 질문만 조회", description = "visable 값에 상관없이, 내가 작성한 질문들 조회")
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "내가 등록한 면접 질문만 조회 성공")
@@ -137,9 +151,10 @@ public class InterviewQuestionController {
     })
     @GetMapping("/bookmark")
     @PreAuthorize("hasRole('USER')")
-    public ApiResult<List<InterviewQuestionDto>> getBookmarks(
-            @CurrentUser PrincipalDetails userPrincipal){
-        List<InterviewQuestionDto> interviewBookmarks = bookmarkService.getInterviewBookmarks(userPrincipal.getUser());
+    public ApiResult<Page<InterviewQuestionDto>> getBookmarks(
+            @CurrentUser PrincipalDetails userPrincipal,
+            @ParameterObject Pageable pageable){
+        Page<InterviewQuestionDto> interviewBookmarks = bookmarkService.getInterviewBookmarks(userPrincipal.getUser(), pageable);
         return success(interviewBookmarks);
     }
 

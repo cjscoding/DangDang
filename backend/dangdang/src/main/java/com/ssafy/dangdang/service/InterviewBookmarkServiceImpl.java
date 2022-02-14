@@ -8,6 +8,8 @@ import com.ssafy.dangdang.repository.InterviewBookmarkRepository;
 import com.ssafy.dangdang.repository.InterviewQuestionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +41,8 @@ public class InterviewBookmarkServiceImpl implements InterviewBookmarkService{
 
     @Override
     @Transactional
-    public List<InterviewQuestionDto> getInterviewBookmarks(User user) {
-        List<InterviewQuestion> bookmarks  = interviewQuestionRepository.findInterviewBookmark(user.getId());
-        return bookmarks.stream().map(interview -> InterviewQuestionDto.of(interview)).collect(Collectors.toList());
+    public Page<InterviewQuestionDto> getInterviewBookmarks(User user, Pageable pageable) {
+        Page<InterviewQuestion> bookmarks  = interviewQuestionRepository.findInterviewBookmark(user.getId(), pageable);
+        return bookmarks.map(interview -> InterviewQuestionDto.of(interview));
     }
 }

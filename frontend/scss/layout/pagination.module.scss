@@ -1,0 +1,22 @@
+@import "../common/variables.scss";
+@import "../common/mixins.scss";
+
+.nav{
+    display: flex;
+    justify-content: center;
+    background-color: inherit;
+    .pagination{
+        display: flex;
+        font-weight: 500;
+        li{
+            list-style: none;
+            padding: 0 10px;
+        }
+        .option{
+            padding: 0 20px;
+        }
+        .curPage{
+            color: $main-color;
+        }
+    }
+}

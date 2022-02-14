@@ -3,6 +3,7 @@ package com.ssafy.dangdang.service;
 import com.ssafy.dangdang.domain.InterviewQuestion;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
+import com.ssafy.dangdang.domain.dto.WriteInterview;
 import com.ssafy.dangdang.exception.UnauthorizedAccessException;
 import com.ssafy.dangdang.repository.InterviewQuestionRepository;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +61,14 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService{
     public Page<InterviewQuestionDto> getAllVisableInterviewQustion(User writer, Pageable pageable){
         Page<InterviewQuestion> all = interviewQuestionRepository.findAllVisableInterviewQuestion(writer, pageable);
         Page<InterviewQuestionDto> interviewQuestionDtos = all.map(InterviewQuestionDto::of);
+        return interviewQuestionDtos;
+    }
+
+    @Override
+    @Transactional
+    public Page<InterviewQuestionDto> searchInterviewQuestion(User writer, WriteInterview searchParam, Pageable pageable){
+        Page<InterviewQuestion> search = interviewQuestionRepository.searchInterviewQuestion(writer, searchParam, pageable);
+        Page<InterviewQuestionDto> interviewQuestionDtos = search.map(InterviewQuestionDto::of);
         return interviewQuestionDtos;
     }
 

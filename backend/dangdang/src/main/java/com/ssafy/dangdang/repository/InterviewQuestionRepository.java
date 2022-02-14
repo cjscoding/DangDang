@@ -29,7 +29,10 @@ public interface InterviewQuestionRepository extends JpaRepository<InterviewQues
     @Query(
             value = "select i from InterviewQuestion i " +
                     "where i.id in (select ib.interviewQuestion.id from InterviewBookmark ib " +
+                    "where  ib.user.id = :userId)",
+            countQuery = "select count(i) from InterviewQuestion i " +
+                    "where i.id in (select ib.interviewQuestion.id from InterviewBookmark ib " +
                     "where  ib.user.id = :userId)"
     )
-    public List<InterviewQuestion> findInterviewBookmark(@Param("userId") Long userId);
+    public Page<InterviewQuestion> findInterviewBookmark(@Param("userId") Long userId, Pageable pageable);
 }

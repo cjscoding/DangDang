@@ -5,6 +5,7 @@ const initialState = {
   sessionId: null,
   recordedQuestionIdxes: [],
   selectedQuestion: null,
+  screenWs: null,
 };
 
 const wsReducer = (state=initialState, action) => {

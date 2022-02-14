@@ -48,7 +48,7 @@ function NavBar({
   setIsMoveTeamStudy,
 }) {
   const router = useRouter();
-  
+
   const logOut = () => {
     logoutRequest(
       (response) => {
@@ -67,54 +67,58 @@ function NavBar({
   return (
     <nav className={styles.navbar}>
       <ul>
-        <li>
-          <Link href="/">
-            <a>Home</a>
-          </Link>
-        </li>
-        <li>
-          <Link href="/self-practice">
-            <a>혼자연습한당</a>
-          </Link>
-        </li>
-        <li>
-          {isLogin ? (
-            <Link href="/user/mypage/myroom">
-              <a>같이연습한당</a>
-            </Link>
-          ) : (
-            <a
-              onClick={() => {
-                setShowModal(true);
-                setIsLoginModal(true);
-                setIsMoveTeamStudy(true);
-              }}
-              tabIndex="0"
-            >
-              같이연습한당
+        <Link href="/">
+          <div className={styles.logo}>
+            <a>
+              <li> </li>
             </a>
-          )}
-        </li>
-        <li>
-          <Link href="/team/board">
-            <a>스터디구한당</a>
-          </Link>
-        </li>
-        <li>
-          <Link href="/interview-question">
-            <a>질문궁금하당</a>
-          </Link>
-        </li>
+          </div>
+        </Link>
+        <div className={styles.menu}>
+          <li>
+            <Link href="/self-practice">
+              <a>혼자연습한당</a>
+            </Link>
+          </li>
+          <li>
+            {isLogin ? (
+              <Link href="/user/mypage/myroom">
+                <a>같이연습한당</a>
+              </Link>
+            ) : (
+              <a
+                onClick={() => {
+                  setShowModal(true);
+                  setIsLoginModal(true);
+                  setIsMoveTeamStudy(true);
+                }}
+                tabIndex="0"
+              >
+                같이연습한당
+              </a>
+            )}
+          </li>
+          <li>
+            <Link href="/team/board">
+              <a>스터디구한당</a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/interview-question">
+              <a>질문궁금하당</a>
+            </Link>
+          </li>
+        </div>
         {isLogin ? (
-          <span>
+          <div className={styles.user}>
             <li>
-              <img
+              {/* <img
                 src={`${BACKEND_URL}/files/images/${user.imageUrl}`}
                 width={30}
                 height={30}
-              />
+              /> */}
               <Link href="/user">
-                <a>{user.nickName}님 안녕하세요! (마이페이지)</a>
+                <a>마이페이지</a>
               </Link>
             </li>
             <li>
@@ -122,9 +126,9 @@ function NavBar({
                 로그아웃
               </a>
             </li>
-          </span>
+          </div>
         ) : (
-          <span>
+          <div className={styles.user}>
             <li>
               <a
                 onClick={() => {
@@ -147,7 +151,7 @@ function NavBar({
                 회원가입
               </a>
             </li>
-          </span>
+          </div>
         )}
       </ul>
 
