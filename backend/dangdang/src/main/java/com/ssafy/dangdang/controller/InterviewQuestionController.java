@@ -82,8 +82,9 @@ public class InterviewQuestionController {
     @GetMapping("/mine")
     @PreAuthorize("hasRole('USER')")
     public ApiResult<Page<InterviewQuestionDto>> getMyQuestion(@CurrentUser PrincipalDetails userPrincipal,
+                                                               @ParameterObject WriteInterview searchParam,
                                                                @ParameterObject Pageable pageable){
-        return success(interviewQuestionService.getMyQuestion(userPrincipal.getUser(), pageable));
+        return success(interviewQuestionService.getMyQuestion(userPrincipal.getUser(), searchParam, pageable));
     }
 
     @Operation(summary = "면접 질문 삭제")

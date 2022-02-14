@@ -21,7 +21,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 @Component
-@Profile({"dev", "dev-test"})
+@Profile("!(prod & common)")
 @RequiredArgsConstructor
 public class InitDb {
 
@@ -29,6 +29,7 @@ public class InitDb {
 
 
     @PostConstruct
+    @Profile("!(prod & common)")
     public void init(){
         initService.signUpUsers();
         initService.createStudy();
@@ -44,6 +45,7 @@ public class InitDb {
     //Bean의 생명주기 때문에, @Transactional같은 어노테이션을 사용하려면
     //아래와 같이 별도의 클래스를 사용해야한다.
     @Component
+    @Profile("!(prod & common)")
     @Transactional
     @RequiredArgsConstructor
     static class InitService{
