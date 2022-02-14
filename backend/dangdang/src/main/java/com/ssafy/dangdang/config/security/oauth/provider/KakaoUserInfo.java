@@ -12,17 +12,23 @@ public class KakaoUserInfo implements OAuth2UserInfo{
 	
     @Override
     public String getProviderId() {
-        return (String) attributes.get("id");
+        return String.valueOf(attributes.get("id"));
     }
 
     @Override
     public String getName() {
-        return (String) attributes.get("name");
+        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+        if (properties == null) {
+            return null;
+        }
+        return (String) properties.get("nickname");
     }
 
     @Override
     public String getEmail() {
-        return (String) attributes.get("email");
+        Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
+        if ((Boolean) account.get("has_email") && (Boolean) account.get("is_email_valid")) return  (String) account.get("email");
+        return null;
     }
 
 	@Override
@@ -31,6 +37,12 @@ public class KakaoUserInfo implements OAuth2UserInfo{
 	}
     @Override
     public String getImageUrl() {
-        return (String) attributes.get("picture");
+        Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+
+        if (properties == null) {
+            return "default.jpg";
+        }
+
+        return (String) properties.get("thumbnail_image");
     }
 }

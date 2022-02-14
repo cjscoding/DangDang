@@ -23,6 +23,7 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
   const [me, setMe] = useState(null)
   const [mode, setMode] = useState(false) // 면접모드 true, 일반모드 false
   const [screenShareTry, setScreenShareTry] = useState(false)
+  const [screenShare, setScreenShare] = useState(false)
 
   const [cameraSelectShow, setCameraSelectShow] = useState(false)
   const [micSelectShow, setMicSelectShow] = useState(false)
@@ -63,13 +64,35 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
       video.id = 'video-' + IdName;
       video.autoplay = true;
       video.controls = false;
-      video.style.height = "100%"
-      // video.style.minHeight = "180px"
       if(this.id === "screen") {
-        video.style.width = "calc(90vw - 24rem)"
+        video.style.height = "calc(60vh - 1.5rem)"
+        video.style.width = "calc(106.667vh - 2.667rem)"
+        video.style.maxHeight = "calc(675px - 15rem)"
+        video.style.maxWidth = "calc(1200px - 26.667rem)"
+        video.style.minHeight = "28.5rem"
+        video.style.minWidth = "50.667rem"
       }else {
-        video.style.width = "calc((90vw - 24rem) / 4)"
+        if(screenShareState) {
+          video.style.width = "calc(35.556vh - 3.556rem)"
+          video.style.height = "calc(20vh - 2rem)"
+          video.style.maxHeight = "calc(19.688vh - 2.344rem)"
+          video.style.maxWidth = "calc(35vh - 4.16rem)"
+          video.style.minHeight = "8.5rem"
+          video.style.minWidth = "15.111rem"
+          video.style.borderRadius = "0.6rem"
+        }else {
+          video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
+          video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
+          video.style.maxHeight = "calc(40vh - 1.5rem)"
+          video.style.maxWidth = "calc(71.111vh - 2.667rem"
+          video.style.minHeight = "8.5rem"
+          video.style.minWidth = "15.111rem"
+          video.style.borderRadius = "1rem"
+        }
       }
+      video.style.border = "2px"
+      video.style.borderStyle = "solid"
+      video.style.backgroundColor = "black"
       if(video.sinkId !== speakerId) video.setSinkId(speakerId)
       container.appendChild(video);
       container.appendChild(span);
@@ -151,6 +174,12 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
               id: "mode",
               position: screenShareTryState?`screenShareTry`:`notScreenShareTry`
             })
+            if(screenShareState) {
+              sendMessage({
+                id: "mode",
+                position: `screenShare`
+              })
+            }
           }
           if(myIdName === volunteerUser) {
             sendMessage({
@@ -177,6 +206,10 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
         case "mode":
           onMode(jsonMsg);
           break;
+        case "duplicateName":
+          alert("이미 참가한 유저입니다.")
+          window.close();
+          break
         default:
           console.log(`ERROR! ${jsonMsg}`)
       }
@@ -265,6 +298,7 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
         screenShareTryState = false
         setScreenShareTry(screenShareTryState);
         screenShareState = false
+        setScreenShare(screenShareState)
         sendMessage({
           id: "mode",
           position: `notScreenShare`
@@ -346,6 +380,7 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
         }
         console.log(volunteerUser)
         setScreenShareTry(screenShareTryState);
+        setScreenShare(screenShareState)
       }
     }
 
@@ -371,6 +406,7 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
             // screenShareTryState = false
             setScreenShareTry(false);
             screenShareState = true
+            setScreenShare(screenShareState)
             sendMessage({
               id: "mode",
               position: `screenShare`
@@ -428,7 +464,6 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
     const chatContentBoxEl = chatContentBox.current
     function onReceiveChat(jsonMsg) {
       const senderIdName = jsonMsg.sessionName
-      console.log(senderIdName)
       const senderName = senderIdName.slice(1 + senderIdName.search('-'), senderIdName.length);
       const showingMsg = `${senderName}: ${jsonMsg.contents}`
       const name = document.createElement("h4")
@@ -609,47 +644,79 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
       if(video.sinkId !== speakerId) video.setSinkId(speakerId)
     }
   },[speakerId])
-  return <div className={styles.mainContainer}>
-    <div className={styles.mainSection}>
-      <div className={styles.videoContainer}>
-        <div id="screens" ></div>
-        <div className={styles.faces} id="participants"></div>
-      </div>
-      <div  className={styles.subContainer}>
-        <span className={`${styles.selectedMenuBtn} ${styles.chatMenuBtn}`}>채팅창</span>
-        <span className={` ${styles.letterMenuBtn}`}>자소서</span>
-        <span className={` ${styles.scoreMenuBtn}`}>채점표</span>
-        <div className={styles.chatContainer} id="chat">
-          <div ref={chatContentBox} className={styles.chat}></div>
-          <div className={styles.chatInput}>
-            <input ref={chatInput} />
-            <button ref={chatInputBtn} ><i className="fas fa-paper-plane"></i></button>
+
+  useEffect(() => {
+    if(screenShare) {
+      const participantsEl = document.getElementById("participants")
+      for(let videoContainer of participantsEl.childNodes) {
+        const video = videoContainer.firstChild
+        video.style.width = "calc(35.556vh - 3.556rem)"
+        video.style.height = "calc(20vh - 2rem)"
+        video.style.maxHeight = "calc(19.688vh - 2.344rem)"
+        video.style.maxWidth = "calc(35vh - 4.16rem)"
+        video.style.minHeight = "8.5rem"
+        video.style.minWidth = "15.111rem"
+        video.style.borderRadius = "0.6rem"
+      }
+    }else {
+      const participantsEl = document.getElementById("participants")
+      for(let videoContainer of participantsEl.childNodes) {
+        const video = videoContainer.firstChild
+        video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
+        video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
+        video.style.maxHeight = "calc(40vh - 1.5rem)"
+        video.style.maxWidth = "calc(71.111vh - 2.667rem"
+        video.style.minHeight = "8.5rem"
+        video.style.minWidth = "15.111rem"
+        video.style.borderRadius = "1rem"
+      }
+    }
+  }, [screenShare])
+
+  return <div>
+    <div className={styles.mainContainer}>
+      <div className={styles.mainSection}>
+        <div id="videoContainer" className={styles.videoContainer}>
+          <div className={styles.screens} id="screens" ></div>
+          <div className={styles.faces} id="participants"></div>
+        </div>
+        <div className={styles.subContainer}>
+          <span className={`${styles.selectedMenuBtn} ${styles.chatMenuBtn}`}>채팅창</span>
+          <span className={` ${styles.memoMenuBtn}`}>메모장</span>
+          <span className={` ${styles.letterMenuBtn}`}>자소서</span>
+          <span className={` ${styles.scoreMenuBtn}`}>채점표</span>
+          <div className={styles.chatContainer} id="chat">
+            <div ref={chatContentBox} className={styles.chat}></div>
+            <div className={styles.chatInput}>
+              <input ref={chatInput} />
+              <button ref={chatInputBtn} ><i className="fas fa-paper-plane"></i></button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div className={styles.btnBar}>
-      <span>
-        <span ref={cameraBtn}><i className="fas fa-video"></i></span>
-        <div style={cameraSelectShow?{}:{display: "none"}} ref={cameraSelectDiv}><CameraSelect /></div>
-      </span>
-      <span>
-        <span ref={micBtn}><i className="fas fa-microphone"></i></span>
-        <div style={micSelectShow?{}:{display: "none"}}><MicSelect /></div>
-      </span>
-      <span>
-        <span ref={speakerBtn}><i className="fas fa-volume-up"></i></span>
-        <div style={speakerSelectShow?{}:{display: "none"}}><SpeakerSelect /></div>
-      </span>
-      <span>
-        <span style={screenShareTry?{display: "none"}:{}} ref={screenBtn}><i className="fas fa-chalkboard"></i></span>
-        <span style={!screenShareTry?{display: "none"}:{}} className={styles.nonCursor}><i className="fas fa-chalkboard-teacher"></i></span>
-      </span>
-      <span ref={changeModeBtn} >
-        <span style={mode?{display: "none"}:{}}><i className="fas fa-user-tie"></i></span>
-        <span style={!mode?{display: "none"}:{}}><i className="fas fa-users"></i></span>
-      </span>
-      <span ref={exitBtn}><i className="fas fa-times-circle"></i></span>
+      <div className={styles.btnBar}>
+        <span>
+          <span ref={cameraBtn}><i className="fas fa-video"></i></span>
+          <div style={cameraSelectShow?{}:{display: "none"}} ref={cameraSelectDiv}><CameraSelect /></div>
+        </span>
+        <span>
+          <span ref={micBtn}><i className="fas fa-microphone"></i></span>
+          <div style={micSelectShow?{}:{display: "none"}}><MicSelect /></div>
+        </span>
+        <span>
+          <span ref={speakerBtn}><i className="fas fa-volume-up"></i></span>
+          <div style={speakerSelectShow?{}:{display: "none"}}><SpeakerSelect /></div>
+        </span>
+        <span>
+          <span style={screenShareTry?{display: "none"}:{}} ref={screenBtn}><i className="fas fa-chalkboard"></i></span>
+          <span style={!screenShareTry?{display: "none"}:{}} className={styles.nonCursor}><i className="fas fa-chalkboard-teacher"></i></span>
+        </span>
+        <span ref={changeModeBtn} >
+          <span style={mode?{display: "none"}:{}}><i className="fas fa-user-tie"></i></span>
+          <span style={!mode?{display: "none"}:{}}><i className="fas fa-users"></i></span>
+        </span>
+        <span ref={exitBtn}><i className="fas fa-times-circle"></i></span>
+      </div>
     </div>
   </div>
 }

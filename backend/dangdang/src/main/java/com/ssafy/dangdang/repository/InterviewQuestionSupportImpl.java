@@ -7,6 +7,7 @@ import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.WriteInterview;
 import com.ssafy.dangdang.domain.types.InterviewField;
 import com.ssafy.dangdang.domain.types.InterviewJob;
+import com.ssafy.dangdang.exception.BadRequestException;
 import com.ssafy.dangdang.repository.support.Querydsl4RepositorySupport;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +46,28 @@ public class InterviewQuestionSupportImpl extends Querydsl4RepositorySupport imp
                 countQuery -> countQuery
                         .selectFrom(interviewQuestion)
                         .where( isVisable().or(userEq(writer)),
+                                fieldEq(searchParam.getField()),
+                                jobEq(searchParam.getJob()),
+                                questionContains(searchParam.getQuestion()),
+                                answerContains(searchParam.getAnswer()) )
+        );
+        return interviewQuestions;
+    }
+
+    @Override
+    public Page<InterviewQuestion> searchMine(User writer, WriteInterview searchParam, Pageable pageable) {
+        if (writer == null) throw new BadRequestException("로그인을 해주세요");
+        Page<InterviewQuestion> interviewQuestions = applyPagination(pageable, contentQuery -> contentQuery
+                        .selectFrom(interviewQuestion)
+                        .join(interviewQuestion.writer, user).fetchJoin()
+                        .where( userEq(writer ),
+                                fieldEq(searchParam.getField()),
+                                jobEq(searchParam.getJob()),
+                                questionContains(searchParam.getQuestion()),
+                                answerContains(searchParam.getAnswer()) ),
+                countQuery -> countQuery
+                        .selectFrom(interviewQuestion)
+                        .where( userEq(writer),
                                 fieldEq(searchParam.getField()),
                                 jobEq(searchParam.getJob()),
                                 questionContains(searchParam.getQuestion()),

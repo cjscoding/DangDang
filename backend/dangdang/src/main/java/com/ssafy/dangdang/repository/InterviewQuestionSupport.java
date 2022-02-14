@@ -21,4 +21,6 @@ public interface InterviewQuestionSupport {
     public Page<InterviewQuestion> findAllVisableInterviewQuestion(User writer, Pageable pageable);
 
     Page<InterviewQuestion> searchInterviewQuestion(User writer, WriteInterview searchParam, Pageable pageable);
+
+    Page<InterviewQuestion> searchMine(User writer, WriteInterview searchParam, Pageable pageable);
 }

@@ -1,4 +1,5 @@
 import types from "../types";
+import { BACKEND_URL } from "../../config";
 
 const initialState = {
   user: {
@@ -6,6 +7,7 @@ const initialState = {
     email: "",
     nickName: "",
     role: "",
+    imageUrl: `${BACKEND_URL}/files/images/default.png`,
   },
   isLogin: false,
   showModal: false,
@@ -18,7 +20,11 @@ const userReducer = (state = initialState, action) => {
     case types.SET_ISLOGIN:
       return { ...state, isLogin: action.isLogin };
     case types.SET_USERINFO:
-      return { ...state, user: { ...action.userInfo } };
+      const user = {
+        ...action.userInfo,
+        imageUrl: action.userInfo.imageUrl.slice(0, 5) === "https"?action.userInfo.imageUrl:`${BACKEND_URL}/files/images/${action.userInfo.imageUrl}`
+      }
+      return { ...state, user: user };
     case types.SET_SHOWMODAL:
       return { ...state, showModal: action.show };
     case types.SET_ISLOGINMODAL:
@@ -30,6 +36,7 @@ const userReducer = (state = initialState, action) => {
           email: "",
           nickName: "",
           role: "",
+          imageUrl: `${BACKEND_URL}/files/images/default.png`,
         },
         showModal: false,
         isLoginModal: false,
