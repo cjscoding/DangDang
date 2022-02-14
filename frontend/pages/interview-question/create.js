@@ -4,7 +4,7 @@ import Link from "next/link";
 import { addInterviewQuestion } from "../../api/interviewQuestion";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default connect()(addQuestion);
 
@@ -12,7 +12,7 @@ function addQuestion() {
   const router = useRouter();
 
   const [values, setValues] = useState({
-    field: options[0],
+    field: "",
     question: "",
     answer: "",
   });
@@ -37,6 +37,16 @@ function addQuestion() {
     );
   };
 
+  useEffect(() => {
+    const fieldSelectEl = document.getElementById("field")
+    fieldSelectEl.firstChild.selected = true
+    const nextValues = {
+      ...values,
+      field: fieldSelectEl.firstChild.value
+    }
+    setValues(nextValues);
+  }, [])
+  
   return (
     <div className={styles.formContainer}>
       <Link href="/interview-question/me">
