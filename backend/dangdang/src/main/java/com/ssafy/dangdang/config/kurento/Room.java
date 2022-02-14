@@ -202,7 +202,7 @@ public class Room implements Closeable {
             jsonArray.add(participant.getName());
             participantsList.add(participant.getName());
         }
-
+        log.info("jsonArray {} ==========",jsonArray);
         newParticipantMsg.addProperty("members",jsonArray.toJSONString());
         sendParticipant.sendMessage(newParticipantMsg);
     }
