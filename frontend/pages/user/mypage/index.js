@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { connect } from "react-redux";
 
 function mapStateToProps({ userReducer }) {
-  const isImgUrlBackendServer = userReducer.user.imageUrl.slice(0, 5) !== "https"
+  const isImgUrlBackendServer = userReducer.user.imageUrl?userReducer.user.imageUrl.slice(0, 5) === "https":true
   return {
     user: userReducer.user,
     isImgUrlBackendServer,
@@ -18,7 +18,6 @@ export default connect(mapStateToProps)(userInfo);
 
 function userInfo({ user, isImgUrlBackendServer }) {
   const router = useRouter();
-  const
   //회원 탈퇴
   const onLeaveDangDang = () => {
     leaveDangDang(

@@ -48,92 +48,11 @@
           border: 1px;
           width: 90%;
           height: 50px;
+          cursor: pointer;
         }
       }
     }
   }
-}
-.pindicator {
-  background-color: $background-color;
-  display: flex;
-  margin: 2rem auto 0;
-  width: 18rem;
-}
-.pindicator .bullet {
-  flex: 1;
-  position: relative;
-  text-align: center;
-  transform-style: preserve-3d;
-}
-.pindicator .bullet::before,
-.pindicator .bullet::after {
-  content: '';
-  display: block;
-  position: absolute;
-  height: .2rem;
-  top: 1rem;
-  transform: translate3d(0,0,-1px);
-}
-.pindicator .bullet::before {
-  background-color: lightgray;
-  width: 100%;
-}
-.pindicator .bullet::after {
-  background-color: black;
-  transition: opacity .25s ease-out;
-  opacity: 0;
-  width: 100%;
-}
-.pindicator .bullet:first-child::before,
-.pindicator .bullet:first-child::after {
-  left: 50%;
-  width: 50%;
-}
-.pindicator .bullet:last-child::before,
-.pindicator .bullet:last-child::after {
-  width: 50%;
-}
-
-.pindicator .icon {
-  background-color: lightgray;
-  border-radius: 100%;
-  color: transparent;
-  cursor: pointer;
-  font-size: 1rem;
-  display: inline-block;
-  height: 2em;
-  line-height: 2;
-  text-align: center;
-  transition: background-color .25s ease-out;
-  width: 2em;
-  span{
-    color:white;
-    font-weight: bold;
-  }
-}
-.pindicator .iconcur {
-  background-color: #7281D7;
-  border-radius: 100%;
-  color: transparent;
-  cursor: pointer;
-  font-size: 1rem;
-  display: inline-block;
-  height: 2em;
-  line-height: 2;
-  text-align: center;
-  transition: background-color .25s ease-out;
-  width: 2em;
-  span{
-    color:white;
-    font-weight: bold;
-  }
-}
-.pindicator .text {
-  color: lightgray;
-  font-size: .75rem;
-  margin-top: 1rem;
-  text-transform: uppercase;
-  transition: background-color .25s ease-out;
 }
 .nextBtn {
   font-weight: bold;
@@ -147,4 +66,5 @@
   color:white;
   margin-bottom: 1rem;
   border: 1px;
+  cursor: pointer;
 }
