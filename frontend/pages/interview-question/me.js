@@ -31,16 +31,6 @@ function myQuestion({ myQuestions, setMyQuestions }) {
 
   const [field, setField] = useState("공통");
   const [question, setQuestion] = useState("");
-  const options = [
-    "공통",
-    "기술",
-    "인성",
-    "기타",
-    "IT",
-    "금융",
-    "회계",
-    "디자인",
-  ];
 
   useEffect(() => {
     getQuestions();
@@ -56,8 +46,8 @@ function myQuestion({ myQuestions, setMyQuestions }) {
 
   const getQuestions = () => {
     const params = {
-    //   field,
-    //   question,
+      //   field,
+      //   question,
       page: curPage,
       size: postsPerPage,
     };
@@ -117,11 +107,10 @@ function myQuestion({ myQuestions, setMyQuestions }) {
         <div className={styles.container}>
           <div className={styles.header}>
             <select onChange={(event) => setField(event.target.value)}>
-              {options.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
+              <option value="공통">공통</option>
+              <option value="인성">인성</option>
+              <option value="기술">IT</option>
+              <option value="기타">기타</option>
             </select>
             <span>질문</span>
           </div>
