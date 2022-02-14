@@ -20,37 +20,35 @@ function MyApp({ Component, pageProps }) {
   useEffect(() => {
     function autoLogin() {
       if(
-        localStorage.getItem("authorization") &&
-        localStorage.getItem("refreshtoken")
+        store.getState().userReducer.isLogin &&
+        !store.getState().userReducer.user.id
       ) {
-        if (!store.getState().userReducer.user.id) {
-          getUserInfo(
-            ({ data: { response } }) => {
-              const userInfo = {
-                id: response.id,
-                email: response.email,
-                nickName: response.nickName,
-                imageUrl: response.imageUrl,
-              };
-              store.dispatch(setUserInfo(userInfo));
-            },
-            (error) => {
-              store.dispatch(setIsLogin(false))
-              console.log(error);
-            }
-          );
-        }else if(!store.getState().userReducer.isLogin){
-          store.dispatch(setIsLogin(true))
-        }
-      }
+        getUserInfo(
+          ({ data: { response } }) => {
+            const userInfo = {
+              id: response.id,
+              email: response.email,
+              nickName: response.nickName,
+              role: response.role,
+              imageUrl: response.imageUrl,
+            };
+            store.dispatch(setUserInfo(userInfo));
+            store.dispatch(setIsLogin(true))
+          },
+          (error) => {
+            store.dispatch(setIsLogin(false))
+            console.log(error);
+          }
+        );
+      }else if(
+        !store.getState().userReducer.isLogin &&
+        store.getState().userReducer.user.id
+      ) store.dispatch(setIsLogin(true))
     }
+
     store.subscribe(autoLogin)
-    if (
-      localStorage.getItem("authorization") &&
-      localStorage.getItem("refreshtoken")
-    ) {
-      store.dispatch(setIsLogin(true))
-    }
+    store.dispatch(setIsLogin(true)) // 자동 로그인 트리거
+
   }, [])
 
   return (
