@@ -2,12 +2,10 @@ import styles from "../../../scss/user/mypage.module.scss";
 import Link from "next/link";
 
 import { leaveDangDang } from "../../../api/user";
-import { BACKEND_URL } from "../../../config";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 
 function mapStateToProps({ userReducer }) {
-  const isImgUrlBackendServer = userReducer.user.imageUrl?userReducer.user.imageUrl.slice(0, 5) !== "https":true
   return {
     user: userReducer.user,
   };
@@ -15,7 +13,7 @@ function mapStateToProps({ userReducer }) {
 
 export default connect(mapStateToProps)(userInfo);
 
-function userInfo({ user, isImgUrlBackendServer }) {
+function userInfo({ user }) {
   const router = useRouter();
   //회원 탈퇴
   const onLeaveDangDang = () => {

@@ -62,6 +62,7 @@ function userInfoEdit({ user, setUserInfo, resetUserInfo, setIsLogin }) {
               id: user.id,
               email: response.email,
               nickName: response.nickName,
+              role: response.role,
               imageUrl: res.data.response.imageUrl,
             };
             setUserInfo(userInfo);

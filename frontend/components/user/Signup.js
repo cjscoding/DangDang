@@ -1,9 +1,7 @@
-import Button from "./Button";
 import styles from "../../scss/user/login-signup.module.scss";
 import { useState } from "react";
 import { connect } from "react-redux";
 import {
-  resetUserInfo,
   setIsLoginModal,
   setShowModal,
 } from "../../store/actions/userAction";

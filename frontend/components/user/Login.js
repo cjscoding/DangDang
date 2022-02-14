@@ -1,4 +1,3 @@
-import Button from "./Button";
 import styles from "../../scss/user/login-signup.module.scss";
 import { useState } from "react";
 import { connect } from "react-redux";
@@ -64,6 +63,7 @@ function Login({
               id: response.id,
               email: response.email,
               nickName: response.nickName,
+              role: response.role,
               imageUrl: response.imageUrl,
             };
             setUserInfo(userInfo);
