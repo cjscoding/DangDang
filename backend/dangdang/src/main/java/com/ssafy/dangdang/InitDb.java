@@ -11,6 +11,7 @@ import com.ssafy.dangdang.repository.StudyHashTagRepository;
 import com.ssafy.dangdang.repository.StudyRepository;
 import com.ssafy.dangdang.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 @Component
+@Profile({"dev", "dev-test"})
 @RequiredArgsConstructor
 public class InitDb {
 
@@ -138,6 +140,7 @@ public class InitDb {
                         .question("민초 어떄요"+i)
                         .answer("너무 좋죠"+i)
                         .field("공통")
+                        .job("IT")
                         .visable(true)
                         .build();
                 interviewQuestionService.writeQuestion(user, interviewQuestionDto);
@@ -147,6 +150,7 @@ public class InitDb {
                         .question("파인애플피자 어떄요"+i)
                         .answer("너무 좋죠"+i)
                         .field("공통")
+                        .job("IT")
                         .visable(false)
                         .build();
                 interviewQuestionService.writeQuestion(user, interviewQuestionDto);
