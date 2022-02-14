@@ -186,11 +186,9 @@ function TeamSpace({
         host={roomHost.nickName}
         createdAt={roomInfo.createdAt}
         image={roomInfo.imageUrl}
+        href={roomInfo.openKakao}
+        btnText="오픈카톡"
       />
-
-      <button className={styles.kakaoBtn}>
-        <a href={roomInfo.openKakao}>오픈카톡</a>
-      </button>
 
       <div className={styles.contentBox}>
         <button onClick={onUpdatePage}>
@@ -208,11 +206,14 @@ function TeamSpace({
                 {roomMembers.map((member, index) => (
                   <form key={index} onSubmit={onRemoveMember}>
                     <div>
-                      <img
-                        src={`${BACKEND_URL}/files/images/${userInfo.imageUrl}`}
-                        width={30}
-                        height={30}
-                      />
+                      {member.imageUrl !== null &&
+                      member.imageUrl !== "default.jpg" ? (
+                        <img
+                          src={`${BACKEND_URL}/files/images/${member.imageUrl}`}
+                        />
+                      ) : (
+                        <img src="/images/dangdang_1.png" />
+                      )}
                       <input type="hidden" value={member.id} disabled />
                       <input
                         type="text"
@@ -239,11 +240,14 @@ function TeamSpace({
                 {waitingList?.map((member, index) => (
                   <form key={index} onSubmit={onAllowJoin}>
                     <div>
-                      <img
-                        src={`${BACKEND_URL}/files/images/${userInfo.imageUrl}`}
-                        width={30}
-                        height={30}
-                      />
+                      {member.imageUrl !== null &&
+                      member.imageUrl !== "default.jpg" ? (
+                        <img
+                          src={`${BACKEND_URL}/files/images/${member.imageUrl}`}
+                        />
+                      ) : (
+                        <img src="/images/dangdang_1.png" />
+                      )}
                       <input type="hidden" value={member.id} disabled />
                       <input type="text" value={member.nickName} disabled />
                     </div>

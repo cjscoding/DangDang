@@ -5,6 +5,7 @@ import { setRoomInfo } from "../../../store/actions/roomAction";
 import { getRoomInfo } from "../../../api/studyroom";
 import { joinTeam } from "../../../api/member";
 import { createDetailComment } from "../../../api/comment";
+import { BACKEND_URL } from "../../../config";
 
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
@@ -110,55 +111,74 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
   };
 
   return (
-    <div>
-      <h1>{roomInfo.name}</h1>
-      <button onClick={() => onJoinStudy(roomInfo.id)}>가입신청</button>
+    <div className={styles.container}>
+      <div className={styles.mainContainer}>
+        <div className={styles.infoBox}>
+          <div className={styles.mainInfo}>
+            <div className={styles.image}>
+              {roomInfo.imageUrl !== null &&
+              roomInfo.imageUrl !== "default.jpg" ? (
+                <img src={`${BACKEND_URL}/files/images/${roomInfo.imageUrl}`} />
+              ) : (
+                <img src="/images/dangdang_1.png" />
+              )}
+            </div>
 
-      <div className={styles.info}>
-        <span>호스트</span>
-        <span>{roomHost.nickName}</span>
+            <div className={styles.title}>
+              <h2>{roomInfo.name}</h2>
+              <div className={styles.hashTags}>
+                {roomInfo.hashTags?.map((tag) => (
+                  <span key={tag}>#{tag}</span>
+                ))}
+              </div>
+              <h4>
+                <i className="fas fa-user-friends"></i> {roomHost.nickName} 외{" "}
+                {roomInfo.number}명
+              </h4>
+            </div>
+          </div>
 
-        <span>생성일</span>
-        <div>
-          {/* {roomInfo.createdAt
-            ? `${createdAt[0]}${createdAt[1]}${createdAt[2]}${createdAt[3]}. ${createdAt[5]}${createdAt[6]}. ${createdAt[8]}${createdAt[9]}`
-            : null} */}
+          <div className={styles.btns}>
+            <button
+              onClick={() => onJoinStudy(roomInfo.id)}
+              className={styles.registBtn}
+            >
+              가입신청
+            </button>
+
+            <button className={styles.kakaoBtn}>
+              <a href={roomInfo.openKakao}>오픈카톡</a>
+            </button>
+          </div>
         </div>
 
-        <span>목표</span>
-        <p>{roomInfo.goal}</p>
+        <div className={styles.introduction}>
+          <span>{roomInfo.goal}</span>
+          <p>{roomInfo.description}</p>
+        </div>
 
-        <span>오카방 주소</span>
-        <p>{roomInfo.openKakao}</p>
+        <h2 className={styles.commentTitle}>물어보면 답해준당</h2>
 
-        <span>팀 소개</span>
-        <p>{roomInfo.description}</p>
-
-        <label>태그</label>
-        <div>
-          {roomInfo.hashTags?.map((hashTag, index) => (
-            <p key={index}># {hashTag}</p>
+        <div className={styles.commentBox}>
+          <form onSubmit={onUploadComment}>
+            <input type="text" placeholder="댓글을 남겨주세요..." />
+            <button>등록</button>
+          </form>
+          {comments.map((comment, index) => (
+            <Comment
+              comment={comment}
+              key={index}
+              reload={reload}
+              userImage={comment.writerImageUrl}
+            />
           ))}
         </div>
       </div>
 
-      <div className={styles.comment}>
-        <h2>궁금하당</h2>
-        <h3>New Comment</h3>
-        <div className={styles.user}>
-          <div className="icon"></div>
-          <label className="author">Bori</label>
-        </div>
-        <form onSubmit={onUploadComment}>
-          <input type="text" placeholder="comment..." />
-          <button>Upload</button>
-        </form>
-        <div className="commentList">
-          <h1>Comments</h1>
-          {comments.map((comment, index) => (
-            <Comment comment={comment} key={index} reload={reload} />
-          ))}
-        </div>
+      <div className={styles.backBtnBox}>
+        <button className={styles.registBtn}>
+          <a href="/team/board">목록으로</a>
+        </button>
       </div>
     </div>
   );

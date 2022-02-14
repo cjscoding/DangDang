@@ -1,14 +1,18 @@
 //color
-$background-color: rgb(249, 249, 249);
+$background-color: #f9f9f9;
 $light-color: rgb(143, 200, 202);
-$main-color: #6BBFCA;
+$main-color: #6bbfca;
 $text-color: rgb(32, 32, 32);
-$yellow-color: #FEE500;
-$red-color: #FF0000;
+$yellow-color: #fbd56d;
+$red-color: #e86c6c;
+$purple-color: #7281d7;
+$google-color: #4285f4;
+$kakao-color: #fee500;
+$line-color: #eeeeee;
 
 //size
 $footer-height: 80.8px;
 
 //multi-set(team-space)
-$division-line: 2px solid rgb(230, 230, 230);
+$division-line: 2px solid $line-color;
 $box-shadow: 0 0 10px rgba(218, 215, 203, 0.25);

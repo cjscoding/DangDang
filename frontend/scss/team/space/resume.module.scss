@@ -1,6 +1,113 @@
-.resumeOneItem{
-    border: 1px solid black;
-    margin: 30px 0;
-    padding: 30px;
-    width: 500px;
+@import "../../common/variables.scss";
+@import "../../common/mixins.scss";
+@import "../board/comment.module.scss";
+@import "../board/reply.module.scss";
+
+.teamResume {
+  max-width: 1000px;
+  padding: 80px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.registBtn {
+  @include filled-button(200px, white, $main-color);
+  align-self: flex-end;
+  a {
+    color: white;
+  }
+}
+
+.resumeContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.memberListBox {
+  @include white-box;
+  width: 250px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  .member {
+    padding: 20px 0;
+    display: flex;
+    border-bottom: $division-line;
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+    .imgBox {
+      @include image-container(35px);
+    }
+    button {
+      @include none-button($text-color);
+      font-size: 18px;
+      font-weight: 500;
+    }
+    .currentMember {
+      opacity: 1;
+      font-weight: 600;
+      color: $main-color;
+    }
+  }
+}
+
+.resumeItem {
+  @include white-box;
+  margin-bottom: 30px;
+  .resumeContent {
+    display: flex;
+    flex-direction: column;
+    .question {
+      display: flex;
+      justify-content: space-between;
+      button {
+        @include none-button($text-color);
+        opacity: 0.5;
+        margin-left: 15px;
+        font-size: 18px;
+      }
+    }
+    p {
+      padding: 30px 0;
+      margin-bottom: 30px;
+      border-bottom: $division-line;
+    }
+  }
+}
+
+.contents {
+  width: 100%;
+  padding-left: 30px;
+  display: flex;
+  flex-direction: column;
+  .contentList {
+    @include white-box;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    h2 {
+      margin-bottom: 30px;
+    }
+    span {
+      margin-bottom: 10px;
+    }
+    button {
+      margin-top: 30px;
+      align-items: center;
+    }
+    img {
+      @include image-container(120px);
+      margin-right: 0;
+      border-radius: 0;
+      position: absolute;
+      right: 40px;
+      bottom: 40px;
+    }
+  }
 }
