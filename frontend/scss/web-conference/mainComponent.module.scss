@@ -21,6 +21,7 @@
       min-height: 40rem;
       min-width: calc(1200px - 24rem);
       .screens {
+        margin-right: 1rem;
         span{
           display: inline-flex;
           flex-direction: column;
@@ -29,6 +30,7 @@
       }
       .faces {
         width: calc(90vw - 24rem);
+        // width: calc(35.556vh - 3.556rem);
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
