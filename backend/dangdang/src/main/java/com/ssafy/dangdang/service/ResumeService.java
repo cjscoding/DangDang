@@ -11,9 +11,9 @@ import java.util.Optional;
 
 public interface ResumeService {
 
-    public Resume writeResume(User user, List<ResumeQuestionDto> resumeQuestionDtoList);
+    public ResumeDto writeResume(User user, List<ResumeQuestionDto> resumeQuestionDtoList);
 
-    public Resume updateResume(User user, ResumeDto resumeDto);
+    public ResumeDto updateResume(User user, ResumeDto resumeDto);
 
     public ApiUtils.ApiResult<String> deleteResume(User user, Long resumeId);
 

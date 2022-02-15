@@ -36,12 +36,14 @@ public class JoinsServiceImpl implements JoinsService {
     @Override
     public Long joinStudy(User user, Long studyId) {
 
+        Optional<Joins> join = joinsRepository.findJoinsByUserIdAndStudyId(user.getId(), studyId);
+        if(join.isPresent() && join.get().getWaiting())  {
+            log.info("가입 신청 취소");
+            joinsRepository.delete(join.get());
+            return 0L;
+        }
+
         Study study = studyRepository.findById(studyId).get();
-        List<Joins> joins = study.getJoins();
-        // 가입 완료된 유저만 조회
-        List<User> users = joins.stream().filter(join -> !join.getWaiting())
-                .map(join -> join.getUser()).collect(Collectors.toList());
-        if (users.size() >= study.getNumber()) throw new ExceedFixedNumber("이미 정원이 다 찬 스터디입니다.") ;
         Joins enter = Joins.builder()
                 .user(user)
                 .study(study)
@@ -54,12 +56,19 @@ public class JoinsServiceImpl implements JoinsService {
     @Override
     @Transactional
     public Long acceptUser(User host, Long userId, Long studyId){
-        Joins joins = joinsRepository.findJoinsByUserIdAndStudyId(userId, studyId);
+        Joins join = joinsRepository.findJoinsByUserIdAndStudyId(userId, studyId).get();
         Optional<Study> study = studyRepository.findById(studyId);
         if(!study.isPresent()) throw new NullPointerException("존재하지 않는 스터디 입니다.");
         if (study.get().getHost().getId() != host.getId()) throw new UnauthorizedAccessException("스터디장만이 유저를 가입시킬 수 있습니다.");
-        joins.acceptUser();
-        return joins.getId();
+
+        List<Joins> joins = study.get().getJoins();
+        // 가입 완료된 유저만 조회
+        List<User> users = joins.stream().filter(j -> !j.getWaiting())
+                .map(j -> j.getUser()).collect(Collectors.toList());
+        if (users.size() >= study.get().getNumber()) throw new ExceedFixedNumber("이미 정원이 다 찬 스터디입니다.") ;
+
+        join.acceptUser();
+        return join.getId();
     }
 
     @Override
@@ -79,7 +88,7 @@ public class JoinsServiceImpl implements JoinsService {
         Study study = studyRepository.findById(studyId).get();
         if (study.getHost().getId().equals(user.getId())) throw new BadRequestException("스터디장은 스터디를 탈퇴할 수 없습니다.");
         
-        Joins enter = joinsRepository.findJoinsByUserIdAndStudyId(user.getId(), studyId);
+        Joins enter = joinsRepository.findJoinsByUserIdAndStudyId(user.getId(), studyId).get();
         joinsRepository.delete(enter);
     }
 
@@ -88,7 +97,7 @@ public class JoinsServiceImpl implements JoinsService {
         Study study = studyRepository.findById(studyId).get();
         if (!study.getHost().getId().equals(user.getId())) throw new UnauthorizedAccessException("스터디장만이 유저를 내보낼 수 있습니다.");
         
-        Joins enter = joinsRepository.findJoinsByUserIdAndStudyId(userId, studyId);
+        Joins enter = joinsRepository.findJoinsByUserIdAndStudyId(userId, studyId).get();
         joinsRepository.delete(enter);
     }
 

@@ -6,6 +6,7 @@ import com.ssafy.dangdang.domain.Study;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.PostDto;
 import com.ssafy.dangdang.domain.types.CommentType;
+import com.ssafy.dangdang.domain.types.UserRoleType;
 import com.ssafy.dangdang.exception.UnauthorizedAccessException;
 import com.ssafy.dangdang.repository.CommentRepository;
 import com.ssafy.dangdang.repository.PostRepository;
@@ -50,6 +51,9 @@ public class PostServiceImpl implements PostService{
     public ApiResult<Post> updatePost(User user, PostDto postDto, Long studyId) {
         Optional<Study> study = studyRepository.findById(studyId);
         if (!study.isPresent()) throw new NullPointerException("존재하지 않는 스터디 입니다.");
+        Optional<Post> postById = postRepository.findById(postDto.getId());
+        if(!postById.isPresent()) throw new NullPointerException("존재하지 않는 게시글 입니다.");
+        if(postById.get().getWriter().getId() != user.getId() && user.getRole() != UserRoleType.ADMIN) throw new UnauthorizedAccessException("작성자만 글을 수정할 수 있습니다.");
 
         Post post =Post.builder()
                 .id(postDto.getId())
