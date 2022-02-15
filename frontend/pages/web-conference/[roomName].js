@@ -13,7 +13,7 @@ import { WEBRTC_URL } from "../../config";
 
 function mapStateToProps(state) {
   return {
-    ws: state.wsReducer.ws,
+    wsSocket: state.wsReducer.ws,
     myIdName: `${state.userReducer.user.id}-${state.userReducer.user.nickName}`, // id + - + nickName
     cameraId: state.videoReducer.cameraId,
     micId: state.videoReducer.micId,
@@ -21,7 +21,7 @@ function mapStateToProps(state) {
   };
 }
 export default connect(mapStateToProps, null)(Conference);
-function Conference({ws, myIdName, cameraId, micId, speakerId}) {
+function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
   const [me, setMe] = useState(null)
   const [mode, setMode] = useState(false) // 면접모드 true, 일반모드 false
   const [applicant, setApplicant] = useState("")
@@ -51,7 +51,14 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
     const myName = myIdName.slice(1 + myIdName.search('-'), myIdName.length);
     let meState = null
     // 새로고침 로직 다른거 생각중
-    if(!ws) window.close();
+    let ws = wsSocket
+    if(!ws) {
+      alert("잘못된 접근입니다.")
+      ws = {}
+      ws.send = function(){}
+      ws.close = function(){}
+      router.push("/404")
+    }
     let participants = {};
 
     function Participant(IdName, isCam) {
@@ -170,9 +177,16 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
       // console.log("Received message: " + message.data);
       switch (jsonMsg.id) {
         case "existingParticipants":
+          if(jsonMsg.data.filter(participant => participant.slice(0, 6) !== "screen").length >= 4) {
+            alert("잘못된 접근입니다.")
+            beforeunload()
+            router.push("/404")
+          }
           onExistingParticipants(jsonMsg);
           break;
         case "newParticipantArrived":
+          console.log(Object.keys(participants).filter(participant => participant.slice(0, 6) !== "screen"))
+          if(jsonMsg.name.slice(0, 6) !== "screen" && Object.keys(participants).filter(participant => participant.slice(0, 6) !== "screen").length >= 4) break;
           if(myIdName === screenShareAppliedUser) {
             sendMessage({
               id: "mode",

@@ -107,8 +107,11 @@
     width: 100%;
     justify-content: space-between;
     font-size: 1.3rem;
-    span {
+    .cursorBtn {
       cursor: pointer;
+    }
+    .blockBtn {
+      cursor: wait;
     }
   }
 }

@@ -3,11 +3,12 @@ import styles from "../../../scss/self-practice/interview/end.module.scss";
 import { connect } from "react-redux";
 import { WEBRTC_URL } from "../../../config"
 import multiDownload from 'multi-download';
+import { useRouter } from "next/router";
 
 function mapStateToProps(state) {
   const questions = state.questionReducer.questions.map(question => question.question)
   return {
-    ws: state.wsReducer.ws,
+    wsSocket: state.wsReducer.ws,
     sessionId: state.wsReducer.sessionId,
     questions,
     recordedQuestionIdxes: state.wsReducer.recordedQuestionIdxes,
@@ -16,10 +17,20 @@ function mapStateToProps(state) {
 }
 export default connect(mapStateToProps, null)(EndInterview)
 
-function EndInterview({ws, sessionId, questions, recordedQuestionIdxes, speakerId}) {
+function EndInterview({wsSocket, sessionId, questions, recordedQuestionIdxes, speakerId}) {
   const endBtn = useRef()
+  const router = useRouter();
+  
   useEffect(()=>{
-    if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
+    let ws = wsSocket
+    if(!ws) {
+      alert("잘못된 접근입니다.")
+      ws = {}
+      ws.send = function(){}
+      ws.close = function(){}
+      router.push("/404")
+    }
+
     const myVideo = document.querySelector("#my-video")
     myVideo.setSinkId(speakerId);
     let webRtcPeer;
