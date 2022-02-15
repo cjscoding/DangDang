@@ -85,6 +85,7 @@ export default function Comment({ comment, reload }) {
       },
       (err) => {
         console.log(err, "댓글 수정 실패");
+        alert("본인의 댓글만 수정이 가능합니다.");
       }
     );
   };

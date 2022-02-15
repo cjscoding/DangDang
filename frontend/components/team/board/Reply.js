@@ -32,6 +32,7 @@ export default function Reply({ reply, submitReload }) {
       },
       (err) => {
         console.log(err, "대댓글 삭제 실패");
+        alert("본인의 대댓글만 수정이 가능합니다.");
       }
     );
   };

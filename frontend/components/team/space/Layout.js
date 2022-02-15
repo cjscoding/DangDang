@@ -55,11 +55,6 @@ export default function Layout({ roomInfo, host, image, href, btnText }) {
           <span>{roomInfo.number}명</span>
           <span>스터디장</span>
           <span>{host}</span>
-          <span>마지막 연습</span>
-          <span>
-            {roomInfo.lastAccessTime?.slice(0, 10)}{" "}
-            {roomInfo.lastAccessTime?.slice(11, 19)}
-          </span>
         </div>
       </div>
 
