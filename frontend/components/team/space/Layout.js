@@ -19,6 +19,11 @@ export default function Layout({ roomInfo, host, image, href, btnText }) {
   function goToWebConference() {
     getStreamPermission(`/web-conference/check-devices/${studyId}`)
   }
+
+  const onMoveKakaoPage = () => {
+      window.open(href);
+  }
+
   return (
     <div className={styles.teamSpaceLayout}>
       <div className={styles.teamInfoBox}>
@@ -50,11 +55,6 @@ export default function Layout({ roomInfo, host, image, href, btnText }) {
           <span>{roomInfo.number}명</span>
           <span>스터디장</span>
           <span>{host}</span>
-          <span>마지막 연습</span>
-          <span>
-            {roomInfo.lastAccessTime?.slice(0, 10)}{" "}
-            {roomInfo.lastAccessTime?.slice(11, 19)}
-          </span>
         </div>
       </div>
 
@@ -103,8 +103,8 @@ export default function Layout({ roomInfo, host, image, href, btnText }) {
         </div>
 
         {`${curPage}` === "info" ? (
-          <button className={styles.kakaoBtn}>
-            <a href={href}>{btnText}</a>
+          <button className={styles.kakaoBtn} onClick={onMoveKakaoPage}>
+            <a>{btnText}</a>
           </button>
         ) : (
           <button className={styles.registBtn}>

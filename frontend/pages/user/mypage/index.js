@@ -2,7 +2,6 @@ import styles from "../../../scss/user/mypage.module.scss";
 import Link from "next/link";
 
 import { leaveDangDang } from "../../../api/user";
-import { BACKEND_URL } from "../../../config";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 
@@ -14,18 +13,20 @@ function mapStateToProps({ userReducer }) {
 
 export default connect(mapStateToProps)(userInfo);
 
-function userInfo({ user, isImgUrlBackendServer }) {
+function userInfo({ user }) {
   const router = useRouter();
   //회원 탈퇴
   const onLeaveDangDang = () => {
     leaveDangDang(
       (res) => {
+        alert("탈퇴 완료되었습니다.");
         console.log(res, "당당 탈퇴 성공");
         router.push({
           pathname: "/",
         });
       },
       (err) => {
+        alert("탈퇴가 완료되지 않았습니다.");
         console.log(err, "당당 탈퇴 실패");
       }
     );
@@ -34,7 +35,11 @@ function userInfo({ user, isImgUrlBackendServer }) {
   return (
     <div className={styles.myPageContainer}>
       <div className={styles.imageBox}>
-        <img src={`${user.imageUrl}`} />
+        {user.imageUrl !== null && user.imageUrl !== "default.jpg" ? (
+          <img src={`${user.imageUrl}`} />
+        ) : (
+          <img src="/images/dangdang_1.png" />
+        )}
       </div>
 
       <div className={styles.info}>
@@ -55,7 +60,9 @@ function userInfo({ user, isImgUrlBackendServer }) {
         </Link>
       </div>
 
-      <button onClick={onLeaveDangDang} className={styles.noButton}>회원 탈퇴</button>
+      <button onClick={onLeaveDangDang} className={styles.noButton}>
+        회원 탈퇴
+      </button>
     </div>
   );
 }

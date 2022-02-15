@@ -1,8 +1,11 @@
 import { connect } from "react-redux"
 
 function mapStateToProps(state) {
+  let timeStampInterval = state.timerReducer.curTime - state.timerReducer.startTIme
+  if(timeStampInterval < 0) timeStampInterval = 0
+  const seconds = Math.round(timeStampInterval / 1000)
   return {
-    seconds: state.timerReducer.seconds,
+    seconds
   };
 }
 export default connect(mapStateToProps, null)(ShowQuestion)
