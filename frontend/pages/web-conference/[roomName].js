@@ -30,9 +30,9 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
   const [screenShareUser, setScreenShareUser] = useState("");
   const [screenCompatibility, setScreenCompatibility] = useState(false)
 
-  const [cameraSelectShow, setCameraSelectShow] = useState(false)
-  const [micSelectShow, setMicSelectShow] = useState(false)
-  const [speakerSelectShow, setSpeakerSelectShow] = useState(false)
+  const [isCamera, setIsCamera] = useState(true)
+  const [isMic, setIsMic] = useState(true)
+  const [isSpeaker, setIsSpeaker] = useState(true)
 
   const chatInput = useRef();
   const chatInputBtn = useRef();
@@ -58,7 +58,8 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       ws = {}
       ws.send = function(){}
       ws.close = function(){}
-      router.push("/404")
+      window.location.href = "/404"
+      // router.push("/404")
     }
     let participants = {};
 
@@ -529,40 +530,20 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
     const changeModeBtnEl = changeModeBtn.current
     const exitBtnEl = exitBtn.current
 
-    let cameraShowState = false
-    let micShowState = false
-    let speakerShowState = false
-    function allSelectShowFalse() {
-      cameraShowState = false
-      micShowState = false
-      speakerShowState = false
-      setCameraSelectShow(cameraShowState)
-      setMicSelectShow(micShowState)
-      setSpeakerSelectShow(speakerShowState)
-    }
+    let isCameraState = true
+    let isMicState = true
+    let isSpeakerState = true
     function cameraSelectToggle() {
-      cameraShowState = !cameraShowState
-      micShowState = false
-      speakerShowState = false
-      setCameraSelectShow(cameraShowState)
-      setMicSelectShow(micShowState)
-      setSpeakerSelectShow(micShowState)
+      isCameraState = !isCameraState
+      setIsCamera(isCameraState)
     }
     function micSelectToggle() {
-      cameraShowState = false
-      micShowState = !micShowState
-      speakerShowState = false
-      setCameraSelectShow(cameraShowState)
-      setMicSelectShow(micShowState)
-      setSpeakerSelectShow(speakerShowState)
+      isMicState = !isMicState
+      setIsMic(isMicState)
     }
     function speakerSelectToggle() {
-      cameraShowState = false
-      micShowState = false
-      speakerShowState = !speakerShowState
-      setCameraSelectShow(cameraShowState)
-      setMicSelectShow(micShowState)
-      setSpeakerSelectShow(speakerShowState)
+      isSpeakerState = !isSpeakerState
+      setIsSpeaker(isSpeakerState)
     }
     cameraBtnEl.addEventListener("click", cameraSelectToggle)
     micBtnEl.addEventListener("click", micSelectToggle)
@@ -574,7 +555,6 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       }
     }
     exitBtnEl.addEventListener("click", exitRoom)
-    exitBtnEl.addEventListener("click", allSelectShowFalse)
 
     let modeState = false;
     function changeMode() {
@@ -609,8 +589,6 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
     }
     changeModeBtnEl.addEventListener("click", changeMode)
     screenBtnEl.addEventListener("click", startScreenShare)
-    changeModeBtnEl.addEventListener("click", allSelectShowFalse)
-    screenBtnEl.addEventListener("click", allSelectShowFalse)
     // 방 입장
     sendMessage({
       id: "joinRoom",
@@ -638,18 +616,15 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       }
     }
     window.addEventListener("beforeunload", beforeunload)
-    // console.log(cameraSelectDiv.current.childNodes[0])
+
     return () => {
       chatInputBtnEl.removeEventListener("click", sendChatMsg)
       chatInputEl.removeEventListener("keypress", enterInput)
       screenBtnEl.removeEventListener("click", startScreenShare)
-      changeModeBtnEl.removeEventListener("click", allSelectShowFalse)
-      screenBtnEl.removeEventListener("click", allSelectShowFalse)
       cameraBtnEl.removeEventListener("click", cameraSelectToggle)
       micBtnEl.removeEventListener("click", micSelectToggle)
       speakerBtnEl.removeEventListener("click", speakerSelectToggle)
       exitBtnEl.removeEventListener("click", exitRoom)
-      exitBtnEl.removeEventListener("click", allSelectShowFalse)
       // 방 퇴장
       window.removeEventListener("beforeunload", beforeunload)
       beforeunload()
@@ -668,6 +643,14 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       me.getVideoElement().srcObject = newStream
     }
   }, [cameraId, micId])
+  useEffect(() => {
+    if(me) {
+      const videoSender = me.rtcPeer.peerConnection.getSenders().find(sender => sender.track.kind === "video")
+      const audioSender = me.rtcPeer.peerConnection.getSenders().find(sender => sender.track.kind === "audio")
+      videoSender.track.enabled = isCamera
+      audioSender.track.enabled = isMic
+    }
+  }, [isCamera, isMic])
 
   useEffect(() => {
     for(let container of document.querySelector("#participants").children) {
@@ -679,34 +662,26 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       if(video.sinkId !== speakerId) video.setSinkId(speakerId)
     }
   },[speakerId])
-
-  // useEffect(() => {
-  //   if(screenShare) {
-  //     const participantsEl = document.getElementById("participants")
-  //     for(let videoContainer of participantsEl.childNodes) {
-  //       const video = videoContainer.firstChild
-  //       video.style.width = "calc(35.556vh - 3.556rem)"
-  //       video.style.height = "calc(20vh - 2rem)"
-  //       video.style.maxHeight = "calc(19.688vh - 2.344rem)"
-  //       video.style.maxWidth = "calc(35vh - 4.16rem)"
-  //       video.style.minHeight = "8.5rem"
-  //       video.style.minWidth = "15.111rem"
-  //       video.style.borderRadius = "0.6rem"
-  //     }
-  //   }else {
-  //     const participantsEl = document.getElementById("participants")
-  //     for(let videoContainer of participantsEl.childNodes) {
-  //       const video = videoContainer.firstChild
-  //       video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
-  //       video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
-  //       video.style.maxHeight = "calc(40vh - 1.5rem)"
-  //       video.style.maxWidth = "calc(71.111vh - 2.667rem"
-  //       video.style.minHeight = "8.5rem"
-  //       video.style.minWidth = "15.111rem"
-  //       video.style.borderRadius = "1rem"
-  //     }
-  //   }
-  // }, [screenShare])
+  useEffect(() => {
+    if(isSpeaker) {
+      for(let container of document.querySelector("#participants").children) {
+        if(container.id === myIdName) {
+          const video = container.firstChild
+          video.muted = true
+          continue
+        }
+        const video = container.firstChild
+        video.muted = false
+      }
+      if(document.querySelector("#screens").firstChild) document.querySelector("#screens").firstChild.firstChild.muted = false
+    }else {
+      for(let container of document.querySelector("#participants").children) {
+        const video = container.firstChild
+        video.muted = true
+      }
+      if(document.querySelector("#screens").firstChild) document.querySelector("#screens").firstChild.firstChild.muted = true
+    }
+  }, [isSpeaker, screenCompatibility])
 
   useEffect(() => {
     const participantsEl = document.getElementById("participants")
@@ -759,14 +734,6 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
             if(videoContainer.id === volunteer) {
               videoContainer.style.display = "none"
             }
-            // video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
-            // video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
-            // video.style.maxHeight = "calc(40vh - 1.5rem)"
-            // video.style.maxWidth = "calc(71.111vh - 2.667rem"
-            // video.style.minHeight = "8.5rem"
-            // video.style.minWidth = "15.111rem"
-            // video.style.borderRadius = "1rem"
-
             video.style.width = `calc((90vw - 24rem - 2rem) / ${inteviewerNum})`
             video.style.height = `calc((90vw - 24rem - 2rem) * 9 / 16 / ${inteviewerNum})`
             video.style.maxHeight = `calc(38.5rem / ${inteviewerNum})`
@@ -871,27 +838,36 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
         </div>
       </div>
       <div className={styles.btnBar}>
-        <span>
-          <span ref={cameraBtn}><i className="fas fa-video"></i></span>
-          <div style={cameraSelectShow?{}:{display: "none"}} ref={cameraSelectDiv}><CameraSelect /></div>
+        <span className={styles.eachBtn}>
+          <span ref={cameraBtn}>
+            <span style={isCamera?{}:{display: "none"}}><i className="fas fa-video"></i></span>
+            <span style={!isCamera?{}:{display: "none"}}><i class="fas fa-video-slash"></i></span>
+          </span>
+          <CameraSelect />
         </span>
-        <span>
-          <span ref={micBtn}><i className="fas fa-microphone"></i></span>
-          <div style={micSelectShow?{}:{display: "none"}}><MicSelect /></div>
+        <span className={styles.eachBtn}>
+          <span ref={micBtn}>
+            <span style={isMic?{}:{display: "none"}}><i className="fas fa-microphone"></i></span>
+            <span style={!isMic?{}:{display: "none"}}><i class="fas fa-microphone-slash"></i></span>
+          </span>
+          <MicSelect />
         </span>
-        <span>
-          <span ref={speakerBtn}><i className="fas fa-volume-up"></i></span>
-          <div style={speakerSelectShow?{}:{display: "none"}}><SpeakerSelect /></div>
+        <span className={styles.eachBtn}>
+          <span ref={speakerBtn}>
+            <span style={isSpeaker?{}:{display: "none"}}><i className="fas fa-volume-up"></i></span>
+            <span style={!isSpeaker?{}:{display: "none"}}><i class="fas fa-volume-mute"></i></span>
+          </span>
+          <SpeakerSelect />
         </span>
-        <span>
+        <span className={styles.eachBtn}>
           <span style={screenShareTry?{display: "none"}:{}} ref={screenBtn}><i className="fas fa-chalkboard"></i></span>
           <span style={!screenShareTry?{display: "none"}:{}} className={styles.nonCursor}><i className="fas fa-chalkboard-teacher"></i></span>
         </span>
-        <span ref={changeModeBtn} >
+        <span className={styles.eachBtn} ref={changeModeBtn} >
           <span style={mode?{display: "none"}:{}}><i className="fas fa-user-tie"></i></span>
           <span style={!mode?{display: "none"}:{}}><i className="fas fa-users"></i></span>
         </span>
-        <span ref={exitBtn}><i className="fas fa-times-circle"></i></span>
+        <span className={styles.eachBtn} ref={exitBtn}><i className="fas fa-times-circle"></i></span>
       </div>
     </div>
   </div>

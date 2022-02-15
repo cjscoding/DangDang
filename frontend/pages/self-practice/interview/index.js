@@ -46,7 +46,8 @@ function Interview({wsSocket, sessionId, questions, setWSSessionId, pushRecorded
       ws = {}
       ws.send = function(){}
       ws.close = function(){}
-      router.push("/404")
+      window.location.href = "/404"
+      // router.push("/404")
     }
 
     setSelectedQuestion(questions[0])
