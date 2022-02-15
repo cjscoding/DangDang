@@ -1,6 +1,7 @@
 package com.ssafy.dangdang.exception.controller;
 
 import com.ssafy.dangdang.exception.BadRequestException;
+import com.ssafy.dangdang.exception.ExceedFixedNumber;
 import com.ssafy.dangdang.exception.ExtantUserException;
 import com.ssafy.dangdang.exception.Swagger.ApiError400;
 import com.ssafy.dangdang.exception.Swagger.ApiError403;
@@ -98,6 +99,19 @@ public class CustomGlobalExceptionHandler  {
         e.printStackTrace();
         notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
         return error("중복된 엔티티거나 외래키 제약이 있습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "500", description = "정원 초과 에러", content = @Content(schema = @Schema(implementation = ApiError500.class))),
+    })
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ExceedFixedNumber.class)
+    public ApiResult<?> ExceedFixedNumberHandle(ExceedFixedNumber e, HttpServletRequest req){
+
+        log.error("정원 초과");
+        e.printStackTrace();
+        notificationManager.sendNotification(e, req.getRequestURI(), getParams(req));
+        return error("이미 정원이 초과된 스터디입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ApiResponses( value = {

@@ -6,6 +6,7 @@ import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.StudyDto;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.exception.BadRequestException;
+import com.ssafy.dangdang.exception.ExceedFixedNumber;
 import com.ssafy.dangdang.exception.UnauthorizedAccessException;
 import com.ssafy.dangdang.repository.JoinsRepository;
 import com.ssafy.dangdang.repository.StudyRepository;
@@ -36,6 +37,11 @@ public class JoinsServiceImpl implements JoinsService {
     public Long joinStudy(User user, Long studyId) {
 
         Study study = studyRepository.findById(studyId).get();
+        List<Joins> joins = study.getJoins();
+        // 가입 완료된 유저만 조회
+        List<User> users = joins.stream().filter(join -> !join.getWaiting())
+                .map(join -> join.getUser()).collect(Collectors.toList());
+        if (users.size() >= study.getNumber()) throw new ExceedFixedNumber("이미 정원이 다 찬 스터디입니다.") ;
         Joins enter = Joins.builder()
                 .user(user)
                 .study(study)
