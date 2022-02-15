@@ -40,7 +40,8 @@ function CheckDevices({preparedQuestions, wsSocket, isQs, setQuestions}) {
       ws = {}
       ws.send = function(){}
       ws.close = function(){}
-      router.push("/404")
+      window.location.href = "/404"
+      // router.push("/404")
     }
 
     if(!isQs) {

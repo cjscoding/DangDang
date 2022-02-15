@@ -28,7 +28,8 @@ function EndInterview({wsSocket, sessionId, questions, recordedQuestionIdxes, sp
       ws = {}
       ws.send = function(){}
       ws.close = function(){}
-      router.push("/404")
+      window.location.href = "/404"
+      // router.push("/404")
     }
 
     const myVideo = document.querySelector("#my-video")

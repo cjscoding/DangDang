@@ -44,7 +44,8 @@ function AddQuestions({wsSocket, questions, isLogin, addQuestion, removeQuestion
       ws = {}
       ws.send = function(){}
       ws.close = function(){}
-      router.push("/404")
+      window.location.href = "/404"
+      // router.push("/404")
     }
 
     const qKindEl = qKind.current
