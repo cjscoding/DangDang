@@ -113,16 +113,19 @@ function userInfoEdit({ user, setUserInfo, resetUserInfo, setIsLogin }) {
     }
   };
 
+  //마이 페이지로 돌아가기
+  const onMovePage = () => {
+    router.push("/user/mypage");
+  };
+
   //유저 이미지 변경 시 state 값 변환
   const onSetImage = (event) => setImage(event.target.files[0]);
 
   return (
     <div className={styles.updateContainer}>
-      <Link href="/user/mypage">
-        <button className={styles.backBtn}>
-          <i class="fas fa-angle-double-left"></i> 돌아가기
-        </button>
-      </Link>
+      <button onClick={onMovePage} className={styles.backBtn}>
+        <i className="fas fa-angle-double-left"></i> 돌아가기
+      </button>
 
       <div className={styles.formContainer}>
         <form method="POST" onSubmit={handleSubmit}>

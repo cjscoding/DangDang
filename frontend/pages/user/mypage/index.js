@@ -19,12 +19,14 @@ function userInfo({ user }) {
   const onLeaveDangDang = () => {
     leaveDangDang(
       (res) => {
+        alert("탈퇴 완료되었습니다.");
         console.log(res, "당당 탈퇴 성공");
         router.push({
           pathname: "/",
         });
       },
       (err) => {
+        alert("탈퇴가 완료되지 않았습니다.");
         console.log(err, "당당 탈퇴 실패");
       }
     );
@@ -33,7 +35,11 @@ function userInfo({ user }) {
   return (
     <div className={styles.myPageContainer}>
       <div className={styles.imageBox}>
-        <img src={`${user.imageUrl}`} />
+        {user.imageUrl !== null && user.imageUrl !== "default.jpg" ? (
+          <img src={`${user.imageUrl}`} />
+        ) : (
+          <img src="/images/dangdang_1.png" />
+        )}
       </div>
 
       <div className={styles.info}>
@@ -54,7 +60,9 @@ function userInfo({ user }) {
         </Link>
       </div>
 
-      <button onClick={onLeaveDangDang} className={styles.noButton}>회원 탈퇴</button>
+      <button onClick={onLeaveDangDang} className={styles.noButton}>
+        회원 탈퇴
+      </button>
     </div>
   );
 }

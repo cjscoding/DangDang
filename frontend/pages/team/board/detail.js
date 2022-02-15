@@ -81,9 +81,12 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
       data,
       (res) => {
         console.log(res, "가입 완료");
+        alert("가입 신청 완료되었습니다.");
       },
       (err) => {
-        console.log(err, "호스트는 이미 멤버로 등록되어 있습니다.");
+        alert("이미 가입한 상태입니다.");
+        console.log(err);
+        
       }
     );
   };
@@ -108,6 +111,10 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
       }
     );
     event.target[0].value = "";
+  };
+
+  const onMoveKakaoPage = (href) => {
+    window.open(href);
   };
 
   return (
@@ -146,8 +153,11 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
               가입신청
             </button>
 
-            <button className={styles.kakaoBtn}>
-              <a href={roomInfo.openKakao}>오픈카톡</a>
+            <button
+              className={styles.kakaoBtn}
+              onClick={() => onMoveKakaoPage(roomInfo.openKakao)}
+            >
+              <a>오픈카톡</a>
             </button>
           </div>
         </div>

@@ -19,6 +19,11 @@ export default function Layout({ roomInfo, host, image, href, btnText }) {
   function goToWebConference() {
     getStreamPermission(`/web-conference/check-devices/${studyId}`)
   }
+
+  const onMoveKakaoPage = () => {
+      window.open(href);
+  }
+
   return (
     <div className={styles.teamSpaceLayout}>
       <div className={styles.teamInfoBox}>
@@ -103,8 +108,8 @@ export default function Layout({ roomInfo, host, image, href, btnText }) {
         </div>
 
         {`${curPage}` === "info" ? (
-          <button className={styles.kakaoBtn}>
-            <a href={href}>{btnText}</a>
+          <button className={styles.kakaoBtn} onClick={onMoveKakaoPage}>
+            <a>{btnText}</a>
           </button>
         ) : (
           <button className={styles.registBtn}>

@@ -40,6 +40,7 @@ export default function ResumeUpdate() {
       data,
       (res) => {
         console.log(res, "질문 수정 성공");
+        alert("질문 수정 완료");
         router.push("/interview-question/me");
       },
       (err) => {

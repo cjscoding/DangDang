@@ -140,6 +140,10 @@ function TeamSpace({
 
   //팀 수정페이지로 이동
   const onUpdatePage = () => {
+    if (hostId !== userId) {
+      alert("수정 권한이 없습니다.");
+      return;
+    }
     router.push({
       pathname: `/team/space/update`,
       query: {
@@ -165,7 +169,6 @@ function TeamSpace({
   //for member
   //스터디룸 탈퇴
   const onLeaveTeam = () => {
-    // if (userInfo.id !== "") {
     leaveTeam(
       router.query.id,
       (res) => {
@@ -176,7 +179,6 @@ function TeamSpace({
         console.log(err, "팀을 탈퇴할 수 없습니다.");
       }
     );
-    // }
   };
 
   return (
