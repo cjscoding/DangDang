@@ -104,7 +104,7 @@ public class UserController {
                                                  content = @Content(mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE)  // Won't work without OCTET_STREAM as the mediaType.
                                          ) MultipartFile image) throws IOException {
 
-        if (userPrincipal.getUser().getImageUrl() != null){
+        if (userPrincipal.getUser().getImageUrl() != null && !userPrincipal.getUser().getImageUrl().equals("default.jpg")){
             storageService.deleteImage(userPrincipal.getUser().getImageUrl());
         }
         log.info("user image 수정 {}", image.getOriginalFilename());
