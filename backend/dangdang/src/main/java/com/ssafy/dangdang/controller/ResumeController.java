@@ -57,8 +57,8 @@ public class ResumeController {
     public ApiResult<ResumeDto> writeResume(@CurrentUser PrincipalDetails userPrincipal,
                                             @RequestBody WriteResume writeResume){
         ResumeDto resumeDto = ResumeDto.of(writeResume);
-        ResumeDto newResume = ResumeDto.of(resumeService.writeResume(userPrincipal.getUser(),
-                resumeDto.getResumeQuestionList()));
+        ResumeDto newResume = resumeService.writeResume(userPrincipal.getUser(),
+                resumeDto.getResumeQuestionList());
         return success(newResume);
     }
 
@@ -75,8 +75,8 @@ public class ResumeController {
                                              @RequestBody WriteResume writeResume){
         ResumeDto resumeDto = ResumeDto.of(writeResume);
         resumeDto.setId(resumeId);
-        ResumeDto newResume = ResumeDto.of(resumeService.updateResume(userPrincipal.getUser(),
-                resumeDto));
+        ResumeDto newResume = resumeService.updateResume(userPrincipal.getUser(),
+                resumeDto);
         return success(newResume);
     }
 
@@ -116,6 +116,7 @@ public class ResumeController {
     @DeleteMapping("/{resumeId}/comment/{commentId}")
     public ApiResult<String> deleteComment(@CurrentUser PrincipalDetails userPrincipal,
                                            @PathVariable String commentId){
+        log.info("자소서 댓글 삭제");
         return commentService.deleteComment(userPrincipal.getUser(), commentId);
     }
 

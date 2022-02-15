@@ -36,7 +36,7 @@ public class ResumeServiceImpl implements ResumeService{
 
     @Override
     @Transactional
-    public Resume writeResume(User user, List<ResumeQuestionDto> resumeQuestionDtoList) {
+    public ResumeDto writeResume(User user, List<ResumeQuestionDto> resumeQuestionDtoList) {
         Resume resume = Resume.builder()
                 .user(user)
                 .resumeQuestionList(new ArrayList<>())
@@ -44,17 +44,18 @@ public class ResumeServiceImpl implements ResumeService{
         resumeRepository.save(resume);
         for ( ResumeQuestionDto resumeQuestionDto:
                 resumeQuestionDtoList) {
+            resumeQuestionDto.setId(null);
             ResumeQuestion resumeQuestion = ResumeQuestion.of(resume, resumeQuestionDto);
             // Front로 resumeQuestionList를 함께 보냄, 이 외래키가 ResumeQuestion에 있기에, 이 코드를 생략해도 DB에 영향을 끼치지 않음
             resume.getResumeQuestionList().add(resumeQuestion);
             resumeQuestionRepository.save(resumeQuestion);
         }
-        return resume;
+        return ResumeDto.of(resume);
     }
 
     @Override
     @Transactional
-    public Resume updateResume(User user, ResumeDto resumeDto) {
+    public ResumeDto updateResume(User user, ResumeDto resumeDto) {
         Resume resume = resumeRepository.findById(resumeDto.getId()).get();
 
         for ( ResumeQuestionDto resumeQuestionDto:
@@ -64,7 +65,7 @@ public class ResumeServiceImpl implements ResumeService{
         }
         resumeRepository.save(resume);
         resume = resumeRepository.findResumeFetchJoinByResumeId(resumeDto.getId());
-        return resume;
+        return ResumeDto.of(resume);
     }
 
     @Override

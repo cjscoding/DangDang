@@ -7,13 +7,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.List;
+import java.util.Optional;
 
 @EnableJpaRepositories
 public interface JoinsRepository extends JpaRepository<Joins, Long> {
 
     List<Joins> findJoinsByUser(User user);
 
-    Joins findJoinsByUserIdAndStudyId(Long userId, Long studyId);
+    Optional<Joins> findJoinsByUserIdAndStudyId(Long userId, Long studyId);
 
     List<Joins> findJoinsByStudyId(Long studyId);
 
