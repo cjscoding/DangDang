@@ -72,6 +72,7 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
       hashtags: searchTags.join(","),
       page: curPage,
       size: postsPerPage,
+      sort: "createdAt,desc"
     };
     getMyRooms(
       param,

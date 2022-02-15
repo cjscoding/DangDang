@@ -22,7 +22,7 @@ const userReducer = (state = initialState, action) => {
     case types.SET_USERINFO:
       const user = {
         ...action.userInfo,
-        imageUrl: action.userInfo.imageUrl.slice(0, 5) === "https"?action.userInfo.imageUrl:`${BACKEND_URL}/files/images/${action.userInfo.imageUrl}`
+        imageUrl: action.userInfo.imageUrl.slice(0, 4) === "http"?action.userInfo.imageUrl:`${BACKEND_URL}/files/images/${action.userInfo.imageUrl}`
       }
       return { ...state, user: user };
     case types.SET_SHOWMODAL:

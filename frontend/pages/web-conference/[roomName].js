@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import CameraSelect from "../../components/webRTC/devices/CameraSelect";
 import MicSelect from "../../components/webRTC/devices/MicSelect";
 import SpeakerSelect from "../../components/webRTC/devices/SpeakerSelect";
+import Timer from "../../components/webRTC/Timer";
+import timer from "../../components/webRTC/timerfunction"
 import getVideoConstraints from "../../components/webRTC/getVideoConstraints";
 import styles from "../../scss/web-conference/mainComponent.module.scss";
 import SockJS from "sockjs-client";
@@ -11,7 +13,7 @@ import { WEBRTC_URL } from "../../config";
 
 function mapStateToProps(state) {
   return {
-    ws: state.wsReducer.ws,
+    wsSocket: state.wsReducer.ws,
     myIdName: `${state.userReducer.user.id}-${state.userReducer.user.nickName}`, // id + - + nickName
     cameraId: state.videoReducer.cameraId,
     micId: state.videoReducer.micId,
@@ -19,11 +21,13 @@ function mapStateToProps(state) {
   };
 }
 export default connect(mapStateToProps, null)(Conference);
-function Conference({ws, myIdName, cameraId, micId, speakerId}) {
+function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
   const [me, setMe] = useState(null)
   const [mode, setMode] = useState(false) // 면접모드 true, 일반모드 false
+  const [applicant, setApplicant] = useState("")
   const [screenShareTry, setScreenShareTry] = useState(false)
   const [screenShare, setScreenShare] = useState(false)
+  const [screenShareUser, setScreenShareUser] = useState("");
 
   const [cameraSelectShow, setCameraSelectShow] = useState(false)
   const [micSelectShow, setMicSelectShow] = useState(false)
@@ -47,7 +51,14 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
     const myName = myIdName.slice(1 + myIdName.search('-'), myIdName.length);
     let meState = null
     // 새로고침 로직 다른거 생각중
-    if(!ws) window.close();
+    let ws = wsSocket
+    if(!ws) {
+      alert("잘못된 접근입니다.")
+      ws = {}
+      ws.send = function(){}
+      ws.close = function(){}
+      router.push("/404")
+    }
     let participants = {};
 
     function Participant(IdName, isCam) {
@@ -166,9 +177,16 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
       // console.log("Received message: " + message.data);
       switch (jsonMsg.id) {
         case "existingParticipants":
+          if(jsonMsg.data.filter(participant => participant.slice(0, 6) !== "screen").length >= 4) {
+            alert("잘못된 접근입니다.")
+            beforeunload()
+            router.push("/404")
+          }
           onExistingParticipants(jsonMsg);
           break;
         case "newParticipantArrived":
+          console.log(Object.keys(participants).filter(participant => participant.slice(0, 6) !== "screen"))
+          if(jsonMsg.name.slice(0, 6) !== "screen" && Object.keys(participants).filter(participant => participant.slice(0, 6) !== "screen").length >= 4) break;
           if(myIdName === screenShareAppliedUser) {
             sendMessage({
               id: "mode",
@@ -299,6 +317,8 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
         setScreenShareTry(screenShareTryState);
         screenShareState = false
         setScreenShare(screenShareState)
+        screenShareAppliedUser = ""
+        setScreenShareUser(screenShareAppliedUser)
         sendMessage({
           id: "mode",
           position: `notScreenShare`
@@ -360,19 +380,19 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
             screenShareTryState = true
             break
           case "notScreenShare":
-            screenShareAppliedUser = jsonMsg.name
+            screenShareAppliedUser = ""
             screenShareState = false
             screenShareTryState = false
             break
           case "normal":
             volunteerUser = ""
             modeState = false
-            setMode(modeState)
+            timer.stopTimer()
             break
           case "volunteer":
             volunteerUser = jsonMsg.name
             modeState = true
-            setMode(modeState)
+            timer.startTimer()
             break
           default:
             console.log(`ERROR! ${jsonMsg.mode}`)
@@ -381,6 +401,9 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
         console.log(volunteerUser)
         setScreenShareTry(screenShareTryState);
         setScreenShare(screenShareState)
+        setScreenShareUser(screenShareAppliedUser)
+        setMode(modeState)
+        setApplicant(volunteerUser)
       }
     }
 
@@ -397,7 +420,6 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
           id: "mode",
           position: `screenShareTry`
         })
-        screenShareAppliedUser = myIdName
         screenHandler = new ScreenHandler();
         stream = await screenHandler.start();
         if(stream) {
@@ -407,6 +429,8 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
             setScreenShareTry(false);
             screenShareState = true
             setScreenShare(screenShareState)
+            screenShareAppliedUser = myIdName
+            setScreenShareUser(screenShareAppliedUser)
             sendMessage({
               id: "mode",
               position: `screenShare`
@@ -560,12 +584,20 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
 
     let modeState = false;
     function changeMode() {
+      if(modeState) {
+        if(!confirm("일반 모드로 바꾸시겠습니까?")) return
+        timer.stopTimer()
+      }else {
+        if(!confirm("면접 모드로 바꾸시겠습니까?")) return
+        timer.startTimer()
+      }
       modeState = !modeState
       if(modeState) {
         volunteerUser = myIdName
       }else {
         volunteerUser = ""
       }
+      setApplicant(volunteerUser)
       setMode(modeState)
       sendMessage({
         id: "mode",
@@ -673,6 +705,24 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
     }
   }, [screenShare])
 
+  useEffect(() => {
+    const participantsEl = document.getElementById("participants")
+    for(let videoContainer of participantsEl.childNodes) {
+      const video = videoContainer.firstChild
+      if(video.id === `video-${screenShareUser}`) {
+        video.style.border = "2px"
+        video.style.borderStyle = "solid"
+        video.style.borderColor = "#BDECB6"
+        video.style.backgroundColor = "#BDECB6"
+      }else {
+        video.style.border = "2px"
+        video.style.borderStyle = "solid"
+        video.style.borderColor = "black"
+        video.style.backgroundColor = "black"
+      }
+    }
+  }, [screenShareUser])
+
   return <div>
     <div className={styles.mainContainer}>
       <div className={styles.mainSection}>
@@ -680,11 +730,16 @@ function Conference({ws, myIdName, cameraId, micId, speakerId}) {
           <div className={styles.screens} id="screens" ></div>
           <div className={styles.faces} id="participants"></div>
         </div>
-        <div className={styles.subContainer}>
-          <span className={`${styles.selectedMenuBtn} ${styles.chatMenuBtn}`}>채팅창</span>
-          <span className={` ${styles.memoMenuBtn}`}>메모장</span>
-          <span className={` ${styles.letterMenuBtn}`}>자소서</span>
-          <span className={` ${styles.scoreMenuBtn}`}>채점표</span>
+        <div style={applicant===myIdName?{display: "none"}:{}} className={styles.subContainer}>
+          <div className={styles.subContainerTopBar}>
+            <span>
+              <span className={`${styles.selectedMenuBtn} ${styles.chatMenuBtn}`}>채팅창</span>
+              <span style={mode?{}:{display: "none"}} className={` ${styles.letterMenuBtn}`}>자소서</span>
+            </span>
+            <span style={mode?{}:{display: "none"}} className={styles.timer}>
+              <Timer />
+            </span>
+          </div>
           <div className={styles.chatContainer} id="chat">
             <div ref={chatContentBox} className={styles.chat}></div>
             <div className={styles.chatInput}>

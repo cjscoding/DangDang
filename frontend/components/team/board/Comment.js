@@ -8,6 +8,7 @@ import {
 } from "../../../api/comment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { BACKEND_URL } from "../../../config";
 
 export default function Comment({ comment, reload }) {
   const router = useRouter();
@@ -84,6 +85,7 @@ export default function Comment({ comment, reload }) {
       },
       (err) => {
         console.log(err, "댓글 수정 실패");
+        alert("본인의 댓글만 수정이 가능합니다.");
       }
     );
   };

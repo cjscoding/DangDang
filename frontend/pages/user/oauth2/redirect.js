@@ -32,6 +32,7 @@ function redirect({ setUserInfo }) {
           id: response.id,
           email: response.email,
           nickName: response.nickName,
+          role: response.role,
           imageUrl: response.imageUrl,
         };
         setUserInfo(userInfo);

@@ -18,7 +18,7 @@ export async function getServerSideProps() {
 };
 function mapStateToProps(state) {
   return {
-    ws: state.wsReducer.ws,
+    wsSocket: state.wsReducer.ws,
     isQs: state.questionReducer.questions.length !== 0,
   };
 }
@@ -29,12 +29,20 @@ function mapDispatchToProps(dispatch) {
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(CheckDevices);
-function CheckDevices({preparedQuestions, ws, isQs, setQuestions}) {
+function CheckDevices({preparedQuestions, wsSocket, isQs, setQuestions}) {
   const nextBtn = useRef();
   const router = useRouter();
 
   useEffect(() => {
-    if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
+    let ws = wsSocket
+    if(!ws) {
+      alert("잘못된 접근입니다.")
+      ws = {}
+      ws.send = function(){}
+      ws.close = function(){}
+      router.push("/404")
+    }
+
     if(!isQs) {
       setQuestions(preparedQuestions);
     }

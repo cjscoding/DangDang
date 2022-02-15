@@ -1,8 +1,9 @@
 import styles from "../../../scss/team/board/detail.module.scss";
 
 import { updateDetailComment, deleteDetailComment } from "../../../api/comment";
-import { useRouter } from "next/router";
+import { BACKEND_URL } from "../../../config";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 export default function Reply({ reply, submitReload }) {
   const router = useRouter();
@@ -31,6 +32,7 @@ export default function Reply({ reply, submitReload }) {
       },
       (err) => {
         console.log(err, "대댓글 삭제 실패");
+        alert("본인의 대댓글만 수정이 가능합니다.");
       }
     );
   };

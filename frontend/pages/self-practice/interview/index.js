@@ -4,20 +4,20 @@ import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import ShowQuestion from "../../../components/webRTC/self-practice/ShowQuestion";
 import styles from "../../../scss/self-practice/interview/mainComponent.module.scss";
-import timer from "../../../components/webRTC/timer"
+import timer from "../../../components/webRTC/timerfunction"
+import Timer from "../../../components/webRTC/Timer";
 import getVideoConstraints from "../../../components/webRTC/getVideoConstraints";
 import { ttsService } from "../../../api/webRTC";
 
 function mapStateToProps(state) {
   const questions = state.questionReducer.questions.map(question => question.question)
   return {
-    ws: state.wsReducer.ws,
+    wsSocket: state.wsReducer.ws,
     sessionId: state.wsReducer.sessionId,
     questions
   };
 }
 import { setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion } from "../../../store/actions/wsAction";
-import Timer from "../../../components/webRTC/self-practice/Timer";
 function mapDispatchToProps(dispatch) {
   return {
     setWSSessionId: (sessionId) => dispatch(setWSSessionId(sessionId)),
@@ -27,7 +27,7 @@ function mapDispatchToProps(dispatch) {
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Interview);
 
-function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion}) {
+function Interview({wsSocket, sessionId, questions, setWSSessionId, pushRecordedQuestionIdx, setSelectedQuestion}) {
   const router = useRouter();
   const [isWait, setIsWait] = useState(true);
   const [screenNum, setScreenNum] = useState(3);
@@ -40,7 +40,14 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
   const volumeBar = useRef();
 
   useEffect(()=>{
-    if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
+    let ws = wsSocket
+    if(!ws) {
+      alert("잘못된 접근입니다.")
+      ws = {}
+      ws.send = function(){}
+      ws.close = function(){}
+      router.push("/404")
+    }
 
     setSelectedQuestion(questions[0])
     let questionNumState = 0; // useEffect에서 사용할 questionNum 상태(useEffect안에서는 questionNum이 바뀌지 않음)
@@ -98,6 +105,7 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
         mediaConstraints : getVideoConstraints(640, 360),
         onicecandidate : onIceCandidate
       }
+      if(typeof kurentoUtils === "undefined") return
       webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options, function(error) {
         if (error) return console.log(`ERROR! ${error}`);
         webRtcPeer.generateOffer(onOffer);
@@ -200,7 +208,7 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
   },[])
   return <div>
   <div className={styles.closeBtnBox}>
-    <span><Timer/></span>
+    <span className={styles.timer}><Timer/></span>
     <Link href="/self-practice/interview/end">
       <a>
        <span className={styles.closeBtn}><i className="fas fa-times"></i></span>
@@ -228,12 +236,21 @@ function Interview({ws, sessionId, questions, setWSSessionId, pushRecordedQuesti
        </div>
        <div className={styles.btnContainer}>
         <span>
-          <span ref={volumeBtn}><i className="fas fa-volume-up"></i></span>
-          <input style={isVol?{}:{display: "none"}} type="range" min="0" max="100" step="1" ref={volumeBar}/>
+          <span className={styles.cursorBtn} ref={volumeBtn}><i className="fas fa-volume-up"></i></span>
+          <input className={styles.cursorBtn} style={isVol?{}:{display: "none"}} type="range" min="0" max="100" step="1" ref={volumeBar}/>
         </span>
-        <span ref={restartBtn} ><i className="fas fa-redo-alt"></i></span>
-        <span ref={saveBtn} ><i className="fas fa-check"></i></span>
-        <span ref={skipBtn} className={styles.tooltipdown}><i className="fas fa-arrow-right"></i><span className={styles.icon}>스킵한 질문은 영상이 저장되지 않습니다.</span></span>
+        <span>
+          <span style={isWait?{display: "none"}:{}} className={styles.cursorBtn} ref={restartBtn} ><i className="fas fa-redo-alt"></i></span>
+          <span style={!isWait?{display: "none"}:{}} className={styles.blockBtn}><i className="fas fa-redo-alt"></i></span>
+        </span>
+        <span>
+          <span style={isWait?{display: "none"}:{}} className={styles.cursorBtn} ref={saveBtn} ><i className="fas fa-check"></i></span>
+          <span style={!isWait?{display: "none"}:{}} className={styles.blockBtn}><i className="fas fa-redo-alt"></i></span>
+        </span>
+        <span>
+          <span style={isWait?{display: "none"}:{}} ref={skipBtn} className={`${styles.cursorBtn} ${styles.tooltipdown}`}><i className="fas fa-arrow-right"></i><span className={styles.icon}>스킵한 질문은 영상이 저장되지 않습니다.</span></span>
+          <span style={!isWait?{display: "none"}:{}} className={styles.blockBtn}><i className="fas fa-arrow-right"></i></span>
+        </span>
       </div>
     </div>
   </div>

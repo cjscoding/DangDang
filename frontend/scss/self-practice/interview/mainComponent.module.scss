@@ -6,9 +6,13 @@
   display: flex;
   justify-content: flex-end;
   margin: 1rem 0;
-  span{
+  .timer {
+    font-size: 1.3rem;
+    margin-right: 2rem;
+  }
+  .closeBtn{
     margin-right:1rem;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
   }
 }
 
@@ -103,8 +107,11 @@
     width: 100%;
     justify-content: space-between;
     font-size: 1.3rem;
-    span {
+    .cursorBtn {
       cursor: pointer;
+    }
+    .blockBtn {
+      cursor: wait;
     }
   }
 }

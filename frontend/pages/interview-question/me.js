@@ -34,10 +34,7 @@ function myQuestion({ myQuestions, setMyQuestions }) {
 
   useEffect(() => {
     getQuestions();
-  }, [
-    curPage,
-    // ,field, question
-  ]);
+  }, [curPage, , field, question]);
 
   const reload = () => {
     setCurPage(0);
@@ -46,8 +43,8 @@ function myQuestion({ myQuestions, setMyQuestions }) {
 
   const getQuestions = () => {
     const params = {
-      //   field,
-      //   question,
+      field,
+      question,
       page: curPage,
       size: postsPerPage,
     };
@@ -64,7 +61,7 @@ function myQuestion({ myQuestions, setMyQuestions }) {
 
   const setKeyword = (event) => {
     event.preventDefault();
-    if (event.key === "Enter") {
+    if (event.target.value === "" || event.key === "Enter") {
       setQuestion(event.target.value);
     }
   };

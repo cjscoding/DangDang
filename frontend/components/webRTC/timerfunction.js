@@ -10,6 +10,7 @@ export default {
     this.timerTick = this.tickFunction()
   },
   stopTimer: function() {
+    store.dispatch(startTimer());
     clearInterval(this.timerTick);
   },
 }

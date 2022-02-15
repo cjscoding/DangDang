@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { connect } from "react-redux";
 import { getInterviewQuestions, getMyInterviewQuestions, getMyBookmarkQuestions } from "../../../api/interviewQuestion";
@@ -7,10 +8,9 @@ import styles from "../../../scss/self-practice/interview/add-questions.module.s
 
 function mapStateToProps(state) {
   return {
-    ws: state.wsReducer.ws,
+    wsSocket: state.wsReducer.ws,
     questions: state.questionReducer.questions,
     isLogin: state.userReducer.isLogin,
-    user: state.userReducer.user,
   };
 }
   
@@ -24,7 +24,7 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddQuestions); 
 
-function AddQuestions({ws, questions, isLogin, user, addQuestion, removeQuestion}) {
+function AddQuestions({wsSocket, questions, isLogin, addQuestion, removeQuestion}) {
   const [questionInput, setQuestionInput] = useState("");
   const [allQuestions, setAllQuestions] = useState([]);
   const [myQuestions, setMyQuestions] = useState([]);
@@ -35,9 +35,18 @@ function AddQuestions({ws, questions, isLogin, user, addQuestion, removeQuestion
   const [postsPerPage] = useState(10);
   const [totalPosts, setTotalPosts] = useState(100);
   const paginate = (pageNumber) => setCurPage(pageNumber);
+  const router = useRouter();
   
   useEffect(() => {
-    if(!ws) window.location.href = "/self-practice/interview/select-questionlist";
+    let ws = wsSocket
+    if(!ws) {
+      alert("잘못된 접근입니다.")
+      ws = {}
+      ws.send = function(){}
+      ws.close = function(){}
+      router.push("/404")
+    }
+
     const qKindEl = qKind.current
     const option0 = document.createElement("option");
     option0.value = 0
