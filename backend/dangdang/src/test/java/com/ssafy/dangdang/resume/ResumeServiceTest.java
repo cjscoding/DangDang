@@ -40,7 +40,7 @@ public class ResumeServiceTest {
     @Test
     @Transactional
     public void getResumes(){
-        List<Resume> resumeDtos = resumeRepository.findResumeListFetchJoinByUserId(1L);
+        List<Resume> resumeDtos = resumeRepository.findResumeList(1L, 1L);
 
 
         System.out.println("=============================");

@@ -36,9 +36,11 @@ public class ResumeController {
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "자소서 조회 성공")
     })
-    @GetMapping("/{userId}")
-    public ApiResult<List<ResumeDto>> getResumes(@PathVariable Long userId,@ParameterObject Pageable pageable){
-        List<ResumeDto> resumes = resumeService.getResumes(userId);
+    @GetMapping("/{studyId}/{userId}")
+    public ApiResult<List<ResumeDto>> getResumes(@PathVariable Long studyId,
+                                                 @PathVariable Long userId,
+                                                 @ParameterObject Pageable pageable){
+        List<ResumeDto> resumes = resumeService.getResumes(userId, studyId);
         for (ResumeDto resumeDto : resumes){
             Page<CommentDto> comments = commentService.findCommentByReferenceIdWithPage(resumeDto.getId(), CommentType.RESUME,pageable);
             resumeDto.setCommentDtos(comments);
@@ -52,12 +54,13 @@ public class ResumeController {
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "자소서 작성 성공")
     })
-    @PostMapping()
+    @PostMapping("/{studyId}")
     @PreAuthorize("hasRole('USER')")
-    public ApiResult<ResumeDto> writeResume(@CurrentUser PrincipalDetails userPrincipal,
+    public ApiResult<ResumeDto> writeResume(@PathVariable Long studyId,
+                                            @CurrentUser PrincipalDetails userPrincipal,
                                             @RequestBody WriteResume writeResume){
         ResumeDto resumeDto = ResumeDto.of(writeResume);
-        ResumeDto newResume = resumeService.writeResume(userPrincipal.getUser(),
+        ResumeDto newResume = resumeService.writeResume(userPrincipal.getUser(),studyId,
                 resumeDto.getResumeQuestionList());
         return success(newResume);
     }
@@ -68,14 +71,15 @@ public class ResumeController {
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "자소서 수정 성공")
     })
-    @PatchMapping("/{resumeId}")
+    @PatchMapping("/{studyId}/{resumeId}")
     @PreAuthorize("hasRole('USER')")
     public ApiResult<ResumeDto> updateResume(@CurrentUser PrincipalDetails userPrincipal,
+                                             @PathVariable Long studyId,
                                              @PathVariable Long resumeId,
                                              @RequestBody WriteResume writeResume){
         ResumeDto resumeDto = ResumeDto.of(writeResume);
         resumeDto.setId(resumeId);
-        ResumeDto newResume = resumeService.updateResume(userPrincipal.getUser(),
+        ResumeDto newResume = resumeService.updateResume(userPrincipal.getUser(), studyId,
                 resumeDto);
         return success(newResume);
     }
@@ -85,11 +89,13 @@ public class ResumeController {
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "자소서 삭제 성공")
     })
-    @DeleteMapping("/{resumeId}")
+    @DeleteMapping("/{studyId}/{resumeId}")
     @PreAuthorize("hasRole('USER')")
-    public  ApiResult<String> deleteResume(@CurrentUser PrincipalDetails userPrincipal, @PathVariable Long resumeId){
+    public  ApiResult<String> deleteResume(@PathVariable Long studyId,
+                                           @CurrentUser PrincipalDetails userPrincipal,
+                                           @PathVariable Long resumeId){
 
-            resumeService.deleteResume(userPrincipal.getUser(), resumeId);
+            resumeService.deleteResume(userPrincipal.getUser(), studyId, resumeId);
         return success("삭제 성공");
     }
 

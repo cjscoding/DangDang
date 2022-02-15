@@ -1,16 +1,11 @@
 package com.ssafy.dangdang.service;
 
-import com.ssafy.dangdang.domain.Comment;
-import com.ssafy.dangdang.domain.Resume;
-import com.ssafy.dangdang.domain.ResumeQuestion;
-import com.ssafy.dangdang.domain.User;
+import com.ssafy.dangdang.domain.*;
 import com.ssafy.dangdang.domain.dto.ResumeDto;
 import com.ssafy.dangdang.domain.dto.ResumeQuestionDto;
 import com.ssafy.dangdang.domain.types.CommentType;
 import com.ssafy.dangdang.exception.UnauthorizedAccessException;
-import com.ssafy.dangdang.repository.CommentRepository;
-import com.ssafy.dangdang.repository.ResumeQuestionRepository;
-import com.ssafy.dangdang.repository.ResumeRepository;
+import com.ssafy.dangdang.repository.*;
 import com.ssafy.dangdang.util.ApiUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,15 +25,22 @@ import static com.ssafy.dangdang.util.ApiUtils.error;
 public class ResumeServiceImpl implements ResumeService{
 
     private final ResumeRepository resumeRepository;
+    private final JoinsRepository joinsRepository;
     private final ResumeQuestionRepository resumeQuestionRepository;
-
+    private final StudyRepository studyRepository;
     private final CommentRepository commentRepository;
 
     @Override
     @Transactional
-    public ResumeDto writeResume(User user, List<ResumeQuestionDto> resumeQuestionDtoList) {
+    public ResumeDto writeResume(User user, Long studyId, List<ResumeQuestionDto> resumeQuestionDtoList) {
+        Optional<Study> study = studyRepository.findById(studyId);
+        if(!study.isPresent()) throw new NullPointerException("존재하지 않는 스터디 입니다");
+        Optional<Joins> join = joinsRepository.findJoinsByUserIdAndStudyId(user.getId(), studyId);
+        if (!join.isPresent()) throw new UnauthorizedAccessException("스터디 회원만 자소서를 작성할 수 있습니다.");
+
         Resume resume = Resume.builder()
                 .user(user)
+                .study(study.get())
                 .resumeQuestionList(new ArrayList<>())
                 .build();
         resumeRepository.save(resume);
@@ -55,9 +57,16 @@ public class ResumeServiceImpl implements ResumeService{
 
     @Override
     @Transactional
-    public ResumeDto updateResume(User user, ResumeDto resumeDto) {
-        Resume resume = resumeRepository.findById(resumeDto.getId()).get();
+    public ResumeDto updateResume(User user,Long studyId, ResumeDto resumeDto) {
 
+        Optional<Study> study = studyRepository.findById(studyId);
+        if(!study.isPresent()) throw new NullPointerException("존재하지 않는 스터디 입니다");
+        Optional<Joins> join = joinsRepository.findJoinsByUserIdAndStudyId(user.getId(), studyId);
+        if (!join.isPresent()) throw new UnauthorizedAccessException("스터디 회원만 자소서를 수정 할 수 있습니다.");
+
+        Optional<Resume> byId = resumeRepository.findById(resumeDto.getId());
+        if(!byId.isPresent()) throw new NullPointerException("존재하지 않는 자소서 입니다.");
+        Resume resume = byId.get();
         for ( ResumeQuestionDto resumeQuestionDto:
                 resumeDto.getResumeQuestionList()) {
             ResumeQuestion resumeQuestion = ResumeQuestion.of(resume, resumeQuestionDto);
@@ -70,7 +79,13 @@ public class ResumeServiceImpl implements ResumeService{
 
     @Override
     @Transactional
-    public ApiUtils.ApiResult<String> deleteResume(User user, Long resumeId) {
+    public ApiUtils.ApiResult<String> deleteResume(User user, Long studyId, Long resumeId) {
+
+        Optional<Study> study = studyRepository.findById(studyId);
+        if(!study.isPresent()) throw new NullPointerException("존재하지 않는 스터디 입니다");
+        Optional<Joins> join = joinsRepository.findJoinsByUserIdAndStudyId(user.getId(), studyId);
+        if (!join.isPresent()) throw new UnauthorizedAccessException("스터디 회원만 자소서를 수정 할 수 있습니다.");
+
         Optional<Resume> resume = resumeRepository.findById(resumeId);
         if(!resume.isPresent()) throw new NullPointerException("존재하지 않는 자소서 입니다.");
         if (resume.get().getUser().getId() != user.getId())
@@ -84,8 +99,8 @@ public class ResumeServiceImpl implements ResumeService{
 
     @Override
     @Transactional
-    public List<ResumeDto> getResumes(Long userId){
-        List<Resume> resumes = resumeRepository.findResumeListFetchJoinByUserId(userId);
+    public List<ResumeDto> getResumes(Long userId, Long studyId){
+        List<Resume> resumes = resumeRepository.findResumeList(userId, studyId);
         List<ResumeDto> resumeDtos = resumes.stream().map(ResumeDto::of).collect(Collectors.toList());
         return resumeDtos;
     }
