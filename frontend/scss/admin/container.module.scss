@@ -5,8 +5,13 @@
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
   text-align: center;
-  opacity: 60%;
   border-bottom: $division-line;
+  position: relative;
+  font-size: 15px;
+
+  :global(*) {
+    color: $gray-color;
+  }
 }
 
 .pagination {
