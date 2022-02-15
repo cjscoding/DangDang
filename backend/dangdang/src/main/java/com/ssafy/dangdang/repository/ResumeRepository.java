@@ -2,8 +2,6 @@ package com.ssafy.dangdang.repository;
 
 
 import com.ssafy.dangdang.domain.Resume;
-import com.ssafy.dangdang.domain.dto.ResumeDto;
-import com.ssafy.dangdang.domain.projection.ResumeMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -21,7 +19,7 @@ public interface ResumeRepository extends JpaRepository<Resume, Long> {
 
     @Query("select distinct r " +
             "from Resume  r left join fetch r.resumeQuestionList" +
-            " where r.user.id = :userId")
-    List<Resume> findResumeListFetchJoinByUserId(@Param("userId")Long userId);
+            " where r.user.id = :userId and r.study.id = :studyId")
+    List<Resume> findResumeList(@Param("userId")Long userId, @Param("studyId") Long studyId);
 
 }

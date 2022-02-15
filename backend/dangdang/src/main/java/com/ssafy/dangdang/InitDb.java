@@ -132,7 +132,7 @@ public class InitDb {
             resumeQuestionDto.setQuestion("파인애플피자 좋아함2?");
             resumeQuestionDto.setAnswer("없어서 못먹음2");
             resumeDto.getResumeQuestionList().add(resumeQuestionDto);
-            resumeService.writeResume(user, resumeDto.getResumeQuestionList());
+            resumeService.writeResume(user, 1L, resumeDto.getResumeQuestionList());
         }
 
         public void writeInterviewQuestion(){

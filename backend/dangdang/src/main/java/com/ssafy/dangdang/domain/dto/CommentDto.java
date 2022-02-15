@@ -62,9 +62,9 @@ public class CommentDto {
     }
 
     public static CommentDto of(Comment comment){
-        if (comment.getChildren() != null){
+        if (comment.getChildren() != null && !comment.getChildren().isEmpty()){
             List<Comment> children = comment.getChildren();
-            List<CommentDto> commentDtos = children.stream().map(child -> CommentDto.of(child))
+            List<CommentDto> commentDtos = children.stream().filter(child -> child != null ).map(child -> CommentDto.of(child))
                     .collect(Collectors.toList());
             return CommentDto.builder()
                     .id(comment.getId())
