@@ -197,7 +197,7 @@ public class StudyController {
                                          ) MultipartFile image) throws IOException {
 
         String studyImageUrl = studyService.getImageUrl(studyId);
-        if(studyImageUrl != null) storageService.deleteImage(studyImageUrl);
+        if(studyImageUrl != null && !studyImageUrl.equals("default.jpg")) storageService.deleteImage(studyImageUrl);
 
         log.info("스터디 image 수정 {}", image.getOriginalFilename());
         UUID uuid = UUID.randomUUID();
