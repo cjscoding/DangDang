@@ -52,6 +52,7 @@ function Resume({
           members: res.data.response.userDtos,
           comments: res.data.response.commentDtos.content,
         };
+        console.log(roomData);
         setRoomInfo(roomData);
         console.log(res, "스터디 조회 성공");
       },

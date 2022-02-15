@@ -55,7 +55,7 @@ function interviewQuestion({ isLogin, questions, setQuestions }) {
 
   const setKeyword = (event) => {
     event.preventDefault();
-    if (event.key === "Enter") {
+    if (event.target.value === "" || event.key === "Enter") {
       setQuestion(event.target.value);
     }
   };
@@ -87,18 +87,24 @@ function interviewQuestion({ isLogin, questions, setQuestions }) {
       <div className={styles.container}>
         <div className={styles.header}>
           <select onChange={(event) => setField(event.target.value)}>
-              <option value="공통">공통</option>
-              <option value="인성">인성</option>
-              <option value="기술">IT</option>
-              <option value="기타">기타</option>
+            <option value="공통">공통</option>
+            <option value="인성">인성</option>
+            <option value="기술">IT</option>
+            <option value="기타">기타</option>
           </select>
           <span>질문</span>
         </div>
 
         <div className={styles.table}>
-          {questions?.map((question) => (
-            <QuestionListRow question={question} key={question.id} />
-          ))}
+          {questions && questions.length === 0 ? (
+            <span className={styles.noQuestion}>
+              아직 등록된 질문이 없어요 ㅜ.ㅜ
+            </span>
+          ) : (
+            questions.map((question) => (
+              <QuestionListRow question={question} key={question.id} />
+            ))
+          )}
         </div>
 
         <div className={styles.pagination}>

@@ -52,12 +52,16 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
     if (event.key === "Enter") {
       const newTag = event.target.value;
       if (newTag == "") {
+        alert("키워드를 입력해주세요.");
         console.log("키워드를 입력해주세요.");
+
       } else if (searchTags.indexOf(newTag) === -1) {
         setSearchTags([...searchTags, newTag]);
         event.target.value = "";
         setCurPage(0);
+
       } else {
+        alert("이미 존재하는 키워드입니다.");
         console.log("이미 존재하는 키워드입니다.");
         event.target.value = "";
       }
@@ -74,7 +78,9 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
       hashtags: searchTags.join(","),
       page: curPage,
       size: postsPerPage,
+      sort: "createdAt,desc"
     };
+    
     getAllRooms(
       param,
       (res) => {

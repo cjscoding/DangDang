@@ -1,6 +1,5 @@
 import styles from "../../../scss/team/form.module.scss";
 import Title from "../../../components/layout/Title";
-import Link from "next/link";
 
 import { createRoom, addRoomImg } from "../../../api/studyroom";
 import { useRouter } from "next/router";
@@ -32,23 +31,27 @@ export default function CreateRoom() {
     };
 
     if (roomInfo.name === "") {
-      console.log("방 이름을 작성해주세요!");
+      alert("스터디명을 작성해주세요!");
       return;
-    } else if (roomInfo.number === "") {
-      console.log("모집 인원 수를 작성해주세요!");
+    } else if (roomInfo.number <= 0) {
+      alert("최소 1명 이상의 인원이 필요합니다!");
+      return;
+    } else if (roomInfo.number > 4) {
+      alert("최대 모집 인원은 4명입니다!");
       return;
     } else if (roomTags.length === 0) {
-      console.log("최소 하나 이상의 태그를 작성해주세요!");
+      alert("최소 하나 이상의 태그를 작성해주세요!");
       return;
     } else if (image === "") {
-      console.log("스터디 프로필 이미지를 첨부해주세요!");
+      alert("스터디 프로필 이미지를 첨부해주세요!");
       return;
     }
 
     createRoom(
       newInfo,
       (res) => {
-        console.log(res, "스터디 생성 완료!");
+        alert("스터디 생성 완료! 마이룸으로 이동합니다!");
+        console.log(res);
         const data = {
           studyId: res.data.response.id,
           image,
@@ -56,16 +59,15 @@ export default function CreateRoom() {
         addRoomImg(
           data,
           (res) => {
-            console.log(res, "스터디 이미지 등록 성공");
-            console.log("마이룸으로 이동합니다.");
+            console.log(res);
           },
           (err) => {
-            console.log(err, "스터디 이미지 등록 실패");
+            console.log(err);
           }
         );
       },
       (err) => {
-        console.log(err, "스터디를 생성할 수 없습니다.");
+        console.log(err);
       }
     );
 
@@ -89,12 +91,12 @@ export default function CreateRoom() {
     event.preventDefault();
     const newTag = event.target[0].value;
     if (newTag == "") {
-      console.log("키워드를 입력해주세요.");
+      alert("키워드를 입력해주세요.");
     } else if (roomTags.indexOf(newTag) === -1) {
       setRoomTags([...roomTags, newTag]);
       event.target[0].value = "";
     } else {
-      console.log("이미 존재하는 키워드입니다.");
+      alert("이미 존재하는 키워드입니다.");
       event.target[0].value = "";
     }
   };
@@ -164,7 +166,7 @@ export default function CreateRoom() {
           <label htmlFor="number">모집인원</label>
           <div className={styles.input}>
             <input
-              type="text"
+              type="number"
               name="number"
               value={roomInfo.number}
               onChange={onChange}
@@ -184,7 +186,7 @@ export default function CreateRoom() {
           <label htmlFor="hashTags">태그</label>
           <form onSubmit={onAddTag}>
             <div className={styles.tagInput}>
-              <input type="text" placeholder="태그를 입력해주세요" />
+              <input type="text" placeholder="태그를 추가해주세요" />
               <button>
                 <i className="fas fa-plus"></i>
               </button>

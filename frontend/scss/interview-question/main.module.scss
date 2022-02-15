@@ -69,23 +69,31 @@
   .table {
     border-top: $division-line;
     border-bottom: $division-line;
+    .noQuestion {
+      width: 100%;
+      margin: 30px 0;
+      display: flex;
+      justify-content: center;
+      font-weight: 500;
+      font-size: 25px;
+    }
   }
-  .pagination{
-      padding: 40px 0;
+  .pagination {
+    padding: 40px 0;
   }
 }
 
-.noQuestions{
-    @include white-box;
-    height: 500px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 25px;
-    a{
-        &:hover{
-            color: $main-color;
-        }
+.noQuestions {
+  @include white-box;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  a {
+    &:hover {
+      color: $main-color;
     }
+  }
 }
