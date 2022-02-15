@@ -78,6 +78,9 @@
     grid-template-rows: 3fr 1fr;
     padding: 0;
     height: 300px;
+    &:hover{
+        cursor: pointer;
+    }
     .imgBox {
       display: flex;
       justify-content: center;
