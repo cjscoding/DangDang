@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { setUserAsManager } from "../../api/admin";
+import styles from "../../scss/admin/userRow.module.scss";
 
 export default function UserListRow({ user }) {
   const [role, setRole] = useState(user.role);
@@ -16,13 +17,16 @@ export default function UserListRow({ user }) {
     );
   };
   return (
-    <div>
+    <div className={styles.container}>
       <span>{user.id}</span>
-      <span>{user.nickName}</span>
+      <span className={styles.nickName}>{user.nickName}</span>
       {role === "USER" ? (
-        <button onClick={setRoleAsManager}>등업</button>
+        <button onClick={setRoleAsManager} className={styles.button}>
+          <i className={`fas fa-plus ${styles.plus}`}></i>
+          매니저로 추가
+        </button>
       ) : (
-        <span>매니저</span>
+        <span>{role === "MANAGER" ? "매니저" : "관리자"}</span>
       )}
     </div>
   );
