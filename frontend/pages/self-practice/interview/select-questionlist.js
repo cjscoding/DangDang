@@ -24,6 +24,7 @@ function SelectQuestions({ws}) {
   useEffect(()=>{
     window.addEventListener("beforeunload", ()=>{
       const delMsg = JSON.stringify({id:"del"});
+      alert("!!")
       ws.send(delMsg);
       ws.close();
     });

@@ -10,6 +10,7 @@ import getVideoConstraints from "../../components/webRTC/getVideoConstraints";
 import styles from "../../scss/web-conference/mainComponent.module.scss";
 import SockJS from "sockjs-client";
 import { WEBRTC_URL } from "../../config";
+import { getStudyResume } from "../../api/resume";
 
 function mapStateToProps(state) {
   return {
@@ -33,6 +34,10 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
   const [isCamera, setIsCamera] = useState(true)
   const [isMic, setIsMic] = useState(true)
   const [isSpeaker, setIsSpeaker] = useState(true)
+
+  const [isChat, setIsChat] = useState(true)
+  const isChatTrue = useRef()
+  const isChatFalse = useRef()
 
   const chatInput = useRef();
   const chatInputBtn = useRef();
@@ -379,6 +384,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
             volunteerUser = ""
             modeState = false
             timer.stopTimer()
+            setIsChat(true)
             break
           case "volunteer":
             volunteerUser = jsonMsg.name
@@ -522,6 +528,49 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
     const chatInputBtnEl = chatInputBtn.current
     chatInputBtnEl.addEventListener("click", sendChatMsg)
     chatInputEl.addEventListener("keypress", enterInput)
+    function setIsChatTrue() {
+      setIsChat(true)
+    }
+    function setIsChatFalse() {
+      setIsChat(false)
+      const userId = volunteerUser.slice(0, volunteerUser.search('-'))
+      if(!isNaN(userId)) {
+        const letterEl = document.getElementById("letter")
+        getStudyResume(
+          {userId, studyId: roomName},
+          (res) => {
+            if(res.data.response.length !== 0) {
+              const resumeList = res.data.response[0].resumeQuestionList
+              const contents = document.createElement("span")
+              resumeList.forEach(resume => {
+                const h3 = document.createElement("h3")
+                h3.innerText = resume.question
+                contents.appendChild(h3)
+                const p = document.createElement("p")
+                p.innerText = resume.answer
+                contents.appendChild(p)
+                const br = document.createElement("br")
+                contents.appendChild(br)
+              })
+              letterEl.innerHTML = ""
+              letterEl.appendChild(contents)
+            }else{
+              const h2 = document.createElement("h2")
+              h2.innerText = "등록된 자기소개서가 없습니다."
+              letterEl.innerHTML = ""
+              letterEl.appendChild(h2)
+            }
+          },
+          (err) => {
+            console.log(`자소서 불러오기 실패! ${err}`)
+          }
+        )
+      }
+    }
+    const isChatTrueEl = isChatTrue.current
+    const isChatFalseEl = isChatFalse.current
+    isChatTrueEl.addEventListener("click", setIsChatTrue)
+    isChatFalseEl.addEventListener("click", setIsChatFalse)
 
     const cameraBtnEl = cameraBtn.current
     const micBtnEl = micBtn.current
@@ -569,6 +618,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       }
       if(modeState) {
         if(!confirm("일반 모드로 바꾸시겠습니까?")) return
+        setIsChat(true)
         timer.stopTimer()
       }else {
         if(!confirm("면접 모드로 바꾸시겠습니까?")) return
@@ -625,6 +675,8 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       micBtnEl.removeEventListener("click", micSelectToggle)
       speakerBtnEl.removeEventListener("click", speakerSelectToggle)
       exitBtnEl.removeEventListener("click", exitRoom)
+      isChatTrueEl.removeEventListener("click", setIsChatTrue)
+      isChatFalseEl.removeEventListener("click", setIsChatFalse)
       // 방 퇴장
       window.removeEventListener("beforeunload", beforeunload)
       beforeunload()
@@ -821,19 +873,23 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
         <div style={volunteer===myIdName?{display: "none"}:{}} className={styles.subContainer}>
           <div className={styles.subContainerTopBar}>
             <span>
-              <span className={`${styles.selectedMenuBtn} ${styles.chatMenuBtn}`}>채팅창</span>
-              <span style={mode?{}:{display: "none"}} className={` ${styles.letterMenuBtn}`}>자소서</span>
+              <span className={`${styles.chatMenuBtn} + " " + ${isChat?styles.selectedMenuBtn:""}`} ref={isChatTrue}>채팅창</span>
+              <span style={mode?{}:{display: "none"}} className={`${styles.letterMenuBtn} + " " + ${!isChat?styles.selectedMenuBtn:""}`} ref={isChatFalse}>자소서</span>
             </span>
             <span style={mode?{}:{display: "none"}} className={styles.timer}>
               <Timer />
             </span>
           </div>
-          <div className={styles.chatContainer} id="chat">
+          <div style={isChat?{}:{display: "none"}} className={styles.chatContainer} id="chat">
             <div ref={chatContentBox} className={styles.chat}></div>
             <div className={styles.chatInput}>
               <input ref={chatInput} />
               <button ref={chatInputBtn} ><i className="fas fa-paper-plane"></i></button>
             </div>
+          </div>
+          <div style={!isChat?{}:{display: "none"}} className={styles.letterContainer}>
+            <pre className={styles.letter} id="letter">
+            </pre>
           </div>
         </div>
       </div>

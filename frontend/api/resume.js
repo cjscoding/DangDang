@@ -12,6 +12,10 @@ export const getResume = async (userId, success, fail) => {
   await api.get(`/resume/${userId}`).then(success).catch(fail);
 };
 
+export const getStudyResume = async ({userId, studyId}, success, fail) => {
+  await api.get(`/resume/${studyId}/${userId}`).then(success).catch(fail);
+};
+
 //자소서 update
 export const updateResume = async (data, success, fail) => {
   await api
