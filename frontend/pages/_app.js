@@ -3,6 +3,10 @@ import Script from "next/script";
 import Layout from "../components/Layout";
 import "../scss/main.scss";
 import { WEBRTC_URL } from "../config"
+import { useEffect } from "react";
+import { store } from "../store"
+import { setUserInfo, setIsLogin } from "../store/actions/userAction"
+import { getUserInfo } from "../api/user"
 // fontawesome
 import '@fortawesome/fontawesome-free/js/fontawesome'; 
 import '@fortawesome/fontawesome-free/js/solid'; 
@@ -13,6 +17,40 @@ import '@fortawesome/fontawesome-svg-core/styles.css'
 config.autoAddCss = false
 
 function MyApp({ Component, pageProps }) {
+  useEffect(() => {
+    function autoLogin() {
+      if(
+        store.getState().userReducer.isLogin &&
+        !store.getState().userReducer.user.id
+      ) {
+        getUserInfo(
+          ({ data: { response } }) => {
+            const userInfo = {
+              id: response.id,
+              email: response.email,
+              nickName: response.nickName,
+              role: response.role,
+              imageUrl: response.imageUrl,
+            };
+            store.dispatch(setUserInfo(userInfo));
+            store.dispatch(setIsLogin(true))
+          },
+          (error) => {
+            store.dispatch(setIsLogin(false))
+            console.log(error);
+          }
+        );
+      }else if(
+        !store.getState().userReducer.isLogin &&
+        store.getState().userReducer.user.id
+      ) store.dispatch(setIsLogin(true))
+    }
+
+    store.subscribe(autoLogin)
+    store.dispatch(setIsLogin(true)) // 자동 로그인 트리거
+
+  }, [])
+
   return (
     <Layout>
       <Script src={`${WEBRTC_URL}/js/kurento-utils.js`}></Script>
@@ -22,29 +60,3 @@ function MyApp({ Component, pageProps }) {
 }
 
 export default wrapper.withRedux(MyApp);
-
-// import App from "next/app";
-// import React from "react";
-// import { createWrapper } from "next-redux-wrapper";
-// import store from "../store/store";
-// import "../scss/";
-// import NavBar from "../components/navbar";
-
-// class MyApp extends App {
-//   render() {
-//     const { Component, pageProps } = this.props;
-//     return (
-//       <div>
-//         <Layout>
-//       {router.pathname === "/" ? null : <NavBar />}
-//       <Component {...pageProps} />
-//     </Layout>
-//       </div>
-//     );
-//   }
-// }
-
-// const makestore = () => store;
-// const wrapper = createWrapper(makestore);
-
-// export default wrapper.withRedux(MyApp);

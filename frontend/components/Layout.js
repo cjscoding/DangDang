@@ -1,8 +1,5 @@
 import Head from "next/head";
 import { connect } from "react-redux";
-import { setUserInfo, setIsLogin } from "../store/actions/userAction";
-import { getUserInfo } from "../api/user";
-import { useEffect, useState } from "react";
 import styles from "../scss/layout/layout.module.scss";
 import NavBar from "./Navbar";
 import Footer from "./layout/footer";
@@ -13,48 +10,11 @@ function mapStateToProps({ userReducer }) {
     user: userReducer.user,
   };
 }
-function mapDispatchToProps(dispatch) {
-  return {
-    setUserInfo: (userInfo) => dispatch(setUserInfo(userInfo)),
-    setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
-  };
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(Layout);
+export default connect(mapStateToProps, null)(Layout);
 
-function Layout({ children, user, setUserInfo, setIsLogin }) {
+function Layout({ children }) {
   const router = useRouter();
-  useEffect(() => {
-    if (
-      typeof window !== "undefined" &&
-      localStorage.getItem("authorization") &&
-      localStorage.getItem("refreshtoken")
-    ) {
-      setIsLogin(true);
-      const initialState = {
-        id: "",
-        email: "",
-        nickName: "",
-      };
-      
-      if (JSON.stringify(user) === JSON.stringify(initialState)) {
-        getUserInfo(
-          ({ data: { response } }) => {
-            const userInfo = {
-              id: response.id,
-              email: response.email,
-              nickName: response.nickName,
-              imageUrl: response.imageUrl,
-            };
-            setUserInfo(userInfo);
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
-      }
-    }
-  }, [user]);
 
   return (
     <>

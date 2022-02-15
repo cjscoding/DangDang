@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import CameraSelect from "../../../components/webRTC/devices/CameraSelect";
