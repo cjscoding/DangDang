@@ -1,12 +1,9 @@
 import styles from "../../scss/user/login-signup.module.scss";
 import { useState } from "react";
 import { connect } from "react-redux";
-import {
-  setIsLoginModal,
-  setShowModal,
-} from "../../store/actions/userAction";
+import { setIsLoginModal, setShowModal } from "../../store/actions/userAction";
 import { signUpRequest, registUserImage } from "../../api/user";
-import { BACKEND_URL, FRONTEND_URL } from "../../config"
+import { BACKEND_URL, FRONTEND_URL } from "../../config";
 import { useRouter } from "next/router";
 
 function mapStateToProps({ userReducer }) {
@@ -72,13 +69,15 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
 
   return (
     <div className={styles.body}>
-      <h1>회원가입</h1>
+      <h1 className={styles.signUp}>회원가입</h1>
       <form className={styles.form} onSubmit={handleSubmit}>
         <div>
           {/* <label htmlFor="profile">프로필 사진</label>
           <input type="file" name="profile" onChange={onSetImage} /> */}
           <label htmlFor="email" className={styles.label}>
-            <span className={styles.span}><i className="fas fa-envelope"></i></span>
+            <span className={styles.span}>
+              <i className="fas fa-envelope"></i>
+            </span>
             <input
               id="email"
               className={styles.email}
@@ -92,7 +91,9 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
         </div>
         <div>
           <label htmlFor="password" className={styles.label}>
-            <span className={styles.span}><i className="fas fa-lock"></i></span>
+            <span className={styles.span}>
+              <i className="fas fa-lock"></i>
+            </span>
             <input
               id="password"
               className={styles.password}
@@ -106,7 +107,9 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
         </div>
         <div>
           <label htmlFor="nickName" className={styles.label}>
-            <span className={styles.span}><i className="fas fa-user"></i></span>
+            <span className={styles.span}>
+              <i className="fas fa-user"></i>
+            </span>
             <input
               id="nickName"
               className={styles.nickName}
@@ -118,16 +121,22 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
             />
           </label>
         </div>
-        <button type="submit" id={styles.submitBtn}>회원가입</button>
+        <button type="submit" id={styles.submitBtn}>
+          회원가입
+        </button>
       </form>
-      <p>
+      <p className={styles.moveTo}>
         계정이 있으세요?{" "}
         <a onClick={() => setIsLoginModal(!isLoginModal)}>로그인</a>
       </p>
       {/* <Button text="Google로 시작하기" />
       <Button text="Kakao로 시작하기" /> */}
-      <a onClick={() => socialLoginRequest("google")} target="_blank"><img src="/images/btn_google_signin_dark_normal_web.png"></img></a>
-      <a onClick={() => socialLoginRequest("kakao")}><img src="/images/kakao_login_medium_narrow.png"></img></a>
+      <a onClick={() => socialLoginRequest("google")} target="_blank">
+        <img src="/images/btn_google_signin_dark_normal_web.png"></img>
+      </a>
+      <a onClick={() => socialLoginRequest("kakao")}>
+        <img src="/images/kakao_login_medium_narrow.png"></img>
+      </a>
     </div>
   );
 }
