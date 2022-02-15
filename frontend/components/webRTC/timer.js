@@ -1,15 +1,17 @@
-import { store } from "../../store";
-import { startTimer, timerTick } from "../../store/actions/timerAction";
+import { connect } from "react-redux"
 
-export default {
-  timerTick: null,
-  tickFunction: () => setInterval(()=>store.dispatch(timerTick()), 1000),
-  startTimer: function() {
-    this.stopTimer();
-    store.dispatch(startTimer());
-    this.timerTick = this.tickFunction()
-  },
-  stopTimer: function() {
-    clearInterval(this.timerTick);
-  },
+function mapStateToProps(state) {
+  let timeStampInterval = state.timerReducer.curTime - state.timerReducer.startTIme
+  if(timeStampInterval < 0) timeStampInterval = 0
+  const seconds = Math.round(timeStampInterval / 1000)
+  return {
+    seconds
+  };
+}
+export default connect(mapStateToProps, null)(ShowQuestion)
+
+function ShowQuestion({seconds}){
+  return <>
+    <span>{parseInt(seconds / 60)}분 {seconds % 60}초</span>
+  </>
 }
