@@ -52,7 +52,7 @@ public class JoinsController {
 
     }
 
-    @Operation(summary = "스터디 가입 신청", description = "로그인한 유저를 가입 대기자 목록에 추가함")
+    @Operation(summary = "스터디 가입 신청", description = "로그인한 유저를 가입 대기자 목록에 추가함, 이미 대기자 목록에 추가되어 있는 유저가 호출할 경우, 가입신청을 취소함")
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "스터디 가입 성공")
     })
