@@ -24,7 +24,7 @@ export default connect(mapStateToProps, null)(Conference);
 function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
   const [me, setMe] = useState(null)
   const [mode, setMode] = useState(false) // 면접모드 true, 일반모드 false
-  const [applicant, setApplicant] = useState("")
+  const [volunteer, setVolunteer] = useState("")
   const [screenShareTry, setScreenShareTry] = useState(false)
   const [screenShare, setScreenShare] = useState(false)
   const [screenShareUser, setScreenShareUser] = useState("");
@@ -61,18 +61,18 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
     }
     let participants = {};
 
-    function Participant(IdName, isCam) {
+    function Participant(idName, isCam) {
       let rtcPeer;
-      const idx = IdName.search('-')
-      this.id = IdName.slice(0, idx)
-      this.name = IdName.slice(1 + idx, IdName.length);
+      const idx = idName.search('-')
+      this.id = idName.slice(0, idx)
+      this.name = idName.slice(1 + idx, idName.length);
 
       const container = document.createElement('span');
-      container.id = IdName;
+      container.id = idName;
       const span = document.createElement('span');
       span.innerText = this.name
       const video = document.createElement('video');
-      video.id = 'video-' + IdName;
+      video.id = 'video-' + idName;
       video.autoplay = true;
       video.controls = false;
       if(this.id === "screen") {
@@ -83,23 +83,77 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
         video.style.minHeight = "28.5rem"
         video.style.minWidth = "50.667rem"
       }else {
-        if(screenShareState) {
-          video.style.width = "calc(35.556vh - 3.556rem)"
-          video.style.height = "calc(20vh - 2rem)"
-          video.style.maxHeight = "calc(19.688vh - 2.344rem)"
-          video.style.maxWidth = "calc(35vh - 4.16rem)"
-          video.style.minHeight = "8.5rem"
-          video.style.minWidth = "15.111rem"
-          video.style.borderRadius = "0.6rem"
-        }else {
-          video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
-          video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
-          video.style.maxHeight = "calc(40vh - 1.5rem)"
-          video.style.maxWidth = "calc(71.111vh - 2.667rem"
-          video.style.minHeight = "8.5rem"
-          video.style.minWidth = "15.111rem"
-          video.style.borderRadius = "1rem"
-        }
+        // if(modeState) {
+        //   if(idName === volunteerUser) {
+        //     if(screenShareState) {
+        //       if(container.id === volunteerUser) {
+        //         container.style.display = "none"
+        //       }
+        //       video.style.width = "calc(35.556vh - 3.556rem)"
+        //       video.style.height = "calc(20vh - 2rem)"
+        //       video.style.maxHeight = "calc(19.688vh - 2.344rem)"
+        //       video.style.maxWidth = "calc(35vh - 4.16rem)"
+        //       video.style.minHeight = "8.5rem"
+        //       video.style.minWidth = "15.111rem"
+        //       video.style.borderRadius = "0.6rem"
+        //     }else {
+        //       if(container.id === volunteerUser) {
+        //         container.style.display = "none"
+        //       }
+        //       video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
+        //       video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
+        //       video.style.maxHeight = "calc(40vh - 1.5rem)"
+        //       video.style.maxWidth = "calc(71.111vh - 2.667rem"
+        //       video.style.minHeight = "8.5rem"
+        //       video.style.minWidth = "15.111rem"
+        //       video.style.borderRadius = "1rem"
+        //     }
+        //   }else {
+        //     if(screenShareState) {
+        //       if(container.id !== volunteerUser) {
+        //         container.style.display = "none"
+        //       }
+        //       video.style.width = "calc(35.556vh - 3.556rem)"
+        //       video.style.height = "calc(20vh - 2rem)"
+        //       video.style.maxHeight = "calc(19.688vh - 2.344rem)"
+        //       video.style.maxWidth = "calc(35vh - 4.16rem)"
+        //       video.style.minHeight = "8.5rem"
+        //       video.style.minWidth = "15.111rem"
+        //       video.style.borderRadius = "0.6rem"
+        //     }else {
+        //       if(container.id !== volunteerUser) {
+        //         container.style.display = "none"
+        //       }
+        //       video.style.width = "calc((90vw - 24rem - 2rem))"
+        //       video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 16)"
+        //       video.style.maxHeight = "900px"
+        //       video.style.maxWidth = "1600px"
+        //       video.style.minHeight = "459px"
+        //       video.style.minWidth = "816px"
+        //       video.style.borderRadius = "1rem"
+        //     }
+        //   }
+        // }else {
+          if(screenShareState) {
+            container.style.display = "flex"
+            video.style.width = "calc(35.556vh - 3.556rem)"
+            video.style.height = "calc(20vh - 2rem)"
+            video.style.maxHeight = "calc(19.688vh - 2.344rem)"
+            video.style.maxWidth = "calc(35vh - 4.16rem)"
+            video.style.minHeight = "8.5rem"
+            video.style.minWidth = "15.111rem"
+            video.style.borderRadius = "0.6rem"
+          }else {
+            container.style.display = "flex"
+            video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
+            video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
+            video.style.maxHeight = "calc(40vh - 1.5rem)"
+            video.style.maxWidth = "calc(71.111vh - 2.667rem"
+            video.style.minHeight = "8.5rem"
+            video.style.minWidth = "15.111rem"
+            video.style.borderRadius = "1rem"
+          }
+        // }
       }
       video.style.border = "2px"
       video.style.borderStyle = "solid"
@@ -129,7 +183,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
           if (error) return console.log(`ERROR! ${error}`)
           sendMessage({ 
             id : "receiveVideoFrom",
-            sender : IdName,
+            sender : idName,
             sdpOffer : offerSdp
           });
         }
@@ -138,7 +192,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
           if (error) return console.log(`ERROR! ${error}`)
           screenMessage({ 
             id : "receiveVideoFrom",
-            sender : IdName,
+            sender : idName,
             sdpOffer : offerSdp
           });
         }
@@ -148,7 +202,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
           sendMessage({
             id: 'onIceCandidate',
             candidate: candidate,
-            name: IdName
+            name: idName
           });
         }
       }else {
@@ -156,7 +210,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
           screenMessage({
             id: 'onIceCandidate',
             candidate: candidate,
-            name: IdName
+            name: idName
           });
         }
       }
@@ -185,7 +239,6 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
           onExistingParticipants(jsonMsg);
           break;
         case "newParticipantArrived":
-          console.log(Object.keys(participants).filter(participant => participant.slice(0, 6) !== "screen"))
           if(jsonMsg.name.slice(0, 6) !== "screen" && Object.keys(participants).filter(participant => participant.slice(0, 6) !== "screen").length >= 4) break;
           if(myIdName === screenShareAppliedUser) {
             sendMessage({
@@ -398,12 +451,11 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
             console.log(`ERROR! ${jsonMsg.mode}`)
             break
         }
-        console.log(volunteerUser)
         setScreenShareTry(screenShareTryState);
         setScreenShare(screenShareState)
         setScreenShareUser(screenShareAppliedUser)
         setMode(modeState)
-        setApplicant(volunteerUser)
+        setVolunteer(volunteerUser)
       }
     }
 
@@ -597,7 +649,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       }else {
         volunteerUser = ""
       }
-      setApplicant(volunteerUser)
+      setVolunteer(volunteerUser)
       setMode(modeState)
       sendMessage({
         id: "mode",
@@ -677,33 +729,33 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
     }
   },[speakerId])
 
-  useEffect(() => {
-    if(screenShare) {
-      const participantsEl = document.getElementById("participants")
-      for(let videoContainer of participantsEl.childNodes) {
-        const video = videoContainer.firstChild
-        video.style.width = "calc(35.556vh - 3.556rem)"
-        video.style.height = "calc(20vh - 2rem)"
-        video.style.maxHeight = "calc(19.688vh - 2.344rem)"
-        video.style.maxWidth = "calc(35vh - 4.16rem)"
-        video.style.minHeight = "8.5rem"
-        video.style.minWidth = "15.111rem"
-        video.style.borderRadius = "0.6rem"
-      }
-    }else {
-      const participantsEl = document.getElementById("participants")
-      for(let videoContainer of participantsEl.childNodes) {
-        const video = videoContainer.firstChild
-        video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
-        video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
-        video.style.maxHeight = "calc(40vh - 1.5rem)"
-        video.style.maxWidth = "calc(71.111vh - 2.667rem"
-        video.style.minHeight = "8.5rem"
-        video.style.minWidth = "15.111rem"
-        video.style.borderRadius = "1rem"
-      }
-    }
-  }, [screenShare])
+  // useEffect(() => {
+  //   if(screenShare) {
+  //     const participantsEl = document.getElementById("participants")
+  //     for(let videoContainer of participantsEl.childNodes) {
+  //       const video = videoContainer.firstChild
+  //       video.style.width = "calc(35.556vh - 3.556rem)"
+  //       video.style.height = "calc(20vh - 2rem)"
+  //       video.style.maxHeight = "calc(19.688vh - 2.344rem)"
+  //       video.style.maxWidth = "calc(35vh - 4.16rem)"
+  //       video.style.minHeight = "8.5rem"
+  //       video.style.minWidth = "15.111rem"
+  //       video.style.borderRadius = "0.6rem"
+  //     }
+  //   }else {
+  //     const participantsEl = document.getElementById("participants")
+  //     for(let videoContainer of participantsEl.childNodes) {
+  //       const video = videoContainer.firstChild
+  //       video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
+  //       video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
+  //       video.style.maxHeight = "calc(40vh - 1.5rem)"
+  //       video.style.maxWidth = "calc(71.111vh - 2.667rem"
+  //       video.style.minHeight = "8.5rem"
+  //       video.style.minWidth = "15.111rem"
+  //       video.style.borderRadius = "1rem"
+  //     }
+  //   }
+  // }, [screenShare])
 
   useEffect(() => {
     const participantsEl = document.getElementById("participants")
@@ -723,6 +775,108 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
     }
   }, [screenShareUser])
 
+  useEffect(() => {
+    if(mode) {
+      if(myIdName === volunteer){
+        if(screenShare) {
+          const participantsEl = document.getElementById("participants")
+          for(let videoContainer of participantsEl.childNodes) {
+            const video = videoContainer.firstChild
+            console.log(videoContainer.id)
+            // if(videoContainer.id === volunteer) {
+            //   videoContainer.style.display = "none"
+            // }
+            // video.style.width = "calc(35.556vh - 3.556rem)"
+            // video.style.height = "calc(20vh - 2rem)"
+            // video.style.maxHeight = "calc(19.688vh - 2.344rem)"
+            // video.style.maxWidth = "calc(35vh - 4.16rem)"
+            // video.style.minHeight = "8.5rem"
+            // video.style.minWidth = "15.111rem"
+            // video.style.borderRadius = "0.6rem"
+          }
+        }else {
+          const participantsEl = document.getElementById("participants")
+          for(let videoContainer of participantsEl.childNodes) {
+            const video = videoContainer.firstChild
+            console.log(videoContainer.id)
+            // if(videoContainer.id === volunteer) {
+            //   videoContainer.style.display = "none"
+            // }
+            // video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
+            // video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
+            // video.style.maxHeight = "calc(40vh - 1.5rem)"
+            // video.style.maxWidth = "calc(71.111vh - 2.667rem"
+            // video.style.minHeight = "8.5rem"
+            // video.style.minWidth = "15.111rem"
+            // video.style.borderRadius = "1rem"
+          }
+        }
+      }else{
+        if(screenShare) {
+          const participantsEl = document.getElementById("participants")
+          for(let videoContainer of participantsEl.childNodes) {
+            const video = videoContainer.firstChild
+            console.log(videoContainer.id)
+            // if(videoContainer.id !== volunteer) {
+            //   videoContainer.style.display = "none"
+            // }
+            // video.style.width = "calc(35.556vh - 3.556rem)"
+            // video.style.height = "calc(20vh - 2rem)"
+            // video.style.maxHeight = "calc(19.688vh - 2.344rem)"
+            // video.style.maxWidth = "calc(35vh - 4.16rem)"
+            // video.style.minHeight = "8.5rem"
+            // video.style.minWidth = "15.111rem"
+            // video.style.borderRadius = "0.6rem"
+          }
+        }else {
+          const participantsEl = document.getElementById("participants")
+          for(let videoContainer of participantsEl.childNodes) {
+            const video = videoContainer.firstChild
+            console.log(videoContainer.id)
+            // if(videoContainer.id !== volunteer) {
+            //   videoContainer.style.display = "none"
+            // }
+            // video.style.width = "calc((90vw - 24rem - 2rem))"
+            // video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 16)"
+            // video.style.maxHeight = "900px"
+            // video.style.maxWidth = "1600px"
+            // video.style.minHeight = "459px"
+            // video.style.minWidth = "816px"
+            // video.style.borderRadius = "1rem"
+          }
+        }
+      }
+    }else {
+      if(screenShare) {
+        const participantsEl = document.getElementById("participants")
+        for(let videoContainer of participantsEl.childNodes) {
+          const video = videoContainer.firstChild
+          videoContainer.style.display = "flex"
+          video.style.width = "calc(35.556vh - 3.556rem)"
+          video.style.height = "calc(20vh - 2rem)"
+          video.style.maxHeight = "calc(19.688vh - 2.344rem)"
+          video.style.maxWidth = "calc(35vh - 4.16rem)"
+          video.style.minHeight = "8.5rem"
+          video.style.minWidth = "15.111rem"
+          video.style.borderRadius = "0.6rem"
+        }
+      }else {
+        const participantsEl = document.getElementById("participants")
+        for(let videoContainer of participantsEl.childNodes) {
+          const video = videoContainer.firstChild
+          videoContainer.style.display = "flex"
+          video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
+          video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
+          video.style.maxHeight = "calc(40vh - 1.5rem)"
+          video.style.maxWidth = "calc(71.111vh - 2.667rem"
+          video.style.minHeight = "8.5rem"
+          video.style.minWidth = "15.111rem"
+          video.style.borderRadius = "1rem"
+        }
+      }
+    }
+  }, [mode, screenShare])
+
   return <div>
     <div className={styles.mainContainer}>
       <div className={styles.mainSection}>
@@ -730,7 +884,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
           <div className={styles.screens} id="screens" ></div>
           <div className={styles.faces} id="participants"></div>
         </div>
-        <div style={applicant===myIdName?{display: "none"}:{}} className={styles.subContainer}>
+        <div style={volunteer===myIdName?{display: "none"}:{}} className={styles.subContainer}>
           <div className={styles.subContainerTopBar}>
             <span>
               <span className={`${styles.selectedMenuBtn} ${styles.chatMenuBtn}`}>채팅창</span>
