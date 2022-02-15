@@ -13,6 +13,7 @@ function addQuestion() {
 
   const [values, setValues] = useState({
     field: "",
+    job: "IT",
     question: "",
     answer: "",
   });
@@ -27,10 +28,12 @@ function addQuestion() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log(values);
     addInterviewQuestion(
       values,
       (res) => {
         console.log(res, "질문 등록 성공");
+        alert("질문 등록 완료!");
         router.push("/interview-question/me");
       },
       (err) => console.log(err, "질문 등록 실패")

@@ -6,7 +6,6 @@ import { useState } from "react";
 
 export default function QuestionListRow({ question, myQuestionMode, reload }) {
   const router = useRouter();
-  const [showAnswer, setShowAnswer] = useState(false);
 
   //내 질문 삭제
   const deleteQuestion = (event) => {
@@ -18,7 +17,8 @@ export default function QuestionListRow({ question, myQuestionMode, reload }) {
     deleteInterviewQuestion(
       params,
       (res) => {
-        console.log(res, "질문 삭제가 완료되었습니다.");
+        alert("질문 삭제 완료!");
+        console.log(res);
         reload();
       },
       (error) => console.log(error)
@@ -61,20 +61,9 @@ export default function QuestionListRow({ question, myQuestionMode, reload }) {
                 </button>
               </div>
             ) : null}
-
-            <button onClick={() => setShowAnswer(!showAnswer)}>
-              <i className="fas fa-angle-down"></i>
-            </button>
           </div>
         </div>
       </div>
-
-      {showAnswer ? (
-        <div className={styles.answerArea}>
-          <div></div>
-          <span>A. {question.answer}</span>
-        </div>
-      ) : null}
     </div>
   );
 }

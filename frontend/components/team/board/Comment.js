@@ -8,6 +8,7 @@ import {
 } from "../../../api/comment";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { BACKEND_URL } from "../../../config";
 
 export default function Comment({ comment, reload }) {
   const router = useRouter();
