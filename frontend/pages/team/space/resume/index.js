@@ -115,12 +115,14 @@ function Resume({
       <div className={styles.resumeContainer}>
         <div className={styles.memberListBox}>
           <h4>팀원 목록이당</h4>
-          {roomMembers?.map((member) => (
+          {roomMembers?.map((member) => {
+            const imgUrl = member.imageUrl.slice(0, 4) === "http"?member.imageUrl:`${BACKEND_URL}/files/images/${member.imageUrl}`
+            return(
             <div key={member.id} className={styles.member}>
               <div className={styles.imgBox}>
                 {member.imageUrl !== null &&
                 member.imageUrl !== "default.jpg" ? (
-                  <img src={`${BACKEND_URL}/files/images/${member.imageUrl}`} />
+                  <img src={imgUrl} />
                 ) : (
                   <img src="/images/dangdang_1.png" />
                 )}
@@ -138,7 +140,7 @@ function Resume({
                 </button>
               )}
             </div>
-          ))}
+          )})}
         </div>
 
         <div className={styles.contents}>

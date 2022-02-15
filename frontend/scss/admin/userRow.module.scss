@@ -1,0 +1,31 @@
+@import "../common/variables.scss";
+@import "../common/mixins.scss";
+
+.container {
+  padding: 1.6rem 0;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  place-items: center;
+  border-bottom: $division-line;
+}
+
+.button {
+  @include filled-button(180px, white, $main-color);
+  font-weight: normal;
+  font-size: 0.85rem;
+  padding: 0.5rem;
+  width: 180px;
+  border-radius: 50px;
+}
+
+.nickName {
+  font-weight: bold;
+}
+
+.plus {
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+  :global(*) {
+    color: white;
+  }
+}

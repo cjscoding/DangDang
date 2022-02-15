@@ -1,0 +1,14 @@
+@import "../common/variables.scss";
+
+.menu {
+  padding: 1.6rem 0;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  text-align: center;
+  opacity: 60%;
+  border-bottom: $division-line;
+}
+
+.pagination {
+  padding: 40px 0;
+}
