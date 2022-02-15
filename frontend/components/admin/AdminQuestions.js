@@ -5,7 +5,7 @@ import { setQuestionList } from "../../store/actions/adminAction";
 import { getAllQuestionList } from "../../api/admin";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import styles from "../../scss/admin/questions.module.scss";
+import styles from "../../scss/admin/container.module.scss";
 
 const mapStateToProps = (state) => {
   return {
