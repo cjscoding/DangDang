@@ -53,13 +53,37 @@
   .header {
     display: grid;
     grid-template-columns: 1fr 4fr;
-    padding: 30px 50px;
+    padding: 30px 0;
     opacity: 0.6;
-    select {
-      border: none;
-      outline: none;
-      background-color: inherit;
-      font-size: 15px;
+    position: relative;
+    .selectBox {
+      display: flex;
+      justify-content: center;
+      select {
+        width: 200px;
+        border: none;
+        outline: none;
+        background-color: inherit;
+        font-size: 15px;
+        text-align: center;
+        -o-appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        &:hover {
+          font-weight: 700;
+        }
+        option {
+          background: $background-color;
+          color: $text-color;
+          padding: 3px 0;
+        }
+      }
+      .selectArrowIcon {
+        position: absolute;
+        left: 180px;
+        z-index: -3;
+      }
     }
     span {
       text-align: center;
