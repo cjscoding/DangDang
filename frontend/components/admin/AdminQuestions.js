@@ -5,6 +5,7 @@ import { setQuestionList } from "../../store/actions/adminAction";
 import { getAllQuestionList } from "../../api/admin";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import styles from "../../scss/admin/container.module.scss";
 
 const mapStateToProps = (state) => {
   return {
@@ -46,7 +47,7 @@ function AdminQuestion({ questions, setQuestions }) {
   return (
     <div>
       <div>
-        <div>
+        <div className={styles.menu}>
           <span>분류</span>
           <span>질문</span>
           <span>설정</span>
@@ -54,11 +55,15 @@ function AdminQuestion({ questions, setQuestions }) {
 
         {questions &&
           questions.map((question) => (
-            <QuestionListRow key={question.id} question={question} />
+            <QuestionListRow
+              key={question.id}
+              question={question}
+              id={question.id}
+            />
           ))}
       </div>
 
-      <div className="pagination">
+      <div className={styles.pagination}>
         <Pagination
           curPage={curPage}
           paginate={paginate}
