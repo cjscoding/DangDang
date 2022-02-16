@@ -20,20 +20,24 @@ export default connect(mapStateToProps, mapDispatchToProps)(Modal);
 function Modal({ showModal, setShowModal, children }) {
   const modalWrapperRef = useRef();
 
-  const closeHandler = (event) => {
-    event.preventDefault();
-    onClose();
+  const closeModal = () => {
+    document.body.style.overflow = "unset";
+    setShowModal();
   };
+  // const closeHandler = (event) => {
+  //   event.preventDefault();
+  //   onClose();
+  // };
 
-  const backDropHandler = (event) => {
-    console.log(event.target);
-    // console.log(event.currentTarget);
-    console.log(modalWrapperRef.current);
-    if (!modalWrapperRef?.current?.contains(event.target)) {
-      event.preventDefault();
-      onClose();
-    }
-  };
+  // const backDropHandler = (event) => {
+  //   console.log(event.target);
+  //   // console.log(event.currentTarget);
+  //   console.log(modalWrapperRef.current);
+  //   if (!modalWrapperRef?.current?.contains(event.target)) {
+  //     event.preventDefault();
+  //     onClose();
+  //   }
+  // };
 
   // useEffect(() => {
   //   console.log("컴포넌트 생성!");
@@ -51,7 +55,7 @@ function Modal({ showModal, setShowModal, children }) {
       <div className={styles.modalWrapper} tabIndex={-1} ref={modalWrapperRef}>
         <div className={styles.modal}>
           <div className={styles.close}>
-            <a href="#" onClick={setShowModal}>
+            <a href="#" onClick={closeModal}>
               <i className="fas fa-times"></i>
             </a>
           </div>

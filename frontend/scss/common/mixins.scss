@@ -78,3 +78,10 @@
     border-radius: 50%;
   }
 }
+
+@mixin form-focus {
+  background-color: white;
+  box-shadow: 0 0 0 1px $main-color inset;
+  color: $text-color;
+  transition: all 0.3s ease;
+}

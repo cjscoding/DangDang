@@ -89,11 +89,11 @@ function Login({
   return (
     <div className={styles.body}>
       <h1>로그인</h1>
-      <h4>
+      <p className={styles.loginText}>
         로그인이 필요한 서비스입니다.
         <br /> 로그인하고 <span id={styles.dangdang}>당당!</span>의 모든
         서비스를 이용해 보세요!
-      </h4>
+      </p>
       <form className={styles.form} method="post" onSubmit={handleSubmit}>
         <div>
           {/* <span className={styles.span}><i className="fa-thin fa-envelope"></i></span> */}
@@ -130,7 +130,7 @@ function Login({
           로그인
         </button>
       </form>
-      <p>
+      <p className={styles.moveTo}>
         아직 회원이 아니세요?{" "}
         <a onClick={() => setIsLoginModal(!isLoginModal)}>회원가입</a>
       </p>
