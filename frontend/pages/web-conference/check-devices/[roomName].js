@@ -84,20 +84,23 @@ function CheckDevices({ws}) {
       <div className={styles.videoContainer}>
         <div><MyFace /></div>
         <div className={styles.selectContainer}>
-          <div>
-            <label htmlFor="camera-select"></label><br/>
-            <span className={styles.span}><i className="fas fa-camera"></i></span>
-            <CameraSelect id="camera-select"/><br/>
+          <div className={styles.select}>
+            <label htmlFor="camera-select">
+              <i className="fas fa-camera"></i>
+            </label>
+            <CameraSelect id="camera-select"/>
           </div>
-          <div>
-            <label htmlFor="mic-select"></label><br/>
-            <span className={styles.span}><i className={`fas fa-microphone`}></i></span>
-            <MicSelect id="mic-select" /><br/>
+          <div className={styles.select}>
+            <label htmlFor="mic-select">
+              <i className={`fas fa-microphone`}></i>
+            </label>
+            <MicSelect id="mic-select" />
           </div>
-          <div>
-            <label htmlFor="speaker-select"></label><br/>
-            <span className={styles.span}><i className="fas fa-headphones"></i></span>
-            <SpeakerSelect id="speaker-select" /><br/>
+          <div className={styles.select}>
+            <label htmlFor="speaker-select">
+              <i className="fas fa-headphones"></i>
+            </label>
+            <SpeakerSelect id="speaker-select" />
           </div>
         </div>
         <button ref={nextBtn} className={styles.nextBtn}>입장하기!</button>

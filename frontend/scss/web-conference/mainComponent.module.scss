@@ -1,166 +1,237 @@
+@import "../common/variables.scss";
 @import "../common/mixins.scss";
 
+.container {
+  background-color: $background-color;
+}
 
 .mainContainer {
-  margin-top: 2.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 50px;
   .mainSection {
     display: flex;
     justify-content:center;
     align-items:center;
-    min-width: 1200px;
+    min-width: 1480px;
+    min-height: 640px;
     .videoContainer {
       display: flex;
       flex-direction: column;
-      justify-content: space-evenly;
+      justify-content: center;
       align-content: center;
       align-items: center;
-      height: 80vh;
-      min-height: 40rem;
-      min-width: calc(1200px - 24rem);
+      height: calc(100vh - 232px);
+      min-height: 640px;
+      min-width: 960px;
       .screens {
-        margin-right: 1rem;
-        span{
-          display: inline-flex;
-          flex-direction: column;
-          align-items: center;
+        span {
+          video {
+          }
+          span {
+            margin: 10px;
+          }
         }
       }
       .faces {
-        width: calc(90vw - 24rem);
-        // width: calc(35.556vh - 3.556rem);
+        // width: calc(1480px - 24rem);
+        max-width: 1200px;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
         align-content: center;
         align-items: center;
-        span{
+        span {
           display: inline-flex;
           flex-direction: column;
           align-items: center;
+          overflow-x: hidden;
+
+          video {
+            // border: none;
+          }
+          span {
+            // margin: 10px;
+          }
         }
       }
     }
     .subContainer {
-      padding: 20px;
-      width: 24rem;
-      min-height: 40rem;
-      height: 80vh;
-      background: white;
-      box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
-      border-radius: 12px;
+      @include white-box;
+      height: 100%;
+      padding: 0;
+      margin: 0;
       .subContainerTopBar {
+        height: 100%;
         display: flex;
         justify-content: space-between;
-        .chatMenuBtn {
-          font-size: 1.3rem;
-          border: 2px;
-          border-right: 1px;
-          border-bottom: 0;
-          border-style: solid;
-          border-top-left-radius: 0.5rem;
-          border-top-right-radius: 0.5rem;
-          cursor: pointer;
-        }
-        .letterMenuBtn {
-          font-size: 1.3rem;
-          border: 2px;
-          border-left: 1px;
-          border-bottom: 0;
-          border-style: solid;
-          border-top-left-radius: 0.5rem;
-          border-top-right-radius: 0.5rem;
-          cursor: pointer;
-        }
-        .selectedMenuBtn {
-          background-color: #BDECB6;
-        }
-        .timer {
-          font-size: 1.3rem;
-        }
-      }
-      .chatContainer{
-        width: 100%;
-        min-height: calc(40rem - 40px - 2rem);
-        height: calc(80vh - 40px - 2rem);
-        border: 2px;
-        border-style: solid;
-        border-top-right-radius: 0.5rem;
-        border-bottom-right-radius: 0.5rem;
-        border-bottom-left-radius: 0.5rem;
-        .chat {
-          width: 100%;
-          height: calc(100% - 3rem);
-          overflow-y: auto;
-          word-break: break-all;
-          white-space: pre-wrap;
-        }
-        .chatInput {
-          direction: flex;
-          flex-direction: row;
-          height: 3rem;
-          padding-top: .5rem;
-          input {
-            padding: 1rem;
-            width: 90%;
-            height: 100%;
-            font-size: 1rem;
-            background: white;
-            // box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
-            border-radius: 10px 0 0 10px;
-            border: 1px;
-            background-color:gainsboro;
-          }
-          button {
-            background:  white;
-            border-radius: 0 10px 10px 0px;
-            box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
-            float: right;
-            width: 10%;
-            height: 100%;
-            outline: none;
-            border: 1px;
-            background-color:gainsboro;
+        padding: 15px 20px;
+        font-size: 15px;
+        font-weight: 700;
+        .header{
+          .chatMenuBtn,
+          .letterMenuBtn {
+            // padding: 0.5rem;
+            padding: 0.3rem;
+            margin: 0.5rem;
+            border-radius: 0.5rem;
             cursor: pointer;
           }
+          .selectedMenuBtn {
+            background-color: aquamarine;
+          }
+        }
+        .timer{
+          font-size: 15px;
         }
       }
-      .letterContainer{
-        width: 100%;
-        min-height: calc(40rem - 40px - 2rem);
-        height: calc(80vh - 40px - 2rem);
-        border: 2px;
-        border-style: solid;
-        border-top-right-radius: 0.5rem;
-        border-bottom-right-radius: 0.5rem;
-        border-bottom-left-radius: 0.5rem;
-        .letter{
-          width: 100%;
-          height: 100%;
+      .chatContainer {
+        .chat {
+          background-color: #eff3f6;
           overflow-y: auto;
           word-break: break-all;
           white-space: pre-wrap;
+          width: 20vw;
+          height: calc(100vh - 353px);
+          min-height: 519px;
+          div {
+            display: flex;
+            flex-direction: column;
+            width: inherit;
+            div {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              margin: 15px;
+              width: fit-content;
+              h4 {
+                font-size: 14px;
+                margin-bottom: 5px;
+              }
+              p {
+                padding: 10px;
+              }
+            }
+            .me {
+              align-self: flex-start;
+              margin-left: 20px;
+              p {
+                border-radius: 10px 10px 10px 0;
+                background-color: $main-color;
+                color: white;
+              }
+            }
+            .others {
+              align-self: flex-end;
+              margin-right: 20px;
+              h4 {
+                align-self: flex-end;
+                color: $purple-color;
+              }
+              p {
+                border-radius: 10px 10px 0 10px;
+                background-color: white;
+                color: $text-color;
+              }
+            }
+          }
+        }
+        .chatInput {
+          padding: 15px 20px;
+          display: flex;
+          align-items: center;
+          input {
+            background-color: #eff3f6;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 7px 0 0 7px;
+            font-size: 12px;
+            height: 40px;
+            width: 100%;
+            outline: none;
+          }
+          button {
+            @include none-button($text-color);
+            height: 40px;
+            opacity: 1;
+            background-color: #eff3f6;
+            padding: 10px 15px;
+            border-radius: 0 7px 7px 0;
+          }
+        }
+      }
+      .letterContainer {
+        .letter {
+          background-color: #eff3f6;
+          overflow-y: auto;
+          word-break: break-all;
+          white-space: pre-wrap;
+          width: 20vw;
+          height: calc(100vh - 283px);
+          min-height: 589px;
+          border-radius: 0 0 7px 7px;
         }
       }
     }
   }
   .btnBar {
-    margin-top: 2rem;
-    width: 80vw;
+    width: 100%;
+    height: 100px;
     display: flex;
-    justify-content: space-evenly;
-    font-size: 1.5rem;
+    justify-content: center;
+    align-items: flex-end;
     .eachBtn {
-      cursor: pointer;
-      span {
-        padding-right: 0.1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 30px;
+      & > .cursor {
+        cursor: pointer;
+      }
+      & > span > span {
+        font-size: 12px;
+        // display: flex;
+        // flex-direction: column;
+        // justify-content: center;
+        // align-items: center;
+        .iconBox {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: white;
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          font-size: 18px;
+          box-shadow: $box-shadow;
+          &:hover {
+            box-shadow: 0 0 5px $main-color;
+            font-size: 20px;
+          }
+        }
+        span {
+          font-size: 12px;
+          text-align: right;
+          margin-top: 10px;
+        }
       }
       select {
-        height: 2rem;
-        width: 1.6rem;
-        font-size: 1rem;
+        cursor: pointer;
+        align-self: flex-end;
+        width: 22px;
+        height: 15px;
+        margin-left: 3px;
+        border: none;
+        background-color: inherit;
+      }
+      &:last-child {
+        .iconBox {
+          background-color: rgb(241, 52, 52);
+          i {
+            color: white;
+          }
+        }
       }
     }
     .nonCursor {

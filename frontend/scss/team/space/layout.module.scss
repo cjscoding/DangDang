@@ -96,10 +96,12 @@
 
 .kakaoBtn {
   @include filled-button(200px, $text-color, $kakao-color);
+  text-align: center;
 }
 
 .registBtn {
   @include filled-button(200px, white, $main-color);
+  text-align: center;
   a {
     color: white;
   }

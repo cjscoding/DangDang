@@ -17,13 +17,9 @@ export function ttsService(txt, volume) {
       }
       return buf;
     }
-    const arraybuffer = str2ab(res.data)
 
+    const arraybuffer = str2ab(res.data)
     const context = new AudioContext();
-    const audio = document.createElement("audio")
-    audio.setSinkId(store.getState().videoReducer.speakerId)
-    const sourceNode = context.createMediaElementSource(audio)
-    console.log(context.destination)
     // 사운드 조절을 위해 gainNode를 추가
     const gainNode = context.createGain()
     gainNode.connect(context.destination)
@@ -35,6 +31,12 @@ export function ttsService(txt, volume) {
       gainNode.gain.value = volume / 100
       source.start(0);
     });
+    // const blob = new Blob([arraybuffer], {"type": "audio/mp3"});
+    // const objectURL = window.URL.createObjectURL(blob);
+    // const audio = document.createElement("audio");
+    // audio.src = objectURL;
+    // audio.play()
+
   }).catch((error)=>{
     console.log(error);
   })

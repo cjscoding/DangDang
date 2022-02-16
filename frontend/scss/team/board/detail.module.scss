@@ -39,12 +39,17 @@
     }
   }
 }
-
-.registBtn{
-    margin-bottom: 7px;
+.cancelBtn {
+  @include unfilled-button($red-color);
+  width: 200px;
+  font-size: 15px;
+  font-weight: 600;
 }
-.kakaoBtn{
-    margin-top: 7px;
+.registBtn {
+  margin-bottom: 7px;
+}
+.kakaoBtn {
+  margin-top: 7px;
 }
 
 .introduction {
@@ -62,14 +67,15 @@
   }
 }
 
-.commentTitle{
-    text-align: center;
-    border-top: $division-line;
-    padding: 50px 0;
+.commentTitle {
+  text-align: center;
+  border-top: $division-line;
+  padding: 50px 0;
 }
 
-.backBtnBox{
-    display: flex;
-    justify-content: center;
-    margin-bottom: 100px;
+.backBtnBox {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 100px;
+  text-align: center;
 }

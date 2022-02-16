@@ -2,17 +2,38 @@
 @import "../../common/mixins.scss";
 @import "../../common/variables.scss";
 
-.closeBtnBox {
-  display: flex;
-  justify-content: flex-end;
-  margin: 1rem 0;
-  .timer {
-    font-size: 1.3rem;
-    margin-right: 2rem;
+.body {
+  @include flex-center;
+  flex-direction: column;
+}
+
+.timer {
+  font-size: 1.2rem;
+  align-self: flex-end;
+  margin: 0.5rem 0;
+}
+
+.closeBtn {
+  margin-right: 1rem;
+  font-size: 1.3rem;
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  text-align: center;
+
+  div {
+    font-size: 0.8rem;
+    margin-top: 0.3rem;
   }
-  .closeBtn{
-    margin-right:1rem;
-    font-size: 1.3rem;
+  :global(*) {
+    color: $gray-color;
+  }
+
+  &:hover {
+    :global(*) {
+      color: $text-color;
+      transition: all 0.2s ease;
+    }
   }
 }
 
@@ -24,65 +45,71 @@
     box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
     position: static;
     display: flex;
-    flex-direction: column;
-    align-items:flex-start;
-    .top{
+    // flex-direction: column;
+    align-items: flex-start;
+    .top {
       display: flex;
-      flex-direction: row;
       width: 60vw;
       height: 33.75vw;
-      .selectContainer{
-        width:10%;
-        height: 100%;
-        // background-color: mediumspringgreen;
-        .changeBtn {
-          height:100%;
-          display: flex;
-          flex-direction: column;
-          span {
-            cursor: pointer;
-            margin:auto;
-            font-size: 1.5rem;
-            .icon{
-              font-size:.9rem;
-            }
-          }
-        }
-      }
-      .videoContainer{
+
+      .videoContainer {
         // background-color: aqua;
-        width:90%;
-        height:100%;
-        .video{
-          width:100%;
-          height:100%;
+        width: 90%;
+        height: 100%;
+        .video {
+          width: 100%;
+          height: 100%;
           .video1 {
             display: flex;
             align-items: center;
             justify-content: center;
             overflow-y: auto;
             overflow-x: hidden;
-            background-color: #EFF3F6;
-            margin:auto;
+            background-color: #eff3f6;
+            margin: auto;
             text-align: center;
             padding: 30px 30px;
             height: 100%;
             width: 100%;
           }
           .video2 {
-            margin:auto;
+            margin: auto;
             height: 100%;
             width: 100%;
+            background-color: #eff3f6;
           }
           .video3 {
+            background-color: #eff3f6;
             height: 33.75vw;
             // width: 60vw;
             width: 100%;
             text-align: center;
-            img{
-              margin: auto;
-              height: 95%;
+            .interviewerContainer {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              overflow: hidden;
+              height: 100%;
+              // position: relative;
+              // // padding-left: 50%;
+              // padding-right: 50%;
+              // left: 0;
+              // padding-top: 56.25%;
+              // height: 0;
+              .interviewer {
+                height: 33.75vw;
+                // position: absolute;
+                // top: 0;
+                // left: 0;
+                // width: 100%;
+                // height: 100%;
+                // object-fit:none;
+              }
             }
+            // img{
+            //   margin: auto;
+            //   height: 95%;
+            // }
           }
           .video4 {
             height: 33.75vw;
@@ -90,7 +117,7 @@
             width: 100%;
             display: flex;
             justify-content: center;
-            img{
+            img {
               margin: auto;
               height: 30%;
             }
@@ -99,80 +126,172 @@
       }
     }
   }
-  .btnContainer {
-    padding-left: 7rem;
-    padding-right: 3.3rem;
-    padding-bottom: 1.5rem;
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-between;
-    font-size: 1.3rem;
-    .cursorBtn {
-      cursor: pointer;
-    }
-    .blockBtn {
-      cursor: wait;
+
+  .selectContainer {
+    width: 10%;
+    height: 60%;
+    // background-color: mediumspringgreen;
+    .changeBtn {
+      padding: 0 1rem;
+      height: 100%;
+      @include flex-center;
+      flex-direction: column;
+      justify-content: flex-start;
+      span {
+        cursor: pointer;
+        margin: auto;
+        font-size: 1.3rem;
+        .icon {
+          font-size: 0.9rem;
+          color: white;
+        }
+      }
     }
   }
 }
-.tooltip span{
-  visibility: hidden;       /* 이벤트가 없으면 툴팁 영역을 숨김 */
-  width: 150px;  
-  height:32px;           /* 툴팁 영역의 넓이를 설정 */
-  background-color: #7D7D7D;
+
+.btnContainer {
+  padding: 2rem;
+  @include flex-center;
+  width: 75%;
+  justify-content: space-between;
+  font-size: 1rem;
+  text-align: center;
+  position: relative;
+
+  .cursorBtn {
+    cursor: pointer;
+  }
+  .blockBtn {
+    cursor: wait;
+  }
+
+  .volume {
+    position: absolute;
+    // top: 130px;
+    top: 5px;
+    left: -8px;
+  }
+
+  .btn {
+    background-color: white;
+    padding: 1rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 500px;
+    box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
+
+    @include flex-center;
+
+    :global(*) {
+      color: $gray-color;
+    }
+
+    .icon {
+      color: white;
+    }
+  }
+
+  .btn.hide {
+    display: none;
+  }
+}
+
+.btn1 {
+  @include self-practice-btn-hover($red-color);
+}
+
+.btn2 {
+  @include self-practice-btn-hover($yellow-color);
+}
+
+.btn3 {
+  @include self-practice-btn-hover($purple-color);
+}
+
+.btn4 {
+  @include self-practice-btn-hover($green-color);
+}
+
+.tooltip span {
+  visibility: hidden; /* 이벤트가 없으면 툴팁 영역을 숨김 */
+  width: 150px;
+  height: 32px; /* 툴팁 영역의 넓이를 설정 */
+  background-color: #7d7d7d;
   color: #fff;
   text-align: center;
   border-radius: 6px;
   padding: 5px 0;
-  position: absolute;       /* 절대 위치를 사용 */
+  position: absolute; /* 절대 위치를 사용 */
   z-index: 1;
   right: 80%;
 }
-.tooltip span::after{
-  content: " ";             /* 정사각형 영역 사용 */
-  position: absolute;       /* 절대 위치 사용 */
+.tooltip span::after {
+  content: " "; /* 정사각형 영역 사용 */
+  position: absolute; /* 절대 위치 사용 */
   border-style: solid;
-  border-width: 5px;  
-  top: 50%;                 /* 사각형 영역이 중앙에 오도록 위치 */
-  left: 100%;               /* 왼쪽에서 100% 위치에 오도록 위치 */
-  margin-top: -5px;   
-  border-color: transparent transparent transparent #7D7D7D;   /* 테두리 넓이를 5px 로 설정 */
+  border-width: 5px;
+  top: 50%; /* 사각형 영역이 중앙에 오도록 위치 */
+  left: 100%; /* 왼쪽에서 100% 위치에 오도록 위치 */
+  margin-top: -5px;
+  border-color: transparent transparent transparent #7d7d7d; /* 테두리 넓이를 5px 로 설정 */
 }
-.tooltip:hover span{
+.tooltip:hover span {
   visibility: visible;
 }
 /*--*/
-.tooltipdown{
+.tooltipdown {
   position: relative;
 }
-.tooltipdown span{
-  font-size: .9rem;
-  visibility: hidden;       /* 이벤트가 없으면 툴팁 영역을 숨김 */
-  width: 300px;  
-  height:32px;           /* 툴팁 영역의 넓이를 설정 */
-  background-color: #7D7D7D;
+.tooltipdown span {
+  font-size: 0.9rem;
+  visibility: hidden; /* 이벤트가 없으면 툴팁 영역을 숨김 */
+  width: 300px;
+  height: 32px; /* 툴팁 영역의 넓이를 설정 */
+  background-color: #7d7d7d;
   color: #fff;
   text-align: center;
   border-radius: 6px;
   padding: 5px 0;
-  position: absolute;       /* 절대 위치를 사용 */
+  position: absolute; /* 절대 위치를 사용 */
   z-index: 1;
   top: 120%;
   left: 50%;
   margin-left: -150px;
 }
-.tooltipdown span::after{
-  content: " ";             /* 정사각형 영역 사용 */
-  position: absolute;       /* 절대 위치 사용 */
+.tooltipdown span::after {
+  content: " "; /* 정사각형 영역 사용 */
+  position: absolute; /* 절대 위치 사용 */
   border-style: solid;
-  border-width: 5px;  
+  border-width: 5px;
   bottom: 100%;
   left: 50%;
-  margin-left: -5px;  
-  border-color: transparent transparent #7D7D7D transparent ;   
+  margin-left: -5px;
+  border-color: transparent transparent #7d7d7d transparent;
 }
-.tooltipdown:hover span{
+.tooltipdown:hover span {
   visibility: visible;
+}
+
+.changeBtn {
+  :global(*) {
+    color: $gray-color;
+  }
+}
+
+.active {
+  :global(*) {
+    color: $main-color;
+    transition: all 0.2s ease;
+  }
+}
+
+.hide {
+  display: none;
+}
+
+.btnDescription {
+  font-size: 0.8rem;
+  margin-top: 0.8rem;
+  color: $gray-color;
 }
