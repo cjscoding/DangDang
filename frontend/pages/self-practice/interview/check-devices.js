@@ -114,38 +114,31 @@ function CheckDevices({ preparedQuestions, wsSocket, isQs, setQuestions }) {
           <div className={menuStyles.text}>카메라 설정</div>
         </div>
       </div>
-      <span className={styles.title}>카메라와 마이크 설정을 확인해주세요.</span>
+      <span className={menuStyles.title}>
+        카메라와 마이크 설정을 확인해주세요.
+      </span>
       <div className={styles.videoContainer}>
         <div>
           <MyFace />
         </div>
         <div className={styles.selectContainer}>
-          <div>
-            <label htmlFor="camera-select"></label>
-            <br />
-            <span className={styles.span}>
+          <div className={styles.select}>
+            <label htmlFor="camera-select">
               <i className="fas fa-camera"></i>
-            </span>
+            </label>
             <CameraSelect id="camera-select" />
-            <br />
           </div>
-          <div>
-            <label htmlFor="mic-select"></label>
-            <br />
-            <span className={styles.span}>
+          <div className={styles.select}>
+            <label htmlFor="mic-select">
               <i className="fas fa-microphone"></i>
-            </span>
+            </label>
             <MicSelect id="mic-select" />
-            <br />
           </div>
-          <div>
-            <label htmlFor="speaker-select"></label>
-            <br />
-            <span className={styles.span}>
+          <div className={styles.select}>
+            <label htmlFor="speaker-select">
               <i className="fas fa-headphones"></i>
-            </span>
+            </label>
             <SpeakerSelect id="speaker-select" />
-            <br />
           </div>
         </div>
         <button ref={nextBtn} className={styles.nextBtn}>
