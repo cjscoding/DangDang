@@ -103,6 +103,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Transactional
     public ApiResult<String> deleteComment(User user, String CommentId) {
         Optional<Comment> comment = commentRepository.findCommentById(CommentId);
         if (!comment.isPresent())  throw new NullPointerException("존재하지 않는 댓글 입니다.");

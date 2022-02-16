@@ -35,4 +35,6 @@ public interface InterviewQuestionRepository extends JpaRepository<InterviewQues
                     "where  ib.user.id = :userId)"
     )
     public Page<InterviewQuestion> findInterviewBookmark(@Param("userId") Long userId, Pageable pageable);
+
+
 }
