@@ -33,6 +33,9 @@ function Interview({wsSocket, sessionId, questions, setWSSessionId, pushRecorded
   const [screenNum, setScreenNum] = useState(3);
   // const [volume, setVolume] = useState(30);
   const [isVol, setIsVol] = useState(false);
+
+  const [videoNum, setVideoNum] = useState(0)
+
   const volumeBtn = useRef();
   const restartBtn = useRef();
   const saveBtn = useRef();
@@ -49,6 +52,8 @@ function Interview({wsSocket, sessionId, questions, setWSSessionId, pushRecorded
       window.location.href = "/404"
       // router.push("/404")
     }
+
+    setVideoNum((+ new Date()) % 3)
 
     setSelectedQuestion(questions[0])
     let questionNumState = 0; // useEffect에서 사용할 questionNum 상태(useEffect안에서는 questionNum이 바뀌지 않음)
@@ -234,7 +239,11 @@ function Interview({wsSocket, sessionId, questions, setWSSessionId, pushRecorded
           <div className={styles.video}>
             <div style={isWait||screenNum!==1?{display: "none"}:{}} className={styles.video1}><ShowQuestion /></div>
             <div style={isWait||screenNum!==2?{display: "none"}:{}} className={styles.video2}><video id="my-face"></video></div>
-            <div style={isWait||screenNum!==3?{display: "none"}:{}} className={styles.video3}><img src="/images/ljy-removebg-preview.png" /></div>
+            <div style={isWait||screenNum!==3?{display: "none"}:{}} className={styles.video3}>
+              <div className={styles.interviewerContainer}>
+                <video  className={styles.interviewer} autoPlay muted loop src={`/images/interviewers/${videoNum}.mp4`}/>
+              </div>
+            </div>
             <div style={!isWait?{display: "none"}:{}} className={styles.video4}><img src="/images/loading.gif" /></div>
           </div>
         </div>
