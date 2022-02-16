@@ -330,7 +330,7 @@ function Interview({
           </span>
           <input
             className={`${styles.cursorBtn} ${styles.volume} ${
-              isVol ? styles.hide : null
+              !isVol ? styles.hide : null
             }`}
             type="range"
             min="0"

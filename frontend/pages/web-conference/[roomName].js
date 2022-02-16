@@ -677,7 +677,7 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
         setIsChat(true);
         timer.stopTimer();
       } else {
-        if (!confirm("면접 모드로 바꾸시겠습니까?")) return;
+        if (!confirm("면접 모드로 바꾸시겠습니까? \n(버튼을 누른 사람이 지원자가 됩니다.)")) return;
         timer.startTimer();
       }
       modeState = !modeState;

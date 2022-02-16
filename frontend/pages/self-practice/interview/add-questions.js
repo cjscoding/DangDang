@@ -205,6 +205,7 @@ function AddQuestions({
   function addQuestionInput(field, question) {
     const trimedQuestion = question.trim();
     if (trimedQuestion) {
+      if(questions.length >= 10) return alert("질문은 10개까지 선택할 수 있습니다.")
       addQuestion(field, trimedQuestion);
     } else {
       alert("값을 입력해주세요");
@@ -256,7 +257,7 @@ function AddQuestions({
                       key={question.id}
                       className={styles.question}
                       onClick={() =>
-                        addQuestion(question.field, question.question)
+                        addQuestionInput(question.field, question.question)
                       }
                     >
                       <span className={styles.questionField}>
@@ -278,7 +279,7 @@ function AddQuestions({
                       key={question.id}
                       className={styles.question}
                       onClick={() =>
-                        addQuestion(question.field, question.question)
+                        addQuestionInput(question.field, question.question)
                       }
                     >
                       <span className={styles.questionField}>
@@ -299,7 +300,7 @@ function AddQuestions({
                       key={question.id}
                       className={styles.question}
                       onClick={() =>
-                        addQuestion(question.field, question.question)
+                        addQuestionInput(question.field, question.question)
                       }
                     >
                       <span className={styles.questionField}>
