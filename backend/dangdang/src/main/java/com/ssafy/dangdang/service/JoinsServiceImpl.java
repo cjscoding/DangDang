@@ -29,9 +29,16 @@ public class JoinsServiceImpl implements JoinsService {
 
     private final UserRepository userRepository;
     private final StudyRepository studyRepository;
-
     private final JoinsRepository joinsRepository;
 
+    @Override
+    public Boolean getJoin(User user, Long studyId){
+        Optional<Joins> join = joinsRepository.findJoinsByUserIdAndStudyId(user.getId(), studyId);
+        // 가입 신청을 하지 않았거나 이미 가입되었으면 false
+        if (!join.isPresent()) return false;
+        if (join.get().getWaiting()) return true;
+        return false;
+    }
 
     @Override
     public Long joinStudy(User user, Long studyId) {
