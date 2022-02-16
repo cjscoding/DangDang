@@ -22,8 +22,20 @@ function mapStateToProps(state) {
     user: state.userReducer.user,
   };
 }
-export default connect(mapStateToProps, null)(Conference);
-function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
+function mapDispatchToProps() {
+  // function pipMode() {
+  //   if (document.pictureInPictureEnabled && myVideoEl) myVideoEl.requestPictureInPicture();
+  // }
+  // function normalMode() {
+  //   if (document.pictureInPictureElement) document.exitPictureInPicture();
+  // }
+  return {
+    pipMode: (event) => {if (document.pictureInPictureEnabled) event.target.requestPictureInPicture()},
+    normalMode: () => {if (document.pictureInPictureElement) document.exitPictureInPicture()},
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Conference);
+function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipMode, normalMode }) {
   const [me, setMe] = useState(null);
   const [mode, setMode] = useState(false); // 면접모드 true, 일반모드 false
   const [volunteer, setVolunteer] = useState("");
@@ -836,6 +848,13 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
   }, [screenShareUser]);
 
   useEffect(() => {
+    let myVideoEl;
+    // function pipMode() {
+    //   if (document.pictureInPictureEnabled && myVideoEl) myVideoEl.requestPictureInPicture();
+    // }
+    // function normalMode() {
+    //   if (document.pictureInPictureElement) document.exitPictureInPicture();
+    // }
     const participantsEl = document.getElementById("participants")
     participantsEl.style.flexDirection = "row"
     if(screenShare) {
@@ -851,6 +870,7 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
       if(videoContainer.id === myIdName) {
         participantsEl.appendChild(videoContainer)
       }
+      videoContainer.style.position = "static"
       videoContainer.style.display = "flex"
       videoContainer.style.paddingRight = "1rem"
       videoContainer.style.paddingLeft = "1rem"
@@ -864,7 +884,15 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
           const participantsEl = document.getElementById("participants")
           for(let videoContainer of participantsEl.childNodes) {
             if(videoContainer.id === volunteer) {
-              videoContainer.style.display = "none"
+              // videoContainer.style.display = "none"
+              const video = videoContainer.firstChild
+              video.style.width = "160px"
+              video.style.height = "90px"
+              videoContainer.style.position = "fixed"
+              videoContainer.style.right = "1rem"
+              videoContainer.style.bottom = "1rem"
+              myVideoEl = video
+              continue
             }
             const video = videoContainer.firstChild
             video.style.width = "240px"
@@ -875,7 +903,15 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
           let inteviewerNum = participantsEl.childNodes.length - 1
           for(let videoContainer of participantsEl.childNodes) {
             if(videoContainer.id === volunteer) {
-              videoContainer.style.display = "none"
+              // videoContainer.style.display = "none"
+              const video = videoContainer.firstChild
+              video.style.width = "160px"
+              video.style.height = "90px"
+              videoContainer.style.position = "fixed"
+              videoContainer.style.right = "1rem"
+              videoContainer.style.bottom = "1rem"
+              myVideoEl = video
+              continue
             }
             const video = videoContainer.firstChild
             video.style.width = "800px"
@@ -892,7 +928,17 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
         if(screenShare) {
           const participantsEl = document.getElementById("participants")
           for(let videoContainer of participantsEl.childNodes) {
-            if(videoContainer.id !== volunteer){// && videoContainer.id !== myIdName) {
+            if(videoContainer.id !== volunteer){
+              if(videoContainer.id === myIdName) {
+                const video = videoContainer.firstChild
+                video.style.width = "160px"
+                video.style.height = "90px"
+                videoContainer.style.position = "fixed"
+                videoContainer.style.right = "1rem"
+                videoContainer.style.bottom = "1rem"
+                myVideoEl = video
+                continue
+              }
               videoContainer.style.display = "none"
             }
             const video = videoContainer.firstChild
@@ -902,7 +948,17 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
         }else {
           const participantsEl = document.getElementById("participants")
           for(let videoContainer of participantsEl.childNodes) {
-            if(videoContainer.id !== volunteer){// && videoContainer.id !== myIdName) {
+            if(videoContainer.id !== volunteer){
+              if(videoContainer.id === myIdName) {
+                const video = videoContainer.firstChild
+                video.style.width = "160px"
+                video.style.height = "90px"
+                videoContainer.style.position = "fixed"
+                videoContainer.style.right = "1rem"
+                videoContainer.style.bottom = "1rem"
+                myVideoEl = video
+                continue
+              }
               videoContainer.style.display = "none"
             }
             if(videoContainer.id === volunteer) {
@@ -928,6 +984,20 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
           const video = videoContainer.firstChild
           video.style.width = "480px"
           video.style.height = "270px"
+        }
+      }
+    }
+    if(!mode) {
+      normalMode()
+    }
+    if(myVideoEl) {
+      myVideoEl.addEventListener("click", pipMode)
+    }else{
+      const participantsEl = document.getElementById("participants")
+      for(let videoContainer of participantsEl.childNodes) {
+        if(videoContainer.id === myIdName) {
+          myVideoEl = videoContainer.firstChild
+          myVideoEl.removeEventListener("click", pipMode)
         }
       }
     }
