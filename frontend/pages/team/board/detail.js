@@ -205,9 +205,7 @@ function TeamDetail({
 
       <div className={styles.backBtnBox}>
         <Link href="/team/board">
-          <button className={styles.registBtn}>
-            목록으로
-          </button>
+          <a className={styles.registBtn}>목록으로</a>
         </Link>
       </div>
     </div>
