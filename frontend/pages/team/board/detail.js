@@ -3,13 +3,13 @@ import Comment from "../../../components/team/board/Comment";
 
 import { setRoomInfo } from "../../../store/actions/roomAction";
 import { getRoomInfo } from "../../../api/studyroom";
-import { joinTeam, getWaitings } from "../../../api/member";
+import { joinTeam, checkJoin } from "../../../api/member";
 import { createDetailComment } from "../../../api/comment";
 import { BACKEND_URL } from "../../../config";
 
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const mapStateToProps = (state) => {
@@ -17,28 +17,21 @@ const mapStateToProps = (state) => {
     roomInfo: state.roomReducer.curRoomInfo,
     roomHost: state.roomReducer.curRoomHost,
     comments: state.roomReducer.comments,
-    waitingList: state.roomReducer.waitings,
+    user: state.userReducer.user,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     setRoomInfo: (roomData) => dispatch(setRoomInfo(roomData)),
-    setWaitings: (waitings) => dispatch(setWaitings(waitings)),
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamDetail);
 
-function TeamDetail({
-  roomInfo,
-  roomHost,
-  comments,
-  waitingList,
-  setRoomInfo,
-  setWaitings,
-}) {
+function TeamDetail({ user, roomInfo, roomHost, comments, setRoomInfo }) {
   const router = useRouter();
+  const [join, setJoin] = useState(false);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -59,15 +52,14 @@ function TeamDetail({
       }
     );
 
-    getWaitings(
+    checkJoin(
       router.query.id,
       (res) => {
-        const waitings = res.data.response;
-        setWaitings(waitings);
-        console.log(res, "가입대기명단 조회 성공!");
+        console.log(res, "가입여부조회");
+        setJoin(res.data.response ? true : false);
       },
       (err) => {
-        console.log(err, "가입대기명단 조회에 실패하였습니다.");
+        console.log(err);
       }
     );
   }, [router.isReady]);
@@ -97,18 +89,34 @@ function TeamDetail({
   const onJoinStudy = (id) => {
     const data = {
       studyId: id,
+      userId: user.id,
     };
-    joinTeam(
-      data,
-      (res) => {
-        console.log(res, "가입 완료");
-        alert("가입 신청 완료되었습니다.");
-      },
-      (err) => {
-        alert("이미 가입한 상태입니다.");
-        console.log(err);
-      }
-    );
+
+    if (join) {
+      joinTeam(
+        data,
+        (res) => {
+          console.log(res);
+          alert("가입 신청이 취소되었습니다.");
+          setJoin(false);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    } else {
+      joinTeam(
+        data,
+        (res) => {
+          console.log(res);
+          alert("가입 신청 완료되었습니다.");
+          setJoin(true);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    }
   };
 
   //댓글 등록
@@ -158,18 +166,27 @@ function TeamDetail({
               </div>
               <h4>
                 <i className="fas fa-user-friends"></i> {roomHost.nickName} 외{" "}
-                {roomInfo.number}명
+                {roomInfo.number - 1}명
               </h4>
             </div>
           </div>
 
           <div className={styles.btns}>
-            <button
-              onClick={() => onJoinStudy(roomInfo.id)}
-              className={styles.registBtn}
-            >
-              가입신청
-            </button>
+            {join ? (
+              <button
+                onClick={() => onJoinStudy(roomInfo.id)}
+                className={styles.cancelBtn}
+              >
+                가입취소
+              </button>
+            ) : (
+              <button
+                onClick={() => onJoinStudy(roomInfo.id)}
+                className={styles.registBtn}
+              >
+                가입신청
+              </button>
+            )}
 
             <button
               className={styles.kakaoBtn}

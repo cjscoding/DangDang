@@ -49,6 +49,8 @@
     opacity: 0.6;
   }
   &:hover {
+    transform: scale(1.05);
+    transition: 0.2s ease;
     opacity: 1;
     font-weight: 800;
     cursor: pointer;
@@ -84,4 +86,21 @@
   box-shadow: 0 0 0 1px $main-color inset;
   color: $text-color;
   transition: all 0.3s ease;
+}
+
+@mixin scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  &::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+  }
 }
