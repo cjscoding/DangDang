@@ -20,16 +20,20 @@ function CreateResume() {
 
   const onSubmitResume = (event) => {
     event.preventDefault();
-    const req = {
-      resumeQuestionList: [
-        {
-          question,
-          answer,
-        },
-      ],
+    const data = {
+      studyId: router.query.id,
+      req: {
+        resumeQuestionList: [
+          {
+            question,
+            answer,
+          },
+        ],
+      },
     };
+
     createResume(
-      req,
+      data,
       (res) => {
         console.log(res, "자소서 등록 성공");
         onMoveResumePage();

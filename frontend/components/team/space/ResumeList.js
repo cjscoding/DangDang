@@ -40,12 +40,23 @@ function ResumeList({ userInfo, setResume, resume, comments, index, reload }) {
 
   //자소서 삭제
   const onDeleteResume = () => {
-    deleteResume(
+    const data = {
+      studyId: router.query.id,
       resumeId,
+    };
+
+    deleteResume(
+      data,
       (res) => {
         alert("자소서 삭제 성공");
+        console.log(res);
+        const data = {
+          studyId: router.query.id,
+          userId: userInfo.id,
+        };
+
         getResume(
-          userInfo.id,
+          data,
           (res) => {
             const resArray = res.data.response;
             setResume(resArray);

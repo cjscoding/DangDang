@@ -70,8 +70,13 @@ function Resume({
   const onSetCurUser = (userId) => setCurUserId(userId);
 
   const getCurUserResume = () => {
+    const data = {
+      studyId: router.query.id,
+      userId: curUserId,
+    };
+    
     getResume(
-      curUserId,
+      data,
       (res) => {
         const resArray = res.data.response;
         setResumeList(resArray);
@@ -116,31 +121,35 @@ function Resume({
         <div className={styles.memberListBox}>
           <h4>팀원 목록이당</h4>
           {roomMembers?.map((member) => {
-            const imgUrl = member.imageUrl.slice(0, 4) === "http"?member.imageUrl:`${BACKEND_URL}/files/images/${member.imageUrl}`
-            return(
-            <div key={member.id} className={styles.member}>
-              <div className={styles.imgBox}>
-                {member.imageUrl !== null &&
-                member.imageUrl !== "default.jpg" ? (
-                  <img src={imgUrl} />
+            const imgUrl =
+              member.imageUrl.slice(0, 4) === "http"
+                ? member.imageUrl
+                : `${BACKEND_URL}/files/images/${member.imageUrl}`;
+            return (
+              <div key={member.id} className={styles.member}>
+                <div className={styles.imgBox}>
+                  {member.imageUrl !== null &&
+                  member.imageUrl !== "default.jpg" ? (
+                    <img src={imgUrl} />
+                  ) : (
+                    <img src="/images/dangdang_1.png" />
+                  )}
+                </div>
+                {member.id === curUserId ? (
+                  <button
+                    onClick={() => onSetCurUser(member.id)}
+                    className={styles.currentMember}
+                  >
+                    {member.nickName}
+                  </button>
                 ) : (
-                  <img src="/images/dangdang_1.png" />
+                  <button onClick={() => onSetCurUser(member.id)}>
+                    {member.nickName}
+                  </button>
                 )}
               </div>
-              {member.id === curUserId ? (
-                <button
-                  onClick={() => onSetCurUser(member.id)}
-                  className={styles.currentMember}
-                >
-                  {member.nickName}
-                </button>
-              ) : (
-                <button onClick={() => onSetCurUser(member.id)}>
-                  {member.nickName}
-                </button>
-              )}
-            </div>
-          )})}
+            );
+          })}
         </div>
 
         <div className={styles.contents}>

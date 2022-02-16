@@ -168,6 +168,8 @@ export default function CreateRoom() {
             <input
               type="number"
               name="number"
+              min="1"
+              max="4"
               value={roomInfo.number}
               onChange={onChange}
             />
