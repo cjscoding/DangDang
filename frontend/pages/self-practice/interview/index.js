@@ -197,7 +197,11 @@ function Interview({wsSocket, sessionId, questions, setWSSessionId, pushRecorded
     skipButton.addEventListener("click", skipQuestion);
     volVar.addEventListener("change", setVolume);
     record();
-
+    window.addEventListener("beforeunload", ()=>{
+      const delMsg = JSON.stringify({id:"del"});
+      ws.send(delMsg);
+      ws.close();
+    });
     return () => {
       timer.stopTimer()
       volumeButton.removeEventListener("click", controlVolume);

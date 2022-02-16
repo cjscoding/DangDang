@@ -76,8 +76,12 @@ export default function CreateRoom() {
 
   //input values
   const onChange = (event) => {
-    const { name, value } = event.target;
-
+    let { name, value } = event.target;
+    if(name === "number"){
+      value = Math.round(value)
+      if(value < 1) value = 1
+      if(value > 4) value = 4
+    }
     const newInfo = {
       ...roomInfo,
       [name]: value,

@@ -69,6 +69,12 @@ function AddQuestions({wsSocket, questions, isLogin, addQuestion, removeQuestion
       setQListNum(parseInt(event.target.value))
     }
     qKindEl.addEventListener("change", changeQListNum)
+
+    window.addEventListener("beforeunload", ()=>{
+      const delMsg = JSON.stringify({id:"del"});
+      ws.send(delMsg);
+      ws.close();
+    });
     return () => {
       qKindEl.removeEventListener("change", changeQListNum)
     }

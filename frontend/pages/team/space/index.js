@@ -136,6 +136,7 @@ function TeamSpace({
         console.log(err, "가입승인 실패");
       }
     );
+    if(roomMembers.length >= roomInfo.number) alert("정원 초과입니다.")
   };
 
   //팀 수정페이지로 이동

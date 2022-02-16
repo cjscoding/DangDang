@@ -53,6 +53,12 @@ function CheckDevices({preparedQuestions, wsSocket, isQs, setQuestions}) {
     }
     const nextBtnEl = nextBtn.current
     nextBtnEl.addEventListener("click", goTointerview)
+
+    window.addEventListener("beforeunload", ()=>{
+      const delMsg = JSON.stringify({id:"del"});
+      ws.send(delMsg);
+      ws.close();
+    });
     return () => {
       nextBtnEl.removeEventListener("click", goTointerview)
     }
