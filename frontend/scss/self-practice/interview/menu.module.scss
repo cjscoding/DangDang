@@ -1,0 +1,104 @@
+@import "../../common/mixins.scss";
+@import "../../common/variables.scss";
+
+.title {
+  font-size: 1.7rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  color: $main-color;
+}
+
+.pindicator {
+  background-color: $background-color;
+  display: flex;
+  // margin: 1rem auto 0;
+  width: 18rem;
+}
+.pindicator .bullet {
+  flex: 1;
+  position: relative;
+  text-align: center;
+  transform-style: preserve-3d;
+}
+.pindicator .bullet::before,
+.pindicator .bullet::after {
+  content: "";
+  display: block;
+  position: absolute;
+  height: 0.2rem;
+  top: 1rem;
+  transform: translate3d(0, 0, -1px);
+}
+.pindicator .bullet::before {
+  background-color: lightgray;
+  width: 100%;
+}
+.pindicator .bullet::after {
+  background-color: black;
+  transition: opacity 0.25s ease-out;
+  opacity: 0;
+  width: 100%;
+}
+.pindicator .bullet:first-child::before,
+.pindicator .bullet:first-child::after {
+  left: 50%;
+  width: 50%;
+}
+.pindicator .bullet:last-child::before,
+.pindicator .bullet:last-child::after {
+  width: 50%;
+}
+
+.pindicator .icon {
+  background-color: lightgray;
+  border-radius: 100%;
+  color: transparent;
+  // cursor: pointer;
+  font-size: 1rem;
+  display: inline-block;
+  height: 2em;
+  line-height: 2;
+  text-align: center;
+  transition: background-color 0.25s ease-out;
+  width: 2em;
+  span {
+    color: white;
+    font-weight: bold;
+  }
+}
+.pindicator .iconcur {
+  border-radius: 100%;
+  color: transparent;
+  // cursor: pointer;
+  font-size: 1rem;
+  display: inline-block;
+  height: 2em;
+  line-height: 2;
+  text-align: center;
+  transition: background-color 0.25s ease-out;
+  width: 2em;
+  span {
+    color: white;
+    font-weight: bold;
+  }
+}
+.pindicator .text {
+  color: $gray-color;
+  font-size: 0.75rem;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  transition: background-color 0.25s ease-out;
+}
+
+.first {
+  background-color: $red-color;
+}
+
+.second {
+  background-color: $yellow-color;
+}
+
+.third {
+  background-color: $purple-color;
+}
