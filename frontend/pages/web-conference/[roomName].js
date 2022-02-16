@@ -40,6 +40,8 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
   const isChatTrue = useRef();
   const isChatFalse = useRef();
 
+  const [isSmall, setIsSmall] = useState(false)
+
   const chatInput = useRef();
   const chatInputBtn = useRef();
   const chatContentBox = useRef();
@@ -83,25 +85,24 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
       video.id = "video-" + idName;
       video.autoplay = true;
       video.controls = false;
-      if (this.id === "screen") {
-        video.style.height = "calc(60vh - 1.5rem)";
-        video.style.width = "calc(106.667vh - 2.667rem)";
-        video.style.maxHeight = "calc(675px - 15rem)";
-        video.style.maxWidth = "calc(1200px - 26.667rem)";
-        video.style.minHeight = "28.5rem";
-        video.style.minWidth = "50.667rem";
+      video.style.border = "2px"
+      video.style.borderStyle = "solid"
+      video.style.backgroundColor = "black"
+      video.style.borderRadius = "10px"
+      if(this.id === "screen") {
+        video.style.width = "960px"
+        video.style.height = "540px"
+        video.style.borderColor = "#6bbfca";
+        video.style.backgroundColor = "#6bbfca";
+        video.style.borderRadius = "0"
       }
-
-      video.style.border = "2px";
-      video.style.borderStyle = "solid";
-      video.style.backgroundColor = "black";
-      if (video.sinkId !== speakerId) video.setSinkId(speakerId);
+      if(video.sinkId !== speakerId) video.setSinkId(speakerId)
       container.appendChild(video);
       container.appendChild(span);
-      container.style =
-        "display: flex; flex-direction: column; align-items: center;";
-
-      if (!isCam) {
+      container.style = "display: flex; flex-direction: column; align-items: center;"
+      container.style.paddingRight = "1rem"
+      container.style.paddingLeft = "1rem"
+      if(!isCam) {
         // pass
       } else if (this.id === "screen") {
         document.getElementById("screens").appendChild(container);
@@ -311,8 +312,8 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
       const constraints = {
         audio: true,
         video: {
-          width: 800, // 최대 너비
-          height: 450, // 최대 높이
+          width: 960, // 최대 너비
+          height: 540, // 최대 높이
           frameRate: 10, // 최대 프레임
         },
       };
@@ -400,9 +401,9 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
             screenShareTryState = true;
             break;
           case "notScreenShareTry":
-            screenShareAppliedUser = jsonMsg.name;
-            screenShareTryState = false;
-            break;
+            screenShareAppliedUser = ""
+            screenShareTryState = false
+            break
           case "screenShare":
             screenShareAppliedUser = jsonMsg.name;
             screenShareState = true;
@@ -700,6 +701,21 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
       name: myIdName,
       room: roomName,
     });
+    let isSmallState = false
+    const videoContainerEl = document.getElementById("videoContainer")
+    function detectResize() {
+      const saveState = isSmallState
+      if(videoContainerEl.clientHeight < 720) {
+        isSmallState = true
+      }else {
+        isSmallState = false
+      }
+      if(saveState !== isSmallState) {
+        setIsSmall(isSmallState)
+      }
+    }
+    detectResize()
+    window.addEventListener("resize", detectResize)
 
     function beforeunload() {
       if (stream) {
@@ -732,6 +748,7 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
       exitBtnEl.removeEventListener("click", exitRoom);
       isChatTrueEl.removeEventListener("click", setIsChatTrue);
       isChatFalseEl.removeEventListener("click", setIsChatFalse);
+      window.removeEventListener("resize", detectResize)
       // 방 퇴장
       window.removeEventListener("beforeunload", beforeunload);
       beforeunload();
@@ -819,115 +836,102 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
   }, [screenShareUser]);
 
   useEffect(() => {
-    document.getElementById("videoContainer").style.flexDirection = "column";
-    document.getElementById("participants").style.width = "calc(90vw - 24rem)";
-    if (mode) {
-      if (myIdName === volunteer) {
-        if (screenShare) {
-          const participantsEl = document.getElementById("participants");
-          for (let videoContainer of participantsEl.childNodes) {
-            const video = videoContainer.firstChild;
-            videoContainer.style.marginRight = "1rem";
-            if (videoContainer.id === volunteer) {
-              videoContainer.style.display = "none";
+    const participantsEl = document.getElementById("participants")
+    participantsEl.style.flexDirection = "row"
+    if(screenShare) {
+      const container = document.getElementById("videoContainer")
+      if(isSmall) {
+        container.style.flexDirection = "row"
+        participantsEl.style.flexDirection = "column"
+      }else {
+        container.style.flexDirection = "column"
+      }
+    }
+    for(let videoContainer of participantsEl.childNodes) {
+      if(videoContainer.id === myIdName) {
+        participantsEl.appendChild(videoContainer)
+      }
+      videoContainer.style.display = "flex"
+      videoContainer.style.paddingRight = "1rem"
+      videoContainer.style.paddingLeft = "1rem"
+      videoContainer.style.width = "auto"
+      const video = videoContainer.firstChild
+      video.style.borderRadius = "10px"
+    }
+    if(mode) {
+      if(myIdName === volunteer){
+        if(screenShare) {
+          const participantsEl = document.getElementById("participants")
+          for(let videoContainer of participantsEl.childNodes) {
+            if(videoContainer.id === volunteer) {
+              videoContainer.style.display = "none"
             }
-            video.style.width = "calc(35.556vh - 3.556rem)";
-            video.style.height = "calc(20vh - 2rem)";
-            video.style.maxHeight = "calc(19.688vh - 2.344rem)";
-            video.style.maxWidth = "calc(35vh - 4.16rem)";
-            video.style.minHeight = "8.5rem";
-            video.style.minWidth = "15.111rem";
-            video.style.borderRadius = "7px";
+            const video = videoContainer.firstChild
+            video.style.width = "240px"
+            video.style.height = "135px"
           }
-          document.getElementById("videoContainer").style.flexDirection = "row";
-          document.getElementById("participants").style.width =
-            "calc(35.556vh - 3.556rem)";
-        } else {
-          const participantsEl = document.getElementById("participants");
-          let inteviewerNum = participantsEl.childNodes.length - 1;
-          if (inteviewerNum > 2) inteviewerNum = 2;
-          for (let videoContainer of participantsEl.childNodes) {
-            const video = videoContainer.firstChild;
-            videoContainer.style.marginRight = "1rem";
-            if (videoContainer.id === volunteer) {
-              videoContainer.style.display = "none";
+        }else {
+          const participantsEl = document.getElementById("participants")
+          let inteviewerNum = participantsEl.childNodes.length - 1
+          for(let videoContainer of participantsEl.childNodes) {
+            if(videoContainer.id === volunteer) {
+              videoContainer.style.display = "none"
             }
-            video.style.width = `calc((90vw - 24rem - 2rem) / ${inteviewerNum})`;
-            video.style.height = `calc((90vw - 24rem - 2rem) * 9 / 16 / ${inteviewerNum})`;
-            video.style.maxHeight = `calc(38.5rem / ${inteviewerNum})`;
-            video.style.maxWidth = `calc(68.444rem / ${inteviewerNum})`;
-            video.style.minHeight = `calc(459px / ${inteviewerNum})`;
-            video.style.minWidth = `calc(816px / ${inteviewerNum})`;
-            video.style.borderRadius = "7px";
+            const video = videoContainer.firstChild
+            video.style.width = "800px"
+            video.style.height = "450px"
+            if(inteviewerNum == 2) {
+              videoContainer.style.width = "600px"
+            }
+            if(inteviewerNum == 3) {
+              videoContainer.style.width = "400px"
+            }
           }
         }
-      } else {
-        if (screenShare) {
-          const participantsEl = document.getElementById("participants");
-          for (let videoContainer of participantsEl.childNodes) {
-            const video = videoContainer.firstChild;
-            videoContainer.style.marginRight = "1rem";
-            if (videoContainer.id !== volunteer) {
-              videoContainer.style.display = "none";
+      }else{
+        if(screenShare) {
+          const participantsEl = document.getElementById("participants")
+          for(let videoContainer of participantsEl.childNodes) {
+            if(videoContainer.id !== volunteer){// && videoContainer.id !== myIdName) {
+              videoContainer.style.display = "none"
             }
-            video.style.width = "calc(35.556vh - 3.556rem)";
-            video.style.height = "calc(20vh - 2rem)";
-            video.style.maxHeight = "calc(19.688vh - 2.344rem)";
-            video.style.maxWidth = "calc(35vh - 4.16rem)";
-            video.style.minHeight = "8.5rem";
-            video.style.minWidth = "15.111rem";
-            video.style.borderRadius = "7px";
+            const video = videoContainer.firstChild
+            video.style.width = "240px"
+            video.style.height = "135px"
           }
-        } else {
-          const participantsEl = document.getElementById("participants");
-          for (let videoContainer of participantsEl.childNodes) {
-            const video = videoContainer.firstChild;
-            videoContainer.style.marginRight = "1rem";
-            if (videoContainer.id !== volunteer) {
-              videoContainer.style.display = "none";
+        }else {
+          const participantsEl = document.getElementById("participants")
+          for(let videoContainer of participantsEl.childNodes) {
+            if(videoContainer.id !== volunteer){// && videoContainer.id !== myIdName) {
+              videoContainer.style.display = "none"
             }
-            video.style.width = "calc((90vw - 24rem - 2rem))";
-            video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 16)";
-            video.style.maxHeight = "38.5rem";
-            video.style.maxWidth = "68.444rem";
-            video.style.minHeight = "459px";
-            video.style.minWidth = "816px";
-            video.style.borderRadius = "7px";
+            if(videoContainer.id === volunteer) {
+              const video = videoContainer.firstChild
+              video.style.width = "800px"
+              video.style.height = "450px"
+            }
           }
         }
       }
-    } else {
-      if (screenShare) {
-        const participantsEl = document.getElementById("participants");
-        for (let videoContainer of participantsEl.childNodes) {
-          const video = videoContainer.firstChild;
-          videoContainer.style.display = "flex";
-          videoContainer.style.marginRight = "1rem";
-          video.style.width = "calc(35.556vh - 3.556rem)";
-          video.style.height = "calc(20vh - 2rem)";
-          video.style.maxHeight = "calc(19.688vh - 2.344rem)";
-          video.style.maxWidth = "calc(35vh - 4.16rem)";
-          video.style.minHeight = "8.5rem";
-          video.style.minWidth = "15.111rem";
-          video.style.borderRadius = "7px";
+    }else {
+      if(screenShare) {
+        /////////////////////////////////////////////////////////////
+        const participantsEl = document.getElementById("participants")
+        for(let videoContainer of participantsEl.childNodes) {
+          const video = videoContainer.firstChild
+          video.style.width = "240px"
+          video.style.height = "135px"
         }
-      } else {
-        const participantsEl = document.getElementById("participants");
-        for (let videoContainer of participantsEl.childNodes) {
-          const video = videoContainer.firstChild;
-          videoContainer.style.display = "flex";
-          videoContainer.style.marginRight = "1rem";
-          video.style.width = "calc((90vw - 24rem - 2rem) / 2)";
-          video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)";
-          video.style.maxHeight = "calc(40vh - 1.5rem)";
-          video.style.maxWidth = "calc(71.111vh - 2.667rem";
-          video.style.minHeight = "8.5rem";
-          video.style.minWidth = "15.111rem";
-          video.style.borderRadius = "7px";
+      }else {
+        const participantsEl = document.getElementById("participants")
+        for(let videoContainer of participantsEl.childNodes) {
+          const video = videoContainer.firstChild
+          video.style.width = "480px"
+          video.style.height = "270px"
         }
       }
     }
-  }, [mode, screenShare, volunteer, screenCompatibility]);
+  }, [mode, screenShare, volunteer, screenCompatibility, isSmall]);
 
   return (
     <div className={styles.container}>
@@ -939,100 +943,169 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
             <div className={styles.faces} id="participants"></div>
           </div>
 
-          <div className={styles.btnBar}>
-            <div className={styles.eachBtn}>
-              <span ref={cameraBtn}>
-                <span style={isCamera ? {} : { display: "none" }}>
-                  <div className={styles.iconBox}>
-                    <i className="fas fa-video"></i>
-                  </div>
-                  <span>비디오 끄기</span>
+
+          <div
+            style={volunteer === myIdName ? { display: "none" } : {}}
+            className={styles.subContainer}
+          >
+            <div className={styles.subContainerTopBar}>
+              <div className={styles.header}>
+                <span
+                  className={`${styles.chatMenuBtn} + " " + ${
+                    isChat ? styles.selectedMenuBtn : ""
+                  }`}
+                  ref={isChatTrue}
+                >
+                  채팅
                 </span>
 
-                <span style={!isCamera ? {} : { display: "none" }}>
-                  <div className={styles.iconBox}>
-                    <i class="fas fa-video-slash"></i>
-                  </div>
-                  <span>비디오 켜기</span>
+                <span
+                  style={mode ? {} : { display: "none" }}
+                  className={`${styles.letterMenuBtn} + " " + ${
+                    !isChat ? styles.selectedMenuBtn : ""
+                  }`}
+                  ref={isChatFalse}
+                >
+                  자소서
                 </span>
+              </div>
+
+              <span
+                style={mode ? {} : { display: "none" }}
+                className={styles.timer}
+              >
+                <Timer />
+              </span>
+            </div>
+
+            <div
+              style={isChat ? {} : { display: "none" }}
+              className={styles.chatContainer}
+              id="chat"
+            >
+              <div ref={chatContentBox} className={styles.chat}></div>
+
+              <div className={styles.chatInput}>
+                <input ref={chatInput} placeholder="메시지를 입력하세요..." />
+                <button ref={chatInputBtn}>
+                  <i className="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </div>
+
+            <div
+              style={!isChat ? {} : { display: "none" }}
+              className={styles.letterContainer}
+            >
+              <pre className={styles.letter} id="letter"></pre>
+            </div>
+          </div>
+        </div>
+
+
+        <div className={styles.btnBar}>
+          <div className={styles.eachBtn}>
+            <span className={styles.cursor} ref={cameraBtn}>
+              <span style={isCamera ? {} : { display: "none" }}>
+                <div className={styles.iconBox}>
+                  <i className="fas fa-video"></i>
+                </div>
               </span>
 
+              <span style={!isCamera ? {} : { display: "none" }}>
+                <div className={styles.iconBox}>
+                  <i className="fas fa-video-slash"></i>
+                </div>
+              </span>
+            </span>
+
+            <span>
+              <span style={isCamera ? {} : { display: "none" }}>비디오 끄기</span>
+              <span style={!isCamera ? {} : { display: "none" }}>비디오 켜기</span>
               <CameraSelect />
-            </div>
+            </span>
+          </div>
 
-            <div className={styles.eachBtn}>
-              <span ref={micBtn}>
-                <span style={isMic ? {} : { display: "none" }}>
-                  <div className={styles.iconBox}>
-                    <i className="fas fa-microphone"></i>
-                  </div>
-                  <span>마이크 끄기</span>
-                </span>
-
-                <span style={!isMic ? {} : { display: "none" }}>
-                  <div className={styles.iconBox}>
-                    <i class="fas fa-microphone-slash"></i>
-                  </div>
-                  <span>마이크 켜기</span>
-                </span>
+          <div className={styles.eachBtn}>
+            <span className={styles.cursor} ref={micBtn}>
+              <span style={isMic ? {} : { display: "none" }}>
+                <div className={styles.iconBox}>
+                  <i className="fas fa-microphone"></i>
+                </div>
               </span>
 
+              <span style={!isMic ? {} : { display: "none" }}>
+                <div className={styles.iconBox}>
+                  <i className="fas fa-microphone-slash"></i>
+                </div>
+              </span>
+            </span>
+
+            <span>
+              <span style={isMic ? {} : { display: "none" }}>마이크 끄기</span>
+              <span style={!isMic ? {} : { display: "none" }}>마이크 켜기</span>
               <MicSelect />
-            </div>
+            </span>
+          </div>
 
-            <div className={styles.eachBtn}>
-              <span ref={speakerBtn}>
-                <span style={isSpeaker ? {} : { display: "none" }}>
-                  <div className={styles.iconBox}>
-                    <i className="fas fa-volume-up"></i>
-                  </div>
-                  <span>음소거</span>
-                </span>
-
-                <span style={!isSpeaker ? {} : { display: "none" }}>
-                  <div className={styles.iconBox}>
-                    <i class="fas fa-volume-mute"></i>
-                  </div>
-                  <span>음소거 해제</span>
-                </span>
+          <div className={styles.eachBtn}>
+            <span className={styles.cursor} ref={speakerBtn}>
+              <span style={isSpeaker ? {} : { display: "none" }}>
+                <div className={styles.iconBox}>
+                  <i className="fas fa-volume-up"></i>
+                </div>
               </span>
 
+              <span style={!isSpeaker ? {} : { display: "none" }}>
+                <div className={styles.iconBox}>
+                  <i className="fas fa-volume-mute"></i>
+                </div>
+              </span>
+            </span>
+
+            <span>
+              <span style={isSpeaker ? {} : { display: "none" }}>음소거</span>
+              <span style={!isSpeaker ? {} : { display: "none" }}>음소거 해제</span>
               <SpeakerSelect />
-            </div>
+            </span>
+          </div>
 
-            <div className={styles.eachBtn}>
-              <span>
-                <span
-                  style={screenShareTry ? { display: "none" } : {}}
-                  ref={screenBtn}
-                >
-                  <div className={styles.iconBox}>
-                    <i className="fas fa-chalkboard"></i>
-                  </div>
-                  <span>화면 공유</span>
-                </span>
+          <div className={styles.eachBtn}>
+            <span className={styles.cursor}>
+              <span
+                style={screenShareTry ? { display: "none" } : {}}
+                ref={screenBtn}
+              >
+                <div className={styles.iconBox}>
+                  <i className="fas fa-chalkboard"></i>
+                </div>
               </span>
+            </span>
 
-              <span>
-                <span
-                  style={!screenShareTry ? { display: "none" } : {}}
-                  className={styles.nonCursor}
-                >
-                  <div className={styles.iconBox}>
-                    <i className="fas fa-chalkboard-teacher"></i>
-                  </div>
-                  <span>화면 공유 종료</span>
-                </span>
+            <span>
+              <span
+                style={!screenShareTry ? { display: "none" } : {}}
+                className={styles.nonCursor}
+              >
+                <div className={styles.iconBox}>
+                  <i className="fas fa-chalkboard-teacher"></i>
+                </div>
               </span>
-            </div>
+            </span>
 
-            <div className={styles.eachBtn} ref={changeModeBtn}>
+            <span>
+              <span style={screenShareTry ? { display: "none" } : {}}>화면 공유</span>
+              <span style={!screenShareTry ? { display: "none" } : {}}>화면 공유 종료</span>
+            </span>
+          </div>
+
+          <div className={styles.cursor} className={styles.eachBtn}>
+            <span ref={changeModeBtn}>
               <span>
                 <span style={mode ? { display: "none" } : {}}>
                   <div className={styles.iconBox}>
                     <i className="fas fa-user-tie"></i>
                   </div>
-                  <span>지원자 모드</span>
                 </span>
               </span>
 
@@ -1041,78 +1114,26 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
                   <div className={styles.iconBox}>
                     <i className="fas fa-users"></i>
                   </div>
-                  <span>면접자 모드</span>
                 </span>
               </span>
-            </div>
-
-            <div className={styles.eachBtn} ref={exitBtn}>
-              <span>
-                <span>
-                  <div className={styles.iconBox}>
-                    <i className="fas fa-times"></i>
-                  </div>
-                  <span>종료</span>
-                </span>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div
-          style={volunteer === myIdName ? { display: "none" } : {}}
-          className={styles.subContainer}
-        >
-          <div className={styles.subContainerTopBar}>
-            <div className={styles.header}>
-              <span
-                className={`${styles.chatMenuBtn} + " " + ${
-                  isChat ? styles.selectedMenuBtn : ""
-                }`}
-                ref={isChatTrue}
-              >
-                채팅
-              </span>
-
-              <span
-                style={mode ? {} : { display: "none" }}
-                className={`${styles.letterMenuBtn} + " " + ${
-                  !isChat ? styles.selectedMenuBtn : ""
-                }`}
-                ref={isChatFalse}
-              >
-                자소서
-              </span>
-            </div>
-
-            <span
-              style={mode ? {} : { display: "none" }}
-              className={styles.timer}
-            >
-              <Timer />
+            </span>
+            <span>
+              <span style={mode ? { display: "none" } : {}}>지원자 모드</span>
+              <span style={!mode ? { display: "none" } : {}}>면접자 모드</span>
             </span>
           </div>
 
-          <div
-            style={isChat ? {} : { display: "none" }}
-            className={styles.chatContainer}
-            id="chat"
-          >
-            <div ref={chatContentBox} className={styles.chat}></div>
-
-            <div className={styles.chatInput}>
-              <input ref={chatInput} placeholder="메시지를 입력하세요..." />
-              <button ref={chatInputBtn}>
-                <i className="fas fa-paper-plane"></i>
-              </button>
-            </div>
-          </div>
-
-          <div
-            style={!isChat ? {} : { display: "none" }}
-            className={styles.letterContainer}
-          >
-            <pre className={styles.letter} id="letter"></pre>
+          <div className={styles.cursor} className={styles.eachBtn}>
+            <span>
+              <span  ref={exitBtn}>
+                <div className={styles.iconBox}>
+                  <i className="fas fa-times"></i>
+                </div>
+              </span>
+            </span>
+            <span>
+              <span>종료</span>
+            </span>
           </div>
         </div>
       </div>
