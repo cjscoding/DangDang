@@ -20,6 +20,7 @@
   @include flex-center;
   flex-direction: column;
   min-height: calc(100vh - #{$footer-height});
+  position: relative;
 }
 
 .isNavBar {
