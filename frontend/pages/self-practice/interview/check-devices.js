@@ -7,37 +7,43 @@ import SpeakerSelect from "../../../components/webRTC/devices/SpeakerSelect";
 import MyFace from "../../../components/webRTC/MyFace";
 import styles from "../../../scss/self-practice/interview/check-devices.module.scss";
 import { BACKEND_URL } from "../../../config";
+import axios from "axios";
 
-export async function getServerSideProps() {
-  const params = {
-    page: 0,
-    size: 5
-  }
-  let preparedQuestions;
-  // SSR은 localStorage가 없음
-  await fetch(`${BACKEND_URL}/interview/recommend`, {
-    method: "get",
-    params
-  })
-    .then((res) => {
-      preparedQuestions = res.data.response.content.map(question => {
-        return {
-          field: question.field,
-          question: question.question
-        }
-      })
-    })
-    .catch((err) => {
-      preparedQuestions = [
-        {field: "미확인", question: "자기소개를 해주세요."},
-        {field: "미확인", question: "지원자가 기업을 선택하는 기준이 무엇인가요?"},
-        {field: "미확인", question: "동료와 갈등이 있다면 어떻게 풀어나가겠습니까?"},
-        {field: "미확인", question: "인생관이나 좌우명을 말해주세요."},
-        {field: "미확인", question: "스스로 부족한 점에 대해 이야기해 보세요."},
-      ]
-    })
-  return {props: {preparedQuestions}};
-};
+// export async function getServerSideProps() {
+//   const params = {
+//     page: 0,
+//     size: 5
+//   }
+//   let preparedQuestions;
+//   // SSR은 localStorage가 없음
+//   await axios({
+//     method: "get",
+//     url: `${BACKEND_URL}/interview/recommend`,
+//     params: params
+//   })
+//     .then((res) => {
+//       console.log("#############################")
+//       console.log(res)
+//       preparedQuestions = res.data.response.content.map(question => {
+//         return {
+//           field: question.field,
+//           question: question.question
+//         }
+//       })
+//     })
+//     .catch((err) => {
+//       console.log("#############################")
+//       console.log(err)
+//       preparedQuestions = [
+//         {field: "미확인", question: "자기소개를 해주세요."},
+//         {field: "미확인", question: "지원자가 기업을 선택하는 기준이 무엇인가요?"},
+//         {field: "미확인", question: "동료와 갈등이 있다면 어떻게 풀어나가겠습니까?"},
+//         {field: "미확인", question: "인생관이나 좌우명을 말해주세요."},
+//         {field: "미확인", question: "스스로 부족한 점에 대해 이야기해 보세요."},
+//       ]
+//     })
+//   return {props: {preparedQuestions}};
+// };
 function mapStateToProps(state) {
   return {
     wsSocket: state.wsReducer.ws,
@@ -45,6 +51,7 @@ function mapStateToProps(state) {
   };
 }
 import { setQuestions } from "../../../store/actions/questionAction";
+import { getRecommendedQuestions } from "../../../api/interviewQuestion";
 function mapDispatchToProps(dispatch) {
   return {
     setQuestions: (questions) => dispatch(setQuestions(questions))
@@ -67,7 +74,32 @@ function CheckDevices({preparedQuestions, wsSocket, isQs, setQuestions}) {
     }
 
     if(!isQs) {
-      setQuestions(preparedQuestions);
+      const params = {
+        page: 0,
+        size: 5
+      }
+      let preparedQuestions;
+      // SSR은 localStorage가 없음
+      getRecommendedQuestions({params}, 
+        (res) => {
+          setQuestions(res.data.response.content.map(question => {
+            return {
+              field: question.field,
+              question: question.question
+            }
+          }))
+        },
+        (err) => {
+          setQuestions([
+            {field: "미확인", question: "자기소개를 해주세요."},
+            {field: "미확인", question: "지원자가 기업을 선택하는 기준이 무엇인가요?"},
+            {field: "미확인", question: "동료와 갈등이 있다면 어떻게 풀어나가겠습니까?"},
+            {field: "미확인", question: "인생관이나 좌우명을 말해주세요."},
+            {field: "미확인", question: "스스로 부족한 점에 대해 이야기해 보세요."},
+          ])
+        }
+      )
+      // setQuestions(preparedQuestions);
     }
 
     function goTointerview() {

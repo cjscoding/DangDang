@@ -11,6 +11,9 @@ export function getMyInterviewQuestions(params, success, fail) {
 export function getMyBookmarkQuestions(params, success, fail) {
   api.get(`/interview/bookmark`, {params}).then(success).catch(fail);
 }
+export function getRecommendedQuestions(params, success, fail) {
+  api.get(`/interview/recommend`, {params}).then(success).catch(fail);
+}
 export function addInterviewQuestion(params, success, fail) {
   api.post(`/interview`, params).then(success).catch(fail);
 }
