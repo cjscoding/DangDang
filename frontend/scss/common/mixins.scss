@@ -49,6 +49,8 @@
     opacity: 0.6;
   }
   &:hover {
+    transform: scale(1.05);
+    transition: 0.2s ease;
     opacity: 1;
     font-weight: 800;
     cursor: pointer;

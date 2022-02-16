@@ -1032,7 +1032,7 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
                   <div className={styles.iconBox}>
                     <i className="fas fa-user-tie"></i>
                   </div>
-                  <span>지원자 모드</span>
+                  <span>면접 모드</span>
                 </span>
               </span>
 
@@ -1041,7 +1041,7 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
                   <div className={styles.iconBox}>
                     <i className="fas fa-users"></i>
                   </div>
-                  <span>면접자 모드</span>
+                  <span>일반 모드</span>
                 </span>
               </span>
             </div>
