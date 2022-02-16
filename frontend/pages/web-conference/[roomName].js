@@ -807,10 +807,10 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
       if (video.id === `video-${screenShareUser}`) {
         video.style.border = "2px";
         video.style.borderStyle = "solid";
-        video.style.borderColor = "#BDECB6";
-        video.style.backgroundColor = "#BDECB6";
+        video.style.borderColor = "#6bbfca";
+        video.style.backgroundColor = "#6bbfca";
       } else {
-        video.style.border = "2px";
+        video.style.border = "1px";
         video.style.borderStyle = "solid";
         video.style.borderColor = "black";
         video.style.backgroundColor = "black";
@@ -837,7 +837,7 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
             video.style.maxWidth = "calc(35vh - 4.16rem)";
             video.style.minHeight = "8.5rem";
             video.style.minWidth = "15.111rem";
-            video.style.borderRadius = "0.6rem";
+            video.style.borderRadius = "7px";
           }
           document.getElementById("videoContainer").style.flexDirection = "row";
           document.getElementById("participants").style.width =
@@ -858,7 +858,7 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
             video.style.maxWidth = `calc(68.444rem / ${inteviewerNum})`;
             video.style.minHeight = `calc(459px / ${inteviewerNum})`;
             video.style.minWidth = `calc(816px / ${inteviewerNum})`;
-            video.style.borderRadius = "1rem";
+            video.style.borderRadius = "7px";
           }
         }
       } else {
@@ -876,7 +876,7 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
             video.style.maxWidth = "calc(35vh - 4.16rem)";
             video.style.minHeight = "8.5rem";
             video.style.minWidth = "15.111rem";
-            video.style.borderRadius = "0.6rem";
+            video.style.borderRadius = "7px";
           }
         } else {
           const participantsEl = document.getElementById("participants");
@@ -892,7 +892,7 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
             video.style.maxWidth = "68.444rem";
             video.style.minHeight = "459px";
             video.style.minWidth = "816px";
-            video.style.borderRadius = "1rem";
+            video.style.borderRadius = "7px";
           }
         }
       }
@@ -909,7 +909,7 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
           video.style.maxWidth = "calc(35vh - 4.16rem)";
           video.style.minHeight = "8.5rem";
           video.style.minWidth = "15.111rem";
-          video.style.borderRadius = "0.6rem";
+          video.style.borderRadius = "7px";
         }
       } else {
         const participantsEl = document.getElementById("participants");
@@ -923,7 +923,7 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
           video.style.maxWidth = "calc(71.111vh - 2.667rem";
           video.style.minHeight = "8.5rem";
           video.style.minWidth = "15.111rem";
-          video.style.borderRadius = "1rem";
+          video.style.borderRadius = "7px";
         }
       }
     }
@@ -931,7 +931,6 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user }) {
 
   return (
     <div className={styles.container}>
-      <h2>당당 면접 스터디</h2>
 
       <div className={styles.mainContainer}>
         <div className={styles.mainSection}>
