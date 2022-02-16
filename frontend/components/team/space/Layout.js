@@ -107,18 +107,18 @@ export default function Layout({ roomInfo, host, image, href, btnText }) {
             <a>{btnText}</a>
           </button>
         ) : (
-          <button className={styles.registBtn}>
-            <Link
-              href={{
-                pathname: `${href}`,
-                query: {
-                  id: studyId,
-                },
-              }}
-            >
-              <a>{btnText}</a>
-            </Link>
-          </button>
+          <Link
+            href={{
+              pathname: `${href}`,
+              query: {
+                id: studyId,
+              },
+            }}
+          >
+            <button className={styles.registBtn}>
+                <a>{btnText}</a>
+            </button>
+          </Link>
         )}
       </div>
     </div>

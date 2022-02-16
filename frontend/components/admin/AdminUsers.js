@@ -5,6 +5,7 @@ import { setUserList } from "../../store/actions/adminAction";
 import { getAllUserList } from "../../api/admin";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import styles from "../../scss/admin/container.module.scss";
 
 const mapStateToProps = (state) => {
   return {
@@ -46,17 +47,17 @@ function AdminQuestion({ users, setUsers }) {
   return (
     <div>
       <div>
-        <div>
-          <span>아이디</span>
+        <div className={styles.menu}>
+          <span>No.</span>
           <span>닉네임</span>
-          <span>설정</span>
+          <span>등급</span>
         </div>
 
         {users &&
           users.map((user) => <UserListRow key={user.id} user={user} />)}
       </div>
 
-      <div className="pagination">
+      <div className={styles.pagination}>
         <Pagination
           curPage={curPage}
           paginate={paginate}

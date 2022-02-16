@@ -44,7 +44,8 @@ function AddQuestions({wsSocket, questions, isLogin, addQuestion, removeQuestion
       ws = {}
       ws.send = function(){}
       ws.close = function(){}
-      router.push("/404")
+      window.location.href = "/404"
+      // router.push("/404")
     }
 
     const qKindEl = qKind.current
@@ -68,6 +69,12 @@ function AddQuestions({wsSocket, questions, isLogin, addQuestion, removeQuestion
       setQListNum(parseInt(event.target.value))
     }
     qKindEl.addEventListener("change", changeQListNum)
+
+    window.addEventListener("beforeunload", ()=>{
+      const delMsg = JSON.stringify({id:"del"});
+      ws.send(delMsg);
+      ws.close();
+    });
     return () => {
       qKindEl.removeEventListener("change", changeQListNum)
     }

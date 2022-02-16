@@ -3,32 +3,41 @@ import Comment from "../../../components/team/board/Comment";
 
 import { setRoomInfo } from "../../../store/actions/roomAction";
 import { getRoomInfo } from "../../../api/studyroom";
-import { joinTeam } from "../../../api/member";
+import { joinTeam, getWaitings } from "../../../api/member";
 import { createDetailComment } from "../../../api/comment";
 import { BACKEND_URL } from "../../../config";
 
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { useEffect } from "react";
+import Link from "next/link";
 
 const mapStateToProps = (state) => {
   return {
     roomInfo: state.roomReducer.curRoomInfo,
     roomHost: state.roomReducer.curRoomHost,
     comments: state.roomReducer.comments,
+    waitingList: state.roomReducer.waitings,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     setRoomInfo: (roomData) => dispatch(setRoomInfo(roomData)),
+    setWaitings: (waitings) => dispatch(setWaitings(waitings)),
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamDetail);
 
-function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
-  //초기 셋팅
+function TeamDetail({
+  roomInfo,
+  roomHost,
+  comments,
+  waitingList,
+  setRoomInfo,
+  setWaitings,
+}) {
   const router = useRouter();
 
   useEffect(() => {
@@ -47,6 +56,18 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
       },
       (err) => {
         console.log(err, "스터디를 조회할 수 없습니다.");
+      }
+    );
+
+    getWaitings(
+      router.query.id,
+      (res) => {
+        const waitings = res.data.response;
+        setWaitings(waitings);
+        console.log(res, "가입대기명단 조회 성공!");
+      },
+      (err) => {
+        console.log(err, "가입대기명단 조회에 실패하였습니다.");
       }
     );
   }, [router.isReady]);
@@ -86,7 +107,6 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
       (err) => {
         alert("이미 가입한 상태입니다.");
         console.log(err);
-        
       }
     );
   };
@@ -113,9 +133,7 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
     event.target[0].value = "";
   };
 
-  const onMoveKakaoPage = (href) => {
-    window.open(href);
-  };
+  const onMoveKakaoPage = (href) => window.open(href);
 
   return (
     <div className={styles.container}>
@@ -186,9 +204,11 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
       </div>
 
       <div className={styles.backBtnBox}>
-        <button className={styles.registBtn}>
-          <a href="/team/board">목록으로</a>
-        </button>
+        <Link href="/team/board">
+          <button className={styles.registBtn}>
+            목록으로
+          </button>
+        </Link>
       </div>
     </div>
   );

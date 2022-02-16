@@ -5,21 +5,12 @@
   border-bottom: $division-line;
   display: flex;
   flex-direction: column;
-  .questionArea,
-  .answerArea {
+  .questionArea {
     display: grid;
     grid-template-columns: 1fr 4fr;
     padding: 15px 0;
-    gap: 50px;
     &:first-child {
       text-align: center;
-    }
-  }
-  .answerArea {
-    border-top: $division-line;
-    background-color: $background-color;
-    span {
-      padding: 5px 50px;
     }
   }
   .contents {

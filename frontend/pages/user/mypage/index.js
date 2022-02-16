@@ -4,6 +4,7 @@ import Link from "next/link";
 import { leaveDangDang } from "../../../api/user";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
+import { BACKEND_URL } from "../../../config";
 
 function mapStateToProps({ userReducer }) {
   return {
@@ -32,10 +33,13 @@ function userInfo({ user }) {
     );
   };
 
+  console.log(user.imageUrl);
+
   return (
     <div className={styles.myPageContainer}>
       <div className={styles.imageBox}>
-        {user.imageUrl !== null && user.imageUrl !== "default.jpg" ? (
+        {user.imageUrl !== null &&
+        user.imageUrl !== `${BACKEND_URL}/files/images/default.jpg` ? (
           <img src={`${user.imageUrl}`} />
         ) : (
           <img src="/images/dangdang_1.png" />

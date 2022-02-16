@@ -46,7 +46,8 @@ function Interview({wsSocket, sessionId, questions, setWSSessionId, pushRecorded
       ws = {}
       ws.send = function(){}
       ws.close = function(){}
-      router.push("/404")
+      window.location.href = "/404"
+      // router.push("/404")
     }
 
     setSelectedQuestion(questions[0])
@@ -196,7 +197,11 @@ function Interview({wsSocket, sessionId, questions, setWSSessionId, pushRecorded
     skipButton.addEventListener("click", skipQuestion);
     volVar.addEventListener("change", setVolume);
     record();
-
+    window.addEventListener("beforeunload", ()=>{
+      const delMsg = JSON.stringify({id:"del"});
+      ws.send(delMsg);
+      ws.close();
+    });
     return () => {
       timer.stopTimer()
       volumeButton.removeEventListener("click", controlVolume);

@@ -10,6 +10,7 @@ import getVideoConstraints from "../../components/webRTC/getVideoConstraints";
 import styles from "../../scss/web-conference/mainComponent.module.scss";
 import SockJS from "sockjs-client";
 import { WEBRTC_URL } from "../../config";
+import { getStudyResume } from "../../api/resume";
 
 function mapStateToProps(state) {
   return {
@@ -24,14 +25,19 @@ export default connect(mapStateToProps, null)(Conference);
 function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
   const [me, setMe] = useState(null)
   const [mode, setMode] = useState(false) // 면접모드 true, 일반모드 false
-  const [applicant, setApplicant] = useState("")
+  const [volunteer, setVolunteer] = useState("")
   const [screenShareTry, setScreenShareTry] = useState(false)
   const [screenShare, setScreenShare] = useState(false)
   const [screenShareUser, setScreenShareUser] = useState("");
+  const [screenCompatibility, setScreenCompatibility] = useState(false)
 
-  const [cameraSelectShow, setCameraSelectShow] = useState(false)
-  const [micSelectShow, setMicSelectShow] = useState(false)
-  const [speakerSelectShow, setSpeakerSelectShow] = useState(false)
+  const [isCamera, setIsCamera] = useState(true)
+  const [isMic, setIsMic] = useState(true)
+  const [isSpeaker, setIsSpeaker] = useState(true)
+
+  const [isChat, setIsChat] = useState(true)
+  const isChatTrue = useRef()
+  const isChatFalse = useRef()
 
   const chatInput = useRef();
   const chatInputBtn = useRef();
@@ -57,22 +63,23 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       ws = {}
       ws.send = function(){}
       ws.close = function(){}
-      router.push("/404")
+      window.location.href = "/404"
+      // router.push("/404")
     }
     let participants = {};
 
-    function Participant(IdName, isCam) {
+    function Participant(idName, isCam) {
       let rtcPeer;
-      const idx = IdName.search('-')
-      this.id = IdName.slice(0, idx)
-      this.name = IdName.slice(1 + idx, IdName.length);
+      const idx = idName.search('-')
+      this.id = idName.slice(0, idx)
+      this.name = idName.slice(1 + idx, idName.length);
 
       const container = document.createElement('span');
-      container.id = IdName;
+      container.id = idName;
       const span = document.createElement('span');
       span.innerText = this.name
       const video = document.createElement('video');
-      video.id = 'video-' + IdName;
+      video.id = 'video-' + idName;
       video.autoplay = true;
       video.controls = false;
       if(this.id === "screen") {
@@ -82,25 +89,8 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
         video.style.maxWidth = "calc(1200px - 26.667rem)"
         video.style.minHeight = "28.5rem"
         video.style.minWidth = "50.667rem"
-      }else {
-        if(screenShareState) {
-          video.style.width = "calc(35.556vh - 3.556rem)"
-          video.style.height = "calc(20vh - 2rem)"
-          video.style.maxHeight = "calc(19.688vh - 2.344rem)"
-          video.style.maxWidth = "calc(35vh - 4.16rem)"
-          video.style.minHeight = "8.5rem"
-          video.style.minWidth = "15.111rem"
-          video.style.borderRadius = "0.6rem"
-        }else {
-          video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
-          video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
-          video.style.maxHeight = "calc(40vh - 1.5rem)"
-          video.style.maxWidth = "calc(71.111vh - 2.667rem"
-          video.style.minHeight = "8.5rem"
-          video.style.minWidth = "15.111rem"
-          video.style.borderRadius = "1rem"
-        }
       }
+
       video.style.border = "2px"
       video.style.borderStyle = "solid"
       video.style.backgroundColor = "black"
@@ -129,7 +119,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
           if (error) return console.log(`ERROR! ${error}`)
           sendMessage({ 
             id : "receiveVideoFrom",
-            sender : IdName,
+            sender : idName,
             sdpOffer : offerSdp
           });
         }
@@ -138,7 +128,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
           if (error) return console.log(`ERROR! ${error}`)
           screenMessage({ 
             id : "receiveVideoFrom",
-            sender : IdName,
+            sender : idName,
             sdpOffer : offerSdp
           });
         }
@@ -148,7 +138,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
           sendMessage({
             id: 'onIceCandidate',
             candidate: candidate,
-            name: IdName
+            name: idName
           });
         }
       }else {
@@ -156,7 +146,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
           screenMessage({
             id: 'onIceCandidate',
             candidate: candidate,
-            name: IdName
+            name: idName
           });
         }
       }
@@ -185,7 +175,6 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
           onExistingParticipants(jsonMsg);
           break;
         case "newParticipantArrived":
-          console.log(Object.keys(participants).filter(participant => participant.slice(0, 6) !== "screen"))
           if(jsonMsg.name.slice(0, 6) !== "screen" && Object.keys(participants).filter(participant => participant.slice(0, 6) !== "screen").length >= 4) break;
           if(myIdName === screenShareAppliedUser) {
             sendMessage({
@@ -257,6 +246,8 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       jsonMsg.data.forEach(receiveVideo);
       meState = participant
       setMe(meState);
+      screenCompatibility = !screenCompatibility
+      setScreenCompatibility(screenCompatibility)
     }
     
     function receiveVideo(senderIdName) {
@@ -273,12 +264,17 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
         if(error) return console.log(`ERROR! ${error}`);
         this.generateOffer(participant.offerToReceiveVideo.bind(participant));
       });
+      screenCompatibility = !screenCompatibility
+      setScreenCompatibility(screenCompatibility)
     }
+    let screenCompatibility = false
 
     function onParticipantLeft(jsonMsg) {
       const participant = participants[jsonMsg.name];
       participant.dispose();
       delete participants[jsonMsg.name];
+      screenCompatibility = !screenCompatibility
+      setScreenCompatibility(screenCompatibility)
     }
 
     function ScreenHandler() {
@@ -388,6 +384,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
             volunteerUser = ""
             modeState = false
             timer.stopTimer()
+            setIsChat(true)
             break
           case "volunteer":
             volunteerUser = jsonMsg.name
@@ -398,12 +395,11 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
             console.log(`ERROR! ${jsonMsg.mode}`)
             break
         }
-        console.log(volunteerUser)
         setScreenShareTry(screenShareTryState);
         setScreenShare(screenShareState)
         setScreenShareUser(screenShareAppliedUser)
+        setVolunteer(volunteerUser)
         setMode(modeState)
-        setApplicant(volunteerUser)
       }
     }
 
@@ -413,6 +409,11 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
     let screenShareState = false
     let screenShareTryState = false
     async function startScreenShare() {
+      if(modeState && volunteerUser !== myIdName) {
+        const userName = volunteerUser.slice(volunteerUser.search('-') + 1, volunteerUser.length)
+        alert(`면접 모드 상태입니다. \n${userName}님만 화면공유를 사용할 수 있습니다.`)
+        return
+      }
       if(!stream) {
         screenWs = new SockJS(`${WEBRTC_URL}/groupcall`);
         screenShareTryState = true
@@ -425,8 +426,8 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
         if(stream) {
           if(!screenShareState) {
             stream.oninactive = () => screenHandler.end()
-            // screenShareTryState = false
-            setScreenShareTry(false);
+            screenShareTryState = false
+            setScreenShareTry(screenShareTryState);
             screenShareState = true
             setScreenShare(screenShareState)
             screenShareAppliedUser = myIdName
@@ -527,6 +528,49 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
     const chatInputBtnEl = chatInputBtn.current
     chatInputBtnEl.addEventListener("click", sendChatMsg)
     chatInputEl.addEventListener("keypress", enterInput)
+    function setIsChatTrue() {
+      setIsChat(true)
+    }
+    function setIsChatFalse() {
+      setIsChat(false)
+      const userId = volunteerUser.slice(0, volunteerUser.search('-'))
+      if(!isNaN(userId)) {
+        const letterEl = document.getElementById("letter")
+        getStudyResume(
+          {userId, studyId: roomName},
+          (res) => {
+            if(res.data.response.length !== 0) {
+              const resumeList = res.data.response[0].resumeQuestionList
+              const contents = document.createElement("span")
+              resumeList.forEach(resume => {
+                const h3 = document.createElement("h3")
+                h3.innerText = resume.question
+                contents.appendChild(h3)
+                const p = document.createElement("p")
+                p.innerText = resume.answer
+                contents.appendChild(p)
+                const br = document.createElement("br")
+                contents.appendChild(br)
+              })
+              letterEl.innerHTML = ""
+              letterEl.appendChild(contents)
+            }else{
+              const h2 = document.createElement("h2")
+              h2.innerText = "등록된 자기소개서가 없습니다."
+              letterEl.innerHTML = ""
+              letterEl.appendChild(h2)
+            }
+          },
+          (err) => {
+            console.log(`자소서 불러오기 실패! ${err}`)
+          }
+        )
+      }
+    }
+    const isChatTrueEl = isChatTrue.current
+    const isChatFalseEl = isChatFalse.current
+    isChatTrueEl.addEventListener("click", setIsChatTrue)
+    isChatFalseEl.addEventListener("click", setIsChatFalse)
 
     const cameraBtnEl = cameraBtn.current
     const micBtnEl = micBtn.current
@@ -535,40 +579,20 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
     const changeModeBtnEl = changeModeBtn.current
     const exitBtnEl = exitBtn.current
 
-    let cameraShowState = false
-    let micShowState = false
-    let speakerShowState = false
-    function allSelectShowFalse() {
-      cameraShowState = false
-      micShowState = false
-      speakerShowState = false
-      setCameraSelectShow(cameraShowState)
-      setMicSelectShow(micShowState)
-      setSpeakerSelectShow(speakerShowState)
-    }
+    let isCameraState = true
+    let isMicState = true
+    let isSpeakerState = true
     function cameraSelectToggle() {
-      cameraShowState = !cameraShowState
-      micShowState = false
-      speakerShowState = false
-      setCameraSelectShow(cameraShowState)
-      setMicSelectShow(micShowState)
-      setSpeakerSelectShow(micShowState)
+      isCameraState = !isCameraState
+      setIsCamera(isCameraState)
     }
     function micSelectToggle() {
-      cameraShowState = false
-      micShowState = !micShowState
-      speakerShowState = false
-      setCameraSelectShow(cameraShowState)
-      setMicSelectShow(micShowState)
-      setSpeakerSelectShow(speakerShowState)
+      isMicState = !isMicState
+      setIsMic(isMicState)
     }
     function speakerSelectToggle() {
-      cameraShowState = false
-      micShowState = false
-      speakerShowState = !speakerShowState
-      setCameraSelectShow(cameraShowState)
-      setMicSelectShow(micShowState)
-      setSpeakerSelectShow(speakerShowState)
+      isSpeakerState = !isSpeakerState
+      setIsSpeaker(isSpeakerState)
     }
     cameraBtnEl.addEventListener("click", cameraSelectToggle)
     micBtnEl.addEventListener("click", micSelectToggle)
@@ -580,12 +604,21 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       }
     }
     exitBtnEl.addEventListener("click", exitRoom)
-    exitBtnEl.addEventListener("click", allSelectShowFalse)
 
     let modeState = false;
     function changeMode() {
+      if(screenShareAppliedUser && screenShareAppliedUser !== myIdName){
+        const userName = screenShareAppliedUser.slice(screenShareAppliedUser.search('-') + 1, screenShareAppliedUser.length)
+        if(screenShareState) {
+          alert(`${userName}님이 화면 공유 중입니다.`)
+        }else {
+          alert(`${userName}님이 화면 공유 준비 중입니다.`)
+        }
+        return
+      }
       if(modeState) {
         if(!confirm("일반 모드로 바꾸시겠습니까?")) return
+        setIsChat(true)
         timer.stopTimer()
       }else {
         if(!confirm("면접 모드로 바꾸시겠습니까?")) return
@@ -597,7 +630,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       }else {
         volunteerUser = ""
       }
-      setApplicant(volunteerUser)
+      setVolunteer(volunteerUser)
       setMode(modeState)
       sendMessage({
         id: "mode",
@@ -606,8 +639,6 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
     }
     changeModeBtnEl.addEventListener("click", changeMode)
     screenBtnEl.addEventListener("click", startScreenShare)
-    changeModeBtnEl.addEventListener("click", allSelectShowFalse)
-    screenBtnEl.addEventListener("click", allSelectShowFalse)
     // 방 입장
     sendMessage({
       id: "joinRoom",
@@ -635,18 +666,17 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       }
     }
     window.addEventListener("beforeunload", beforeunload)
-    // console.log(cameraSelectDiv.current.childNodes[0])
+
     return () => {
       chatInputBtnEl.removeEventListener("click", sendChatMsg)
       chatInputEl.removeEventListener("keypress", enterInput)
       screenBtnEl.removeEventListener("click", startScreenShare)
-      changeModeBtnEl.removeEventListener("click", allSelectShowFalse)
-      screenBtnEl.removeEventListener("click", allSelectShowFalse)
       cameraBtnEl.removeEventListener("click", cameraSelectToggle)
       micBtnEl.removeEventListener("click", micSelectToggle)
       speakerBtnEl.removeEventListener("click", speakerSelectToggle)
       exitBtnEl.removeEventListener("click", exitRoom)
-      exitBtnEl.removeEventListener("click", allSelectShowFalse)
+      isChatTrueEl.removeEventListener("click", setIsChatTrue)
+      isChatFalseEl.removeEventListener("click", setIsChatFalse)
       // 방 퇴장
       window.removeEventListener("beforeunload", beforeunload)
       beforeunload()
@@ -665,45 +695,45 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       me.getVideoElement().srcObject = newStream
     }
   }, [cameraId, micId])
+  useEffect(() => {
+    if(me) {
+      const videoSender = me.rtcPeer.peerConnection.getSenders().find(sender => sender.track.kind === "video")
+      const audioSender = me.rtcPeer.peerConnection.getSenders().find(sender => sender.track.kind === "audio")
+      videoSender.track.enabled = isCamera
+      audioSender.track.enabled = isMic
+    }
+  }, [isCamera, isMic])
 
   useEffect(() => {
     for(let container of document.querySelector("#participants").children) {
       const video = container.firstChild
       if(video.sinkId !== speakerId) video.setSinkId(speakerId)
     }
-    for(let container of document.querySelector("#participants").children) {
+    for(let container of document.querySelector("#screens").children) {
       const video = container.firstChild
       if(video.sinkId !== speakerId) video.setSinkId(speakerId)
     }
   },[speakerId])
-
   useEffect(() => {
-    if(screenShare) {
-      const participantsEl = document.getElementById("participants")
-      for(let videoContainer of participantsEl.childNodes) {
-        const video = videoContainer.firstChild
-        video.style.width = "calc(35.556vh - 3.556rem)"
-        video.style.height = "calc(20vh - 2rem)"
-        video.style.maxHeight = "calc(19.688vh - 2.344rem)"
-        video.style.maxWidth = "calc(35vh - 4.16rem)"
-        video.style.minHeight = "8.5rem"
-        video.style.minWidth = "15.111rem"
-        video.style.borderRadius = "0.6rem"
+    if(isSpeaker) {
+      for(let container of document.querySelector("#participants").children) {
+        if(container.id === myIdName) {
+          const video = container.firstChild
+          video.muted = true
+          continue
+        }
+        const video = container.firstChild
+        video.muted = false
       }
+      if(document.querySelector("#screens").firstChild) document.querySelector("#screens").firstChild.firstChild.muted = false
     }else {
-      const participantsEl = document.getElementById("participants")
-      for(let videoContainer of participantsEl.childNodes) {
-        const video = videoContainer.firstChild
-        video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
-        video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
-        video.style.maxHeight = "calc(40vh - 1.5rem)"
-        video.style.maxWidth = "calc(71.111vh - 2.667rem"
-        video.style.minHeight = "8.5rem"
-        video.style.minWidth = "15.111rem"
-        video.style.borderRadius = "1rem"
+      for(let container of document.querySelector("#participants").children) {
+        const video = container.firstChild
+        video.muted = true
       }
+      if(document.querySelector("#screens").firstChild) document.querySelector("#screens").firstChild.firstChild.muted = true
     }
-  }, [screenShare])
+  }, [isSpeaker, screenCompatibility])
 
   useEffect(() => {
     const participantsEl = document.getElementById("participants")
@@ -723,6 +753,116 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
     }
   }, [screenShareUser])
 
+  useEffect(() => {
+    document.getElementById("videoContainer").style.flexDirection = "column"
+    document.getElementById("participants").style.width = "calc(90vw - 24rem)"
+    if(mode) {
+      if(myIdName === volunteer){
+        if(screenShare) {
+          const participantsEl = document.getElementById("participants")
+          for(let videoContainer of participantsEl.childNodes) {
+            const video = videoContainer.firstChild
+            videoContainer.style.marginRight = "1rem"
+            if(videoContainer.id === volunteer) {
+              videoContainer.style.display = "none"
+            }
+            video.style.width = "calc(35.556vh - 3.556rem)"
+            video.style.height = "calc(20vh - 2rem)"
+            video.style.maxHeight = "calc(19.688vh - 2.344rem)"
+            video.style.maxWidth = "calc(35vh - 4.16rem)"
+            video.style.minHeight = "8.5rem"
+            video.style.minWidth = "15.111rem"
+            video.style.borderRadius = "0.6rem"
+          }
+          document.getElementById("videoContainer").style.flexDirection = "row"
+          document.getElementById("participants").style.width = "calc(35.556vh - 3.556rem)"
+        }else {
+          const participantsEl = document.getElementById("participants")
+          let inteviewerNum = participantsEl.childNodes.length - 1
+          if (inteviewerNum > 2) inteviewerNum = 2
+          for(let videoContainer of participantsEl.childNodes) {
+            const video = videoContainer.firstChild
+            videoContainer.style.marginRight = "1rem"
+            if(videoContainer.id === volunteer) {
+              videoContainer.style.display = "none"
+            }
+            video.style.width = `calc((90vw - 24rem - 2rem) / ${inteviewerNum})`
+            video.style.height = `calc((90vw - 24rem - 2rem) * 9 / 16 / ${inteviewerNum})`
+            video.style.maxHeight = `calc(38.5rem / ${inteviewerNum})`
+            video.style.maxWidth = `calc(68.444rem / ${inteviewerNum})`
+            video.style.minHeight = `calc(459px / ${inteviewerNum})`
+            video.style.minWidth = `calc(816px / ${inteviewerNum})`
+            video.style.borderRadius = "1rem"
+          }
+        }
+      }else{
+        if(screenShare) {
+          const participantsEl = document.getElementById("participants")
+          for(let videoContainer of participantsEl.childNodes) {
+            const video = videoContainer.firstChild
+            videoContainer.style.marginRight = "1rem"
+            if(videoContainer.id !== volunteer) {
+              videoContainer.style.display = "none"
+            }
+            video.style.width = "calc(35.556vh - 3.556rem)"
+            video.style.height = "calc(20vh - 2rem)"
+            video.style.maxHeight = "calc(19.688vh - 2.344rem)"
+            video.style.maxWidth = "calc(35vh - 4.16rem)"
+            video.style.minHeight = "8.5rem"
+            video.style.minWidth = "15.111rem"
+            video.style.borderRadius = "0.6rem"
+          }
+        }else {
+          const participantsEl = document.getElementById("participants")
+          for(let videoContainer of participantsEl.childNodes) {
+            const video = videoContainer.firstChild
+            videoContainer.style.marginRight = "1rem"
+            if(videoContainer.id !== volunteer) {
+              videoContainer.style.display = "none"
+            }
+            video.style.width = "calc((90vw - 24rem - 2rem))"
+            video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 16)"
+            video.style.maxHeight = "38.5rem"
+            video.style.maxWidth = "68.444rem"
+            video.style.minHeight = "459px"
+            video.style.minWidth = "816px"
+            video.style.borderRadius = "1rem"
+          }
+        }
+      }
+    }else {
+      if(screenShare) {
+        const participantsEl = document.getElementById("participants")
+        for(let videoContainer of participantsEl.childNodes) {
+          const video = videoContainer.firstChild
+          videoContainer.style.display = "flex"
+          videoContainer.style.marginRight = "1rem"
+          video.style.width = "calc(35.556vh - 3.556rem)"
+          video.style.height = "calc(20vh - 2rem)"
+          video.style.maxHeight = "calc(19.688vh - 2.344rem)"
+          video.style.maxWidth = "calc(35vh - 4.16rem)"
+          video.style.minHeight = "8.5rem"
+          video.style.minWidth = "15.111rem"
+          video.style.borderRadius = "0.6rem"
+        }
+      }else {
+        const participantsEl = document.getElementById("participants")
+        for(let videoContainer of participantsEl.childNodes) {
+          const video = videoContainer.firstChild
+          videoContainer.style.display = "flex"
+          videoContainer.style.marginRight = "1rem"
+          video.style.width = "calc((90vw - 24rem - 2rem) / 2)"
+          video.style.height = "calc((90vw - 24rem - 2rem) * 9 / 32)"
+          video.style.maxHeight = "calc(40vh - 1.5rem)"
+          video.style.maxWidth = "calc(71.111vh - 2.667rem"
+          video.style.minHeight = "8.5rem"
+          video.style.minWidth = "15.111rem"
+          video.style.borderRadius = "1rem"
+        }
+      }
+    }
+  }, [mode, screenShare, volunteer, screenCompatibility])
+
   return <div>
     <div className={styles.mainContainer}>
       <div className={styles.mainSection}>
@@ -730,47 +870,60 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
           <div className={styles.screens} id="screens" ></div>
           <div className={styles.faces} id="participants"></div>
         </div>
-        <div style={applicant===myIdName?{display: "none"}:{}} className={styles.subContainer}>
+        <div style={volunteer===myIdName?{display: "none"}:{}} className={styles.subContainer}>
           <div className={styles.subContainerTopBar}>
             <span>
-              <span className={`${styles.selectedMenuBtn} ${styles.chatMenuBtn}`}>채팅창</span>
-              <span style={mode?{}:{display: "none"}} className={` ${styles.letterMenuBtn}`}>자소서</span>
+              <span className={`${styles.chatMenuBtn} + " " + ${isChat?styles.selectedMenuBtn:""}`} ref={isChatTrue}>채팅창</span>
+              <span style={mode?{}:{display: "none"}} className={`${styles.letterMenuBtn} + " " + ${!isChat?styles.selectedMenuBtn:""}`} ref={isChatFalse}>자소서</span>
             </span>
             <span style={mode?{}:{display: "none"}} className={styles.timer}>
               <Timer />
             </span>
           </div>
-          <div className={styles.chatContainer} id="chat">
+          <div style={isChat?{}:{display: "none"}} className={styles.chatContainer} id="chat">
             <div ref={chatContentBox} className={styles.chat}></div>
             <div className={styles.chatInput}>
               <input ref={chatInput} />
               <button ref={chatInputBtn} ><i className="fas fa-paper-plane"></i></button>
             </div>
           </div>
+          <div style={!isChat?{}:{display: "none"}} className={styles.letterContainer}>
+            <pre className={styles.letter} id="letter">
+            </pre>
+          </div>
         </div>
       </div>
       <div className={styles.btnBar}>
-        <span>
-          <span ref={cameraBtn}><i className="fas fa-video"></i></span>
-          <div style={cameraSelectShow?{}:{display: "none"}} ref={cameraSelectDiv}><CameraSelect /></div>
+        <span className={styles.eachBtn}>
+          <span ref={cameraBtn}>
+            <span style={isCamera?{}:{display: "none"}}><i className="fas fa-video"></i></span>
+            <span style={!isCamera?{}:{display: "none"}}><i class="fas fa-video-slash"></i></span>
+          </span>
+          <CameraSelect />
         </span>
-        <span>
-          <span ref={micBtn}><i className="fas fa-microphone"></i></span>
-          <div style={micSelectShow?{}:{display: "none"}}><MicSelect /></div>
+        <span className={styles.eachBtn}>
+          <span ref={micBtn}>
+            <span style={isMic?{}:{display: "none"}}><i className="fas fa-microphone"></i></span>
+            <span style={!isMic?{}:{display: "none"}}><i class="fas fa-microphone-slash"></i></span>
+          </span>
+          <MicSelect />
         </span>
-        <span>
-          <span ref={speakerBtn}><i className="fas fa-volume-up"></i></span>
-          <div style={speakerSelectShow?{}:{display: "none"}}><SpeakerSelect /></div>
+        <span className={styles.eachBtn}>
+          <span ref={speakerBtn}>
+            <span style={isSpeaker?{}:{display: "none"}}><i className="fas fa-volume-up"></i></span>
+            <span style={!isSpeaker?{}:{display: "none"}}><i class="fas fa-volume-mute"></i></span>
+          </span>
+          <SpeakerSelect />
         </span>
-        <span>
+        <span className={styles.eachBtn}>
           <span style={screenShareTry?{display: "none"}:{}} ref={screenBtn}><i className="fas fa-chalkboard"></i></span>
           <span style={!screenShareTry?{display: "none"}:{}} className={styles.nonCursor}><i className="fas fa-chalkboard-teacher"></i></span>
         </span>
-        <span ref={changeModeBtn} >
+        <span className={styles.eachBtn} ref={changeModeBtn} >
           <span style={mode?{display: "none"}:{}}><i className="fas fa-user-tie"></i></span>
           <span style={!mode?{display: "none"}:{}}><i className="fas fa-users"></i></span>
         </span>
-        <span ref={exitBtn}><i className="fas fa-times-circle"></i></span>
+        <span className={styles.eachBtn} ref={exitBtn}><i className="fas fa-times-circle"></i></span>
       </div>
     </div>
   </div>

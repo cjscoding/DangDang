@@ -28,7 +28,8 @@ function EndInterview({wsSocket, sessionId, questions, recordedQuestionIdxes, sp
       ws = {}
       ws.send = function(){}
       ws.close = function(){}
-      router.push("/404")
+      window.location.href = "/404"
+      // router.push("/404")
     }
 
     const myVideo = document.querySelector("#my-video")
@@ -97,6 +98,12 @@ function EndInterview({wsSocket, sessionId, questions, recordedQuestionIdxes, sp
     endBtnEl.addEventListener("click", endInterview)
     const allDownloadBtn = document.getElementById("allDownloadBtn")
     allDownloadBtn.addEventListener("click", allDownload)
+
+    window.addEventListener("beforeunload", ()=>{
+      const delMsg = JSON.stringify({id:"del"});
+      ws.send(delMsg);
+      ws.close();
+    });
     return () => {
       endBtnEl.removeEventListener("click", endInterview)
       allDownloadBtn.removeEventListener("click", allDownload)

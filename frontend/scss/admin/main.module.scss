@@ -1,0 +1,39 @@
+@import "../common/variables.scss";
+@import "../common/mixins.scss";
+
+.mainContainer {
+  width: 1000px;
+  padding: 60px 0;
+  h1 {
+    color: $main-color;
+    text-align: center;
+    margin-bottom: 100px;
+  }
+}
+
+.container {
+  @include white-box;
+  padding: 0;
+}
+
+.menu {
+  @include flex-center;
+  li {
+    padding: 1rem;
+    list-style: none;
+    cursor: pointer;
+    &:first-of-type {
+      margin-right: 1rem;
+    }
+  }
+
+  margin-bottom: 80px;
+}
+
+.questionMode {
+  box-shadow: 0 -2.5px 0 $red-color inset;
+}
+
+.userMode {
+  box-shadow: 0 -2.5px 0 $yellow-color inset;
+}
