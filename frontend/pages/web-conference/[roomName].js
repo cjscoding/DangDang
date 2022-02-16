@@ -709,7 +709,7 @@ function Conference({wsSocket, myIdName, cameraId, micId, speakerId}) {
       const video = container.firstChild
       if(video.sinkId !== speakerId) video.setSinkId(speakerId)
     }
-    for(let container of document.querySelector("#participants").children) {
+    for(let container of document.querySelector("#screens").children) {
       const video = container.firstChild
       if(video.sinkId !== speakerId) video.setSinkId(speakerId)
     }
