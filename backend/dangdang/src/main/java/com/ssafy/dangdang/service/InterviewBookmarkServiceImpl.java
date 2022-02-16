@@ -4,6 +4,7 @@ import com.ssafy.dangdang.domain.InterviewBookmark;
 import com.ssafy.dangdang.domain.InterviewQuestion;
 import com.ssafy.dangdang.domain.User;
 import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
+import com.ssafy.dangdang.domain.projection.InterviewBookmarkMapping;
 import com.ssafy.dangdang.repository.InterviewBookmarkRepository;
 import com.ssafy.dangdang.repository.InterviewQuestionRepository;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,8 @@ public class InterviewBookmarkServiceImpl implements InterviewBookmarkService{
     @Override
     @Transactional
     public Page<InterviewQuestionDto> getRecommends(Pageable pageable) {
-        Page<InterviewBookmark> bookmarks  = bookmarkRepository.findRecommends(pageable);
-        return bookmarks.map(bookmark -> InterviewQuestionDto.of(bookmark.getInterviewQuestion()));
+        Page<InterviewQuestion> bookmarks  = bookmarkRepository.findRecommends(pageable);
+
+        return bookmarks.map(bookmark -> InterviewQuestionDto.of(bookmark));
     }
 }
