@@ -15,6 +15,12 @@ export default connect(mapStateToProps, null)(Layout);
 
 function Layout({ children }) {
   const router = useRouter();
+  const isNavBar =
+    router.pathname === "/" ||
+    router.pathname.slice(0, 16) === "/web-conference/" ||
+    router.pathname.slice(0, 15) === "/self-practice/"
+      ? false
+      : true;
 
   return (
     <>
@@ -24,12 +30,14 @@ function Layout({ children }) {
         <link rel="icon" href="/images/favicon.ico" />
       </Head>
       <div className={styles.bodyWrapper}>
-        {router.pathname === "/" ||
-        router.pathname.slice(0, 16) === "/web-conference/" ||
-        router.pathname.slice(0, 15) === "/self-practice/" ? null : (
-          <NavBar />
-        )}
-        <div className={styles.mainContainer}>{children}</div>
+        {isNavBar ? <NavBar /> : null}
+        <div
+          className={`${styles.mainContainer} ${
+            isNavBar ? styles.isNavBar : null
+          }`}
+        >
+          {children}
+        </div>
         <Footer></Footer>
       </div>
     </>
