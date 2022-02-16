@@ -5,7 +5,6 @@ const api = apiInstance();
 export function getInterviewQuestions(params, success, fail) {
   api.get(`/interview/search`, {params}).then(success).catch(fail);
 }
-
 export function getMyInterviewQuestions(params, success, fail) {
   api.get(`/interview/mine`, {params}).then(success).catch(fail);
 }

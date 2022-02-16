@@ -112,17 +112,17 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
           />
 
           <div className={styles.btns}>
-            <button className={styles.createBtn}>
-              <Link href="/team/space/create">
+            <Link href="/team/space/create">
+              <button className={styles.createBtn}>
                 <a>방 생성하기</a>
-              </Link>
-            </button>
+              </button>
+            </Link>
 
-            <button className={styles.goMyRoomBtn}>
-              <Link href="/user/mypage/myroom">
+            <Link href="/user/mypage/myroom">
+              <button className={styles.goMyRoomBtn}>
                 <a>내 방으로</a>
-              </Link>
-            </button>
+              </button>
+            </Link>
           </div>
         </div>
 

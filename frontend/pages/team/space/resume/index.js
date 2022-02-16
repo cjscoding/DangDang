@@ -170,7 +170,7 @@ function Resume({
                 </button>
               </div>
               <div className={styles.imgBox}>
-                <img src="/images/dangdang_1.png" width={100} />
+                <img src="/images/dangdang_4.png" width={100} />
               </div>
             </div>
           )}

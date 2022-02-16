@@ -105,11 +105,11 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
           />
 
           <div className={styles.btns}>
-            <button className={styles.createBtn}>
-              <Link href="/team/board">
-                <a>스터디 게시판으로</a>
-              </Link>
-            </button>
+            <Link href="/team/board">
+              <button className={styles.createBtn}>
+                  <a>스터디 게시판으로</a>
+              </button>
+            </Link>
           </div>
         </div>
 

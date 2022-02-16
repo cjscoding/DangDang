@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react"
 import { connect } from "react-redux";
@@ -7,13 +6,36 @@ import MicSelect from "../../../components/webRTC/devices/MicSelect";
 import SpeakerSelect from "../../../components/webRTC/devices/SpeakerSelect";
 import MyFace from "../../../components/webRTC/MyFace";
 import styles from "../../../scss/self-practice/interview/check-devices.module.scss";
+import { BACKEND_URL } from "../../../config";
 
 export async function getServerSideProps() {
-  const preparedQuestions = [
-      {field: "미확인", question: "안녕하세요"},
-      {field: "미확인", question: "점심 맛있게 드셨어요?"},
-      {field: "미확인", question: "하나의 쓰기 스레드와 여러 읽기 스레드가 존재할 때 사용되어야 하는 Java의 동기화 기능은 무엇이고 어떻게 동작하게 되는지 설명해주세요."},
-  ] // api요청으로 교체될 파트
+  const params = {
+    page: 0,
+    size: 5
+  }
+  let preparedQuestions;
+  // SSR은 localStorage가 없음
+  await fetch(`${BACKEND_URL}/interview/recommend`, {
+    method: "get",
+    params
+  })
+    .then((res) => {
+      preparedQuestions = res.data.response.content.map(question => {
+        return {
+          field: question.field,
+          question: question.question
+        }
+      })
+    })
+    .catch((err) => {
+      preparedQuestions = [
+        {field: "미확인", question: "자기소개를 해주세요."},
+        {field: "미확인", question: "지원자가 기업을 선택하는 기준이 무엇인가요?"},
+        {field: "미확인", question: "동료와 갈등이 있다면 어떻게 풀어나가겠습니까?"},
+        {field: "미확인", question: "인생관이나 좌우명을 말해주세요."},
+        {field: "미확인", question: "스스로 부족한 점에 대해 이야기해 보세요."},
+      ]
+    })
   return {props: {preparedQuestions}};
 };
 function mapStateToProps(state) {

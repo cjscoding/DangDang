@@ -10,6 +10,7 @@ import { BACKEND_URL } from "../../../config";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { useEffect } from "react";
+import Link from "next/link";
 
 const mapStateToProps = (state) => {
   return {
@@ -186,9 +187,11 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
       </div>
 
       <div className={styles.backBtnBox}>
-        <button className={styles.registBtn}>
-          <a href="/team/board">목록으로</a>
-        </button>
+        <Link href="/team/board">
+          <button className={styles.registBtn}>
+            목록으로
+          </button>
+        </Link>
       </div>
     </div>
   );
