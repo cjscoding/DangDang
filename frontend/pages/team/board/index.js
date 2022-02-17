@@ -54,12 +54,10 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
       if (newTag == "") {
         alert("키워드를 입력해주세요.");
         console.log("키워드를 입력해주세요.");
-
       } else if (searchTags.indexOf(newTag) === -1) {
         setSearchTags([...searchTags, newTag]);
         event.target.value = "";
         setCurPage(0);
-
       } else {
         alert("이미 존재하는 키워드입니다.");
         console.log("이미 존재하는 키워드입니다.");
@@ -78,9 +76,9 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
       hashtags: searchTags.join(","),
       page: curPage,
       size: postsPerPage,
-      sort: "createdAt,desc"
+      sort: "createdAt,desc",
     };
-    
+
     getAllRooms(
       param,
       (res) => {
@@ -99,7 +97,7 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
 
   return (
     <div className={styles.studyBoard}>
-      <Title title="Board"></Title>
+      <Title title="스터디 구한당"></Title>
 
       <h1 className={styles.title}># 스터디구한당</h1>
 
