@@ -1,5 +1,4 @@
 import styles from "../../../scss/user/update.module.scss";
-import Link from "next/link";
 
 import { connect } from "react-redux";
 import { useState } from "react";
@@ -39,7 +38,6 @@ function userInfoEdit({ user, setUserInfo, resetUserInfo, setIsLogin }) {
     id: user.id,
     email: user.email,
     nickName: user.nickName,
-    imageUrl: user.imageUrl,
     password: "",
   });
 
@@ -77,20 +75,9 @@ function userInfoEdit({ user, setUserInfo, resetUserInfo, setIsLogin }) {
     );
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (user.email === values.email) {
-      updateUserImage(
-        image,
-        (res) => {
-          console.log(res, "유저 이미지 변경 성공");
-          getAndModifyUserData();
-        },
-        (err) => {
-          console.log(err, "유저 이미지 변경 실패");
-        }
-      );
-    } else {
+  const updateData = () => {
+    if (user.email === values.email) getAndModifyUserData();
+    else {
       logoutRequest((response) => {
         modifyUserInfo(
           values,
@@ -110,6 +97,24 @@ function userInfoEdit({ user, setUserInfo, resetUserInfo, setIsLogin }) {
           (error) => console.log(error)
         );
       });
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (image) {
+      updateUserImage(
+        image,
+        (res) => {
+          console.log(res, "유저 이미지 변경 성공");
+          updateData();
+        },
+        (err) => {
+          console.log(err, "유저 이미지 변경 실패");
+        }
+      );
+    } else {
+      updateData();
     }
   };
 
@@ -167,7 +172,6 @@ function userInfoEdit({ user, setUserInfo, resetUserInfo, setIsLogin }) {
                 type="file"
                 id="inputFile"
                 onChange={onSetImage}
-                required
                 style={{ display: "none" }}
               />
               <span>{image ? image.name : null}</span>

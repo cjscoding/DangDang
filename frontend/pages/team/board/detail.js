@@ -140,7 +140,10 @@ function TeamDetail({ user, roomInfo, roomHost, comments, setRoomInfo }) {
     event.target[0].value = "";
   };
 
-  const onMoveKakaoPage = (href) => window.open(href);
+  const onMoveKakaoPage = (href) => {
+      if(href) window.open(href);
+      else alert("등록된 주소가 없습니다.");
+  }
 
   return (
     <div className={styles.container}>
