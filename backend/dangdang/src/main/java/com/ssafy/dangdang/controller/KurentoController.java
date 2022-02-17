@@ -17,9 +17,14 @@ import org.springframework.web.util.UriUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @RestController
 @RequestMapping("/kurento")
@@ -37,6 +42,23 @@ public class KurentoController {
         Resource resource = storageService.loadVideoAsResource(name);
         String encodedUploadFileName = UriUtils.encode(name, StandardCharsets.UTF_8);
 
+//        response.setContentType("application/octet-stream");
+//        response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedUploadFileName);
+//        response.setHeader("Content-Transfer-Encoding", "binary");
+//        response.getOutputStream().flush();
+//        response.getOutputStream().close();
+        String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                contentDisposition).body(resource);
+
+    }
+
+    @GetMapping("/download/all")
+    public ResponseEntity<Resource> download(HttpServletResponse response, String[] fileNames) throws IOException {
+        UUID uuid = UUID.randomUUID();
+
+        Resource resource = storageService.loadAllVideo(uuid, fileNames);
+        String encodedUploadFileName = UriUtils.encode(uuid.toString()+"interview.zip", StandardCharsets.UTF_8);
 //        response.setContentType("application/octet-stream");
 //        response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedUploadFileName);
 //        response.setHeader("Content-Transfer-Encoding", "binary");
