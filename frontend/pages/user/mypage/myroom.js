@@ -38,6 +38,12 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
     });
   };
 
+  const [newRoomImage, setNewRoomImage] = useState("");
+  const newImage = myRooms[0].imageUrl;
+  useEffect(() => {
+    setNewRoomImage(newRoomImage);
+  }, [newImage]);
+
   //pagination
   const [curPage, setCurPage] = useState(0);
   const [postsPerPage] = useState(9);
@@ -72,7 +78,7 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
       hashtags: searchTags.join(","),
       page: curPage,
       size: postsPerPage,
-      sort: "createdAt,desc"
+      sort: "createdAt,desc",
     };
     getMyRooms(
       param,
@@ -88,7 +94,7 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
         console.log(err, "마이스터디를 조회할 수 없습니다.");
       }
     );
-  }, [searchTags, curPage]);
+  }, [searchTags, curPage, newRoomImage]);
 
   return (
     <div className={styles.studyBoard}>
@@ -107,7 +113,7 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
           <div className={styles.btns}>
             <Link href="/team/board">
               <button className={styles.createBtn}>
-                  <a>스터디 게시판으로</a>
+                <a>스터디 게시판으로</a>
               </button>
             </Link>
           </div>

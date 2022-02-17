@@ -9,8 +9,17 @@ import {
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../../../config";
+import { connect } from "react-redux";
 
-export default function Comment({ comment, reload }) {
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+  };
+};
+
+export default connect(mapStateToProps, null)(Comment);
+
+function Comment({ comment, reload, user }) {
   const router = useRouter();
 
   const [showReply, setShowReply] = useState(false);
@@ -61,7 +70,7 @@ export default function Comment({ comment, reload }) {
         reload();
       },
       (err) => {
-        console.log(err, "댓글 삭제 실패");
+        console.log(err);
       }
     );
   };
@@ -76,6 +85,7 @@ export default function Comment({ comment, reload }) {
         content: newComment,
       },
     };
+
     updateDetailComment(
       data,
       (res) => {
@@ -85,7 +95,6 @@ export default function Comment({ comment, reload }) {
       },
       (err) => {
         console.log(err, "댓글 수정 실패");
-        alert("본인의 댓글만 수정이 가능합니다.");
       }
     );
   };
@@ -127,12 +136,16 @@ export default function Comment({ comment, reload }) {
               <button type="button" onClick={toggleReply}>
                 <i className="fas fa-reply"></i>
               </button>
-              <button type="submit">
-                <i className="fas fa-check"></i>
-              </button>
-              <button type="button" onClick={toggleUpdate}>
-                <i className="fas fa-times"></i>
-              </button>
+              {comment.writerId === user.id ? (
+                <>
+                  <button type="submit">
+                    <i className="fas fa-check"></i>
+                  </button>
+                  <button type="button" onClick={toggleUpdate}>
+                    <i className="fas fa-times"></i>
+                  </button>
+                </>
+              ) : null}
             </div>
           </form>
         ) : (
@@ -159,12 +172,16 @@ export default function Comment({ comment, reload }) {
               <button onClick={toggleReply}>
                 <i className="fas fa-reply"></i>
               </button>
-              <button onClick={toggleUpdate}>
-                <i className="fas fa-pen"></i>
-              </button>
-              <button onClick={() => onDeleteComment(comment.id)}>
-                <i className="fas fa-trash"></i>
-              </button>
+              {comment.writerId === user.id ? (
+                <>
+                  <button onClick={toggleUpdate}>
+                    <i className="fas fa-pen"></i>
+                  </button>
+                  <button onClick={() => onDeleteComment(comment.id)}>
+                    <i className="fas fa-trash"></i>
+                  </button>
+                </>
+              ) : null}
             </div>
           </div>
         )}
@@ -178,11 +195,7 @@ export default function Comment({ comment, reload }) {
           </form>
           <div className={styles.replyList}>
             {comment.children?.map((reply) => (
-              <Reply
-                key={reply.id}
-                reply={reply}
-                submitReload={submitReload}
-              />
+              <Reply key={reply.id} reply={reply} submitReload={submitReload} />
             ))}
           </div>
         </div>
