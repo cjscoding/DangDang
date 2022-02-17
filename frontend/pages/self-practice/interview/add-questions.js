@@ -47,7 +47,7 @@ function AddQuestions({
   const [qListNum, setQListNum] = useState(-1);
   const qKind = useRef();
   const [curPage, setCurPage] = useState(0);
-  const [postsPerPage] = useState(7);
+  const [postsPerPage] = useState(10);
   const [totalPosts, setTotalPosts] = useState(100);
   const paginate = (pageNumber) => setCurPage(pageNumber);
   const router = useRouter();
@@ -243,10 +243,6 @@ function AddQuestions({
       <span className={menuStyles.title}>연습에 사용할 질문을 골라주세요.</span>
       <div className={styles.mainContainer}>
         <div className={styles.rowContainer}>
-          {/* <div className={styles.changeBtn}>
-          <button onClick={() => changeQuetionList(0)}>●</button>
-          {isLogin?<button onClick={() => changeQuetionList(1)}>●</button>:null}
-        </div> */}
           <div className={styles.ContainerL}>
             <div className={styles.QuestionContainer}>
               <div className={styles.QuestionTitle}>
@@ -318,46 +314,14 @@ function AddQuestions({
                     </li>
                   ))}
                 </ul>
-                {/* <div style={qListNum !== 1 ? { display: "none" } : {}}>
-                  {myQuestions?.map((question) => (
-                    <div key={question.id} className={styles.question}>
-                      <span>
-                        {question.field} | {question.question}{" "}
-                        <button
-                          onClick={() =>
-                            addQuestion(question.field, question.question)
-                          }
-                        >
-                          <i className="fas fa-plus"></i>
-                        </button>
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <div style={qListNum !== 2 ? { display: "none" } : {}}>
-                  {bookmarkQuestions?.map((question) => (
-                    <div key={question.id} className={styles.question}>
-                      <span>
-                        {question.field} | {question.question}{" "}
-                        <button
-                          onClick={() =>
-                            addQuestion(question.field, question.question)
-                          }
-                        >
-                          <i className="fas fa-plus"></i>
-                        </button>
-                      </span>
-                    </div>
-                  ))}
-                </div> */}
-                <div className={styles.pagination}>
-                  <Pagination
-                    curPage={curPage}
-                    paginate={paginate}
-                    totalCount={totalPosts}
-                    postsPerPage={postsPerPage}
-                  />
-                </div>
+              </div>
+              <div className={styles.pagination}>
+                <Pagination
+                  curPage={curPage}
+                  paginate={paginate}
+                  totalCount={totalPosts}
+                  postsPerPage={postsPerPage}
+                />
               </div>
             </div>
             <div className={styles.addContainer}>
@@ -374,12 +338,6 @@ function AddQuestions({
               >
                 <i className="fas fa-paper-plane"></i>
               </button>
-              {/* <button
-                onClick={() => addQuestionInput("미확인", questionInput)}
-                className={styles.send}
-              >
-                <i className="fas fa-paper-plane"></i>
-              </button> */}
             </div>
           </div>
           <div className={styles.ContainerR}>
@@ -410,19 +368,6 @@ function AddQuestions({
                   </li>
                 ))}
               </ul>
-
-              {/* <div className={styles.selectedList}>
-                {questions?.map((question, idx) => (
-                  <div className={styles.question}>
-                    <span key={idx}>
-                      {question.field} | {question.question}{" "}
-                      <button onClick={() => removeQuestion(idx)}>
-                        <i className="fas fa-times"></i>
-                      </button>
-                    </span>
-                  </div>
-                ))}
-              </div> */}
             </div>
           </div>
         </div>
