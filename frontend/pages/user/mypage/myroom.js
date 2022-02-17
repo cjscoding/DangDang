@@ -1,6 +1,5 @@
 import Pagination from "../../../components/layout/Pagination";
 import styles from "../../../scss/team/board/board.module.scss";
-// import Title from "../../../components/layout/Title";
 import Link from "next/link";
 
 import { BACKEND_URL } from "../../../config";
@@ -107,7 +106,6 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
 
   return (
     <div className={styles.studyBoard}>
-      {/* <Title title="Board"></Title> */}
 
       <h1 className={styles.title}># 내방들이당</h1>
 
