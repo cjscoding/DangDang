@@ -4,8 +4,17 @@ import { updateDetailComment, deleteDetailComment } from "../../../api/comment";
 import { BACKEND_URL } from "../../../config";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { connect } from "react-redux";
 
-export default function Reply({ reply, submitReload }) {
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+  };
+};
+
+export default connect(mapStateToProps, null)(Reply);
+
+function Reply({ reply, submitReload, user }) {
   const router = useRouter();
 
   const [showUpdateBtn, setShowUpdateBtn] = useState(false);
@@ -89,14 +98,16 @@ export default function Reply({ reply, submitReload }) {
             />
           </div>
 
-          <div className={styles.btnBox}>
-            <button type="submit">
-              <i className="fas fa-check"></i>
-            </button>
-            <button type="button" onClick={toggleUpdate}>
-              <i className="fas fa-times"></i>
-            </button>
-          </div>
+          {reply.writerId === user.id ? (
+            <div className={styles.btnBox}>
+              <button type="submit">
+                <i className="fas fa-check"></i>
+              </button>
+              <button type="button" onClick={toggleUpdate}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+          ) : null}
         </form>
       ) : (
         <div className={styles.commentToggle}>
@@ -118,14 +129,16 @@ export default function Reply({ reply, submitReload }) {
             <p>{reply.content}</p>
           </div>
 
-          <div className={styles.btnBox}>
-            <button onClick={toggleUpdate}>
-              <i className="fas fa-pen"></i>
-            </button>
-            <button onClick={() => onDeleteReply(reply.id)}>
-              <i className="fas fa-trash"></i>
-            </button>
-          </div>
+          {reply.writerId === user.id ? (
+            <div className={styles.btnBox}>
+              <button onClick={toggleUpdate}>
+                <i className="fas fa-pen"></i>
+              </button>
+              <button onClick={() => onDeleteReply(reply.id)}>
+                <i className="fas fa-trash"></i>
+              </button>
+            </div>
+          ) : null}
         </div>
       )}
     </div>

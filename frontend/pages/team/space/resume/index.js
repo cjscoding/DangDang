@@ -16,7 +16,7 @@ const mapStateToProps = (state) => {
     roomInfo: state.roomReducer.curRoomInfo,
     roomHost: state.roomReducer.curRoomHost,
     roomMembers: state.roomReducer.curRoomMembers,
-    userInfo: state.userReducer.user,
+    user: state.userReducer.user,
   };
 };
 
@@ -30,7 +30,7 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(mapStateToProps, mapDispatchToProps)(Resume);
 
 function Resume({
-  userInfo,
+  user,
   roomInfo,
   roomHost,
   roomMembers,
@@ -38,7 +38,7 @@ function Resume({
   setResume,
 }) {
   const router = useRouter();
-  const [curUserId, setCurUserId] = useState(userInfo.id);
+  const [curUserId, setCurUserId] = useState(user.id);
   const [resumeList, setResumeList] = useState([]);
 
   useEffect(() => {
@@ -63,8 +63,8 @@ function Resume({
   }, [router.isReady]);
 
   useEffect(() => {
-    setCurUserId(userInfo.id);
-  }, [userInfo]);
+    setCurUserId(user.id);
+  }, [user]);
 
   //해당 멤버의 자소서 조회
   const onSetCurUser = (userId) => setCurUserId(userId);

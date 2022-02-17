@@ -42,9 +42,6 @@ export default function CreateRoom() {
     } else if (roomTags.length === 0) {
       alert("최소 하나 이상의 태그를 작성해주세요!");
       return;
-    } else if (image === "") {
-      alert("스터디 프로필 이미지를 첨부해주세요!");
-      return;
     }
 
     createRoom(
@@ -60,6 +57,7 @@ export default function CreateRoom() {
           data,
           (res) => {
             console.log(res);
+            router.push("/user/mypage/myroom");
           },
           (err) => {
             console.log(err);
@@ -71,7 +69,6 @@ export default function CreateRoom() {
       }
     );
 
-    router.push("/user/mypage/myroom");
   };
 
   //input values
