@@ -97,15 +97,10 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
       video.id = "video-" + idName;
       video.autoplay = true;
       video.controls = false;
-      video.style.border = "2px"
-      video.style.borderStyle = "solid"
-      video.style.backgroundColor = "black"
       video.style.borderRadius = "10px"
       if(this.id === "screen") {
         video.style.width = "960px"
         video.style.height = "540px"
-        video.style.borderColor = "#6bbfca";
-        video.style.backgroundColor = "#6bbfca";
         video.style.borderRadius = "0"
       }
       if(video.sinkId !== speakerId) video.setSinkId(speakerId)
@@ -604,26 +599,31 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
         getStudyResume(
           { userId, studyId: roomName },
           (res) => {
+            letterEl.innerHTML = "";
             if (res.data.response.length !== 0) {
               const resumeList = res.data.response[0].resumeQuestionList;
-              const contents = document.createElement("span");
+              for(let i = 0; i < 10; i++){
               resumeList.forEach((resume) => {
-                const h3 = document.createElement("h3");
+                const contentElContainer = document.createElement("div");
+                const contentEl = document.createElement("div");
+                const h3 = document.createElement("h4");
                 h3.innerText = resume.question;
-                contents.appendChild(h3);
+                h3.style.display = "inline"
+                contentEl.appendChild(h3);
                 const p = document.createElement("p");
-                p.innerText = resume.answer;
-                contents.appendChild(p);
-                const br = document.createElement("br");
-                contents.appendChild(br);
-              });
-              letterEl.innerHTML = "";
-              letterEl.appendChild(contents);
+                p.innerText = "\u00a0" + "\u00a0" + resume.answer;
+                p.style.display = "inline"
+                contentEl.appendChild(p);
+                contentElContainer.appendChild(contentEl)
+                letterEl.appendChild(contentElContainer)
+              });}
             } else {
-              const h2 = document.createElement("h2");
-              h2.innerText = "등록된 자기소개서가 없습니다.";
-              letterEl.innerHTML = "";
-              letterEl.appendChild(h2);
+              const content = document.createElement("div");
+              const h3 = document.createElement("h3");
+              h3.innerText = "등록된 자기소개서가 없습니다.";
+              content.appendChild(h3)
+              content.classList.add(`${styles.noLetterBox}`)
+              letterEl.appendChild(content);
             }
           },
           (err) => {
@@ -834,27 +834,17 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
     for (let videoContainer of participantsEl.childNodes) {
       const video = videoContainer.firstChild;
       if (video.id === `video-${screenShareUser}`) {
-        video.style.border = "2px";
+        video.style.border = "2px"
         video.style.borderStyle = "solid";
         video.style.borderColor = "#6bbfca";
         video.style.backgroundColor = "#6bbfca";
       } else {
-        video.style.border = "1px";
-        video.style.borderStyle = "solid";
-        video.style.borderColor = "black";
-        video.style.backgroundColor = "black";
       }
     }
   }, [screenShareUser]);
 
   useEffect(() => {
     let myVideoEl;
-    // function pipMode() {
-    //   if (document.pictureInPictureEnabled && myVideoEl) myVideoEl.requestPictureInPicture();
-    // }
-    // function normalMode() {
-    //   if (document.pictureInPictureElement) document.exitPictureInPicture();
-    // }
     const participantsEl = document.getElementById("participants")
     participantsEl.style.flexDirection = "row"
     if(screenShare) {
@@ -971,7 +961,6 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
       }
     }else {
       if(screenShare) {
-        /////////////////////////////////////////////////////////////
         const participantsEl = document.getElementById("participants")
         for(let videoContainer of participantsEl.childNodes) {
           const video = videoContainer.firstChild
@@ -1067,7 +1056,7 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
               style={!isChat ? {} : { display: "none" }}
               className={styles.letterContainer}
             >
-              <pre className={styles.letter} id="letter"></pre>
+              <div className={styles.letter} id="letter"></div>
             </div>
           </div>
         </div>
