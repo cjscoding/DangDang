@@ -4,15 +4,26 @@
   padding: 1.6rem 0;
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
-  place-items: center;
+  justify-content: center;
+  align-items: center;
   border-bottom: $division-line;
+  span,
+  p, div {
+    display: flex;
+    justify-content: center;
+  }
+  .question {
+    font-weight: bold;
+    text-align: start;
+    padding: 5px 15px;
+    width: 600px;
+    word-wrap: break-word;
+  }
+  div{
+      margin-right: 50px;
+  }
 }
 
-.question {
-  font-weight: bold;
-}
-
-// 버튼 설정
 .toggleContainer {
   display: none;
 

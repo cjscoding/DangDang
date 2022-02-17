@@ -5,7 +5,7 @@ const api = apiInstance();
 //관리자 모든 질문 조회
 export const getAllQuestionList = async (param, success, fail) => {
   await api
-    .get(`/admin/interview`, { params: param })
+    .get(`/admin/interview/search`, { params: param })
     .then(success)
     .catch(fail);
 };
