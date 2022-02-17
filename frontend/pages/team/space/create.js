@@ -61,6 +61,7 @@ export default function CreateRoom() {
           },
           (err) => {
             console.log(err);
+            router.push("/user/mypage/myroom");
           }
         );
       },

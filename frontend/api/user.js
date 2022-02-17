@@ -46,8 +46,8 @@ export const registUserImage = async (req, success, fail) => {
 };
 
 //회원 이미지 수정
-export const updateUserImage = async (req, success, fail) => {
+export const updateUserImage = async (newImage, success, fail) => {
   const formData = new FormData();
-  formData.append("image", req);
+  formData.append("image", newImage);
   await api.patch("/user/image", formData).then(success).catch(fail);
 };

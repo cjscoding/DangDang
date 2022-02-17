@@ -8,14 +8,19 @@
   .questionArea {
     display: grid;
     grid-template-columns: 1fr 4fr;
+    justify-content: center;
     padding: 15px 0;
+    align-items: center;
     &:first-child {
       text-align: center;
     }
   }
   .contents {
-    span {
+    p {
+      text-align: start;
       padding: 5px 0;
+      width: 600px;
+      word-wrap: break-word;
     }
     display: flex;
     justify-content: space-between;

@@ -48,7 +48,7 @@ export const addRoomImg = async (data, success, fail) => {
 //스터디 이미지 수정
 export const updateRoomImg = async (data, success, fail) => {
   const formData = new FormData();
-  formData.append("image", data.image);
+  formData.append("image", data.newImage);
   await api
     .patch(`/study/${data.studyId}/image`, formData)
     .then(success)
