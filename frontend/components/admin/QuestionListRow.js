@@ -3,7 +3,7 @@ import { setQuestionOpen, setQuestionPrivate } from "../../api/admin";
 import styles from "../../scss/admin/questionRow.module.scss";
 
 export default function QuestionListRow({ id, question }) {
-  const [visible, setVisible] = useState(question.visable);
+  const [visible, setVisible] = useState(question.visible);
 
   const handleChange = () => {
     setVisible((curr) => !curr);

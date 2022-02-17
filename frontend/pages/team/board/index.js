@@ -97,7 +97,7 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
 
   return (
     <div className={styles.studyBoard}>
-      <Title title="스터디 구한당"></Title>
+      <Title title="스터디구한당"></Title>
 
       <h1 className={styles.title}># 스터디구한당</h1>
 

@@ -8,6 +8,7 @@ import timer from "../../../components/webRTC/timerfunction";
 import Timer from "../../../components/webRTC/Timer";
 import getVideoConstraints from "../../../components/webRTC/getVideoConstraints";
 import { ttsService } from "../../../api/webRTC";
+import Title from "../../../components/layout/Title";
 
 function mapStateToProps(state) {
   const questions = state.questionReducer.questions.map(
@@ -236,6 +237,7 @@ function Interview({
   }, []);
   return (
     <div className={styles.body}>
+      <Title title="혼자연습한당"></Title>
       <Link href="/self-practice/interview/end">
         <a className={styles.closeBtn}>
           <span>

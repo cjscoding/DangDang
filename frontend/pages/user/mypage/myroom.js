@@ -72,7 +72,7 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
       hashtags: searchTags.join(","),
       page: curPage,
       size: postsPerPage,
-      sort: "createdAt,desc"
+      sort: "createdAt,desc",
     };
     getMyRooms(
       param,
@@ -92,7 +92,7 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
 
   return (
     <div className={styles.studyBoard}>
-      <Title title="Board"></Title>
+      <Title title="내방들이당"></Title>
 
       <h1 className={styles.title}># 내방들이당</h1>
 
@@ -107,7 +107,7 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
           <div className={styles.btns}>
             <Link href="/team/board">
               <button className={styles.createBtn}>
-                  <a>스터디 게시판으로</a>
+                <a>스터디 게시판으로</a>
               </button>
             </Link>
           </div>
