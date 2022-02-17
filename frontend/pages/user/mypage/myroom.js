@@ -39,7 +39,8 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
   };
 
   const [newRoomImage, setNewRoomImage] = useState("");
-  const newImage = myRooms[0].imageUrl;
+  let newImage
+  if(myRooms.length > 0) newImage = myRooms[0].imageUrl;
   useEffect(() => {
     setNewRoomImage(newRoomImage);
   }, [newImage]);
