@@ -4,6 +4,7 @@ import { FRONTEND_URL, BACKEND_URL } from "../../../config";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import getStreamPermission from "../../webRTC/getStreamPermission";
+import Title from "../../layout/Title";
 
 export default function Layout({ roomInfo, host, image, href, btnText }) {
   const router = useRouter();
@@ -26,6 +27,7 @@ export default function Layout({ roomInfo, host, image, href, btnText }) {
 
   return (
     <div className={styles.teamSpaceLayout}>
+      <Title title={`${roomInfo.name}`}></Title>
       <div className={styles.teamInfoBox}>
         <div className={styles.mainInfo}>
           <div className={styles.image}>

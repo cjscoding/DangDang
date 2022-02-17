@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Title from "../../../components/layout/Title";
 
 const mapStateToProps = (state) => {
   return {
@@ -147,6 +148,7 @@ function TeamDetail({ user, roomInfo, roomHost, comments, setRoomInfo }) {
 
   return (
     <div className={styles.container}>
+      <Title title={roomInfo.name}></Title>
       <div className={styles.mainContainer}>
         <div className={styles.infoBox}>
           <div className={styles.mainInfo}>

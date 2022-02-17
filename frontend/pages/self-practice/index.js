@@ -1,9 +1,11 @@
 import getStreamPermission from "../../components/webRTC/getStreamPermission";
 import styles from "../../scss/self-practice/mainComponent.module.scss";
+import Title from "../../components/layout/Title";
 
 export default function SelfPractice() {
   return (
     <div className="container">
+      <Title title="혼자연습한당"></Title>
       {/* 로그인 정보가 담겨서 새 창을 띄워줄지,, 의문 */}
       {/* 이후 페이지들 url로 접속시 차단 기능 추가해야함 */}
       <div className={styles.txt}>

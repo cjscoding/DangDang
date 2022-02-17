@@ -9,6 +9,7 @@ import styles from "../../../scss/self-practice/interview/check-devices.module.s
 import menuStyles from "../../../scss/self-practice/interview/menu.module.scss";
 // import { BACKEND_URL } from "../../../config";
 // import axios from "axios";
+import Title from "../../../components/layout/Title";
 
 // export async function getServerSideProps() {
 //   const params = {
@@ -132,6 +133,7 @@ function CheckDevices({ preparedQuestions, wsSocket, isQs, setQuestions }) {
 
   return (
     <div className={styles.body}>
+      <Title title="혼자연습한당"></Title>
       <div className={menuStyles.pindicator}>
         <div className={menuStyles.bullet}>
           <span className={menuStyles.icon}>1</span>
