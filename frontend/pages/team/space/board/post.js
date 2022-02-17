@@ -3,8 +3,17 @@ import styles from "../../../../scss/team/form.module.scss";
 import { deletePost } from "../../../../api/board";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { connect } from "react-redux";
 
-export default function Post() {
+function mapStateToProps(state) {
+  return {
+    user: state.userReducer.user,
+  };
+}
+
+export default connect(mapStateToProps, null)(Post);
+
+function Post({user}) {
   const router = useRouter();
   const initData = {
     title: "",
@@ -74,14 +83,16 @@ export default function Post() {
   return (
     <div className={styles.formContainer}>
       <div className={styles.viewContainer}>
-        <div className={styles.btnBox}>
-          <button onClick={onMoveUpdatePage}>
-            <i className="fas fa-pen"></i>
-          </button>
-          <button onClick={onDeletePost}>
-            <i className="fas fa-trash"></i>
-          </button>
-        </div>
+        {post.writer.id === user.id ? (
+          <div className={styles.btnBox}>
+            <button onClick={onMoveUpdatePage}>
+              <i className="fas fa-pen"></i>
+            </button>
+            <button onClick={onDeletePost}>
+              <i className="fas fa-trash"></i>
+            </button>
+          </div>
+        ) : null}
 
         <h2>{post.title}</h2>
 
