@@ -4,77 +4,125 @@
 
 .body {
   @include flex-center;
-  position: relative;
+  // position: relative;
   flex-direction: column;
-  .endBtn{
+  .endBtn {
+    margin-right: 1rem;
     position: absolute;
-    top: 1rem;
+    top: 2rem;
     right: 2rem;
-    font-size: 2rem;
+    font-size: 1.3rem;
     cursor: pointer;
-  }
-  h1{
-    margin-top:3rem;
-    color:#6BBFCA;
-  }
-  .btn{
-    width: 100%;
-    margin-top: 1rem;
-    button{
-      float:right;
-      background:#6BBFCA;
-      color:white;
-      text-align: center;
-      margin: 1px;
-      width: 150px;
-      height: 40px;
-      cursor:pointer;
-      transition:800ms ease all;
-      outline:none;
-      border-radius: 7px;
-      border:1px;
-      font-size: 15px;
+    text-align: center;
+
+    div {
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+    }
+
+    :global(*) {
+      color: $gray-color;
+    }
+
+    &:hover {
+      :global(*) {
+        color: $text-color;
+        transition: all 0.2s ease;
+      }
     }
   }
-  .comp{
+
+  h1 {
+    font-size: 1.7rem;
+    margin-top: 4rem;
+    color: $main-color;
+  }
+  .btn {
+    width: 100%;
+    margin-top: 1rem;
+    button {
+      @include filled-button(150px, white, $main-color);
+      float: right;
+      font-size: 0.8rem;
+      margin: 0.5rem 0;
+      // background: #6bbfca;
+      // color: white;
+      // text-align: center;
+      // margin: 0.5rem 0;
+      // width: 150px;
+      // height: 40px;
+      // cursor: pointer;
+      // transition: 800ms ease all;
+      // outline: none;
+      // border-radius: 7px;
+      // border: 1px;
+      // font-size: 15px;
+    }
+  }
+  .comp {
     display: flex;
     flex-direction: row;
-    margin-top:.3rem;
-    background: #FFFFFF;
-    box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.03);
+    margin-top: 0.3rem;
+    // background: #ffffff;
+
     border-radius: 10px;
     width: 1000px;
     height: 500px;
     // padding: 50px;
-    .videoComp{
-      width:60%;
+    .videoComp {
+      width: 60%;
+      box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.03);
       // background-color: #6BBFCA;
-      video{
-        width:100%;
+      video {
+        width: 100%;
         height: 100%;
         border-radius: 7px;
       }
     }
-    .recordComp{
+    .recordComp {
+      @include scrollbar;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: 35px;
-      width:40%;
-      height:100%;
+      padding: 2rem;
+      padding-top: 1rem;
+
+      width: 40%;
+      height: 100%;
       border-radius: 10px;
-      .recordList{
-        margin-bottom: 10px;
-        span{
-          font-size: 1.1rem;
+      background-color: white;
+      box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.03);
+      margin-left: 20px;
+
+      .recordList {
+        display: grid;
+        grid-template-columns: 1fr 50px;
+        padding: 1rem 0;
+        span {
+          // font-size: 1.1rem;
           margin-right: 1rem;
         }
-        button{
+
+        > div > button {
           font-size: 1rem;
           outline: none;
-          border:1px;
+          border: 1px;
           background-color: white;
-          margin-right: 1rem;
           cursor: pointer;
+
+          :global(*) {
+            color: $gray-color;
+          }
+
+          &:first-of-type {
+            margin-right: 1rem;
+          }
+
+          &:hover {
+            :global(*) {
+              color: $text-color;
+              transition: all 0.2s ease;
+            }
+          }
         }
       }
     }
