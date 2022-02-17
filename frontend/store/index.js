@@ -8,7 +8,7 @@ let store;
 const makeStore = () => {
   const logger = createLogger();
   const enhancer = compose(composeWithDevTools(applyMiddleware(logger)));
-  store = createStore(reducer, enhancer);
+  store = createStore(reducer)//, enhancer);
   return store;
 };
 export {store};
