@@ -69,16 +69,15 @@ export default function CreateRoom() {
         console.log(err);
       }
     );
-
   };
 
   //input values
   const onChange = (event) => {
     let { name, value } = event.target;
-    if(name === "number"){
-      value = Math.round(value)
-      if(value < 1) value = 1
-      if(value > 4) value = 4
+    if (name === "number") {
+      value = Math.round(value);
+      if (value < 1) value = 1;
+      if (value > 4) value = 4;
     }
     const newInfo = {
       ...roomInfo,
@@ -114,13 +113,14 @@ export default function CreateRoom() {
 
   //go back
   const onMoveStudyBoardPage = () => {
-    router.push({
-      pathname: `/team/space`,
-      query: {
-        id: roomInfo.id,
-        page: "info",
-      },
-    });
+    // router.push({
+    //   pathname: `/team/space`,
+    //   query: {
+    //     id: roomInfo.id,
+    //     page: "info",
+    //   },
+    // });
+    router.push(`/team/board`);
   };
 
   return (
