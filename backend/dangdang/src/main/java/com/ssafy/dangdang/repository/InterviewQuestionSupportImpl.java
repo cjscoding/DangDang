@@ -55,6 +55,25 @@ public class InterviewQuestionSupportImpl extends Querydsl4RepositorySupport imp
     }
 
     @Override
+    public Page<InterviewQuestion> adminSearchInterviewQuestion(WriteInterview searchParam, Pageable pageable) {
+        Page<InterviewQuestion> interviewQuestions = applyPagination(pageable, contentQuery -> contentQuery
+                        .selectFrom(interviewQuestion)
+                        .join(interviewQuestion.writer, user).fetchJoin()
+                        .where( fieldEq(searchParam.getField()),
+                                jobEq(searchParam.getJob()),
+                                questionContains(searchParam.getQuestion()),
+                                answerContains(searchParam.getAnswer()) ),
+                countQuery -> countQuery
+                        .selectFrom(interviewQuestion)
+                        .where( fieldEq(searchParam.getField()),
+                                jobEq(searchParam.getJob()),
+                                questionContains(searchParam.getQuestion()),
+                                answerContains(searchParam.getAnswer()) )
+        );
+        return interviewQuestions;
+    }
+
+    @Override
     public Page<InterviewQuestion> searchMine(User writer, WriteInterview searchParam, Pageable pageable) {
         if (writer == null) throw new BadRequestException("로그인을 해주세요");
         Page<InterviewQuestion> interviewQuestions = applyPagination(pageable, contentQuery -> contentQuery
