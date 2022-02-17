@@ -43,7 +43,7 @@ public class InterviewQuestionController {
             @CurrentUser PrincipalDetails userPrincipal,
             @RequestBody WriteInterview writeInterview){
         InterviewQuestionDto interviewQuestionDto = InterviewQuestionDto.of(writeInterview);
-        interviewQuestionDto.setVisable(false);
+        interviewQuestionDto.setVisable(true);
         InterviewQuestionDto createdQuestion = interviewQuestionService.writeQuestion(userPrincipal.getUser(), interviewQuestionDto);
         return success(createdQuestion);
 

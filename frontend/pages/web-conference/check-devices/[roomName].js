@@ -6,7 +6,6 @@ import SpeakerSelect from "../../../components/webRTC/devices/SpeakerSelect";
 import MyFace from "../../../components/webRTC/MyFace";
 import styles from "../../../scss/web-conference/check-devices.module.scss";
 import SockJS from "sockjs-client";
-import removeStream from "../../../components/webRTC/removeStream";
 import { WEBRTC_URL } from "../../../config";
 
 function mapStateToProps(state) {
@@ -36,7 +35,6 @@ function CheckDevices({ws}) {
     if(rooms.length !== 0 && roomNum) {
       if(!rooms.some(room => String(room.id) === roomNum)) {
         alert("가입한 스터디 채널이 아닙니다.")
-        removeStream()
         router.push("/404")
       }
     }
@@ -57,7 +55,6 @@ function CheckDevices({ws}) {
       },
       () => {
         alert("로그인 이후에 이용하실 수 있습니다.")
-        removeStream()
         router.push("/404")
       }
     );

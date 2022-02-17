@@ -106,7 +106,6 @@ function Interview({
           });
           break;
         case "stopped":
-          console.log("111111")
           break;
         case "paused":
           break;
