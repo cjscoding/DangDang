@@ -242,13 +242,15 @@ function TeamSpace({
             <div className={styles.section}>
               <h3>대기명단</h3>
               <div className={styles.waitingList}>
-                {waitingList?.map((member, index) => (
+                {waitingList?.map((member, index) => {
+                  const imgUrl = member.imageUrl.slice(0, 4) === "http"?member.imageUrl:`${BACKEND_URL}/files/images/${member.imageUrl}`
+                  return(
                   <form key={index} onSubmit={onAllowJoin}>
                     <div>
                       {member.imageUrl !== null &&
                       member.imageUrl !== "default.jpg" ? (
                         <img
-                          src={`${BACKEND_URL}/files/images/${member.imageUrl}`}
+                          src={imgUrl}
                         />
                       ) : (
                         <img src="/images/dangdang_1.png" />
@@ -258,7 +260,7 @@ function TeamSpace({
                     </div>
                     <button className={styles.allowMemberBtn}>가입승인</button>
                   </form>
-                ))}
+                )})}
               </div>
             </div>
           </div>
