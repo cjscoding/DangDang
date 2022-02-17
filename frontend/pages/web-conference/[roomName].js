@@ -23,12 +23,6 @@ function mapStateToProps(state) {
   };
 }
 function mapDispatchToProps() {
-  // function pipMode() {
-  //   if (document.pictureInPictureEnabled && myVideoEl) myVideoEl.requestPictureInPicture();
-  // }
-  // function normalMode() {
-  //   if (document.pictureInPictureElement) document.exitPictureInPicture();
-  // }
   return {
     pipMode: (event) => {if (document.pictureInPictureEnabled) event.target.requestPictureInPicture()},
     normalMode: () => {if (document.pictureInPictureElement) document.exitPictureInPicture()},
@@ -99,16 +93,16 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
       video.controls = false;
       video.style.borderRadius = "10px"
       if(this.id === "screen") {
-        video.style.width = "960px"
-        video.style.height = "540px"
+        video.style.width = "800px"
+        video.style.height = "450px"
         video.style.borderRadius = "0"
       }
       if(video.sinkId !== speakerId) video.setSinkId(speakerId)
       container.appendChild(video);
       container.appendChild(span);
       container.style = "display: flex; flex-direction: column; align-items: center;"
-      container.style.paddingRight = "1rem"
-      container.style.paddingLeft = "1rem"
+      container.style.marginRight = "1rem"
+      container.style.marginLeft = "1rem"
       if(!isCam) {
         // pass
       } else if (this.id === "screen") {
@@ -689,6 +683,9 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
         setIsChat(true);
         timer.stopTimer();
       } else {
+        if(Object.keys(participants).filter(
+          (participant) => participant.slice(0, 6) !== "screen"
+        ).length <= 1) return alert("두명 이상의 참가자가 필요합니다.")
         if (!confirm("면접 모드로 바꾸시겠습니까? \n(버튼을 누른 사람이 지원자가 됩니다.)")) return;
         timer.startTimer();
       }
@@ -717,7 +714,7 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
     const videoContainerEl = document.getElementById("videoContainer")
     function detectResize() {
       const saveState = isSmallState
-      if(videoContainerEl.clientHeight < 720) {
+      if(videoContainerEl.clientHeight < 670) {
         isSmallState = true
       }else {
         isSmallState = false
@@ -839,6 +836,8 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
         video.style.borderColor = "#6bbfca";
         video.style.backgroundColor = "#6bbfca";
       } else {
+        video.style.border = "0px"
+        video.style.backgroundColor = "transparent"
       }
     }
   }, [screenShareUser]);
@@ -862,8 +861,8 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
       }
       videoContainer.style.position = "static"
       videoContainer.style.display = "flex"
-      videoContainer.style.paddingRight = "1rem"
-      videoContainer.style.paddingLeft = "1rem"
+      videoContainer.style.marginRight = "1rem"
+      videoContainer.style.marginLeft = "1rem"
       videoContainer.style.width = "auto"
       const video = videoContainer.firstChild
       video.style.borderRadius = "10px"
@@ -885,8 +884,8 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
               continue
             }
             const video = videoContainer.firstChild
-            video.style.width = "240px"
-            video.style.height = "135px"
+            video.style.width = "208px"
+            video.style.height = "117px"
           }
         }else {
           const participantsEl = document.getElementById("participants")
@@ -904,13 +903,13 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
               continue
             }
             const video = videoContainer.firstChild
-            video.style.width = "800px"
-            video.style.height = "450px"
+            video.style.width = "640px"
+            video.style.height = "360px"
             if(inteviewerNum == 2) {
-              videoContainer.style.width = "600px"
+              videoContainer.style.width = "450px"
             }
             if(inteviewerNum == 3) {
-              videoContainer.style.width = "400px"
+              videoContainer.style.width = "300px"
             }
           }
         }
@@ -932,8 +931,8 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
               videoContainer.style.display = "none"
             }
             const video = videoContainer.firstChild
-            video.style.width = "240px"
-            video.style.height = "135px"
+            video.style.width = "208px"
+            video.style.height = "117px"
           }
         }else {
           const participantsEl = document.getElementById("participants")
@@ -964,8 +963,8 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
         const participantsEl = document.getElementById("participants")
         for(let videoContainer of participantsEl.childNodes) {
           const video = videoContainer.firstChild
-          video.style.width = "240px"
-          video.style.height = "135px"
+          video.style.width = "208px"
+          video.style.height = "117px"
         }
       }else {
         const participantsEl = document.getElementById("participants")

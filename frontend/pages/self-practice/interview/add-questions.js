@@ -10,6 +10,7 @@ import {
 import Pagination from "../../../components/layout/Pagination";
 import styles from "../../../scss/self-practice/interview/add-questions.module.scss";
 import menuStyles from "../../../scss/self-practice/interview/menu.module.scss";
+import Title from "../../../components/layout/Title";
 
 function mapStateToProps(state) {
   return {
@@ -205,7 +206,8 @@ function AddQuestions({
   function addQuestionInput(field, question) {
     const trimedQuestion = question.trim();
     if (trimedQuestion) {
-      if(questions.length >= 10) return alert("질문은 10개까지 선택할 수 있습니다.")
+      if (questions.length >= 10)
+        return alert("질문은 10개까지 선택할 수 있습니다.");
       addQuestion(field, trimedQuestion);
     } else {
       alert("값을 입력해주세요");
@@ -221,6 +223,7 @@ function AddQuestions({
 
   return (
     <div className={styles.body}>
+      <Title title="혼자연습한당"></Title>
       <div className={menuStyles.pindicator}>
         <div className={menuStyles.bullet}>
           <span className={menuStyles.icon}>1</span>
@@ -265,10 +268,10 @@ function AddQuestions({
                       </span>
                       <div className={styles.questionContent}>
                         {question.question}
-                        <button>
-                          <i className="fas fa-plus"></i>
-                        </button>
                       </div>
+                      <button>
+                        <i className="fas fa-plus"></i>
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -287,10 +290,10 @@ function AddQuestions({
                       </span>
                       <div className={styles.questionContent}>
                         {question.question}
-                        <button>
-                          <i className="fas fa-plus"></i>
-                        </button>
                       </div>
+                      <button>
+                        <i className="fas fa-plus"></i>
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -308,10 +311,10 @@ function AddQuestions({
                       </span>
                       <div className={styles.questionContent}>
                         {question.question}
-                        <button>
-                          <i className="fas fa-plus"></i>
-                        </button>
                       </div>
+                      <button>
+                        <i className="fas fa-plus"></i>
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -400,10 +403,10 @@ function AddQuestions({
                     </span>
                     <div className={styles.questionContent}>
                       {question.question}
-                      <button>
-                        <i className="fas fa-times"></i>
-                      </button>
                     </div>
+                    <button>
+                      <i className="fas fa-times"></i>
+                    </button>
                   </li>
                 ))}
               </ul>

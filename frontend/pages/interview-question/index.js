@@ -2,6 +2,7 @@ import QuestionListRow from "../../components/interview-question/QuestionListRow
 import styles from "../../scss/interview-question/main.module.scss";
 import Pagination from "../../components/layout/Pagination";
 import Link from "next/link";
+import Title from "../../components/layout/Title";
 
 import { getInterviewQuestions } from "../../api/interviewQuestion";
 import { setQuestions } from "../../store/actions/questionAction";
@@ -62,6 +63,7 @@ function interviewQuestion({ isLogin, questions, setQuestions }) {
 
   return (
     <div className={styles.mainContainer}>
+      <Title title="질문궁금하당"></Title>
       <h1># 질문궁금하당</h1>
 
       <div className={styles.topBar}>
@@ -71,17 +73,19 @@ function interviewQuestion({ isLogin, questions, setQuestions }) {
           onKeyUp={setKeyword}
         />
 
-        <div className={styles.btns}>
-          {isLogin ? (
-            <Link href="/interview-question/me">
-              <a className={styles.isNotButton}>내 질문 보기</a>
-            </Link>
-          ) : null}
+        {isLogin ? (
+          <div className={styles.btns}>
+            {isLogin ? (
+              <Link href="/interview-question/me">
+                <a className={styles.isNotButton}>내 질문 보기</a>
+              </Link>
+            ) : null}
 
-          <Link href="/self-practice">
-            <button className={styles.isButton}>연습 시작하기</button>
-          </Link>
-        </div>
+            <Link href="/self-practice">
+              <button className={styles.isButton}>연습 시작하기</button>
+            </Link>
+          </div>
+        ) : null}
       </div>
 
       <div className={styles.container}>

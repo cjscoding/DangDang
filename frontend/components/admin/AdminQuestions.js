@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import styles from "../../scss/admin/container.module.scss";
 import Selectbox from "../layout/Selectbox";
+import Title from "../layout/Title";
 
 const mapStateToProps = (state) => {
   return {
@@ -29,12 +30,14 @@ function AdminQuestion({ questions, setQuestions }) {
   const [totalElements, setTotalElements] = useState(questions.totalElements);
   const paginate = (pageNumber) => setCurPage(pageNumber);
 
-  const fields = ["공통", "인성", "IT", "기타"];
+  //   const fields = ["공통", "인성", "IT", "기타"];
+  const [field, setField] = useState("공통");
 
   useEffect(() => {
     const param = {
       page: curPage,
       size: postsPerPage,
+      field,
     };
     getAllQuestionList(
       param,
@@ -45,19 +48,37 @@ function AdminQuestion({ questions, setQuestions }) {
       },
       (err) => console.log(err, "질문 리스트 조회 실패")
     );
-  }, [curPage]);
+  }, [curPage, field]);
+
+  useEffect(() => {
+    setCurPage(0);
+  }, [field]);
 
   useEffect(() => {
     console.log(questions);
   }, [questions]);
-  // console.log(questions);
+
+  const setFieldParam = (value) => setField(value);
+
   return (
     <div>
+      <Title title="질문 관리"></Title>
       <div>
         <div className={styles.menu}>
-          <Selectbox values={fields}></Selectbox>
+          {/* <Selectbox values={fields}></Selectbox> */}
+          <div className={styles.selectBox}>
+            <select onChange={(event) => setFieldParam(event.target.value)}>
+              <option value="공통">공통</option>
+              <option value="인성">인성</option>
+              <option value="기술">IT</option>
+              <option value="기타">기타</option>
+            </select>
+            <span className={styles.selectArrowIcon}>
+              <i className="fas fa-angle-down"></i>
+            </span>
+          </div>
           <span>질문</span>
-          <span>설정</span>
+          <span>공개</span>
         </div>
 
         {questions &&

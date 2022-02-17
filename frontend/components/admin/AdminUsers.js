@@ -6,6 +6,7 @@ import { getAllUserList } from "../../api/admin";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import styles from "../../scss/admin/container.module.scss";
+import Title from "../layout/Title";
 
 const mapStateToProps = (state) => {
   return {
@@ -46,6 +47,7 @@ function AdminQuestion({ users, setUsers }) {
 
   return (
     <div>
+      <Title title="회원 관리"></Title>
       <div>
         <div className={styles.menu}>
           <span>No.</span>

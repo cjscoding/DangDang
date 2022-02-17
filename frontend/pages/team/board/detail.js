@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Title from "../../../components/layout/Title";
 
 const mapStateToProps = (state) => {
   return {
@@ -140,10 +141,14 @@ function TeamDetail({ user, roomInfo, roomHost, comments, setRoomInfo }) {
     event.target[0].value = "";
   };
 
-  const onMoveKakaoPage = (href) => window.open(href);
+  const onMoveKakaoPage = (href) => {
+      if(href) window.open(href);
+      else alert("등록된 주소가 없습니다.");
+  }
 
   return (
     <div className={styles.container}>
+      <Title title={roomInfo.name}></Title>
       <div className={styles.mainContainer}>
         <div className={styles.infoBox}>
           <div className={styles.mainInfo}>
@@ -208,14 +213,16 @@ function TeamDetail({ user, roomInfo, roomHost, comments, setRoomInfo }) {
             <input type="text" placeholder="댓글을 남겨주세요..." />
             <button>등록</button>
           </form>
-          {comments.map((comment, index) => (
-            <Comment
-              comment={comment}
-              key={index}
-              reload={reload}
-              userImage={comment.writerImageUrl}
-            />
-          ))}
+          {comments.map((comment, index) => {
+            return(
+              <Comment
+                comment={comment}
+                key={index}
+                reload={reload}
+                userImage={comment.writerImageUrl}
+              />
+            )
+          })}
         </div>
       </div>
 

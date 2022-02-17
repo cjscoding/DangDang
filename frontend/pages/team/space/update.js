@@ -1,5 +1,4 @@
 import styles from "../../../scss/team/form.module.scss";
-// import Title from "../../../components/layout/Title";
 
 import { getWaitings } from "../../../api/member";
 import { getRoomInfo, updateRoom, updateRoomImg } from "../../../api/studyroom";
@@ -37,7 +36,7 @@ function UpdateTeam({ roomInfo, setRoomInfo, setWaitings }) {
 
   const [updateInfo, setUpdateInfo] = useState(roomInit);
   const [updateTags, setUpdateTags] = useState([]);
-  const [image, setImage] = useState("");
+  const [newImage, setNewImage] = useState("");
 
   useEffect(() => {
     const roomObj = {
@@ -74,9 +73,6 @@ function UpdateTeam({ roomInfo, setRoomInfo, setWaitings }) {
     } else if (updateTags.length === 0) {
       console.log("최소 하나 이상의 태그를 작성해주세요!");
       return;
-    } else if (image === "") {
-      console.log("스터디 프로필 이미지를 첨부해주세요!");
-      return;
     }
 
     updateRoom(
@@ -85,48 +81,51 @@ function UpdateTeam({ roomInfo, setRoomInfo, setWaitings }) {
         console.log(res, "스터디 수정 완료!");
         const data = {
           studyId: router.query.id,
-          image,
+          newImage,
         };
-        updateRoomImg(
-          data,
+        if (newImage) {
+          updateRoomImg(
+            data,
+            (res) => {
+              console.log(res, "스터디 이미지 등록 성공");
+            },
+            (err) => {
+              console.log(err, "스터디 이미지 등록 실패");
+            }
+          );
+        }
+        getRoomInfo(
+          router.query.id,
           (res) => {
-            console.log(res, "스터디 이미지 등록 성공");
-            getRoomInfo(
+            const roomData = {
+              roomInfo: res.data.response,
+              host: res.data.response.host,
+              members: res.data.response.userDtos,
+              comments: res.data.response.commentDtos.content,
+            };
+            console.log(roomData);
+            setRoomInfo(roomData);
+            getWaitings(
               router.query.id,
               (res) => {
-                const roomData = {
-                  roomInfo: res.data.response,
-                  host: res.data.response.host,
-                  members: res.data.response.userDtos,
-                  comments: res.data.response.commentDtos.content,
-                };
-                console.log(roomData);
-                setRoomInfo(roomData);
-                getWaitings(
-                  router.query.id,
-                  (res) => {
-                    const waitings = res.data.response;
-                    setWaitings(waitings);
-                    console.log(res, "가입대기명단 조회 성공!");
-                    onMoveInfoPage();
-                  },
-                  (err) => {
-                    console.log(err, "가입대기명단 조회에 실패하였습니다.");
-                  }
-                );
+                const waitings = res.data.response;
+                setWaitings(waitings);
+                console.log(res, "가입대기명단 조회 성공!");
+                onMoveInfoPage();
               },
               (err) => {
-                console.log(err, "스터디를 조회할 수 없습니다.");
+                console.log(err, "가입대기명단 조회에 실패하였습니다.");
+                onMoveInfoPage();
               }
             );
           },
           (err) => {
-            console.log(err, "스터디 이미지 등록 실패");
+            console.log(err, "스터디를 조회할 수 없습니다.");
           }
         );
       },
       (err) => {
-        console.log(err, "스터디를 수정할 권한이 없습니다.");
+        console.log(err, "스터디를 수정할 실패");
       }
     );
   };
@@ -169,7 +168,7 @@ function UpdateTeam({ roomInfo, setRoomInfo, setWaitings }) {
   };
 
   //studyroom image
-  const onSetImage = (event) => setImage(event.target.files[0]);
+  const onSetImage = (event) => setNewImage(event.target.files[0]);
 
   return (
     <div className={styles.formContainer}>
@@ -262,8 +261,9 @@ function UpdateTeam({ roomInfo, setRoomInfo, setWaitings }) {
               id="inputFile"
               onChange={onSetImage}
               style={{ display: "none" }}
+              required
             />
-            <span>{image ? image.name : null}</span>
+            <span>{newImage ? newImage.name : null}</span>
             <label className={styles.inputFileButton} htmlFor="inputFile">
               등록
             </label>

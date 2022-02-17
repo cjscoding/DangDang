@@ -73,6 +73,7 @@
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
+        z-index: 1;
         &:hover {
           font-weight: 700;
         }
@@ -85,7 +86,7 @@
       .selectArrowIcon {
         position: absolute;
         left: 180px;
-        z-index: -3;
+        z-index: 0;
       }
     }
     span {

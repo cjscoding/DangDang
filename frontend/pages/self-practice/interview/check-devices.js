@@ -7,8 +7,9 @@ import SpeakerSelect from "../../../components/webRTC/devices/SpeakerSelect";
 import MyFace from "../../../components/webRTC/MyFace";
 import styles from "../../../scss/self-practice/interview/check-devices.module.scss";
 import menuStyles from "../../../scss/self-practice/interview/menu.module.scss";
-import { BACKEND_URL } from "../../../config";
-import axios from "axios";
+// import { BACKEND_URL } from "../../../config";
+// import axios from "axios";
+import Title from "../../../components/layout/Title";
 
 // export async function getServerSideProps() {
 //   const params = {
@@ -79,7 +80,6 @@ function CheckDevices({ preparedQuestions, wsSocket, isQs, setQuestions }) {
         page: 0,
         size: 5,
       };
-      let preparedQuestions;
       // SSR은 localStorage가 없음
       getRecommendedQuestions(
         { params },
@@ -133,6 +133,7 @@ function CheckDevices({ preparedQuestions, wsSocket, isQs, setQuestions }) {
 
   return (
     <div className={styles.body}>
+      <Title title="혼자연습한당"></Title>
       <div className={menuStyles.pindicator}>
         <div className={menuStyles.bullet}>
           <span className={menuStyles.icon}>1</span>

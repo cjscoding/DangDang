@@ -5,6 +5,7 @@ import menuStyles from "../../../scss/self-practice/interview/menu.module.scss";
 import SockJS from "sockjs-client";
 import { WEBRTC_URL } from "../../../config";
 import { useEffect } from "react";
+import Title from "../../../components/layout/Title";
 
 function mapStateToProps(state) {
   return {
@@ -31,6 +32,7 @@ function SelectQuestions({ ws }) {
   }, []);
   return (
     <div className={styles.body}>
+      <Title title="혼자연습한당"></Title>
       <div className={menuStyles.pindicator}>
         <div className={menuStyles.bullet}>
           <span className={`${menuStyles.iconcur} ${menuStyles.first}`}>

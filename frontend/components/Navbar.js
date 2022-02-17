@@ -8,6 +8,7 @@ import {
   setIsLogin,
   setIsMoveTeamStudy,
 } from "../store/actions/userAction";
+import { setMyRooms } from "../store/actions/roomAction";
 
 import Link from "next/link";
 import styles from "../scss/layout/navbar.module.scss";
@@ -31,6 +32,7 @@ function mapDispatchToProps(dispatch) {
     setIsLogin: (isLogin) => dispatch(setIsLogin(isLogin)),
     setIsMoveTeamStudy: (isMoveTeamStudy) =>
       dispatch(setIsMoveTeamStudy(isMoveTeamStudy)),
+    setMyRooms: (myRoomList) => dispatch(setMyRooms(myRoomList)),
   };
 }
 
@@ -45,6 +47,7 @@ function NavBar({
   setIsLoginModal,
   resetUserInfo,
   setIsMoveTeamStudy,
+  setMyRooms,
 }) {
   const router = useRouter();
 
@@ -57,6 +60,11 @@ function NavBar({
         // 로그아웃 시 삭제해야 하는 store 값들 추가로 삭제 바람!
         resetUserInfo();
         setIsLogin(false);
+        const myRoomList = {
+          myRooms: [],
+          myRoomsCount: 0,
+        };
+        setMyRooms(myRoomList);
         router.push("/");
       },
       (error) => console.log(error)

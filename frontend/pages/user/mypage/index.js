@@ -5,6 +5,7 @@ import { leaveDangDang } from "../../../api/user";
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
 import { BACKEND_URL } from "../../../config";
+import Title from "../../../components/layout/Title";
 
 function mapStateToProps({ userReducer }) {
   return {
@@ -37,6 +38,7 @@ function userInfo({ user }) {
 
   return (
     <div className={styles.myPageContainer}>
+      <Title title={user.nickName}></Title>
       <div className={styles.imageBox}>
         {user.imageUrl !== null &&
         user.imageUrl !== `${BACKEND_URL}/files/images/default.jpg` ? (

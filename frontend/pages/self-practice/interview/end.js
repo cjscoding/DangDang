@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { WEBRTC_URL } from "../../../config";
 import multiDownload from "multi-download";
 import { useRouter } from "next/router";
+import Title from "../../../components/layout/Title";
 
 function mapStateToProps(state) {
   const questions = state.questionReducer.questions.map(
@@ -119,6 +120,7 @@ function EndInterview({
   }, []);
   return (
     <div className={styles.body}>
+      <Title title="혼자연습한당"></Title>
       <div className={styles.endBtn} ref={endBtn}>
         <i className="fas fa-times"></i>
         <div>종료</div>

@@ -1,6 +1,6 @@
 import Pagination from "../../../components/layout/Pagination";
 import styles from "../../../scss/team/board/board.module.scss";
-// import Title from "../../../components/layout/Title";
+import Title from "../../../components/layout/Title";
 import Link from "next/link";
 
 import { BACKEND_URL } from "../../../config";
@@ -14,6 +14,7 @@ const mapStateToProps = (state) => {
   return {
     rooms: state.roomReducer.curRooms,
     totalPosts: state.roomReducer.curRoomsCount,
+    isLogin: state.userReducer.isLogin,
   };
 };
 
@@ -25,7 +26,7 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamBoard);
 
-function TeamBoard({ rooms, totalPosts, setAllRooms }) {
+function TeamBoard({ rooms, totalPosts, setAllRooms, isLogin }) {
   //스터디룸 상세보기 페이지 연결 로직
   const router = useRouter();
   const onDetail = (id) => {
@@ -54,12 +55,10 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
       if (newTag == "") {
         alert("키워드를 입력해주세요.");
         console.log("키워드를 입력해주세요.");
-
       } else if (searchTags.indexOf(newTag) === -1) {
         setSearchTags([...searchTags, newTag]);
         event.target.value = "";
         setCurPage(0);
-
       } else {
         alert("이미 존재하는 키워드입니다.");
         console.log("이미 존재하는 키워드입니다.");
@@ -78,9 +77,9 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
       hashtags: searchTags.join(","),
       page: curPage,
       size: postsPerPage,
-      sort: "createdAt,desc"
+      sort: "createdAt,desc",
     };
-    
+
     getAllRooms(
       param,
       (res) => {
@@ -99,7 +98,7 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
 
   return (
     <div className={styles.studyBoard}>
-      {/* <Title title="Board"></Title> */}
+      <Title title="스터디구한당"></Title>
 
       <h1 className={styles.title}># 스터디구한당</h1>
 
@@ -111,19 +110,21 @@ function TeamBoard({ rooms, totalPosts, setAllRooms }) {
             placeholder="검색어를 입력하고 엔터키를 눌러주세요..."
           />
 
-          <div className={styles.btns}>
-            <Link href="/team/space/create">
-              <button className={styles.createBtn}>
-                <a>방 생성하기</a>
-              </button>
-            </Link>
+          {isLogin ? (
+            <div className={styles.btns}>
+              <Link href="/team/space/create">
+                <button className={styles.createBtn}>
+                  <a>방 생성하기</a>
+                </button>
+              </Link>
 
-            <Link href="/user/mypage/myroom">
-              <button className={styles.goMyRoomBtn}>
-                <a>내 방으로</a>
-              </button>
-            </Link>
-          </div>
+              <Link href="/user/mypage/myroom">
+                <button className={styles.goMyRoomBtn}>
+                  <a>내 방으로</a>
+                </button>
+              </Link>
+            </div>
+          ) : null}
         </div>
 
         <div className={styles.tagContainer}>
