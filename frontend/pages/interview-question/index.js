@@ -73,17 +73,19 @@ function interviewQuestion({ isLogin, questions, setQuestions }) {
           onKeyUp={setKeyword}
         />
 
-        <div className={styles.btns}>
-          {isLogin ? (
-            <Link href="/interview-question/me">
-              <a className={styles.isNotButton}>내 질문 보기</a>
-            </Link>
-          ) : null}
+        {isLogin ? (
+          <div className={styles.btns}>
+            {isLogin ? (
+              <Link href="/interview-question/me">
+                <a className={styles.isNotButton}>내 질문 보기</a>
+              </Link>
+            ) : null}
 
-          <Link href="/self-practice">
-            <button className={styles.isButton}>연습 시작하기</button>
-          </Link>
-        </div>
+            <Link href="/self-practice">
+              <button className={styles.isButton}>연습 시작하기</button>
+            </Link>
+          </div>
+        ) : null}
       </div>
 
       <div className={styles.container}>
