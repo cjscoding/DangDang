@@ -13,15 +13,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Slf4j
 @Service
@@ -73,6 +73,29 @@ public class FileSystemStorageService implements StorageService {
       return rootLocation.resolve(Paths.get(fileLocation + filename));
   }
 
+  @Override
+  public Resource loadAllVideo(UUID uuid, String[] fileNames) throws IOException {
+    FileOutputStream fos = new FileOutputStream(videoLocation+uuid.toString()+"interview.zip");
+    ZipOutputStream out = new ZipOutputStream(fos);
+    byte[] buf = new byte[4096];
+    for (String name : fileNames){
+      Resource resource = this.loadVideoAsResource(name);
+      File file = resource.getFile();
+      try(FileInputStream in = new FileInputStream(file)){
+        ZipEntry ze = new ZipEntry(file.getName());
+        out.putNextEntry(ze);
+        int len;
+        while ((len = in.read(buf)) > 0) {
+          out.write(buf, 0, len);
+        }
+        out.closeEntry();
+
+      }
+    }
+
+    Resource resource = this.loadVideoAsResource(uuid.toString()+"interview.zip");
+    return resource;
+  }
 
   @Override
   public Resource loadAsResource(String filename) {
