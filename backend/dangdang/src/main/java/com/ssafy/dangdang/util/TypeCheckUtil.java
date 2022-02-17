@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 @Component
 public class TypeCheckUtil {
 
-  private final Pattern imageExt = Pattern.compile("\\.(?<ext>png|jpg|jpeg|bmp|gif)$");
+  private final Pattern imageExt = Pattern.compile("\\.(?<ext>png|jpg|jpeg|bmp|gif|PNG|JPG|JPEG|BMP|GIF)$");
 
   /**
    * @param fileName

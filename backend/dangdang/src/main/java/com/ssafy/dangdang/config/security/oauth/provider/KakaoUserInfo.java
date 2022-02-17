@@ -37,11 +37,14 @@ public class KakaoUserInfo implements OAuth2UserInfo{
 	}
     @Override
     public String getImageUrl() {
+
         Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
 
         if (properties == null) {
             return "default.jpg";
         }
+        if (properties.get("thumbnail_image") ==null) return  "default.jpg";
+
 
         return (String) properties.get("thumbnail_image");
     }
