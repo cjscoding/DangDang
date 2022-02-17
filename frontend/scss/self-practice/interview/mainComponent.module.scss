@@ -202,11 +202,11 @@
 }
 
 .btn2 {
-  @include self-practice-btn-hover($yellow-color);
+  @include self-practice-btn-hover($purple-color);
 }
 
 .btn3 {
-  @include self-practice-btn-hover($purple-color);
+  @include self-practice-btn-hover($yellow-color);
 }
 
 .btn4 {
