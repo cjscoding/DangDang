@@ -1,5 +1,5 @@
 import styles from "../../../scss/team/form.module.scss";
-import Title from "../../../components/layout/Title";
+// import Title from "../../../components/layout/Title";
 
 import { createRoom, addRoomImg } from "../../../api/studyroom";
 import { useRouter } from "next/router";
@@ -127,7 +127,7 @@ export default function CreateRoom() {
 
   return (
     <div className={styles.formContainer}>
-      <Title title="Create Room"></Title>
+      {/* <Title title="Create Room"></Title> */}
 
       <button onClick={onMoveStudyBoardPage} className={styles.moveBackBtn}>
         <i className="fas fa-angle-double-left"></i> 돌아가기

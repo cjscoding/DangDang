@@ -32,7 +32,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(TeamDetail);
 function TeamDetail({ user, roomInfo, roomHost, comments, setRoomInfo }) {
   const router = useRouter();
   const [join, setJoin] = useState(false);
-
   useEffect(() => {
     if (!router.isReady) return;
     getRoomInfo(

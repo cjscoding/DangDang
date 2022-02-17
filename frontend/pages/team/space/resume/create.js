@@ -80,7 +80,7 @@ function CreateResume() {
             name="answer"
             onChange={(event) => setAnswer(event.target.value)}
             placeholder="내용을 입력해주세요..."
-          ></textarea>
+          />
         </div>
       </form>
       <button className={styles.submitBtn} onClick={onSubmitResume}>

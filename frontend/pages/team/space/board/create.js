@@ -69,7 +69,7 @@ export default function createPost() {
             value={content}
             onChange={(event) => setContent(event.target.value)}
             placeholder="내용을 작성해주세요..."
-          ></textarea>
+          />
         </div>
       </form>
 

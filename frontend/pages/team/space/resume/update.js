@@ -80,7 +80,7 @@ export default function ResumeUpdate() {
             name="answer"
             value={answer}
             onChange={(event) => setAnswer(event.target.value)}
-          ></textarea>
+          />
         </div>
       </form>
 
