@@ -596,7 +596,6 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
             letterEl.innerHTML = "";
             if (res.data.response.length !== 0) {
               const resumeList = res.data.response[0].resumeQuestionList;
-              for(let i = 0; i < 10; i++){
               resumeList.forEach((resume) => {
                 const contentElContainer = document.createElement("div");
                 const contentEl = document.createElement("div");
@@ -610,7 +609,7 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
                 contentEl.appendChild(p);
                 contentElContainer.appendChild(contentEl)
                 letterEl.appendChild(contentElContainer)
-              });}
+              });
             } else {
               const content = document.createElement("div");
               const h3 = document.createElement("h3");
