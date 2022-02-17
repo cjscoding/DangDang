@@ -22,5 +22,7 @@ public interface InterviewQuestionSupport {
 
     Page<InterviewQuestion> searchInterviewQuestion(User writer, WriteInterview searchParam, Pageable pageable);
 
+    Page<InterviewQuestion> adminSearchInterviewQuestion(WriteInterview searchParam, Pageable pageable);
+
     Page<InterviewQuestion> searchMine(User writer, WriteInterview searchParam, Pageable pageable);
 }
