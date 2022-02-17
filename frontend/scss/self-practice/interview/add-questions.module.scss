@@ -29,9 +29,11 @@
       width: 400px;
       margin-right: 1rem;
       .QuestionContainer {
-        margin-bottom: 1.7rem;
+        // margin-bottom: 1.7rem;
         width: 100%;
         height: 83%;
+        margin-bottom: 3px;
+        max-height: 534px;
         background: white;
         box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.05);
         border-radius: 12px;
@@ -57,9 +59,22 @@
         }
         .QuestionList {
           width: 100%;
-          height: 90%;
+
+          height: 422.8px;
           overflow-y: auto;
           overflow-x: hidden;
+          @include scrollbar;
+          border-bottom: $division-line;
+        }
+        .pagination {
+          background-color: white;
+          padding: 0.7rem;
+          padding-bottom: 1.5rem;
+          height: 7%;
+          height: 42px;
+          font-size: 0.8rem;
+          border-bottom: $division-line;
+          border-radius: 12px;
         }
       }
       .addContainer {
@@ -91,12 +106,6 @@
             color: $gray-color;
           }
         }
-      }
-      .pagination {
-        padding: 1rem;
-        padding-bottom: 1.5rem;
-        height: 5%;
-        font-size: 0.8rem;
       }
     }
     .ContainerR {
@@ -155,8 +164,8 @@
 
 .question {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  padding: 1rem 1.5rem;
+  grid-template-columns: 1fr 2fr 0.6fr;
+  padding: 1rem 0;
   padding-left: 0;
   font-size: 0.9rem;
   position: relative;
@@ -170,8 +179,8 @@
     font-weight: bold;
   }
   button {
-    position: absolute;
-    right: 1.5rem;
+    // position: absolute;
+    // right: 1.5rem;
     :global(*) {
       color: $gray-color;
     }

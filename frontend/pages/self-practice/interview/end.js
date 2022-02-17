@@ -1,10 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "../../../scss/self-practice/interview/end.module.scss";
 import { connect } from "react-redux";
 import { WEBRTC_URL } from "../../../config";
-import multiDownload from "multi-download";
 import { useRouter } from "next/router";
 import Title from "../../../components/layout/Title";
+// import axios from "axios";
+// import JSZip from "jszip"
 
 function mapStateToProps(state) {
   const questions = state.questionReducer.questions.map(
@@ -29,6 +30,7 @@ function EndInterview({
 }) {
   const endBtn = useRef();
   const router = useRouter();
+  const [downloadIdxes, setDownloadIdxes] = useState([])
 
   useEffect(() => {
     let ws = wsSocket;
@@ -68,21 +70,34 @@ function EndInterview({
     function play(idx) {
       myVideo.src = `${WEBRTC_URL}/files/videos/${sessionId + idx}.webm`;
     }
-    async function download(idx) {
-      // const element = document.createElement('a');
-      // element.setAttribute('href',`${WEBRTC_URL}/kurento/download/${sessionId}${idx}.webm`);
-      // element.setAttribute('download', `${sessionId}${idx}.webm`);
-      // document.body.appendChild(element);
-      // element.click();
-      // document.body.removeChild(element);
+    function download(idx) {
       window.open(`${WEBRTC_URL}/kurento/download/${sessionId}${idx}.webm`);
     }
     function allDownload(e) {
-      const urls = [];
-      for (let idx of recordedQuestionIdxes) {
-        urls.push(`${WEBRTC_URL}/kurento/download/${sessionId}${idx}.webm`);
+      let fileNames = ""
+      for(let idx of recordedQuestionIdxes) {
+        fileNames += (`fileNames=${sessionId}${idx}.webm&`)
       }
-      multiDownload(urls);
+      fileNames = fileNames.slice(0, fileNames.length - 1)
+      // axios({
+      //   method: "get",
+      //   url: `${WEBRTC_URL}/kurento/download/all?${fileNames}`,
+      // })
+      //   .then(async (res) => {
+      //     console.log(res)
+      //     const zip = new JSZip()
+      //     await zip.loadAsync(res.data, {type: "uint8array"})
+      //     const blob = await zip.generateAsync({type: "blob"})
+      //     const a = document.createElement("a")
+      //     a.setAttribute("href", window.URL.createObjectURL(blob))
+      //     a.setAttribute("download")
+      //     document.body.appendChild(a);
+      //     a.click();
+      //     document.body.removeChild(a);
+      //   })
+      //   .catch((err) => console.log(err))
+      // setDownloadIdxes(recordedQuestionIdxes)
+      window.open(`${WEBRTC_URL}/kurento/download/all?${fileNames}`);
     }
     for (let idx of recordedQuestionIdxes) {
       const playId = idx + "-play";
@@ -118,6 +133,20 @@ function EndInterview({
       allDownloadBtn.removeEventListener("click", allDownload);
     };
   }, []);
+
+  // useEffect(() => {
+  //   if(downloadIdxes.length !== 0) {
+  //     const element = document.createElement('a');
+  //     element.setAttribute('href',`${WEBRTC_URL}/kurento/download/${sessionId}${downloadIdxes[0]}.webm`);
+  //     element.setAttribute('download', `${sessionId}${downloadIdxes[0]}.webm`);
+  //     document.body.appendChild(element);
+  //     element.click();
+  //     document.body.removeChild(element);
+  //     const remainDownloadIdxes = downloadIdxes.splice(1, downloadIdxes.length)
+  //     setDownloadIdxes(remainDownloadIdxes)
+  //   }
+  // }, [downloadIdxes])
+
   return (
     <div className={styles.body}>
       <Title title="혼자연습한당"></Title>
