@@ -80,6 +80,14 @@ public class InterviewQuestionServiceImpl implements InterviewQuestionService{
 
     @Override
     @Transactional
+    public Page<InterviewQuestionDto> adminSearchInterviewQuestion(WriteInterview searchParam, Pageable pageable){
+        Page<InterviewQuestion> search = interviewQuestionRepository.adminSearchInterviewQuestion(searchParam, pageable);
+        Page<InterviewQuestionDto> interviewQuestionDtos = search.map(InterviewQuestionDto::of);
+        return interviewQuestionDtos;
+    }
+
+    @Override
+    @Transactional
     public void makePublic(Long interviewId){
         Optional<InterviewQuestion> interview = interviewQuestionRepository.findById(interviewId);
         if (!interview.isPresent()) throw new NullPointerException("존재하지 않는 질문 입니다.");
