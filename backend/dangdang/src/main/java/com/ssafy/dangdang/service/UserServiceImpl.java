@@ -81,6 +81,7 @@ public class UserServiceImpl implements UserService{
             comment.setWriterEmail(userDto.getEmail());
             comment.setWriterNickname(userDto.getNickName());
         }
+        commentRepository.saveAll(comments);
 
     }
 
@@ -92,6 +93,7 @@ public class UserServiceImpl implements UserService{
         user.addImageUrl(uuid + file.getOriginalFilename());
         List<Comment> comments = commentRepository.findCommentByWriterEmail(user.getEmail());
         for (Comment comment : comments) comment.setWriterImageUrl(uuid + file.getOriginalFilename());
+        commentRepository.saveAll(comments);
     }
 
     @Override
