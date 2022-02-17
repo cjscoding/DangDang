@@ -41,15 +41,15 @@ function addQuestion() {
   };
 
   useEffect(() => {
-    const fieldSelectEl = document.getElementById("field")
-    fieldSelectEl.firstChild.selected = true
+    const fieldSelectEl = document.getElementById("field");
+    fieldSelectEl.firstChild.selected = true;
     const nextValues = {
       ...values,
-      field: fieldSelectEl.firstChild.value
-    }
+      field: fieldSelectEl.firstChild.value,
+    };
     setValues(nextValues);
-  }, [])
-  
+  }, []);
+
   return (
     <div className={styles.formContainer}>
       <Link href="/interview-question/me">
@@ -80,6 +80,7 @@ function addQuestion() {
             autoFocus
             required
           />
+        </div>
       </form>
 
       <button className={styles.submitBtn} onClick={handleSubmit}>
