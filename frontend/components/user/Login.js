@@ -74,6 +74,7 @@ function Login({
             console.log(error);
           }
         );
+        document.body.style.overflow = "unset";
         setShowModal(false);
       },
       (error) => {

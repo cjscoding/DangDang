@@ -8,6 +8,7 @@ import timer from "../../../components/webRTC/timerfunction";
 import Timer from "../../../components/webRTC/Timer";
 import getVideoConstraints from "../../../components/webRTC/getVideoConstraints";
 import { ttsService } from "../../../api/webRTC";
+import Title from "../../../components/layout/Title";
 
 function mapStateToProps(state) {
   const questions = state.questionReducer.questions.map(
@@ -85,12 +86,12 @@ function Interview({
       myFace.srcObject = stream;
     }
     getStream();
-
+    let tts;
     function sendMessage(msgObj) {
       const msgStr = JSON.stringify(msgObj);
       ws.send(msgStr);
     }
-    ws.onmessage = function (message) {
+    ws.onmessage = async function (message) {
       const msgObj = JSON.parse(message.data);
       switch (msgObj.id) {
         case "startResponse":
@@ -105,13 +106,15 @@ function Interview({
           });
           break;
         case "stopped":
+          console.log("111111")
           break;
         case "paused":
           break;
         case "recording":
           showScreen();
           timer.startTimer();
-          ttsService(questions[questionNumState], volume);
+          tts = await ttsService(questions[questionNumState], volume);
+          tts.start(0)
           break;
         default:
           console.log(`ERROR! ${msgObj}`);
@@ -121,7 +124,7 @@ function Interview({
 
     function record() {
       hideScreen();
-
+      if(tts) tts.stop()
       const options = {
         localVideo: myFace,
         mediaConstraints: getVideoConstraints(640, 360),
@@ -184,6 +187,7 @@ function Interview({
       timer.stopTimer();
       pushRecordedQuestionIdx(questionNumState);
       if (questionNumState === questions.length - 1) {
+        if(tts) tts.stop()
         router.push(`/self-practice/interview/end`);
         return;
       }
@@ -195,6 +199,7 @@ function Interview({
     function skipQuestion() {
       timer.stopTimer();
       if (questionNumState === questions.length - 1) {
+        if(tts) tts.stop()
         router.push(`/self-practice/interview/end`);
         return;
       }
@@ -236,6 +241,7 @@ function Interview({
   }, []);
   return (
     <div className={styles.body}>
+      <Title title="혼자연습한당"></Title>
       <Link href="/self-practice/interview/end">
         <a className={styles.closeBtn}>
           <span>

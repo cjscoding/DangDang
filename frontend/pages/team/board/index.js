@@ -1,6 +1,6 @@
 import Pagination from "../../../components/layout/Pagination";
 import styles from "../../../scss/team/board/board.module.scss";
-// import Title from "../../../components/layout/Title";
+import Title from "../../../components/layout/Title";
 import Link from "next/link";
 
 import { BACKEND_URL } from "../../../config";
@@ -98,7 +98,7 @@ function TeamBoard({ rooms, totalPosts, setAllRooms, isLogin }) {
 
   return (
     <div className={styles.studyBoard}>
-      {/* <Title title="Board"></Title> */}
+      <Title title="스터디구한당"></Title>
 
       <h1 className={styles.title}># 스터디구한당</h1>
 

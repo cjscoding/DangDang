@@ -55,6 +55,7 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
             console.log(err, "유저 이미지 변경 실패");
           }
         );
+        document.body.style.overflow = "unset";
         setShowModal(false);
       },
       (error) => console.log(error)
@@ -62,6 +63,7 @@ function Signup({ isLoginModal, setIsLoginModal, setShowModal }) {
   };
 
   const socialLoginRequest = (provider) => {
+    document.body.style.overflow = "unset";
     window.location.href = `${BACKEND_URL}/oauth2/authorize/${provider}?redirect_uri=${FRONTEND_URL}/user/oauth2/redirect?destination=${router.pathname}`;
   };
   //유저 이미지 설정 시 state 값 변환

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import styles from "../../scss/admin/container.module.scss";
 import Selectbox from "../layout/Selectbox";
+import Title from "../layout/Title";
 
 const mapStateToProps = (state) => {
   return {
@@ -61,6 +62,7 @@ function AdminQuestion({ questions, setQuestions }) {
 
   return (
     <div>
+      <Title title="질문 관리"></Title>
       <div>
         <div className={styles.menu}>
           {/* <Selectbox values={fields}></Selectbox> */}

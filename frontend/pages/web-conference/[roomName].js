@@ -101,8 +101,8 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
       container.appendChild(video);
       container.appendChild(span);
       container.style = "display: flex; flex-direction: column; align-items: center;"
-      container.style.paddingRight = "1rem"
-      container.style.paddingLeft = "1rem"
+      container.style.marginRight = "1rem"
+      container.style.marginLeft = "1rem"
       if(!isCam) {
         // pass
       } else if (this.id === "screen") {
@@ -683,6 +683,9 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
         setIsChat(true);
         timer.stopTimer();
       } else {
+        if(Object.keys(participants).filter(
+          (participant) => participant.slice(0, 6) !== "screen"
+        ).length <= 1) return alert("두명 이상의 참가자가 필요합니다.")
         if (!confirm("면접 모드로 바꾸시겠습니까? \n(버튼을 누른 사람이 지원자가 됩니다.)")) return;
         timer.startTimer();
       }
@@ -858,8 +861,8 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
       }
       videoContainer.style.position = "static"
       videoContainer.style.display = "flex"
-      videoContainer.style.paddingRight = "1rem"
-      videoContainer.style.paddingLeft = "1rem"
+      videoContainer.style.marginRight = "1rem"
+      videoContainer.style.marginLeft = "1rem"
       videoContainer.style.width = "auto"
       const video = videoContainer.firstChild
       video.style.borderRadius = "10px"
@@ -900,13 +903,13 @@ function Conference({ wsSocket, myIdName, cameraId, micId, speakerId, user, pipM
               continue
             }
             const video = videoContainer.firstChild
-            video.style.width = "800px"
-            video.style.height = "450px"
+            video.style.width = "640px"
+            video.style.height = "360px"
             if(inteviewerNum == 2) {
-              videoContainer.style.width = "600px"
+              videoContainer.style.width = "450px"
             }
             if(inteviewerNum == 3) {
-              videoContainer.style.width = "400px"
+              videoContainer.style.width = "300px"
             }
           }
         }

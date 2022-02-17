@@ -31,6 +31,9 @@ public interface InterviewQuestionService {
     @Transactional
     Page<InterviewQuestionDto> searchInterviewQuestion(User writer, WriteInterview searchParam, Pageable pageable);
 
+    @Transactional
+    Page<InterviewQuestionDto> adminSearchInterviewQuestion(WriteInterview searchParam, Pageable pageable);
+
     void makePublic(Long interviewId);
 
     @Transactional

@@ -12,6 +12,7 @@ public interface
 JoinsService {
 
 
+    Boolean getJoin(User user, Long studyId);
 
     public Long joinStudy(User user, Long studyId);
 
