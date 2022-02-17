@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 
 const mapStateToProps = (state) => {
   return {
-    userInfo: state.userReducer.user,
+    user: state.userReducer.user,
   };
 };
 
@@ -25,7 +25,15 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResumeList);
 
-function ResumeList({ userInfo, setResume, resume, comments, index, reload }) {
+function ResumeList({
+  user,
+  setResume,
+  resume,
+  comments,
+  index,
+  reload,
+  curUserId,
+}) {
   const router = useRouter();
   const [questionId] = useState(resume.resumeQuestionList[0].id);
   const [resumeId] = useState(resume.id);
@@ -52,7 +60,7 @@ function ResumeList({ userInfo, setResume, resume, comments, index, reload }) {
         console.log(res);
         const data = {
           studyId: router.query.id,
-          userId: userInfo.id,
+          userId: user.id,
         };
 
         getResume(
@@ -121,14 +129,16 @@ function ResumeList({ userInfo, setResume, resume, comments, index, reload }) {
         <div className={styles.question}>
           <h3>{`Q${index + 1} : ${question}`}</h3>
 
-          <div className={styles.btnBox}>
-            <button onClick={onMoveToUpdate}>
-              <i className="fas fa-pen"></i>
-            </button>
-            <button onClick={onDeleteResume}>
-              <i className="fas fa-trash"></i>
-            </button>
-          </div>
+          {curUserId === user.id ? (
+            <div className={styles.btnBox}>
+              <button onClick={onMoveToUpdate}>
+                <i className="fas fa-pen"></i>
+              </button>
+              <button onClick={onDeleteResume}>
+                <i className="fas fa-trash"></i>
+              </button>
+            </div>
+          ) : null}
         </div>
         <p>{answer}</p>
       </div>

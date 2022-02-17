@@ -74,7 +74,7 @@ function Resume({
       studyId: router.query.id,
       userId: curUserId,
     };
-    
+
     getResume(
       data,
       (res) => {
@@ -157,6 +157,7 @@ function Resume({
             <div>
               {resumeList?.map((resume, index) => (
                 <ResumeList
+                  curUserId={curUserId}
                   resume={resume}
                   comments={resume.commentDtos.content}
                   key={resume.id}

@@ -3,8 +3,17 @@ import styles from "../../../scss/team/space/resume.module.scss";
 import { updateResumeComment, deleteResumeComment } from "../../../api/resume";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../../../config";
+import { connect } from "react-redux";
 
-export default function Reply({ reply, submitReload, resumeId, commentId }) {
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+  };
+};
+
+export default connect(mapStateToProps, null)(ResumeReply);
+
+function ResumeReply({ reply, submitReload, resumeId, commentId, user }) {
   const [showUpdateBtn, setShowUpdateBtn] = useState(false);
   const [newReply, setNewReply] = useState(reply.content);
 
@@ -87,20 +96,22 @@ export default function Reply({ reply, submitReload, resumeId, commentId }) {
             />
           </div>
 
-          <div className={styles.btnBox}>
-            <button type="submit">
-              <i className="fas fa-check"></i>
-            </button>
-            <button type="button" onClick={toggleUpdate}>
-              <i className="fas fa-times"></i>
-            </button>
-          </div>
+          {reply.writerId === user.id ? (
+            <div className={styles.btnBox}>
+              <button type="submit">
+                <i className="fas fa-check"></i>
+              </button>
+              <button type="button" onClick={toggleUpdate}>
+                <i className="fas fa-times"></i>
+              </button>
+            </div>
+          ) : null}
         </form>
       ) : (
         <div className={styles.commentToggle}>
           <div className={styles.userInfo}>
             <div className={styles.imgBox}>
-            {reply.writerImageUrl !== null &&
+              {reply.writerImageUrl !== null &&
               reply.writerImageUrl !== "default.jpg" ? (
                 <img
                   src={`${BACKEND_URL}/files/images/${reply.writerImageUrl}`}
@@ -115,15 +126,16 @@ export default function Reply({ reply, submitReload, resumeId, commentId }) {
           <div className={styles.contentBox}>
             <p>{reply.content}</p>
           </div>
-
-          <div className={styles.btnBox}>
-            <button onClick={toggleUpdate}>
-              <i className="fas fa-pen"></i>
-            </button>
-            <button onClick={() => onDeleteReply(reply.id)}>
-              <i className="fas fa-trash"></i>
-            </button>
-          </div>
+          {reply.writerId === user.id ? (
+            <div className={styles.btnBox}>
+              <button onClick={toggleUpdate}>
+                <i className="fas fa-pen"></i>
+              </button>
+              <button onClick={() => onDeleteReply(reply.id)}>
+                <i className="fas fa-trash"></i>
+              </button>
+            </div>
+          ) : null}
         </div>
       )}
     </div>

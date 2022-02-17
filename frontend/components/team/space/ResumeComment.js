@@ -8,14 +8,17 @@ import {
 } from "../../../api/resume";
 import { useEffect, useState } from "react";
 import { BACKEND_URL } from "../../../config";
+import { connect } from "react-redux";
 
-export default function Comment({
-  comment,
-  reload,
-  resumeId,
-  userName,
-  userImage
-}) {
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+  };
+};
+
+export default connect(mapStateToProps, null)(ResumeComment);
+
+function ResumeComment({ comment, reload, resumeId, userName, userImage, user }) {
   const [showReply, setShowReply] = useState(false);
   const [showUpdateBtn, setShowUpdateBtn] = useState(false);
   const [newComment, setNewComment] = useState(comment.content);
@@ -103,11 +106,8 @@ export default function Comment({
           <form onSubmit={onUpdateComment} className={styles.commentToggle}>
             <div className={styles.userInfo}>
               <div className={styles.imgBox}>
-                {userImage !== null &&
-                userImage !== "default.jpg" ? (
-                  <img
-                    src={`${BACKEND_URL}/files/images/${userImage}`}
-                  />
+                {userImage !== null && userImage !== "default.jpg" ? (
+                  <img src={`${BACKEND_URL}/files/images/${userImage}`} />
                 ) : (
                   <img src="/images/dangdang_1.png" />
                 )}
@@ -130,23 +130,24 @@ export default function Comment({
               <button type="button" onClick={toggleReply}>
                 <i className="fas fa-reply"></i>
               </button>
-              <button type="submit">
-                <i className="fas fa-check"></i>
-              </button>
-              <button type="button" onClick={toggleUpdate}>
-                <i className="fas fa-times"></i>
-              </button>
+              {comment.writerId === user.id ? (
+                <>
+                  <button type="submit">
+                    <i className="fas fa-check"></i>
+                  </button>
+                  <button type="button" onClick={toggleUpdate}>
+                    <i className="fas fa-times"></i>
+                  </button>
+                </>
+              ) : null}
             </div>
           </form>
         ) : (
           <div className={styles.commentToggle}>
             <div className={styles.userInfo}>
               <div className={styles.imgBox}>
-                {userImage !== null &&
-                userImage !== "default.jpg" ? (
-                  <img
-                    src={`${BACKEND_URL}/files/images/${userImage}`}
-                  />
+                {userImage !== null && userImage !== "default.jpg" ? (
+                  <img src={`${BACKEND_URL}/files/images/${userImage}`} />
                 ) : (
                   <img src="/images/dangdang_1.png" />
                 )}
@@ -162,12 +163,16 @@ export default function Comment({
               <button onClick={toggleReply}>
                 <i className="fas fa-reply"></i>
               </button>
-              <button onClick={toggleUpdate}>
-                <i className="fas fa-pen"></i>
-              </button>
-              <button onClick={() => onDeleteComment(comment.id)}>
-                <i className="fas fa-trash"></i>
-              </button>
+              {comment.writerId === user.id ? (
+                <>
+                  <button onClick={toggleUpdate}>
+                    <i className="fas fa-pen"></i>
+                  </button>
+                  <button onClick={() => onDeleteComment(comment.id)}>
+                    <i className="fas fa-trash"></i>
+                  </button>
+                </>
+              ) : null}
             </div>
           </div>
         )}
