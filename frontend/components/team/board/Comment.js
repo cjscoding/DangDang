@@ -25,6 +25,7 @@ function Comment({ comment, reload, user }) {
   const [showReply, setShowReply] = useState(false);
   const [showUpdateBtn, setShowUpdateBtn] = useState(false);
   const [newComment, setNewComment] = useState(comment.content);
+  const [imgUrl, setImageUrl] = useState(null);
 
   const toggleReply = () => setShowReply((showReply) => !showReply);
   const toggleUpdate = () =>
@@ -102,6 +103,16 @@ function Comment({ comment, reload, user }) {
   const onChangeComment = (event) => setNewComment(event.target.value);
   const submitReload = () => reload();
 
+  useEffect(() => {
+    if(comment.writerImageUrl === "default.jpg") {
+      setImageUrl("default.jpg")
+    }else if (comment.writerImageUrl.slice(0, 4) === "http") {
+      setImageUrl(comment.writerImageUrl)
+    }else {
+      setImageUrl(`${BACKEND_URL}/files/images/${comment.writerImageUrl}`)
+    }
+  }, [])
+
   return (
     <div className={styles.commentItem}>
       <div className={styles.commentContent}>
@@ -109,10 +120,10 @@ function Comment({ comment, reload, user }) {
           <form onSubmit={onUpdateComment} className={styles.commentToggle}>
             <div className={styles.userInfo}>
               <div className={styles.imgBox}>
-                {comment.writerImageUrl !== null &&
-                comment.writerImageUrl !== "default.jpg" ? (
+                {imgUrl !== null &&
+                  imgUrl !== "default.jpg" ? (
                   <img
-                    src={`${BACKEND_URL}/files/images/${comment.writerImageUrl}`}
+                    src={imgUrl}
                   />
                 ) : (
                   <img src="/images/dangdang_1.png" />
@@ -152,10 +163,10 @@ function Comment({ comment, reload, user }) {
           <div className={styles.commentToggle}>
             <div className={styles.userInfo}>
               <div className={styles.imgBox}>
-                {comment.writerImageUrl !== null &&
-                comment.writerImageUrl !== "default.jpg" ? (
+                {imgUrl !== null &&
+                  imgUrl !== "default.jpg" ? (
                   <img
-                    src={`${BACKEND_URL}/files/images/${comment.writerImageUrl}`}
+                    src={imgUrl}
                   />
                 ) : (
                   <img src="/images/dangdang_1.png" />
