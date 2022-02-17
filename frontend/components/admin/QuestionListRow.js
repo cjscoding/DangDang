@@ -6,27 +6,26 @@ export default function QuestionListRow({ id, question }) {
   const [visible, setVisible] = useState(question.visable);
 
   // 질문 공개 설정
-  const setOpen = () => {
-    setVisible(true);
-    setQuestionOpen(
-      question.id,
-      (res) => {
-        console.log(res, "질문 공개 설정 완료");
-      },
-      (err) => console.log(err, "질문 공개 설정 실패")
-    );
-  };
-
-  //질문 비공개 설정
-  const setPrivate = () => {
-    setVisible(false);
-    setQuestionPrivate(
-      question.id,
-      (res) => {
-        console.log(res, "질문 비공개 설정 완료");
-      },
-      (err) => console.log(err, "질문 비공개 설정 실패")
-    );
+  const setStatus = () => {
+    if (visible) {
+      setVisible(false);
+      setQuestionPrivate(
+        question.id,
+        (res) => {
+          console.log(res, "질문 비공개 설정 완료");
+        },
+        (err) => console.log(err, "질문 비공개 설정 실패")
+      );
+    } else {
+      setVisible(true);
+      setQuestionOpen(
+        question.id,
+        (res) => {
+          console.log(res, "질문 공개 설정 완료");
+        },
+        (err) => console.log(err, "질문 공개 설정 실패")
+      );
+    }
   };
 
   return (
@@ -40,7 +39,7 @@ export default function QuestionListRow({ id, question }) {
             type="checkbox"
             value={visible}
             className={styles.toggleContainer}
-            onChange={setPrivate}
+            onChange={setStatus}
             checked
           />
           <label htmlFor={`toggle${id}`} className={styles.toggleBtn}></label>
@@ -52,7 +51,7 @@ export default function QuestionListRow({ id, question }) {
             type="checkbox"
             value={visible}
             className={styles.toggleContainer}
-            onChange={setPrivate}
+            onChange={setStatus}
           />
           <label htmlFor={`toggle${id}`} className={styles.toggleBtn}></label>
         </div>
