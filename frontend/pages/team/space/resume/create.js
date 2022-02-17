@@ -20,16 +20,20 @@ function CreateResume() {
 
   const onSubmitResume = (event) => {
     event.preventDefault();
-    const req = {
-      resumeQuestionList: [
-        {
-          question,
-          answer,
-        },
-      ],
+    const data = {
+      studyId: router.query.id,
+      req: {
+        resumeQuestionList: [
+          {
+            question,
+            answer,
+          },
+        ],
+      },
     };
+
     createResume(
-      req,
+      data,
       (res) => {
         console.log(res, "자소서 등록 성공");
         onMoveResumePage();
@@ -76,7 +80,7 @@ function CreateResume() {
             name="answer"
             onChange={(event) => setAnswer(event.target.value)}
             placeholder="내용을 입력해주세요..."
-          ></textarea>
+          />
         </div>
       </form>
       <button className={styles.submitBtn} onClick={onSubmitResume}>

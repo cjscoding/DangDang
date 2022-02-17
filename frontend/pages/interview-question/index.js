@@ -74,7 +74,7 @@ function interviewQuestion({ isLogin, questions, setQuestions }) {
         <div className={styles.btns}>
           {isLogin ? (
             <Link href="/interview-question/me">
-              <button className={styles.isNotButton}>내 질문 보기</button>
+              <a className={styles.isNotButton}>내 질문 보기</a>
             </Link>
           ) : null}
 
@@ -86,12 +86,18 @@ function interviewQuestion({ isLogin, questions, setQuestions }) {
 
       <div className={styles.container}>
         <div className={styles.header}>
-          <select onChange={(event) => setField(event.target.value)}>
-            <option value="공통">공통</option>
-            <option value="인성">인성</option>
-            <option value="기술">IT</option>
-            <option value="기타">기타</option>
-          </select>
+          <div className={styles.selectBox}>
+            <select onChange={(event) => setField(event.target.value)}>
+              <option value="공통">공통</option>
+              <option value="인성">인성</option>
+              <option value="기술">IT</option>
+              <option value="기타">기타</option>
+            </select>
+            <span className={styles.selectArrowIcon}>
+              <i className="fas fa-angle-down"></i>
+            </span>
+          </div>
+
           <span>질문</span>
         </div>
 

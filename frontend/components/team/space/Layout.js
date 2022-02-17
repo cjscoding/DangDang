@@ -17,12 +17,12 @@ export default function Layout({ roomInfo, host, image, href, btnText }) {
   }, [router.isReady]);
 
   function goToWebConference() {
-    getStreamPermission(`/web-conference/check-devices/${studyId}`)
+    getStreamPermission(`/web-conference/check-devices/${studyId}`);
   }
 
   const onMoveKakaoPage = () => {
-      window.open(href);
-  }
+    window.open(href);
+  };
 
   return (
     <div className={styles.teamSpaceLayout}>
@@ -107,18 +107,16 @@ export default function Layout({ roomInfo, host, image, href, btnText }) {
             <a>{btnText}</a>
           </button>
         ) : (
-          <button className={styles.registBtn}>
-            <Link
-              href={{
-                pathname: `${href}`,
-                query: {
-                  id: studyId,
-                },
-              }}
-            >
-              <a>{btnText}</a>
-            </Link>
-          </button>
+          <Link
+            href={{
+              pathname: `${href}`,
+              query: {
+                id: studyId,
+              },
+            }}
+          >
+            <a className={styles.registBtn}>{btnText}</a>
+          </Link>
         )}
       </div>
     </div>

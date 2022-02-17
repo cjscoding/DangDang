@@ -159,4 +159,14 @@ public class InterviewQuestionController {
         return success(interviewBookmarks);
     }
 
+    @Operation(summary = "면접 질문 추천")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "면접 질문 추천")
+    })
+    @GetMapping("/recommend")
+    public ApiResult<Page<InterviewQuestionDto>> getRecommend(@ParameterObject Pageable pageable){
+        Page<InterviewQuestionDto> interviewBookmarks = bookmarkService.getRecommends(pageable);
+        return success(interviewBookmarks);
+    }
+
 }

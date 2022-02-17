@@ -1,6 +1,6 @@
 import Pagination from "../../../components/layout/Pagination";
 import styles from "../../../scss/team/board/board.module.scss";
-import Title from "../../../components/layout/Title";
+// import Title from "../../../components/layout/Title";
 import Link from "next/link";
 
 import { BACKEND_URL } from "../../../config";
@@ -38,6 +38,13 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
     });
   };
 
+  const [newRoomImage, setNewRoomImage] = useState("");
+  let newImage
+  if(myRooms.length > 0) newImage = myRooms[0].imageUrl;
+  useEffect(() => {
+    setNewRoomImage(newRoomImage);
+  }, [newImage]);
+
   //pagination
   const [curPage, setCurPage] = useState(0);
   const [postsPerPage] = useState(9);
@@ -72,7 +79,7 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
       hashtags: searchTags.join(","),
       page: curPage,
       size: postsPerPage,
-      sort: "createdAt,desc"
+      sort: "createdAt,desc",
     };
     getMyRooms(
       param,
@@ -88,11 +95,11 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
         console.log(err, "마이스터디를 조회할 수 없습니다.");
       }
     );
-  }, [searchTags, curPage]);
+  }, [searchTags, curPage, newRoomImage]);
 
   return (
     <div className={styles.studyBoard}>
-      <Title title="Board"></Title>
+      {/* <Title title="Board"></Title> */}
 
       <h1 className={styles.title}># 내방들이당</h1>
 
@@ -105,11 +112,11 @@ function MyRooms({ myRooms, totalPosts, setMyRooms }) {
           />
 
           <div className={styles.btns}>
-            <button className={styles.createBtn}>
-              <Link href="/team/board">
+            <Link href="/team/board">
+              <button className={styles.createBtn}>
                 <a>스터디 게시판으로</a>
-              </Link>
-            </button>
+              </button>
+            </Link>
           </div>
         </div>
 

@@ -78,8 +78,10 @@
     grid-template-rows: 3fr 1fr;
     padding: 0;
     height: 300px;
+    border-radius: 15px;
     &:hover{
         cursor: pointer;
+        box-shadow: 0 0 5px $main-color;
     }
     .imgBox {
       display: flex;

@@ -19,6 +19,7 @@ export default function ResumeUpdate() {
   const onSubmitUpdated = (event) => {
     event.preventDefault();
     const data = {
+      studyId: router.query.id,
       resumeId: router.query.resumeId,
       req: {
         resumeQuestionList: [
@@ -30,6 +31,7 @@ export default function ResumeUpdate() {
         ],
       },
     };
+    
     updateResume(
       data,
       (res) => {
@@ -78,7 +80,7 @@ export default function ResumeUpdate() {
             name="answer"
             value={answer}
             onChange={(event) => setAnswer(event.target.value)}
-          ></textarea>
+          />
         </div>
       </form>
 

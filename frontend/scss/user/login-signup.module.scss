@@ -1,21 +1,38 @@
 @import "../common/mixins.scss";
+@import "../common/variables.scss";
 
 .body {
   @include flex-center;
   flex-direction: column;
-  h4{
-    margin-top: 1rem;
-    text-align: center;
-    font-weight: normal;
-  }
-  p{
-    font-size: 14px;
+  h1 {
+    font-size: 1.8rem;
     margin-bottom: 1rem;
+  }
+
+  .signUp {
+    margin-bottom: 0.1rem;
+  }
+
+  .loginText {
+    text-align: center;
+    line-height: 1.5rem;
+  }
+
+  .moveTo {
+    margin-bottom: 1.2rem;
     a {
-      color:#6BBFCA;
+      color: $main-color;
       font-weight: bold;
       text-decoration: underline;
     }
+  }
+
+  p {
+    font-size: 14px;
+  }
+
+  a:first-of-type {
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -23,52 +40,57 @@
   @include flex-center;
   flex-direction: column;
   width: 100%;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   input {
+    outline: none;
     width: 284px;
     height: 47px;
     box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.15);
     border-radius: 5px;
     padding: 1rem;
-    padding-left:3rem;
-    background-color: #EFF3F6;
+    padding-left: 3rem;
+    background-color: #eff3f6;
     // transition: background-color 0.3s;
     margin-bottom: 1rem;
     border: 1px;
   }
   input::placeholder {
-    color: #A3A3A3;
+    color: $gray-color;
+  }
+
+  input:focus {
+    @include form-focus;
   }
 }
-// .email{
-//   background-position: 10px 10px;
-// }
 
-// .password{
-//   background-position: 10px -53px
-// }
-.label{
+.label {
   position: relative;
-  .span{
+  .span {
     position: absolute;
     left: 14px;
     top: 1px;
+
+    :global(*) {
+      color: $gray-color;
+    }
   }
 }
 
-#dangdang{
-  color : #4EB7E4;
+#dangdang {
+  color: $main-color;
+  font-weight: bold;
 }
 
-#submitBtn{
+#submitBtn {
   font-weight: bold;
-  margin-top: 1rem;
+  // margin-top: 1rem;
   width: 284px;
   height: 47px;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.15);
   border-radius: 5px;
-  background-color: #6BBFCA;
-  color:white;
+  background-color: $main-color;
+  color: white;
   margin-bottom: 1rem;
   border: 1px;
+  cursor: pointer;
 }

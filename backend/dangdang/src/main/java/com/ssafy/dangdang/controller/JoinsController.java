@@ -52,7 +52,7 @@ public class JoinsController {
 
     }
 
-    @Operation(summary = "스터디 가입 신청", description = "로그인한 유저를 가입 대기자 목록에 추가함")
+    @Operation(summary = "스터디 가입 신청", description = "로그인한 유저를 가입 대기자 목록에 추가함, 이미 대기자 목록에 추가되어 있는 유저가 호출할 경우, 가입신청을 취소함")
     @ApiResponses( value = {
             @ApiResponse(responseCode = "200", description = "스터디 가입 성공")
     })
@@ -82,9 +82,21 @@ public class JoinsController {
             @ApiResponse(responseCode = "200", description = "가입 신청자 리스트 성공")
     })
     @GetMapping("/waiting/{studyId}")
+    @PreAuthorize("hasRole('USER')")
     public ApiResult<List<UserDto>> getWaitingUsers(@CurrentUser PrincipalDetails userPrincipal, @PathVariable Long studyId){
         List<UserDto> waitingUser = joinsService.getWaitingUser(userPrincipal.getUser(), studyId);
         return success(waitingUser);
+    }
+
+    @Operation(summary = "가입 신청 확인", description = "로그인해야 호출 가능")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "가입 신청 확인 성공")
+    })
+    @GetMapping("/{studyId}")
+    @PreAuthorize("hasRole('USER')")
+    public ApiResult<Boolean> getJoin(@CurrentUser PrincipalDetails userPrincipal, @PathVariable Long studyId){
+        Boolean join = joinsService.getJoin(userPrincipal.getUser(), studyId);
+        return success(join);
     }
 
     @Operation(summary = "스터디 나가기")

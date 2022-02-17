@@ -27,6 +27,11 @@ public class Resume {
     @JsonIgnore
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "study_id")
+    @JsonIgnore
+    private Study study;
+
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<ResumeQuestion> resumeQuestionList = new ArrayList<>();

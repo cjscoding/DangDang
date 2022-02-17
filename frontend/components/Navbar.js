@@ -90,6 +90,7 @@ function NavBar({
                   setShowModal(true);
                   setIsLoginModal(true);
                   setIsMoveTeamStudy(true);
+                  document.body.style.overflow = "hidden";
                 }}
                 tabIndex="0"
               >
@@ -135,6 +136,7 @@ function NavBar({
                 onClick={() => {
                   setShowModal(true);
                   setIsLoginModal(true);
+                  document.body.style.overflow = "hidden";
                 }}
                 tabIndex="0"
               >
@@ -146,6 +148,7 @@ function NavBar({
                 onClick={() => {
                   setShowModal(true);
                   setIsLoginModal(false);
+                  document.body.style.overflow = "hidden";
                 }}
                 tabIndex="0"
               >

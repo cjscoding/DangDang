@@ -41,15 +41,15 @@ function addQuestion() {
   };
 
   useEffect(() => {
-    const fieldSelectEl = document.getElementById("field")
-    fieldSelectEl.firstChild.selected = true
+    const fieldSelectEl = document.getElementById("field");
+    fieldSelectEl.firstChild.selected = true;
     const nextValues = {
       ...values,
-      field: fieldSelectEl.firstChild.value
-    }
+      field: fieldSelectEl.firstChild.value,
+    };
     setValues(nextValues);
-  }, [])
-  
+  }, []);
+
   return (
     <div className={styles.formContainer}>
       <Link href="/interview-question/me">
@@ -71,7 +71,7 @@ function addQuestion() {
           </select>
 
           <label htmlFor="question">질문</label>
-          <input
+          <textarea
             id="question"
             type="text"
             value={values.question}
@@ -79,14 +79,6 @@ function addQuestion() {
             placeholder="질문을 입력해주세요..."
             autoFocus
             required
-          />
-
-          <label htmlFor="answer">답변</label>
-          <textarea
-            id="answer"
-            value={values.answer}
-            placeholder="답변을 입력해주세요..."
-            onChange={handleChange}
           />
         </div>
       </form>

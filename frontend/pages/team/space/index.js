@@ -136,6 +136,7 @@ function TeamSpace({
         console.log(err, "가입승인 실패");
       }
     );
+    if(roomMembers.length >= roomInfo.number) alert("정원 초과입니다.")
   };
 
   //팀 수정페이지로 이동
@@ -205,13 +206,15 @@ function TeamSpace({
             <div className={styles.section}>
               <h3>멤버관리</h3>
               <div className={styles.memberList}>
-                {roomMembers.map((member, index) => (
+                {roomMembers.map((member, index) => {
+                  const imgUrl = member.imageUrl.slice(0, 4) === "http"?member.imageUrl:`${BACKEND_URL}/files/images/${member.imageUrl}`
+                  return(
                   <form key={index} onSubmit={onRemoveMember}>
                     <div>
                       {member.imageUrl !== null &&
                       member.imageUrl !== "default.jpg" ? (
                         <img
-                          src={`${BACKEND_URL}/files/images/${member.imageUrl}`}
+                          src={imgUrl}
                         />
                       ) : (
                         <img src="/images/dangdang_1.png" />
@@ -232,7 +235,7 @@ function TeamSpace({
                       <></>
                     )}
                   </form>
-                ))}
+                )})}
               </div>
             </div>
 

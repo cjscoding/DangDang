@@ -1,5 +1,5 @@
 import styles from "../../../scss/team/form.module.scss";
-import Title from "../../../components/layout/Title";
+// import Title from "../../../components/layout/Title";
 
 import { createRoom, addRoomImg } from "../../../api/studyroom";
 import { useRouter } from "next/router";
@@ -42,9 +42,6 @@ export default function CreateRoom() {
     } else if (roomTags.length === 0) {
       alert("최소 하나 이상의 태그를 작성해주세요!");
       return;
-    } else if (image === "") {
-      alert("스터디 프로필 이미지를 첨부해주세요!");
-      return;
     }
 
     createRoom(
@@ -60,6 +57,7 @@ export default function CreateRoom() {
           data,
           (res) => {
             console.log(res);
+            router.push("/user/mypage/myroom");
           },
           (err) => {
             console.log(err);
@@ -71,13 +69,16 @@ export default function CreateRoom() {
       }
     );
 
-    router.push("/user/mypage/myroom");
   };
 
   //input values
   const onChange = (event) => {
-    const { name, value } = event.target;
-
+    let { name, value } = event.target;
+    if(name === "number"){
+      value = Math.round(value)
+      if(value < 1) value = 1
+      if(value > 4) value = 4
+    }
     const newInfo = {
       ...roomInfo,
       [name]: value,
@@ -123,7 +124,7 @@ export default function CreateRoom() {
 
   return (
     <div className={styles.formContainer}>
-      <Title title="Create Room"></Title>
+      {/* <Title title="Create Room"></Title> */}
 
       <button onClick={onMoveStudyBoardPage} className={styles.moveBackBtn}>
         <i className="fas fa-angle-double-left"></i> 돌아가기
@@ -168,6 +169,8 @@ export default function CreateRoom() {
             <input
               type="number"
               name="number"
+              min="1"
+              max="4"
               value={roomInfo.number}
               onChange={onChange}
             />

@@ -3,19 +3,21 @@ import Comment from "../../../components/team/board/Comment";
 
 import { setRoomInfo } from "../../../store/actions/roomAction";
 import { getRoomInfo } from "../../../api/studyroom";
-import { joinTeam } from "../../../api/member";
+import { joinTeam, checkJoin } from "../../../api/member";
 import { createDetailComment } from "../../../api/comment";
 import { BACKEND_URL } from "../../../config";
 
 import { useRouter } from "next/router";
 import { connect } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
 const mapStateToProps = (state) => {
   return {
     roomInfo: state.roomReducer.curRoomInfo,
     roomHost: state.roomReducer.curRoomHost,
     comments: state.roomReducer.comments,
+    user: state.userReducer.user,
   };
 };
 
@@ -27,10 +29,9 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(mapStateToProps, mapDispatchToProps)(TeamDetail);
 
-function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
-  //초기 셋팅
+function TeamDetail({ user, roomInfo, roomHost, comments, setRoomInfo }) {
   const router = useRouter();
-
+  const [join, setJoin] = useState(false);
   useEffect(() => {
     if (!router.isReady) return;
     getRoomInfo(
@@ -47,6 +48,17 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
       },
       (err) => {
         console.log(err, "스터디를 조회할 수 없습니다.");
+      }
+    );
+
+    checkJoin(
+      router.query.id,
+      (res) => {
+        console.log(res, "가입여부조회");
+        setJoin(res.data.response ? true : false);
+      },
+      (err) => {
+        console.log(err);
       }
     );
   }, [router.isReady]);
@@ -76,19 +88,34 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
   const onJoinStudy = (id) => {
     const data = {
       studyId: id,
+      userId: user.id,
     };
-    joinTeam(
-      data,
-      (res) => {
-        console.log(res, "가입 완료");
-        alert("가입 신청 완료되었습니다.");
-      },
-      (err) => {
-        alert("이미 가입한 상태입니다.");
-        console.log(err);
-        
-      }
-    );
+
+    if (join) {
+      joinTeam(
+        data,
+        (res) => {
+          console.log(res);
+          alert("가입 신청이 취소되었습니다.");
+          setJoin(false);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    } else {
+      joinTeam(
+        data,
+        (res) => {
+          console.log(res);
+          alert("가입 신청 완료되었습니다.");
+          setJoin(true);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    }
   };
 
   //댓글 등록
@@ -113,9 +140,7 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
     event.target[0].value = "";
   };
 
-  const onMoveKakaoPage = (href) => {
-    window.open(href);
-  };
+  const onMoveKakaoPage = (href) => window.open(href);
 
   return (
     <div className={styles.container}>
@@ -140,18 +165,27 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
               </div>
               <h4>
                 <i className="fas fa-user-friends"></i> {roomHost.nickName} 외{" "}
-                {roomInfo.number}명
+                {roomInfo.number - 1}명
               </h4>
             </div>
           </div>
 
           <div className={styles.btns}>
-            <button
-              onClick={() => onJoinStudy(roomInfo.id)}
-              className={styles.registBtn}
-            >
-              가입신청
-            </button>
+            {join ? (
+              <button
+                onClick={() => onJoinStudy(roomInfo.id)}
+                className={styles.cancelBtn}
+              >
+                가입취소
+              </button>
+            ) : (
+              <button
+                onClick={() => onJoinStudy(roomInfo.id)}
+                className={styles.registBtn}
+              >
+                가입신청
+              </button>
+            )}
 
             <button
               className={styles.kakaoBtn}
@@ -186,9 +220,9 @@ function TeamDetail({ roomInfo, roomHost, comments, setRoomInfo }) {
       </div>
 
       <div className={styles.backBtnBox}>
-        <button className={styles.registBtn}>
-          <a href="/team/board">목록으로</a>
-        </button>
+        <Link href="/team/board">
+          <a className={styles.registBtn}>목록으로</a>
+        </Link>
       </div>
     </div>
   );

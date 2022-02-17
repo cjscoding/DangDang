@@ -5,55 +5,59 @@
 .body {
   @include flex-center;
   flex-direction: column;
+  width: 1000px;
   max-width: 1000px;
-  margin-top:2rem;
-  .title{
-    font-size: 1.8rem;
-    margin-top:1.6rem;
-    font-weight: bold;
-    color:#6BBFCA;
-  }
-  button{
+  margin-top: 2rem;
+
+  button {
     outline: none;
     border: 1px;
-    background-color: white;
+    background-color: transparent;
+  }
+  li {
+    list-style: none;
   }
 }
 
 .mainContainer {
-  margin-top:2rem;
+  margin-top: 2rem;
+  width: 100%;
   .rowContainer {
-    display: flex;
-    flex-direction: row;
+    @include flex-center;
+    align-items: flex-start;
     .ContainerL {
       width: 400px;
-      padding-right: 10px;
-      .QuestionContainer{
-        padding: 20px;
+      margin-right: 1rem;
+      .QuestionContainer {
+        margin-bottom: 1.7rem;
         width: 100%;
         height: 83%;
         background: white;
-        box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
+        box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.05);
         border-radius: 12px;
-        .QuestionTitle{
+        .QuestionTitle {
+          padding: 1rem 1.5rem;
+          border-bottom: $division-line;
           display: flex;
           justify-content: space-between;
           width: 100%;
           height: 10%;
-          // background-color: beige;
-          span{
-            font-size: 1.2rem;
+          span {
+            margin-top: 3.5px;
+            font-size: 1.1rem;
             font-weight: bold;
           }
           select {
             height: 2rem;
             font-size: 1rem;
+            border: 0;
+            outline: none;
+            cursor: pointer;
           }
         }
-        .QuestionList{
+        .QuestionList {
           width: 100%;
           height: 90%;
-          // background-color: blue;
           overflow-y: auto;
           overflow-x: hidden;
         }
@@ -61,62 +65,74 @@
       .addContainer {
         direction: flex;
         flex-direction: row;
+        width: 100%;
         height: 12%;
-        padding-top: .5rem;
+        position: relative;
+        background-color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.05);
         input {
-          padding: 1rem;
-          width: 90%;
-          height: 70%;
-          font-size: 1rem;
-          background: white;
-          // box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
-          border-radius: 10px 0 0 10px;
-          border: 1px;
+          border: none;
+          width: 100%;
+          &:focus {
+            outline: none;
+          }
         }
-        button {
-          background:  white;
-          border-radius: 0 10px 10px 0px;
-          box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
-          float: right;
-          width: 10%;
-          height: 70%;
-          outline: none;
-          border: 1px;
+        .send {
+          position: absolute;
+          right: 1.5rem;
+          cursor: pointer;
+          &:hover {
+            transform: rotate(15deg);
+            transition: transform 0.1s linear;
+          }
+          :global(*) {
+            color: $gray-color;
+          }
         }
       }
-      .pagination{
+      .pagination {
+        padding: 1rem;
+        padding-bottom: 1.5rem;
         height: 5%;
-      }  
+        font-size: 0.8rem;
+      }
     }
     .ContainerR {
       padding-left: 10px;
       width: 400px;
-      height: 600px;
+      height: 591.2px;
       // background-color: blue;
-      .selectedContainer{
-        padding: 20px;
+      .selectedContainer {
         width: 100%;
         height: 100%;
         background: white;
-        box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
+        box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.05);
         border-radius: 12px;
-        .selectedTitle{
-          width: 100%;
-          height: 8%;
+        .selectedTitle {
           // background-color: beige;
-          span{
-            font-size: 1.2rem;
+          padding: 1rem 1.5rem;
+          border-bottom: $division-line;
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          height: 10%;
+          > span {
+            font-size: 1.1rem;
             font-weight: bold;
           }
-          #total{
-            float:right;
+          .length {
+            color: $main-color;
+            font-weight: bold;
           }
         }
-        .selectedList{
+        .selectedList {
           overflow-y: auto;
           overflow-x: hidden;
           width: 100%;
           height: 90%;
+          @include scrollbar;
           // background-color: blue;
         }
       }
@@ -124,115 +140,48 @@
   }
 }
 
-.pindicator {
-  background-color: $background-color;
-  display: flex;
-  margin: 1rem auto 0;
-  width: 20rem;
-}
-.pindicator .bullet {
-  flex: 1;
-  position: relative;
-  text-align: center;
-  transform-style: preserve-3d;
-}
-.pindicator .bullet::before,
-.pindicator .bullet::after {
-  content: '';
-  display: block;
-  position: absolute;
-  height: .2rem;
-  top: 1rem;
-  transform: translate3d(0,0,-1px);
-}
-.pindicator .bullet::before {
-  background-color: lightgray;
-  width: 100%;
-}
-.pindicator .bullet::after {
-  background-color: black;
-  transition: opacity .25s ease-out;
-  opacity: 0;
-  width: 100%;
-}
-.pindicator .bullet:first-child::before,
-.pindicator .bullet:first-child::after {
-  left: 50%;
-  width: 50%;
-}
-.pindicator .bullet:last-child::before,
-.pindicator .bullet:last-child::after {
-  width: 50%;
-}
-
-.pindicator .icon {
-  background-color: lightgray;
-  border-radius: 100%;
-  color: transparent;
-  cursor: pointer;
-  font-size: 1rem;
-  display: inline-block;
-  height: 2em;
-  line-height: 2;
-  text-align: center;
-  transition: background-color .25s ease-out;
-  width: 2em;
-  span{
-    color:white;
-    font-weight: bold;
-  }
-}
-.pindicator .iconcur {
-  background-color: #FBD56D;
-  border-radius: 100%;
-  color: transparent;
-  cursor: pointer;
-  font-size: 1rem;
-  display: inline-block;
-  height: 2em;
-  line-height: 2;
-  text-align: center;
-  transition: background-color .25s ease-out;
-  width: 2em;
-  span{
-    color:white;
-    font-weight: bold;
-  }
-}
-.pindicator .text {
-  color: lightgray;
-  font-size: .75rem;
-  margin-top: 1rem;
-  text-transform: uppercase;
-  transition: background-color .25s ease-out;
-}
-
-#submitBtn{
+#submitBtn {
   font-weight: bold;
-  margin-top: 1.5rem;
+  margin-top: 2.5rem;
   width: 284px;
   height: 47px;
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.15);
   border-radius: 5px;
-  background-color: #6BBFCA;
-  color:white;
-  margin-bottom: 1rem;
+  background-color: $main-color;
+  color: white;
   border: 1px;
   cursor: pointer;
 }
 
+.question {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  padding: 1rem 1.5rem;
+  padding-left: 0;
+  font-size: 0.9rem;
+  position: relative;
+  cursor: pointer;
+  border-bottom: $division-line;
 
-.question{
-  background: white;
-  border: 7px;
-  margin-bottom:1rem;
-  // box-shadow: 0px 2px 32px rgba(0, 0, 0, 0.11);
-  span{
-    font-size: 1.2rem;
+  .questionField {
+    // padding: 0 2.5rem;
+    text-align: center;
+    color: $main-color;
+    font-weight: bold;
   }
-  button{
-    float:right;
-    margin-right:1rem;
-    cursor: pointer;
+  button {
+    position: absolute;
+    right: 1.5rem;
+    :global(*) {
+      color: $gray-color;
+    }
   }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    transition: all 0.1s ease;
+  }
+  // &:nth-child(even) {
+  //   background-color: rgba(0, 0, 0, 0.03);
+  // }
 }

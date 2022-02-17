@@ -5,6 +5,8 @@ import { setQuestionList } from "../../store/actions/adminAction";
 import { getAllQuestionList } from "../../api/admin";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import styles from "../../scss/admin/container.module.scss";
+import Selectbox from "../layout/Selectbox";
 
 const mapStateToProps = (state) => {
   return {
@@ -27,6 +29,8 @@ function AdminQuestion({ questions, setQuestions }) {
   const [totalElements, setTotalElements] = useState(questions.totalElements);
   const paginate = (pageNumber) => setCurPage(pageNumber);
 
+  const fields = ["공통", "인성", "IT", "기타"];
+
   useEffect(() => {
     const param = {
       page: curPage,
@@ -43,22 +47,30 @@ function AdminQuestion({ questions, setQuestions }) {
     );
   }, [curPage]);
 
+  useEffect(() => {
+    console.log(questions);
+  }, [questions]);
+  // console.log(questions);
   return (
     <div>
       <div>
-        <div>
-          <span>분류</span>
+        <div className={styles.menu}>
+          <Selectbox values={fields}></Selectbox>
           <span>질문</span>
           <span>설정</span>
         </div>
 
         {questions &&
           questions.map((question) => (
-            <QuestionListRow key={question.id} question={question} />
+            <QuestionListRow
+              key={question.id}
+              question={question}
+              id={question.id}
+            />
           ))}
       </div>
 
-      <div className="pagination">
+      <div className={styles.pagination}>
         <Pagination
           curPage={curPage}
           paginate={paginate}

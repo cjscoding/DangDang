@@ -76,6 +76,13 @@ public class UserServiceImpl implements UserService{
                 .build();
         userRepository.save(user);
 
+        List<Comment> comments = commentRepository.findCommentByWriterEmail(user.getEmail());
+        for (Comment comment : comments){
+            comment.setWriterEmail(userDto.getEmail());
+            comment.setWriterNickname(userDto.getNickName());
+        }
+        commentRepository.saveAll(comments);
+
     }
 
     @Override
@@ -84,6 +91,9 @@ public class UserServiceImpl implements UserService{
         // 컨트롤러에서 넘어온 유저는 OSIV 옵션이 꺼져있으면 준영속상태이기 때문에, 다시 조회해서 영속상태인 객체에서 값을 변경해야 더티체킹이 일어난다.
         user = userRepository.findById(user.getId()).get();
         user.addImageUrl(uuid + file.getOriginalFilename());
+        List<Comment> comments = commentRepository.findCommentByWriterEmail(user.getEmail());
+        for (Comment comment : comments) comment.setWriterImageUrl(uuid + file.getOriginalFilename());
+        commentRepository.saveAll(comments);
     }
 
     @Override

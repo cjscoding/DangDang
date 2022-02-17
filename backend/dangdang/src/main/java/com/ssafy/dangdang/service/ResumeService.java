@@ -11,13 +11,13 @@ import java.util.Optional;
 
 public interface ResumeService {
 
-    public ResumeDto writeResume(User user, List<ResumeQuestionDto> resumeQuestionDtoList);
+    public ResumeDto writeResume(User user, Long studyId, List<ResumeQuestionDto> resumeQuestionDtoList);
 
-    public ResumeDto updateResume(User user, ResumeDto resumeDto);
+    public ResumeDto updateResume(User user,Long studyId, ResumeDto resumeDto);
 
-    public ApiUtils.ApiResult<String> deleteResume(User user, Long resumeId);
+    public ApiUtils.ApiResult<String> deleteResume(User user, Long studyId, Long resumeId);
 
-    public List<ResumeDto> getResumes(Long userId);
+    public List<ResumeDto> getResumes(Long userId,Long studyId);
 
     public Optional<Resume> getResume(Long resumeId);
 

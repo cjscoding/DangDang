@@ -16,7 +16,7 @@ const mapStateToProps = (state) => {
     roomInfo: state.roomReducer.curRoomInfo,
     roomHost: state.roomReducer.curRoomHost,
     roomMembers: state.roomReducer.curRoomMembers,
-    userInfo: state.userReducer.user,
+    user: state.userReducer.user,
   };
 };
 
@@ -30,7 +30,7 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(mapStateToProps, mapDispatchToProps)(Resume);
 
 function Resume({
-  userInfo,
+  user,
   roomInfo,
   roomHost,
   roomMembers,
@@ -38,7 +38,7 @@ function Resume({
   setResume,
 }) {
   const router = useRouter();
-  const [curUserId, setCurUserId] = useState(userInfo.id);
+  const [curUserId, setCurUserId] = useState(user.id);
   const [resumeList, setResumeList] = useState([]);
 
   useEffect(() => {
@@ -63,15 +63,20 @@ function Resume({
   }, [router.isReady]);
 
   useEffect(() => {
-    setCurUserId(userInfo.id);
-  }, [userInfo]);
+    setCurUserId(user.id);
+  }, [user]);
 
   //해당 멤버의 자소서 조회
   const onSetCurUser = (userId) => setCurUserId(userId);
 
   const getCurUserResume = () => {
+    const data = {
+      studyId: router.query.id,
+      userId: curUserId,
+    };
+    
     getResume(
-      curUserId,
+      data,
       (res) => {
         const resArray = res.data.response;
         setResumeList(resArray);
@@ -115,30 +120,36 @@ function Resume({
       <div className={styles.resumeContainer}>
         <div className={styles.memberListBox}>
           <h4>팀원 목록이당</h4>
-          {roomMembers?.map((member) => (
-            <div key={member.id} className={styles.member}>
-              <div className={styles.imgBox}>
-                {member.imageUrl !== null &&
-                member.imageUrl !== "default.jpg" ? (
-                  <img src={`${BACKEND_URL}/files/images/${member.imageUrl}`} />
+          {roomMembers?.map((member) => {
+            const imgUrl =
+              member.imageUrl.slice(0, 4) === "http"
+                ? member.imageUrl
+                : `${BACKEND_URL}/files/images/${member.imageUrl}`;
+            return (
+              <div key={member.id} className={styles.member}>
+                <div className={styles.imgBox}>
+                  {member.imageUrl !== null &&
+                  member.imageUrl !== "default.jpg" ? (
+                    <img src={imgUrl} />
+                  ) : (
+                    <img src="/images/dangdang_1.png" />
+                  )}
+                </div>
+                {member.id === curUserId ? (
+                  <button
+                    onClick={() => onSetCurUser(member.id)}
+                    className={styles.currentMember}
+                  >
+                    {member.nickName}
+                  </button>
                 ) : (
-                  <img src="/images/dangdang_1.png" />
+                  <button onClick={() => onSetCurUser(member.id)}>
+                    {member.nickName}
+                  </button>
                 )}
               </div>
-              {member.id === curUserId ? (
-                <button
-                  onClick={() => onSetCurUser(member.id)}
-                  className={styles.currentMember}
-                >
-                  {member.nickName}
-                </button>
-              ) : (
-                <button onClick={() => onSetCurUser(member.id)}>
-                  {member.nickName}
-                </button>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className={styles.contents}>
@@ -168,7 +179,7 @@ function Resume({
                 </button>
               </div>
               <div className={styles.imgBox}>
-                <img src="/images/dangdang_1.png" width={100} />
+                <img src="/images/dangdang_4.png" width={100} />
               </div>
             </div>
           )}
