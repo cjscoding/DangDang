@@ -27,6 +27,9 @@
   background-color: $background-color;
   font-size: 15px;
   font-weight: 700;
+  a {
+    text-align: center;
+  }
   &:hover {
     transform: scale(1.05);
     transition: 0.2s ease;
@@ -42,6 +45,9 @@
   border: 1px solid $color;
   border-radius: 7px;
   font-size: 12px;
+  a {
+    text-align: center;
+  }
   i {
     color: $color;
   }

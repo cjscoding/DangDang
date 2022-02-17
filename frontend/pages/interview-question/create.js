@@ -71,7 +71,7 @@ function addQuestion() {
           </select>
 
           <label htmlFor="question">질문</label>
-          <input
+          <textarea
             id="question"
             type="text"
             value={values.question}
@@ -80,15 +80,6 @@ function addQuestion() {
             autoFocus
             required
           />
-
-          <label htmlFor="answer">답변</label>
-          <textarea
-            id="answer"
-            value={values.answer}
-            placeholder="답변을 입력해주세요..."
-            onChange={handleChange}
-          />
-        </div>
       </form>
 
       <button className={styles.submitBtn} onClick={handleSubmit}>

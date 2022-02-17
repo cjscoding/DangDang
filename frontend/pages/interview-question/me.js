@@ -111,7 +111,7 @@ function myQuestion({ myQuestions, setMyQuestions }) {
                 <option value="기타">기타</option>
               </select>
               <span className={styles.selectArrowIcon}>
-                <i class="fas fa-angle-down"></i>
+                <i className="fas fa-angle-down"></i>
               </span>
             </div>
 

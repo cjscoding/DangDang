@@ -2,7 +2,6 @@ import styles from "../../scss/interview-question/questionListRow.module.scss";
 
 import { deleteInterviewQuestion } from "../../api/interviewQuestion";
 import { useRouter } from "next/router";
-import { useState } from "react";
 
 export default function QuestionListRow({ question, myQuestionMode, reload }) {
   const router = useRouter();
@@ -10,12 +9,8 @@ export default function QuestionListRow({ question, myQuestionMode, reload }) {
   //내 질문 삭제
   const deleteQuestion = (event) => {
     event.preventDefault();
-    const params = {
-      id: question.id,
-    };
-
     deleteInterviewQuestion(
-      params,
+      question.id,
       (res) => {
         alert("질문 삭제 완료!");
         console.log(res);

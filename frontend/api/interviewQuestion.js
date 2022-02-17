@@ -22,6 +22,6 @@ export function updateInterviewQuestion(params, success, fail) {
   api.patch(`/interview/${params.interviewQuestionId}`, params.req).then(success).catch(fail);
 }
 
-export function deleteInterviewQuestion(params, success, fail) {
-  api.delete(`/interview/${params.id}`, params).then(success).catch(fail);
+export function deleteInterviewQuestion(interviewQuestionId, success, fail) {
+  api.delete(`/interview/${interviewQuestionId}`).then(success).catch(fail);
 }

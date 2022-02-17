@@ -32,7 +32,7 @@ export default function ResumeUpdate() {
         field: myQuestion.field,
         job: "IT", //임시
         question: myQuestion.question,
-        answer: myQuestion.answer,
+        answer: "",
       },
     };
 
@@ -86,7 +86,7 @@ export default function ResumeUpdate() {
           </select>
 
           <label htmlFor="question">질문</label>
-          <input
+          <textarea
             type="text"
             name="question"
             value={myQuestion.question}
@@ -94,15 +94,6 @@ export default function ResumeUpdate() {
             placeholder="질문을 입력해주세요..."
             autoFocus
             required
-          />
-
-          <label htmlFor="answer">답변</label>
-          <textarea
-            type="text"
-            name="answer"
-            value={myQuestion.answer}
-            onChange={onChangeValue}
-            placeholder="답변을 입력해주세요..."
           />
         </div>
       </form>

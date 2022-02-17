@@ -36,6 +36,9 @@
       font-size: 15px;
       font-weight: 600;
       margin-right: 30px;
+      &:hover{
+          color: $main-color;
+      }
     }
     .isButton {
       @include filled-button(200px, white, $main-color);

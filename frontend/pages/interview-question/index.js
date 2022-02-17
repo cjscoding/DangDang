@@ -74,7 +74,7 @@ function interviewQuestion({ isLogin, questions, setQuestions }) {
         <div className={styles.btns}>
           {isLogin ? (
             <Link href="/interview-question/me">
-              <button className={styles.isNotButton}>내 질문 보기</button>
+              <a className={styles.isNotButton}>내 질문 보기</a>
             </Link>
           ) : null}
 
