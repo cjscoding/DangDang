@@ -26,6 +26,10 @@ public interface InterviewQuestionRepository extends JpaRepository<InterviewQues
                     "where i.writer.id = :writerId" )
     public Page<InterviewQuestion> findAllByWriter(@Param("writerId") Long writerId, Pageable pageable);
 
+    @Query( value = "select i from InterviewQuestion i left join fetch i.writer " +
+            "where i.writer.id = :writerId" )
+    public List<InterviewQuestion> findAllByWriter(@Param("writerId") Long writerId);
+
     @Query(
             value = "select i from InterviewQuestion i " +
                     "where i.id in (select ib.interviewQuestion.id from InterviewBookmark ib " +
