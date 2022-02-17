@@ -21,6 +21,8 @@ public interface InterviewBookmarkRepository extends JpaRepository<InterviewBook
 
     List<InterviewBookmark> findInterviewBookmarksByInterviewQuestionId(Long interviewQuestionId);
 
+    List<InterviewBookmark> findInterviewBookmarksByUserId(Long userId);
+
     @Query(value = "select ib.interviewQuestion from InterviewBookmark ib" +
             "  group by ib.interviewQuestion " +
             "order by count(ib.interviewQuestion) desc",

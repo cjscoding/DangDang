@@ -1,12 +1,11 @@
 package com.ssafy.dangdang.service;
 
-import com.ssafy.dangdang.domain.Comment;
-import com.ssafy.dangdang.domain.User;
+import com.ssafy.dangdang.domain.*;
 import com.ssafy.dangdang.domain.dto.UserDto;
 import com.ssafy.dangdang.domain.types.UserRoleType;
 import com.ssafy.dangdang.exception.ExtantUserException;
-import com.ssafy.dangdang.repository.CommentRepository;
-import com.ssafy.dangdang.repository.UserRepository;
+import com.ssafy.dangdang.exception.UnauthorizedAccessException;
+import com.ssafy.dangdang.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,7 +25,10 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
-
+    private final InterviewQuestionRepository interviewQuestionRepository;
+    private final InterviewBookmarkRepository bookmarkRepository;
+    private final PostRepository postRepository;
+    private final JoinsRepository joinsRepository;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -105,13 +107,28 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public boolean deleteUser(User user, String password) {
 
+        List<Joins> joins = joinsRepository.findJoinsByUser(user);
+        for (Joins join : joins) if (join.getStudy().getHost().getEmail().equals(user.getEmail())) throw new UnauthorizedAccessException("스터디 장은 회원 탈퇴를 할 수없습니다.");
+
+        List<InterviewBookmark> bookmarks = bookmarkRepository.findInterviewBookmarksByUserId(user.getId());
+        bookmarkRepository.deleteAll(bookmarks);
+        List<InterviewQuestion> allByWriter = interviewQuestionRepository.findAllByWriter(user.getId());
+        interviewQuestionRepository.deleteAll(allByWriter);
+
+        List<Post> posts = postRepository.findPostByWriterId(user.getId());
+        postRepository.deleteAll(posts);
+
+        joinsRepository.deleteAll(joins);
+
+
+
         //TODO: 유저가 단 댓글을 삭제할 지 정해야함
             if (passwordEncoder.matches(password, user.getPassword())) {
 
                 //TODO: 나중에 벌크 수정 쿼리로 바꾸기
                 List<Comment> comments = commentRepository.findCommentByWriterEmail(user.getEmail());
-                comments.forEach(Comment::disappear);
-                commentRepository.saveAll(comments);
+//                comments.forEach(Comment::disappear);
+                commentRepository.deleteAll(comments);
 
                 userRepository.delete(user);
                 return true;
