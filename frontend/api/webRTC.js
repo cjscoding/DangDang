@@ -2,12 +2,13 @@ import axios from "axios";
 import { BACKEND_URL } from "../config";
 import { store } from "../store";
 
-export function ttsService(txt, volume) {
-  axios({
+export async function ttsService(txt, volume) {
+  let source;
+  await axios({
     method:"post",
     url: `${BACKEND_URL}/api/tts`,
     data: {text:txt},
-  }).then((res)=>{
+  }).then(async (res)=>{
     // string을 arraybuffer로 바꾸는 과정
     function str2ab(str) {
       var buf = new ArrayBuffer(str.length);
@@ -25,14 +26,15 @@ export function ttsService(txt, volume) {
     const gainNode = context.createGain()
     gainNode.connect(context.destination)
     // arraybuffer 재생
-    context.decodeAudioData(arraybuffer,buffer=>{
-      const source = context.createBufferSource();
+    await context.decodeAudioData(arraybuffer, async buffer=>{
+      source = context.createBufferSource();
       source.buffer = buffer;
       source.connect(gainNode);
       gainNode.gain.value = volume / 100
-      source.start(0);
+      // source.start(0);
     });
   }).catch((error)=>{
     console.log(error);
   })
+  return source
 }
