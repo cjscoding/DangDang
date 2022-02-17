@@ -273,7 +273,7 @@ function AddQuestions({
                 </ul>
 
                 <ul style={qListNum !== 1 ? { display: "none" } : {}}>
-                  {allQuestions?.map((question) => (
+                  {myQuestions?.map((question) => (
                     <li
                       key={question.id}
                       className={styles.question}
@@ -294,7 +294,7 @@ function AddQuestions({
                   ))}
                 </ul>
                 <ul style={qListNum !== 2 ? { display: "none" } : {}}>
-                  {allQuestions?.map((question) => (
+                  {bookmarkQuestions?.map((question) => (
                     <li
                       key={question.id}
                       className={styles.question}

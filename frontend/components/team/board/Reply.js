@@ -19,7 +19,8 @@ function Reply({ reply, submitReload, user }) {
 
   const [showUpdateBtn, setShowUpdateBtn] = useState(false);
   const [newReply, setNewReply] = useState(reply.content);
-
+  const [imgUrl, setImageUrl] = useState(null);
+  
   const toggleUpdate = () =>
     setShowUpdateBtn((showUpdateBtn) => !showUpdateBtn);
 
@@ -70,16 +71,26 @@ function Reply({ reply, submitReload, user }) {
     );
   };
 
+  useEffect(() => {
+    if(reply.writerImageUrl === "default.jpg") {
+      setImageUrl("default.jpg")
+    }else if (reply.writerImageUrl.slice(0, 4) === "http") {
+      setImageUrl(reply.writerImageUrl)
+    }else {
+      setImageUrl(`${BACKEND_URL}/files/images/${reply.writerImageUrl}`)
+    }
+  }, [])
+
   return (
     <div className={styles.replyContent}>
       {showUpdateBtn ? (
         <form onSubmit={onUpdateReply} className={styles.commentToggle}>
           <div className={styles.userInfo}>
             <div className={styles.imgBox}>
-              {reply.writerImageUrl !== null &&
-              reply.writerImageUrl !== "default.jpg" ? (
+              {imgUrl !== null &&
+                imgUrl !== "default.jpg" ? (
                 <img
-                  src={`${BACKEND_URL}/files/images/${reply.writerImageUrl}`}
+                  src={imgUrl}
                 />
               ) : (
                 <img src="/images/dangdang_1.png" />
@@ -113,10 +124,10 @@ function Reply({ reply, submitReload, user }) {
         <div className={styles.commentToggle}>
           <div className={styles.userInfo}>
             <div className={styles.imgBox}>
-              {reply.writerImageUrl !== null &&
-              reply.writerImageUrl !== "default.jpg" ? (
+              {imgUrl !== null &&
+                imgUrl !== "default.jpg" ? (
                 <img
-                  src={`${BACKEND_URL}/files/images/${reply.writerImageUrl}`}
+                  src={imgUrl}
                 />
               ) : (
                 <img src="/images/dangdang_1.png" />

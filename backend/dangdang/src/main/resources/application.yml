@@ -49,10 +49,10 @@ spring:
 
 file :
   upload :
-    baseLocation : "C:\\home\\ssafy\\share\\"
-    file :  "C:\\home\\ssafy\\share\\files\\"
-    video : "C:\\home\\ssafy\\share\\videos\\"
-    image: "C:\\home\\ssafy\\share\\images\\"
+    baseLocation : "C:/home/ssafy/share/"
+    file :  "C:/home/ssafy/share/files/"
+    video : "C:/home/ssafy/share/videos/"
+    image: "C:/home/ssafy/share/images/"
     address : "https://localhost:8443/files/"
 ---
 
