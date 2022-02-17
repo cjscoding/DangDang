@@ -208,14 +208,16 @@ function TeamDetail({ user, roomInfo, roomHost, comments, setRoomInfo }) {
             <input type="text" placeholder="댓글을 남겨주세요..." />
             <button>등록</button>
           </form>
-          {comments.map((comment, index) => (
-            <Comment
-              comment={comment}
-              key={index}
-              reload={reload}
-              userImage={comment.writerImageUrl}
-            />
-          ))}
+          {comments.map((comment, index) => {
+            return(
+              <Comment
+                comment={comment}
+                key={index}
+                reload={reload}
+                userImage={comment.writerImageUrl}
+              />
+            )
+          })}
         </div>
       </div>
 
