@@ -49,6 +49,19 @@ public class Comment {
 //    @JoinColumn(name = "writer")
     private Long writerId;
     private String writerNickname;
+
+    public void setWriterNickname(String writerNickname) {
+        this.writerNickname = writerNickname;
+    }
+
+    public void setWriterEmail(String writerEmail) {
+        this.writerEmail = writerEmail;
+    }
+
+    public void setWriterImageUrl(String writerImageUrl) {
+        this.writerImageUrl = writerImageUrl;
+    }
+
     private String writerEmail;
     private String writerImageUrl;
 

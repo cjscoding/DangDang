@@ -2,6 +2,7 @@ package com.ssafy.dangdang.controller;
 
 import com.ssafy.dangdang.domain.dto.InterviewQuestionDto;
 import com.ssafy.dangdang.domain.dto.UserDto;
+import com.ssafy.dangdang.domain.dto.WriteInterview;
 import com.ssafy.dangdang.service.InterviewQuestionService;
 import com.ssafy.dangdang.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,8 +57,19 @@ public class AdminController {
     })
     @GetMapping("/interview")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    public ApiResult<Page<InterviewQuestionDto>> getAllInterviewQustion( @ParameterObject Pageable pageable){
+    public ApiResult<Page<InterviewQuestionDto>> getAllInterviewQustion(@ParameterObject Pageable pageable){
         return success(interviewQuestionService.getAllInterviewQustion(pageable));
+    }
+
+    @Operation(summary = "모든 면접 질문 검색")
+    @ApiResponses( value = {
+            @ApiResponse(responseCode = "200", description = "모든 면접 질문 조회 성공")
+    })
+    @GetMapping("/interview/search")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ApiResult<Page<InterviewQuestionDto>> getAllInterviewQustionSearch(@ParameterObject Pageable pageable,
+                                                                              @ParameterObject WriteInterview searchParam){
+        return success(interviewQuestionService.adminSearchInterviewQuestion( searchParam, pageable ));
     }
 
     @Operation(summary = "면접 질문 공개 허용")
