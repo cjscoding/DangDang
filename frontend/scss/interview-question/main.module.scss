@@ -112,7 +112,6 @@
 }
 
 .noQuestions {
-  @include white-box;
   height: 500px;
   display: flex;
   flex-direction: column;

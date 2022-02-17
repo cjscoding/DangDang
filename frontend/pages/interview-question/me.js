@@ -88,36 +88,35 @@ function myQuestion({ myQuestions, setMyQuestions }) {
         </div>
       </div>
 
-      {Array.isArray(myQuestions) && myQuestions.length === 0 ? (
-        <div className={styles.noQuestions}>
-          <span>아직 등록한 질문이 없어요 ㅜ.ㅜ</span>
-          <p>
-            <strong>
-              <Link href="/interview-question/create">
-                <a>내 질문 등록하기</a>
-              </Link>
-            </strong>
-            에서 나만의 질문을 등록해보세요!
-          </p>
-        </div>
-      ) : (
-        <div className={styles.container}>
-          <div className={styles.header}>
-            <div className={styles.selectBox}>
-              <select onChange={(event) => setField(event.target.value)}>
-                <option value="공통">공통</option>
-                <option value="인성">인성</option>
-                <option value="기술">IT</option>
-                <option value="기타">기타</option>
-              </select>
-              <span className={styles.selectArrowIcon}>
-                <i className="fas fa-angle-down"></i>
-              </span>
-            </div>
-
-            <span>질문</span>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div className={styles.selectBox}>
+            <select onChange={(event) => setField(event.target.value)}>
+              <option value="공통">공통</option>
+              <option value="인성">인성</option>
+              <option value="기술">IT</option>
+              <option value="기타">기타</option>
+            </select>
+            <span className={styles.selectArrowIcon}>
+              <i className="fas fa-angle-down"></i>
+            </span>
           </div>
 
+          <span>질문</span>
+        </div>
+        {Array.isArray(myQuestions) && myQuestions.length === 0 ? (
+          <div className={styles.noQuestions}>
+            <span>아직 등록한 질문이 없어요 ㅜ.ㅜ</span>
+            <p>
+              <strong>
+                <Link href="/interview-question/create">
+                  <a>내 질문 등록하기</a>
+                </Link>
+              </strong>
+              에서 나만의 질문을 등록해보세요!
+            </p>
+          </div>
+        ) : (
           <div className={styles.table}>
             {myQuestions?.map((question) => (
               <QuestionListRow
@@ -128,17 +127,16 @@ function myQuestion({ myQuestions, setMyQuestions }) {
               />
             ))}
           </div>
-
-          <div className={styles.pagination}>
-            <Pagination
-              curPage={curPage}
-              paginate={paginate}
-              totalCount={totalPosts}
-              postsPerPage={postsPerPage}
-            />
-          </div>
+        )}
+        <div className={styles.pagination}>
+          <Pagination
+            curPage={curPage}
+            paginate={paginate}
+            totalCount={totalPosts}
+            postsPerPage={postsPerPage}
+          />
         </div>
-      )}
+      </div>
     </div>
   );
 }
