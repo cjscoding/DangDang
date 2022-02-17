@@ -268,10 +268,10 @@ function AddQuestions({
                       </span>
                       <div className={styles.questionContent}>
                         {question.question}
-                        <button>
-                          <i className="fas fa-plus"></i>
-                        </button>
                       </div>
+                      <button>
+                        <i className="fas fa-plus"></i>
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -290,10 +290,10 @@ function AddQuestions({
                       </span>
                       <div className={styles.questionContent}>
                         {question.question}
-                        <button>
-                          <i className="fas fa-plus"></i>
-                        </button>
                       </div>
+                      <button>
+                        <i className="fas fa-plus"></i>
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -311,10 +311,10 @@ function AddQuestions({
                       </span>
                       <div className={styles.questionContent}>
                         {question.question}
-                        <button>
-                          <i className="fas fa-plus"></i>
-                        </button>
                       </div>
+                      <button>
+                        <i className="fas fa-plus"></i>
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -403,10 +403,10 @@ function AddQuestions({
                     </span>
                     <div className={styles.questionContent}>
                       {question.question}
-                      <button>
-                        <i className="fas fa-times"></i>
-                      </button>
                     </div>
+                    <button>
+                      <i className="fas fa-times"></i>
+                    </button>
                   </li>
                 ))}
               </ul>
