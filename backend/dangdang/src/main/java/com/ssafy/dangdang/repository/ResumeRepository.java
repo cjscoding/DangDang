@@ -22,4 +22,6 @@ public interface ResumeRepository extends JpaRepository<Resume, Long> {
             " where r.user.id = :userId and r.study.id = :studyId")
     List<Resume> findResumeList(@Param("userId")Long userId, @Param("studyId") Long studyId);
 
+    List<Resume> findAllByUserId(Long userId);
+
 }
