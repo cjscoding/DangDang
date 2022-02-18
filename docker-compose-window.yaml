@@ -40,7 +40,7 @@ services:
       - dangdang-kms
     networks:
       - dangdang_network
-    command: "java -Dspring.profiles.active=prod -Dkms.url=ws://dangdang-kms:8888/kurento -jar /app.jar"
+    command: "java -Dspring.profiles.active=dev-test -Dkms.url=ws://dangdang-kms:8888/kurento -jar /app.jar"
 
   dangdang-mysql:
     image: mysql:8.0.28
@@ -94,9 +94,9 @@ services:
       - type: bind
         source: C:/home/ubuntu/data/videos
         target: /tmp
-      - type: bind
-        source: C:/home/ubuntu/kurento
-        target: /etc/kurento
+      # - type: bind
+      #   source: C:/home/ubuntu/kurento
+      #   target: /etc/kurento
       # network_mode: host
     expose:
       - 8888
