@@ -31,7 +31,8 @@ public class UserServiceImpl implements UserService{
     private final JoinsRepository joinsRepository;
     private final PasswordEncoder passwordEncoder;
 
-
+    private final ResumeRepository resumeRepository;
+    private final ResumeQuestionRepository resumeQuestionRepository;
     @Override
     @Transactional
     public void signUpUser(UserDto userDto) {
@@ -114,6 +115,12 @@ public class UserServiceImpl implements UserService{
         bookmarkRepository.deleteAll(bookmarks);
         List<InterviewQuestion> allByWriter = interviewQuestionRepository.findAllByWriter(user.getId());
         interviewQuestionRepository.deleteAll(allByWriter);
+        List<Resume> resumes = resumeRepository.findAllByUserId(user.getId());
+        for (Resume r : resumes) {
+            List<ResumeQuestion> allByResume = resumeQuestionRepository.findAllByResume(r);
+            resumeQuestionRepository.deleteAll(allByResume);
+        }
+        resumeRepository.deleteAll(resumes);
 
         List<Post> posts = postRepository.findPostByWriterId(user.getId());
         postRepository.deleteAll(posts);
