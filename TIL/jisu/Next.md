@@ -10,6 +10,12 @@
 (terminal)
     with out TS > npx create-next-app@latest
     with TS     > npx create-next-app@latest --typescript
+
+    Sass(Scss)  > npm install sass
+    PostCSS     > npm install tailwindcss postcss-preset-env postcss-flexbugs-fixes
+    classnames  > npm install classnames
+    parse .md   > npm install gray-matter
+    
 ```
 
 ---
@@ -288,4 +294,57 @@ export default function Home() {
 
   ### ✧ Fetching Data
 
-  > 
+  >
+
+  ### ✧ Redirect
+
+  > next.config.js 파일 내에서
+
+  ```javascript
+  module.exports = {
+    reactStrictMode: true,
+    async redirects() {
+      return [
+        {
+          source: "/contact:path",
+          destination: "/form:path",
+          permanent: false,
+        },
+      ];
+    },
+  };
+  ```
+
+  - url : /contact 접속시 /form 으로 redirect됨
+  - :path로 같은 path 정보를 가지고 url 이동가능
+  - 뒤따라오는 모든 path를 catch하기 위해서는 :path\*
+
+  ### ✧ Rewrite
+
+  ```javascript
+  const API_KEY = process.env.API_KEY;
+
+  module.exports = {
+    reactStrictMode: true,
+    async rewrites() {
+      return [
+        {
+          source: "/api/movies",
+          destination: `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`,
+        },
+      ];
+    },
+  };
+  ```
+
+  - user가 url의 api_key를 보지 못하도록 숨길 수 있음
+  - api key는 .env파일에 저장
+
+  ### ✧ Dynamic Routes
+
+  > pages 폴더 내 폴더 또는 파일로 route 결정됨
+
+  - 예를 들어, 페이지가 하나라면 about.js => /about
+  - 둘 이상이면,
+    - about(폴더) > index.js => /about
+    - about(폴더) > all.js => /about/all

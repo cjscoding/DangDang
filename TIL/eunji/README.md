@@ -611,3 +611,931 @@ Named 쿼리 - 어노테이션
 @NamedQuery → 미리 쿼리문을 작성해 놓는 거
 
 쿼리에 에러를 찾을 수 있다?
+
+------------
+### 2022.01.17
+## React 2강
+
+## 1. Before React
+
+```html
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <span>Total clicks: 0</span>
+    <button id="btn">Click me</button>
+</body>
+<script>
+    const button=document.getElementById("btn");
+    let counter=0;
+    const span=document.querySelector("span");
+    function handleClick(){
+        console.log("clicked");
+        counter++;
+        span.innerHTML='Total clicks: '+counter;
+    }
+    button.addEventListener("click",handleClick);
+</script>
+</html>
+```
+
+react를 사용하기 위해 설치해야 하는 것 
+
+react, react-dom
+
+```html
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></scrip
+```
+
+## **2. Our First React Element**
+
+React는 엔진이다
+
+React-dom은 React element를 HTML에 두는 역할을 하는 것
+
+render = 사용자에게 보여준다.
+
+```html
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script>
+    const root=document.getElementById("root");
+    const span=React.createElement("span"); 
+    ReactDOM.render(span,root); //render = 사용자에게 보여준다.
+</script>
+</html>
+```
+
+![Untitled](#2%2091248c63872144f5a35d8aad73912cbd/Untitled.png)
+
+아이디 이름 정하기
+
+```jsx
+const span=React.createElement("span",{id:"cute-span"})
+```
+
+![Untitled](#2%2091248c63872144f5a35d8aad73912cbd/Untitled%201.png)
+
+```jsx
+const span=React.createElement("span",{id:"cute-span"},"Hello, I'm a span"); 
+```
+
+![Untitled](#2%2091248c63872144f5a35d8aad73912cbd/Untitled%202.png)
+
+```jsx
+const span=React.createElement("span",{id:"cute-span",style:{color:"blue"}},"Hello, I'm a span"); 
+```
+
+![Untitled](#2%2091248c63872144f5a35d8aad73912cbd/Untitled%203.png)
+
+→ 이런 코드 한번만 쓸거임, 다른 간단한 방법이 있음.
+
+바닐라JS는 Html부터 만들고, 그것을 JS가 가져오는 방식
+
+ReactJS는 모든 것이 JS임 → 유저에게 보여질 내용을 컨트롤 할 수 있다.
+
+## 3. **Events in React**
+
+```jsx
+
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script>
+    const root=document.getElementById("root");
+    const span=React.createElement("span",{id:"cute-span",style:{color:"blue"}},"Hello, I'm a span"); 
+    const btn=React.createElement("button",{id:"btn"},"버튼이다");
+    const container=React.createElement("div",null,[span,btn]);
+    ReactDOM.render(container,root); //render = 사용자에게 보여준다.
+</script>
+```
+
+div tag, btn tag 둘다 render 하고 싶으면 container 하나 만들어서 그안에 배열형태로 집어넣어주고, container를 render 해줌
+
+button에 eventListner 달기
+
+```jsx
+const btn=React.createElement("button",{
+        onClick:()=>console.log("i'm clicked"),
+    },"버튼이다");
+```
+
+다른 evnetListner
+
+```jsx
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script>
+    const root=document.getElementById("root");
+    const h3=React.createElement("h3",{onMouseEnter: ()=>console.log("enter"),},"Hi");
+    const span=React.createElement("span",{id:"cute-span",style:{color:"blue"}},"Hello, I'm a span"); 
+    const btn=React.createElement("button",{
+        onClick:()=>console.log("i'm clicked"),
+    },"버튼이다");
+    const container=React.createElement("div",null,[h3,span,btn]);
+    ReactDOM.render(container,root); //render = 사용자에게 보여준다.
+</script>
+```
+
+## 4. Recap
+
+앞으로 `React.createElement`는 안쓸거임 
+
+이전 시간 복습임 
+
+## 5. JSX
+
+createElement를 대체할 수 있는 JSX
+
+왜? 더 편리해서 
+
+- JSX는 JS를 확장한 문법
+- Html과 생긴게 비슷해서 JSX로 React 요소를 만드는게 편하다
+
+```jsx
+const h3 = React.createElement("h3", { onMouseEnter: () => console.log("enter"), }, "Hi");
+const Title=<h3 id="title" onMouseEnter={() => console.log("enter")}>Hi</h3> // JSX
+```
+
+```jsx
+<script>
+    const root = document.getElementById("root");
+    const Title=<h3 
+    id="title" onMouseEnter={() => console.log("Enter")}>
+    Hi</h3> // JSX
+    const Button=<button 
+    id="btn" style={{color :
+    'red'}} onClick={()=>console.log("Click me")}>
+    button</button>
+    const span = React.createElement("span", { id: "cute-span", style: { color: "blue" } }, "Hello, I'm a span");
+    const container = React.createElement("div", null, [Title, span, Button]);
+    ReactDOM.render(container, root); //render = 사용자에게 보여준다.
+</script>
+```
+
+브라우저가 JSX를 알아들을 수 있도록 설정해주어야 함. 이때, Babel 사용함.
+
+변환기 설치, script type 지정해줌
+
+```jsx
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+```
+
+## 6. JSX part Two
+
+해당 부분을 JSX를 통해 바꿔보자!
+
+```jsx
+const container = React.createElement("div", null, [Title, Button]);
+ReactDOM.render(container, root); //render = 사용자에게 보여준다.
+```
+
+Title과 Button을 div 안에 넣어주기 위해서는 함수로 만들어줘야 한다. 
+
+```jsx
+const Title= () => (<h3 
+    id="title" onMouseEnter={() => console.log("Enter")}>
+    Hi</h3>) // JSX
+    const Button=() => (<button 
+    id="btn" style={{color :
+    'red'}} onClick={()=>console.log("Click me")}>
+    button</button>)
+```
+
+우리가 만든 요소들은 모두 대문자로 시작해야 한다!
+
+코드를 분리, 렌더링 가능 
+
+**직접 만든 컨포넌트를 렌더링해서 다른곳에서 사용할 때에는 무조건 대문자로 시작해야 한다! 아니면 그냥 html 코드가 되어버림**
+
+```jsx
+const Container = <div>
+        <Title />
+        <Button />
+    </div> //컴포넌트라고 생각하면 됨, 우리가 만든 요소들은 대문자로 작성하기
+```
+
+## React 3강
+## 0. Understanding State
+
+state = 데이터가 저장되는 곳
+
+바뀌는 데이터를 state에 저장함 
+
+값이 바뀔 데이터를 state에 담는 법
+
+잠깐 JSX 복습 
+
+함수 안에 React Element를 담으면 컴포넌트처럼 사용이 가능하다!
+
+```jsx
+const Button = () => (<button
+        id="btn" style={{
+            color:
+                'red'
+        }} onClick={() => console.log("Click me")}>
+        button</button>);
+```
+
+2강에서 배웠던 js로 total clicks 만들었던거 react로 바꾸기
+
+```jsx
+<script type="text/babel">
+    const root = document.getElementById("root");
+    const Container = () => (<div>
+        <h3>Total clicks: 0</h3>
+        <button>Click me</button>
+    </div>) //컴포넌트라고 생각하면 됨, 우리가 만든 요소들은 대문자로 작성하기 
+    // const container = React.createElement("div", null, [Title, Button]);
+    ReactDOM.render(<Container />, root); //render = 사용자에게 보여준다.
+</script>
+```
+
+변수 연결해주기 → 중괄호 사용 { }
+
+```jsx
+<script type="text/babel">
+    let counter = 10;
+    const root = document.getElementById("root");
+    const Container = () => (
+        <div>
+            <h3>Total clicks: {counter}</h3>
+            <button>Click me</button>
+        </div>); //컴포넌트라고 생각하면 됨, 우리가 만든 요소들은 대문자로 작성하기 
+    // const container = React.createElement("div", null, [Title, Button]);
+    ReactDOM.render(<Container />, root); //render = 사용자에게 보여준다.
+</script>
+```
+
+카운터 변경 함수 만들고, button에 연결해주기
+
+```jsx
+<script type="text/babel">
+    let counter = 0;
+    function countUp(){
+        counter=counter+1;
+    }
+    const root = document.getElementById("root");
+    const Container = () => (
+        <div>
+            <h3>Total clicks: {counter}</h3>
+            <button onClick={countUp}>Click me</button>
+        </div>); //컴포넌트라고 생각하면 됨, 우리가 만든 요소들은 대문자로 작성하기 
+    // const container = React.createElement("div", null, [Title, Button]);
+    ReactDOM.render(<Container />, root); //render = 사용자에게 보여준다.
+</script>
+```
+
+counter 변수는 바뀌지만, 바뀐 값이 UI에서는 그대로임!
+
+container를 변수 값이 바뀔 때마다 render 해주어야 함
+
+```jsx
+function countUp(){
+        counter=counter+1;
+        render();
+    }
+function render(){
+    ReactDOM.render(<Container />, root);
+}
+```
+
+근데 이렇게 하면 코드가 많아질 때 일일히 다 렌더링 다시를 해주어야 하나..??
+
+→ 더 쉬운 방법이 당연히 있음! 다음 강의에서..
+
+## 1. **setState part One**
+
+UI를 업데이트 하는 더 간단한 방법
+
+React는 container를 새로 렌더링 하더라도 모든 것을 다시 렌더링 하지 않음. 바뀐 부분만 알아서 렌더링 해줌!
+
+react 어플 내 데이터를 보관하고, 자동으로 리렌더링을 일으킬 수 있는 방법
+
+```jsx
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App(){
+        const data=React.useState();
+        console.log(data);
+        return(
+            <div>
+            <h3>Total clicks: {data[0]}</h3>
+            <button>Click me</button>
+        </div>
+        );
+    }
+   ReactDOM.render(<App />, root); //render = 사용자에게 보여준다.
+</script>
+```
+
+![Untitled](#3%2071c7dde6510245c1934dea7ca8969a22/Untitled.png)
+
+undefined 부분이 data, f 부분이 data를 바꿀 때 사용하는 함수
+
+```jsx
+//원래 코드
+let counter=0;
+function countUp(){
+	//code
+}
+
+//React state 사용 코드 
+const data=React.useState(); 
+```
+
+둘 다는 같은 코드임!
+
+```jsx
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App(){
+        const data=React.useState(0);
+        const[counter,modifier] = data;
+        return(
+            <div>
+            <h3>Total clicks: {counter}</h3>
+            <button>Click me</button>
+        </div>
+        );
+    }
+   ReactDOM.render(<App />, root); //render = 사용자에게 보여준다.
+</script>
+```
+
+## **2. setState part Two**
+
+modifier 작성법
+
+```jsx
+const data=React.useState(0);
+const [counter,modifier] = data;
+```
+
+이렇게 새로운 배열을 하나 더 선언해주면 data[0]. data[1] 이렇게 쓰지 않고도 counter, modifier의 값으로 사용할 수 있다.
+
+카운트 올리기 코드 
+
+modifier 함수 이름을 setCounter라고 바꾸고, 함수의 인자값을 하고싶은 계산식으로 만들어줌 
+
+```jsx
+<script type="text/babel">
+    const root = document.getElementById("root");
+    function App(){
+        const data=React.useState(0);
+        const [counter,setCounter] = data;
+        const onClick = () => {
+            setCounter(counter+1);
+        }
+        return(
+            <div>
+            <h3>Total clicks: {counter}</h3>
+            <button onClick={onClick}>Click me</button>
+        </div>
+        );
+    }
+   ReactDOM.render(<App />, root); //render = 사용자에게 보여준다.
+</script>
+```
+
+## 3. Recap
+
+앞에꺼 복습 
+
+## 4. **State Functions**
+
+state를 바꾸는 2가지 방법
+
+- setCounter를 이용해 우리가 원하는 값을 넣어주는 것
+- 이전 값을 이용해 현재 값을 계산하는 것
+    - **setCounter의 인자 부분에 함수를 넣음** → 더 안전한 방법
+        
+        current가 현재 값이라는 완벽한 보장을 할 수 있어서...?
+        
+        ```jsx
+        setCounter((current)=>current+1)
+        ```
+        
+
+---
+
+## 5. **Inputs and State**
+
+단위 변환 페이지 만들기
+
+```jsx
+function App(){
+        return(
+            <div>
+            <h1>Super Converter</h1>
+            <label for="minutes">Minutes</label>
+            <input type="number" id="minutes" placeholder="Minutes" />
+            <label for="hours">Hours</label>
+            <input type="number" id="hours" placeholder="Hours" />
+        </div>
+        );
+    }
+```
+
+jsx는 html과 유사하지만 다른 점 몇가지가 있음.
+
+- class와 for를 사용하면 안된다.
+
+```jsx
+function App(){
+        const [minutes,setMinutes]=React.useState();
+        const onChange=(event)=>{
+            console.log(event.target.value);
+            setMinutes(event.target.value);
+        }
+        return(
+            <div>
+            <h1>Super Converter</h1>
+            <label for="minutes">Minutes</label>
+            <input value={minutes} 
+            type="number" 
+            id="minutes" 
+            placeholder="Minutes" 
+            onChange={onChange}/>
+            <h4>You want to convert {minutes}</h4>
+            <label for="hours">Hours</label>
+            <input type="number" id="hours" placeholder="Hours" />
+        </div>
+        );
+    }
+```
+
+![Untitled](#3%2071c7dde6510245c1934dea7ca8969a22/Untitled%201.png)
+
+## **6. State Practice part One**
+
+- state 만들기
+    - state의 결과는 배열
+        - 첫번째 요소는 value
+        - 두번째 요소는 value를 업데이트 하는 함수
+- input의 value를 state로 연결
+- onChange 함수를 만들어서 input에 연결
+    - 해당 함수는 데이터를 업데이트 해주는 역할
+
+```jsx
+function App(){
+        const [minutes,setMinutes]=React.useState(0);
+        const onChange=(event)=>{
+            console.log(event.target.value);
+            setMinutes(event.target.value);
+        }
+        const reset=()=>{
+            setMinutes(0);
+        }
+        return(
+            <div>
+            <h1>Super Converter</h1>
+            <div>
+                <label htmlFor="minutes">Minutes</label>
+                <input value={minutes} 
+                type="number" 
+                id="minutes" 
+                placeholder="Minutes" 
+                onChange={onChange}/>
+            </div>
+            <div>
+                <label htmlFor="hours">Hours</label>
+                <input value={minutes/60} type="number" id="hours" placeholder="Hours"/>
+            </div>
+            <button onClick={reset}>Reset</button>
+        </div>
+        );
+    }
+```
+
+------------
+### 2022.01.18
+## Kurento
+
+[Kurento](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-kurento) 는 [WebRTC](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-webrtc) 미디어 서버이자 웹 및 스마트폰 플랫폼용 고급 비디오 애플리케이션 개발을 단순화하는 클라이언트 API 세트입니다. 그 기능에는 그룹 커뮤니케이션, 트랜스코딩, 녹음, 믹싱, 방송 및 시청각 흐름 라우팅이 포함됩니다.
+
+## kurento와 같은 미디어 서버를 사용하는 이유
+
+[WebRTC](https://webrtc.org/) 는 브라우저와 모바일 애플리케이션에 피어 투 피어 연결을 통해 실시간 통신(RTC) 기능을 제공하는 일련의 프로토콜, 메커니즘 및 API입니다. 어떤 종류의 인프라도 중재하지 않고 브라우저가 직접 통신할 수 있도록 하는 기술로 인식되었습니다. 그러나 이 모델은 기본 웹 애플리케이션을 만드는 데만 충분합니다. **그룹 통신, 미디어 스트림 녹음, 미디어 방송 또는 미디어 트랜스코딩과 같은 기능은 그 위에 구현하기 어렵습니다.** 이러한 이유로 많은 응용 프로그램에 중간 미디어 서버가 필요합니다.
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/0a93837a-329b-4172-8c5c-998ba4912d43/Untitled.png)
+
+### WebRTC Media Server가 제공하는 기능들
+
+- 그룹 통신: 한 피어가 생성하는 미디어 스트림을 여러 수신기에 배포하는 것, 즉 다중 회의 장치("MCU") 역할을 합니다.
+- 혼합: 여러 수신 스트림을 하나의 단일 복합 스트림으로 변환합니다.
+- 트랜스코딩: 호환되지 않는 클라이언트 간에 코덱 및 형식을 즉시 적용합니다.
+- 녹음: 피어 간에 교환되는 미디어를 지속적으로 저장합니다.
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/b946aa7a-efd5-41ce-a310-8b12c557edac/Untitled.png)
+
+Kurento의 주요 구성 요소는 미디어 전송, 처리, 녹음 및 재생을 담당하는 KMS( **Kurento Media Server )입니다.**
+
+### KMS가 제공하는 주요 기능들
+
+- [HTTP,](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-http)[RTP 및](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-rtp) [WebRTC](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-webrtc)를 포함한 네트워크 스트리밍 프로토콜
+- 미디어 믹싱과 미디어 라우팅/디스패칭을 모두 지원하는 그룹 통신(MCU 및 SFU 기능)
+- Computer Vision 및 Augmented Reality 알고리즘을 구현하는 필터에 대한 일반 지원
+- [WebM 및](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-webm)  [MP4](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-mp4) **에 대한 쓰기 작업과 GStreamer 에서 지원하는 모든 형식의 재생 을 지원하는 미디어 저장소입니다.
+- VP8, H.264, H.263, AMR, OPUS, Speex, G.711 등을 포함하여 GStreamer에서 지원하는 모든 코덱 간의 자동 미디어 트랜스코딩
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7ab98bf4-1f88-433f-a676-8be44eee2331/Untitled.png)
+
+## 쿠렌토 설치 방법 3가지
+
+- [Amazon Web Services](https://aws.amazon.com/)
+
+  (AWS) 클라우드 서비스 에서 EC2 인스턴스 사용 . 제공된 설정이 이 모든 작업을 자동으로 수행하기 때문에 서버와 모든 소프트웨어 패키지를 올바르게 구성하는 것에 대해 걱정하지 않으려는 사용자에게 AWS를 사용하는 것이 좋습니다.
+
+- Kurento 팀에서 제공한 Docker 이미지 사용. Docker 이미지를 사용하면 모든 호스트 컴퓨터에서 Kurento를 실행할 수 있으므로 예를 들어 Fedora 또는 CentOS 시스템 위에서 KMS를 실행할 수 있습니다. 이론상으로는 Windows에서도 실행할 수 있지만 지금까지 그 가능성은 탐색되지 않았으므로 사용자가 위험을 감수해야 합니다.
+
+- 모든 Ubuntu 시스템에서 ,를 사용한 로컬 설치 . 이 방법을 사용하면 설치 프로세스를 완전히 제어할 수 있습니다. KMS를 설치하는 것 외에도 , 특히 KMS 또는 해당 클라이언트가 [NAT](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-nat) 방화벽 뒤에 있는 경우에는 [STUN](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-stun) 또는 [TURN 서버도 설치해야 합니다.](https://doc-kurento.readthedocs.io/en/6.9.0/glossary.html#term-turn)`apt-get install`
+
+## 쿠렌토 서버 실행시키기
+[[Kurento\] 쿠렌토 서버 Docker로 실행시켜보기 (feat. 윈도우)](https://gh402.tistory.com/44)
+[Windows 10에서 WSL2를 이용하여 Ubuntu 설치하는 방법](https://wylee-developer.tistory.com/57)
+
+------------
+### 2022.01.19
+## KMS, STUN/TURN 서버 설정 및 skeleton 코드 실행
+
+webRTC기술 학습과 주요 기능 구현 pdf 파일을 참고하여 Ubuntu 환경에서 docker에 KMS, STUN/TURN 서버 설정
+
+싸피에서 제공한 skeleton 코드 실행 
+![이미지](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FW19IV%2FbtrrcgQKUue%2FjKcXsLv1IrFQ1OwqUpZSbK%2Fimg.png)
+
+실행 결과
+![이미지](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FdVE3i8%2FbtrrcNN5aOE%2FftUO1QorYKzI8ifna22FBK%2Fimg.png)
+
+------------
+### 2022.01.20
+## SockJS 기반 채팅 서버 예제 따라해보기
+
+쿠렌토 서버는 다음주 월요일 AWS계정 받으면 하기로 하고, 우선 웹소켓 통신부터 공부함.
+
+https://supawer0728.github.io/2018/03/30/spring-websocket/
+
+https://github.com/supawer0728/simple-websocket/blob/master/src/main/resources/templates/chat1/room-detail.html
+
+!주요 코드만 담았음
+
+ChatHandler.java
+
+```java
+package com.ssafy.common;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.db.dto.ChatMessage;
+import com.ssafy.db.dto.ChatRoom;
+import com.ssafy.db.repository.ChatRoomRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+@Slf4j
+@Profile("!stomp")
+@Component
+public class ChatHandler extends TextWebSocketHandler {
+
+    private final ObjectMapper objectMapper;
+    private final ChatRoomRepository repository;
+
+    @Autowired
+    public ChatHandler(ObjectMapper objectMapper, ChatRoomRepository chatRoomRepository) {
+        this.objectMapper = objectMapper;
+        this.repository = chatRoomRepository;
+    }
+
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+
+        String payload = message.getPayload();
+        log.info("payload : {}", payload);
+
+        ChatMessage chatMessage = objectMapper.readValue(payload, ChatMessage.class);
+        ChatRoom chatRoom = repository.getChatRoom(chatMessage.getChatRoomId());
+        chatRoom.handleMessage(session, chatMessage, objectMapper);
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        repository.remove(session);
+    }
+}
+```
+
+WebSocketConfig.java
+
+```java
+package com.ssafy.config;
+
+import com.ssafy.common.ChatHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+
+@Profile("!stomp")
+@Configuration
+@EnableWebSocket
+public class WebSocketConfig implements WebSocketConfigurer {
+    @Autowired
+    private ChatHandler chatHandler;
+
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(chatHandler, "/ws/chat").setAllowedOrigins("*").withSockJS();
+    }
+}
+```
+
+
+ChatRoomController.java
+
+```java
+package com.ssafy.api.controller;
+
+import com.ssafy.db.dto.ChatRoom;
+import com.ssafy.db.repository.ChatRoomRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+@Controller
+@RequestMapping("/chat1")
+public class ChatRoomController {
+
+    private final ChatRoomRepository repository;
+//    private final String listViewName;
+//    private final String detailViewName;
+    private final AtomicInteger seq = new AtomicInteger(0);
+
+    @Autowired
+    public ChatRoomController(ChatRoomRepository repository) {
+        this.repository = repository;
+    }
+
+    @GetMapping("/rooms")
+    public String rooms(Model model) {
+        model.addAttribute("rooms", repository.getChatRooms());
+        return "/chat1/room-list";
+    }
+
+    @GetMapping("/rooms/{id}")
+    public String room(@PathVariable String id, Model model) {
+        ChatRoom room = repository.getChatRoom(id);
+        model.addAttribute("room", room);
+        model.addAttribute("member", "member" + seq.incrementAndGet()); // 회원 이름 부여
+
+        return "/chat1/room";
+    }
+}
+
+```
+
+### Spring Sockets - WebSocket, SockJS, STOMP 공부 중
+
+https://www.youtube.com/watch?v=gQyRxPjssWg&ab_channel=%EC%8B%9C%EB%8B%88%EC%96%B4%EC%BD%94%EB%94%A9
+
+
+- WebSocket
+  - 사용자의 브라우저와 서버 사이의 인터렉티브 통신 세션을 설정할 수 있게 하는 고급 기술.
+- SockJS 
+  - socket.io는 NodeJS 기반
+  - sprnig은 SockJS client가 있음.
+  - 웹 소켓과 유사함
+- STOMP
+  - Spring Only
+  - Use stomp js library
+  - SockJS의 서브 프로토콜
+
+메세지 형식은 JSON을 사용하는 것이 좋다고 함.
+
+
+------------
+### 2022.01.21
+## SockJS 기반 채팅 서버 예제 따라해보기 2
+
+# Spring Sockets 
+
+
+- WebSocket
+  - 기본적인 순수한 웹소켓
+  - 사용자의 브라우저와 서버 사이의 인터렉티브 통신 세션을 설정할 수 있게 하는 고급 기술
+  - HTTP 상에 존재함
+- SockJS 
+  - socket.io는 NodeJS 기반
+  - spring은 SockJS client가 있음.
+  - 웹 소켓과 유사함
+- STOMP
+  - Spring Only
+  - Use stomp js library
+  - SockJS의 서브 프로토콜
+  - 약속된 커뮤니케이션
+  - 토픽 구독 방식
+
+세가지 모두 메세지 형식은 JSON을 사용하는 것이 좋다고 함.
+
+
+
+## WebSocket on Spring MVC Project
+
+![image-20220120233839583](C:\Users\multicampus\AppData\Roaming\Typora\typora-user-images\image-20220120233839583.png)
+
+1. pom.xml, sevlet-context.xml 세팅
+2. WebSocket Handler 만듦 (이미지나 파일은 BinaryWebSocketHandler, 텍스트는 TextWebSocketHandler)
+3. html 만듦 (WebSocket js를 사용)
+
+
+
+ws : 원래 웹소켓
+
+wss: https 인증서 받아서 암호화된 방식 SSL 인증서로 암호화 
+
+long polling : 서버랑 클라이언트가 계속 붙어 있음. 끊어지지 않고 -> 실시간성 보장
+
+auto-reconnect with intelligence
+
+session만 끊는다. 
+
+
+
+### pom.xml
+
+websocket-api, spring-websocket 추가
+
+
+
+### servlet-context.xml
+
+handler 등록 (websocket handler 등록)
+
+handshake하는 interceptor 필요 (로그인한 사용자 session 알아야 해서 사용함)
+
+websocket은 기본적으로 http Session을 가지고 있지 않음
+
+
+
+## ### WebSocketConfig 생성
+
+```java
+package com.example.demo.config;
+
+import com.example.demo.handler.ReplyEchoHandler;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+
+@Configuration
+@EnableWebSocket
+public class WebSocketConfig implements WebSocketConfigurer {
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(new ReplyEchoHandler(), "/replyEcho").setAllowedOrigins("*");
+    }
+
+}
+
+```
+
+
+
+### handler 생성
+
+```java
+public class ReplyEchoHandler implements TextWebSocketHandler{
+    
+    @Override
+    public void afterConnectionsEstablished(WebSocketSession session) thorws Exception{
+        
+    }
+    @Override
+    protected void handleTextMessage(WebSocketSession session, TextMessage message) thorws Exception{
+        
+    }
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) thorws Exception{
+        
+    }
+}
+```
+
+3개의 메소드가 있고, 모두 다 오버라이드 함
+
+- afterConnectionsEstablished (연결이 됐을 때 (클라이언트가 서버 접속 성공헀을 때))
+- handleTextMessage (메세지를 보냈을 때)
+- afterConnectionClosed (연결이 끊어질 때)
+
+
+
+WebSocket 표준 js 코드 
+
+```javascript
+var ws = new WebSocket("ws://localhost:8080/replyEcho?bno=1234");
+
+    ws.onopen = function () {
+        console.log('Info: connection opened.');
+        setTimeout( function(){ connect(); }, 1000); // retry connection!!
+        
+             ws.onmessage = function (event) {
+            console.log(event.data+'\n');
+        };
+    };
+
+   
+
+    ws.onclose = function (event) { console.log('Info: connection closed.'); };
+    ws.onerror = function (event) { console.log('Info: connection closed.'); };
+    
+    $('#btnSend').on('click', function(evt) {
+	  evt.preventDefault();
+  if (socket.readyState !== 1) return;
+    	  let msg = $('input#msg').val();
+    	  ws.send(msg);
+    });
+
+```
+
+
+
+## SockJS
+
+- sockjs-client library 사용
+
+
+
+websocket과 핸들러 똑같이 쓰는데 뒤에 
+
+`withSockJS()` 추가
+
+
+
+client html에 추가
+
+```javascript
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+```
+
+
+
+To allow credentials to a set of origins, list them explicitly or consider using "allowedOriginPatterns" instead. 오류 계속 뜸
+
+```java
+registry.addHandler(new ReplyEchoHandler(), "/replyEcho").setAllowedOrigins("https://localhost:3478/").withSockJS();
+```
+
+일단 setAllowedOrigins에 '*' 대신에 정확한 주소 넣어주니 실행은 됨 
+
+
+
+한번 메세지를 보내면 웹소켓이 자꾸 닫힘
+
+Closing session due to exception for WebSocketServerSockJsSession[id=pdqbk10b]
+
+```java
+function connectSockJS(){
+        var sock = new SockJS("/replyEcho")
+        socket=sock;
+        console.log("연결 중..");
+        sock.onopen = function () {
+            console.log('Info: connection opened.');
+            sock.onmessage = function (event) {
+                console.log("받은 msg :: "+event.data+'\n');
+            };
+            sock.onclose = function (event) {
+                console.log(event+' :: Info: connection closed.');
+            };
+        };
+    }
+```
+
+sock.onmessage와 onclose를 onopen 안에 넣어주니 해결됨.
