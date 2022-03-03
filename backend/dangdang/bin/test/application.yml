@@ -1,0 +1,139 @@
+
+server:
+  ssl :
+    key-store: classpath:cert.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/dangdang?useUnicode=yes&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Seoul
+    username: ssafy
+    password: ssafy
+
+  jpa :
+    hibernate :
+      ddl-auto : create
+    generate-ddl : false
+    properties :
+      hibernate :
+        format_sql : true
+        show_sql : true
+        dialect : org.hibernate.dialect.MySQL8Dialect
+        default_batch_fetch_size: 1000
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/dangdang
+
+
+  session:
+    store-type: REDIS
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  # JWT Secret Key
+
+  jwt:
+    secret: eae6d34010d4fea74bcafeeef81c1f8685e4793dfe98701d30e568118b31e4e0
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 778294656538-2aqiatern99l4vfpn2ea0h345g3tfhfa.apps.googleusercontent.com
+            clientSecret: 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
+            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+            scope:
+              - email
+              - profile
+          kakao:
+            clientId: d0e1d1d6605d4b3d337a63aaec0f97b8
+            clientSecret: 5YEnwcnW8HrVfvHBjH4VMFVTkd6h3zFY
+            clientAuthenticationMethod: get
+            authorizationGrantType: authorization_code
+            redirectUri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
+            clientName: Kakao
+        provider:
+          kakao:
+            authorizationUri: https://kauth.kakao.com/oauth/authorize
+            tokenUri: https://kauth.kakao.com/oauth/token
+            userInfoUri: https://kapi.kakao.com/v2/user/me
+            userNameAttribute: id
+
+
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          google:
+#            clientId: 5014057553-8gm9um6vnli3cle5rgigcdjpdrid14m9.apps.googleusercontent.com
+#            clientSecret: tWZKVLxaD_ARWsriiiUFYoIk
+#            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+#            scope:
+#              - email
+#              - profile
+#          facebook:
+#            clientId: 121189305185277
+#            clientSecret: 42ffe5aa7379e8326387e0fe16f34132
+#            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+#            scope:
+#              - email
+#              - public_profile
+#          github:
+#            clientId: d3e47fc2ddd966fa4352
+#            clientSecret: 3bc0f6b8332f93076354c2a5bada2f5a05aea60d
+#            redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+#            scope:
+#              - user:email
+#              - read:user
+#        provider:
+#          facebook:
+#            authorizationUri: https://www.facebook.com/v3.0/dialog/oauth
+#            tokenUri: https://graph.facebook.com/v3.0/oauth/access_token
+#            userInfoUri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
+#
+
+
+notification:
+  mattermost:
+    enabled: true # mmSender를 사용할 지 여부, false면 알림이 오지 않는다
+    webhook-url: https://meeting.ssafy.com/hooks/7xqk6s4f57gnuf88f9hbiyjp8w # 위의 Webhook URL을 기입
+    channel: # 기본 설정한 채널이 아닌 다른 채널로 보내고 싶을 때 기입한다
+    pretext: # attachments의 상단에 나오게 되는 일반 텍스트 문자
+    color: # attachment에 왼쪽 사이드 컬러. default=red
+    author-name: # attachment의 상단에 나오는 이름
+    author-icon: # author-icon 왼쪽에 나올 아이콘의 url링크
+    footer: # attachment에 하단에 나올 부분. default=현재 시간
+
+file:
+  upload:
+    baseLocation: "C:\\home\\ssafy\\share\\"
+    file: "C:\\home\\ssafy\\share\\files\\"
+    video: "C:\\home\\ssafy\\share\\videos\\"
+    image: "C:\\home\\ssafy\\share\\images\\"
+    address: "https://localhost:8443/files/"
+
+springdoc:
+  version: '@project.version@'
+  api-docs:
+    path: /v3/api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    display-query-params-without-oauth2: true
+    persistAuthorization: true
+  paths-to-match:
+    - /**
+    - /test/**

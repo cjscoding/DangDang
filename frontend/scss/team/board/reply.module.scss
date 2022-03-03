@@ -1,0 +1,21 @@
+@import "../../common/variables.scss";
+@import "../../common/mixins.scss";
+
+//reply components
+.replyContainer {
+  form {
+    margin: 20px 0;
+  }
+  .replyList {
+    padding: 0 20px;
+    border-radius: 5px;
+    background-color: $background-color;
+    .replyContent {
+      padding: 20px;
+      border-bottom: $division-line;
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}

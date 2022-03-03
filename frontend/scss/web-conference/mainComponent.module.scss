@@ -1,0 +1,281 @@
+@import "../common/variables.scss";
+@import "../common/mixins.scss";
+
+.container {
+  background-color: $background-color;
+}
+
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+  .mainSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 1480px;
+    min-height: 640px;
+    .videoContainer {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+      height: calc(100vh - 232px);
+      min-height: 640px;
+      min-width: 960px;
+      .screens {
+        span {
+          video {
+          }
+          span {
+            margin: 10px;
+          }
+        }
+      }
+      .faces {
+        // width: calc(1480px - 24rem);
+        max-width: 1200px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-content: center;
+        align-items: center;
+        span {
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          overflow-x: hidden;
+
+          video {
+            // border: none;
+          }
+          span {
+            // margin: 10px;
+          }
+        }
+      }
+    }
+    .subContainer {
+      @include white-box;
+      height: 100%;
+      min-width: 280px;
+      padding: 0;
+      margin: 0;
+      .subContainerTopBar {
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 20px;
+        font-size: 15px;
+        font-weight: 700;
+        .header {
+          .chatMenuBtn,
+          .letterMenuBtn {
+            padding: 13px 20px;
+            cursor: pointer;
+            width: 70px;
+          }
+          .selectedMenuBtn {
+            border-bottom: 3px solid $purple-color;
+          }
+        }
+        .timer {
+          font-size: 15px;
+        }
+      }
+      .chatContainer {
+        .chat {
+          @include scrollbar;
+          background-color: #eff3f6;
+          overflow-y: auto;
+          word-break: break-all;
+          white-space: pre-wrap;
+          width: 20vw;
+          min-width: 280px;
+          height: calc(100vh - 353px);
+          min-height: 519px;
+          div {
+            display: flex;
+            flex-direction: column;
+            // width: inherit;
+            div {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              margin: 15px;
+              width: fit-content;
+              h4 {
+                font-size: 14px;
+                margin-bottom: 5px;
+              }
+              p {
+                padding: 10px;
+              }
+            }
+            .others {
+              align-self: flex-start;
+              margin-left: 20px;
+              h4 {
+                color: $purple-color;
+              }
+              p {
+                border-radius: 10px 10px 10px 0;
+                background-color: white;
+                color: $text-color;
+              }
+            }
+            .me {
+              align-self: flex-end;
+              margin-right: 20px;
+              h4 {
+                align-self: flex-end;
+              }
+              p {
+                border-radius: 10px 10px 0 10px;
+                background-color: $main-color;
+                color: white;
+              }
+            }
+          }
+        }
+        .chatInput {
+          padding: 15px 20px;
+          display: flex;
+          align-items: center;
+          input {
+            background-color: #eff3f6;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 7px 0 0 7px;
+            font-size: 12px;
+            height: 40px;
+            width: 100%;
+            outline: none;
+          }
+          button {
+            @include none-button($text-color);
+            height: 40px;
+            opacity: 1;
+            background-color: #eff3f6;
+            padding: 10px 15px;
+            border-radius: 0 7px 7px 0;
+          }
+        }
+      }
+      .letterContainer {
+        .letter {
+          min-width: 280px;
+          @include scrollbar;
+          background-color: #eff3f6;
+          overflow-y: auto;
+          word-break: break-all;
+          white-space: pre-wrap;
+          width: 20vw;
+          height: calc(100vh - 283px);
+          min-height: 589px;
+          border-radius: 0 0 7px 7px;
+
+          div {
+            margin: 20px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            // width: inherit;
+            background-color: white;
+            div {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              margin: 15px;
+              width: fit-content;
+              h3 {
+                font-size: 14px;
+                margin-bottom: 5px;
+              }
+              p {
+                padding: 10px;
+              }
+            }
+          }
+          .noLetterBox {
+            background-color: #eff3f6;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+  .btnBar {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    .eachBtn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 30px;
+      & > .cursor {
+        cursor: pointer;
+      }
+      & > span > span {
+        font-size: 12px;
+        // display: flex;
+        // flex-direction: column;
+        // justify-content: center;
+        // align-items: center;
+        .iconBox {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: white;
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          font-size: 18px;
+          box-shadow: $box-shadow;
+          &:hover {
+            box-shadow: 0 0 5px $main-color;
+            font-size: 20px;
+          }
+        }
+        span {
+          font-size: 12px;
+          text-align: right;
+          margin-top: 10px;
+        }
+      }
+      select {
+        cursor: pointer;
+        align-self: flex-end;
+        width: 20px;
+        height: 15px;
+        margin-left: 3px;
+        border: none;
+        background-color: inherit;
+      }
+      &:last-child {
+        .iconBox {
+          background-color: rgb(241, 52, 52);
+          :global(*) {
+            color: white;
+          }
+          &:hover {
+            box-shadow: 0 0 3px rgb(241, 52, 52);
+          }
+        }
+      }
+    }
+    .nonCursor {
+      cursor: not-allowed;
+    }
+  }
+}

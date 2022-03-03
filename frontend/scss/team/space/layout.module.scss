@@ -1,0 +1,108 @@
+@import "../../common/variables.scss";
+@import "../../common/mixins.scss";
+
+.teamSpaceLayout {
+  display: flex;
+  flex-direction: column;
+}
+
+.teamInfoBox {
+  @include white-box;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+.mainInfo {
+  padding-right: 40px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  align-items: center;
+  border-right: $division-line;
+}
+
+.image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  box-shadow: $box-shadow;
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
+}
+
+.title {
+  height: 100%;
+  padding-left: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  overflow: hidden;
+  h2 {
+    color: $main-color;
+  }
+  .hashTags {
+    height: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    opacity: 0.5;
+  }
+  button {
+    @include filled-button(200px, white, $main-color);
+  }
+}
+
+.detailInfo {
+  padding: 20px 0 20px 40px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  span {
+    &:nth-child(odd) {
+      font-weight: 800;
+      margin-right: 10px;
+    }
+  }
+}
+
+.teamSpaceMenuBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  .menuBar {
+    display: flex;
+    align-items: center;
+    a {
+      padding: 10px;
+      margin: 0 5px;
+      text-align: center;
+    }
+    .infoMenu {
+      font-weight: 800;
+      border-bottom: 2px solid $red-color;
+    }
+    .resumeMenu {
+      font-weight: 800;
+      border-bottom: 2px solid $yellow-color;
+    }
+    .boardMenu {
+      font-weight: 800;
+      border-bottom: 2px solid $purple-color;
+    }
+  }
+}
+
+.kakaoBtn {
+  @include filled-button(200px, $text-color, $kakao-color);
+  text-align: center;
+}
+
+.registBtn {
+  @include filled-button(200px, white, $main-color);
+  text-align: center;
+  a {
+    color: white;
+  }
+}

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="expires" content="0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="img/kurento.png" type="image/png" />
+
+<link rel="stylesheet"
+	href="webjars/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="webjars/ekko-lightbox/dist/ekko-lightbox.min.css">
+<link rel="stylesheet" href="webjars/demo-console/index.css">
+<link rel="stylesheet" href="css/kurento.css">
+
+<script src="webjars/jquery/dist/jquery.min.js"></script>
+<script src="webjars/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="webjars/ekko-lightbox/dist/ekko-lightbox.min.js"></script>
+<script src="/webjars/webrtc-adapter/release/adapter.js"></script>
+<script src="webjars/demo-console/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+
+<script src="js/kurento-utils.js"></script>
+<script src="js/index.js"></script>
+
+<title>Kurento Tutorial: Hello World with Recording</title>
+</head>
+
+<body>
+	<header>
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="">Kurento Tutorial</a>
+				</div>
+				<div class="collapse navbar-collapse"
+					id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a
+							href="https://github.com/Kurento/kurento-tutorial-java/tree/master/kurento-hello-world-recording"><span
+								class="glyphicon glyphicon-file"></span> Source Code</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</header>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<input type="radio" name="mode" value="video-and-audio"
+					> Video and audio <input type="radio"
+					name="mode" value="video-only" checked="checked"> Video only <input
+					type="radio" name="mode" value="audio-only"> Audio only
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-5">
+				<h3>Local stream</h3>
+				<video id="videoInput" autoplay width="480px" height="360px"
+					poster="img/person.png"></video>
+			</div>
+			<div class="col-md-2">
+				<!-- start함수 매개변수 -->
+				<label for="fileName"> 저장파일 이름
+					<input type="text" id="fileName" name="fileName">
+				<a id="start" href="#" class="btn btn-success"
+					onclick="start('test'); return false;"><span
+					class="glyphicon glyphicon-play"></span> Start</a><br> <br> <a
+					id="stop" href="#" class="btn btn-danger"
+					onclick="stop(); return false;"><span
+					class="glyphicon glyphicon-stop"></span> Stop</a><br> <br> <a
+					id="play" href="#" class="btn btn-warning"
+					onclick="play(); return false;"><span
+					class="glyphicon glyphicon-play-circle"></span> Play</a>
+			</div>
+			<div class="col-md-5">
+				<h3>Remote stream</h3>
+				<video id="videoOutput" autoplay width="480px" height="360px"
+					poster="img/person.png" controls></video>
+			</div>
+		</div>
+		<a id="del" href="#" class="btn btn-danger" onclick="del(); return false;">전체 영상 삭제</a>
+		<div class="row">
+			<!-- 녹화된 영상 길이만큼 button 생성 -->
+			<!-- 녹화 영상 이름 동적으로 생성해서 controller로 -->
+			<div class="col-4">
+				<button onclick="playRecord('rthws4sldd.webm'); return false;">녹화 영상 1</button>
+				
+				<a href="https://localhost:8443/kurento/download/5tovjjbh1.webm">다운로드</a>
+			</div>
+			<div class="col-4">
+				<button onclick="playRecord('2HelloWorldRecorded.webm'); return false;">녹화 영상 2</button>
+				<a href="https://localhost:8443/kurento/download/2HelloWorldRecorded.webm">다운로드</a>
+			</div>
+			<div class="col-4">
+				<button onclick="playRecord('3HelloWorldRecorded.webm'); return false;">녹화 영상 3</button>
+				<a href="https://localhost:8443/kurento/download/3HelloWorldRecorded.webm">다운로드</a>
+			</div>	
+			<div class="col-4">
+				<button onclick="playRecord('2HelloWorldRecorded.webm'); return false;">녹화 영상 4</button>
+				<a href="https://localhost:8443/kurento/download/4HelloWorldRecorded.webm">다운로드</a>
+			</div>
+		</div>
+		<div>
+			test
+<!--			<img src="https://localhost:8443/files/images/21d246b8-1c35-458f-803a-9d2905506654압도적감사.jpg">-->
+<!--			<video src="https://localhost:8443/files/videos/z5br3ivm22.webm" controls></video>-->
+
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<label class="control-label" for="console">Console</label><br>
+				<br>
+				<div id="console" class="democonsole">
+					<ul></ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<footer>
+	</footer>
+
+</body>
+</html>

@@ -1,0 +1,82 @@
+@import "../../common/variables.scss";
+@import "../../common/mixins.scss";
+@import "../space/layout.module.scss";
+@import "../board/comment.module.scss";
+@import "../board/reply.module.scss";
+
+.container {
+  width: 1000px;
+}
+
+.mainContainer {
+  @include white-box;
+  padding: 80px;
+  margin: 80px 0;
+  .infoBox {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    .mainInfo {
+      border-right: none;
+      display: grid;
+      grid-template-columns: 1fr 5fr;
+      .image {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        box-shadow: $box-shadow;
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+        }
+      }
+    }
+    .btns {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+  }
+}
+.cancelBtn {
+  @include unfilled-button($red-color);
+  width: 200px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.registBtn {
+  margin-bottom: 7px;
+}
+.kakaoBtn {
+  margin-top: 7px;
+}
+
+.introduction {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  span {
+    padding: 20px 30px;
+    background-color: $line-color;
+    border-left: 7px solid $red-color;
+    font-weight: 700;
+  }
+  p {
+      white-space: pre-wrap;
+      margin: 50px;
+  }
+}
+
+.commentTitle {
+  text-align: center;
+  border-top: $division-line;
+  padding: 50px 0;
+}
+
+.backBtnBox {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 100px;
+  text-align: center;
+}

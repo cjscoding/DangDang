@@ -1,0 +1,26 @@
+%mainComponent {
+  padding: 2rem 1.25rem;
+  width: 210px;
+  height: 400px;
+  border-radius: 12px;
+  margin-right: 2rem;
+  font-size: 0.875rem;
+  white-space: pre-line;
+
+  &:hover {
+    transform: translateY(-0.4rem);
+    transition: 0.45s ease;
+  }
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    line-height: 1.5rem;
+  }
+
+  :global(*) {
+    color: white;
+  }
+}

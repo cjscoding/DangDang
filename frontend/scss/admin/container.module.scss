@@ -1,0 +1,49 @@
+@import "../common/variables.scss";
+
+.menu {
+  padding: 1.6rem 0;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  text-align: center;
+  border-bottom: $division-line;
+  position: relative;
+  font-size: 15px;
+
+  :global(*) {
+    color: $gray-color;
+  }
+}
+
+.pagination {
+  padding: 40px 0;
+}
+
+.selectBox {
+  display: flex;
+  select {
+    width: 200px;
+    border: none;
+    outline: none;
+    background-color: inherit;
+    font-size: 15px;
+    text-align: center;
+    -o-appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    z-index: 1;
+    &:hover {
+      font-weight: 700;
+    }
+    option {
+      background: $background-color;
+      color: $text-color;
+      padding: 3px 0;
+    }
+  }
+  .selectArrowIcon {
+    position: absolute;
+    left: 150px;
+    z-index: 0;
+  }
+}

@@ -1,0 +1,48 @@
+@import "../../common/mixins.scss";
+@import "../../common/variables.scss";
+
+.body {
+  @include flex-center;
+  flex-direction: column;
+  height: calc(100vh - $footer-height);
+}
+
+.selectBox {
+  margin-top: 2.7rem;
+  display: flex;
+  justify-content: space-evenly;
+  a {
+    text-decoration: none;
+  }
+}
+.borderBox {
+  @include flex-center;
+  flex-direction: column;
+  // height: 80vh;
+  padding: 0 auto;
+  width: 262px;
+  height: 311px;
+  margin-right: 100px;
+  margin-left: 100px;
+  background: white;
+  // box-shadow: 0px 2px 24px rgba(107, 191, 202, 0.2);
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+
+  &:hover {
+    transform: translateY(-0.4rem);
+    transition: 0.45s ease;
+  }
+
+  p {
+    margin-top: 1.5rem;
+    text-align: center;
+    span {
+      color: $main-color;
+    }
+  }
+}
+
+#dangdang {
+  font-weight: bold;
+}

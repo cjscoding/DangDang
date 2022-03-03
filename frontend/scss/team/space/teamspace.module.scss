@@ -1,0 +1,78 @@
+@import "../../common/variables.scss";
+@import "../../common/mixins.scss";
+
+.teamSpace {
+  max-width: 1000px;
+  padding: 80px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.contentBox {
+  @include white-box;
+  margin: 30px 0;
+  display: flex;
+  flex-direction: column;
+  button {
+    @include none-button($text-color);
+    margin-bottom: 20px;
+    align-self: flex-end;
+    font-size: 18px;
+  }
+  p {
+    padding: 0 40px;
+    white-space: pre-wrap;
+  }
+}
+
+.adminContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.adminBox {
+  margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  .section {
+    @include white-box;
+    form {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      div {
+        display: flex;
+        align-items: center;
+        img {
+          width: 30px;
+          height: 30px;
+          margin-right: 20px;
+          border-radius: 50%;
+        }
+        input {
+          background-color: inherit;
+          border: none;
+          font-size: 15px;
+          font-weight: 500;
+        }
+      }
+      .removeMemberBtn {
+        @include unfilled-button($text-color);
+      }
+      .allowMemberBtn {
+        @include unfilled-button($main-color);
+      }
+    }
+  }
+}
+
+.deleteBtnBox {
+  margin: 0 20px;
+  display: flex;
+  justify-content: flex-end;
+  button {
+    @include none-button($red-color);
+  }
+}

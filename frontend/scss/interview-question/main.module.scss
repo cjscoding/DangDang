@@ -1,0 +1,126 @@
+@import "../common/variables.scss";
+@import "../common/mixins.scss";
+
+.mainContainer {
+  width: 1000px;
+  padding: 80px 0;
+  h1 {
+    color: $main-color;
+    text-align: center;
+    margin-bottom: 100px;
+  }
+}
+
+.topBar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 30px 0;
+  input {
+    width: 300px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 20px;
+    background-color: $line-color;
+    outline: none;
+    &:focus {
+      border: 1px solid $main-color;
+      background-color: white;
+    }
+  }
+  .btns {
+    .isNotButton {
+      @include none-button($text-color);
+      opacity: 1;
+      font-size: 15px;
+      font-weight: 600;
+      margin-right: 30px;
+      &:hover{
+          color: $main-color;
+      }
+    }
+    .isButton {
+      @include filled-button(200px, white, $main-color);
+      a {
+        color: white;
+      }
+    }
+  }
+}
+
+.container {
+  @include white-box;
+  margin: 30px 0;
+  padding: 0;
+  .header {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    padding: 30px 0;
+    opacity: 0.6;
+    position: relative;
+    .selectBox {
+      display: flex;
+      justify-content: center;
+      select {
+        width: 200px;
+        border: none;
+        outline: none;
+        background-color: inherit;
+        font-size: 15px;
+        text-align: center;
+        -o-appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        z-index: 1;
+        &:hover {
+          font-weight: 700;
+        }
+        option {
+          background: $background-color;
+          color: $text-color;
+          padding: 3px 0;
+        }
+      }
+      .selectArrowIcon {
+        position: absolute;
+        left: 180px;
+        z-index: 0;
+      }
+    }
+    span {
+      text-align: center;
+      font-size: 15px;
+    }
+  }
+  .table {
+    border-top: $division-line;
+    border-bottom: $division-line;
+    .noQuestion {
+      width: 100%;
+      margin: 30px 0;
+      display: flex;
+      justify-content: center;
+      font-weight: 500;
+      font-size: 25px;
+    }
+  }
+  .pagination {
+    padding: 40px 0;
+  }
+}
+
+.noQuestions {
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 25px;
+  a {
+    &:hover {
+      color: $main-color;
+    }
+  }
+}

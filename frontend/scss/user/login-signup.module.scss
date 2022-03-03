@@ -1,0 +1,96 @@
+@import "../common/mixins.scss";
+@import "../common/variables.scss";
+
+.body {
+  @include flex-center;
+  flex-direction: column;
+  h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .signUp {
+    margin-bottom: 0.1rem;
+  }
+
+  .loginText {
+    text-align: center;
+    line-height: 1.5rem;
+  }
+
+  .moveTo {
+    margin-bottom: 1.2rem;
+    a {
+      color: $main-color;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  }
+
+  p {
+    font-size: 14px;
+  }
+
+  a:first-of-type {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.form {
+  @include flex-center;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 1.5rem;
+  input {
+    outline: none;
+    width: 284px;
+    height: 47px;
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    padding: 1rem;
+    padding-left: 3rem;
+    background-color: #eff3f6;
+    // transition: background-color 0.3s;
+    margin-bottom: 1rem;
+    border: 1px;
+  }
+  input::placeholder {
+    color: $gray-color;
+  }
+
+  input:focus {
+    @include form-focus;
+  }
+}
+
+.label {
+  position: relative;
+  .span {
+    position: absolute;
+    left: 14px;
+    top: 1px;
+
+    :global(*) {
+      color: $gray-color;
+    }
+  }
+}
+
+#dangdang {
+  color: $main-color;
+  font-weight: bold;
+}
+
+#submitBtn {
+  font-weight: bold;
+  // margin-top: 1rem;
+  width: 284px;
+  height: 47px;
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.15);
+  border-radius: 5px;
+  background-color: $main-color;
+  color: white;
+  margin-bottom: 1rem;
+  border: 1px;
+  cursor: pointer;
+}

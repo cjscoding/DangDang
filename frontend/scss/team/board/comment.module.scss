@@ -1,0 +1,65 @@
+@import "../../common/variables.scss";
+@import "../../common/mixins.scss";
+
+//Comment component
+.commentBox {
+  margin: 0 15px;
+  form {
+    display: flex;
+    input {
+      width: 100%;
+      border: none;
+      background-color: $background-color;
+      padding: 10px 20px;
+      border-radius: 5px;
+      margin-right: 15px;
+      outline: none;
+    }
+    button {
+      @include filled-button(100px, white, $main-color);
+      border-radius: 5px;
+    }
+  }
+}
+
+.commentItem {
+  padding: 20px;
+  .commentContent {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.commentToggle {
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  align-items: center;
+  .userInfo {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    .imgBox {
+      @include image-container(40px);
+    }
+  }
+  .contentBox {
+    input {
+      background-color: white;
+    }
+    .commentInput {
+      background-color: $background-color;
+    }
+    width: 100%;
+    padding: 0 20px;
+  }
+  .btnBox {
+    display: flex;
+    justify-content: flex-end;
+    button {
+      @include none-button($text-color);
+      width: 10px;
+      margin-left: 15px;
+      opacity: 0.5;
+    }
+  }
+}

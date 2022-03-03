@@ -1,0 +1,42 @@
+@import "../common/variables.scss";
+@import "../common/mixins.scss";
+
+.questionListRow {
+  border-bottom: $division-line;
+  display: flex;
+  flex-direction: column;
+  .questionArea {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    justify-content: center;
+    padding: 15px 0;
+    align-items: center;
+    &:first-child {
+      text-align: center;
+    }
+  }
+  .contents {
+    p {
+      text-align: start;
+      padding: 5px 0;
+      width: 600px;
+      word-wrap: break-word;
+    }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    font-weight: 700;
+    .btns {
+      display: flex;
+      button {
+        @include none-button($text-color);
+        font-size: 18px;
+        margin-left: 15px;
+      }
+    }
+  }
+  &:last-child {
+    border-bottom: none;
+  }
+}

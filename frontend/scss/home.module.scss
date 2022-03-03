@@ -1,0 +1,29 @@
+@import "./common/variables.scss";
+@import "./common/mixins.scss";
+
+.container {
+  @include flex-center;
+  flex-direction: column;
+  height: calc(100% - $footer-height);
+}
+
+.menuContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @include main-container;
+}
+
+.title {
+  margin: 2rem 0;
+  img {
+    vertical-align: middle;
+    transform: translateY(-7px);
+    padding-right: 1rem;
+  }
+  h1 {
+    // margin: 0;
+    display: inline;
+    font-size: 2.25rem;
+  }
+}

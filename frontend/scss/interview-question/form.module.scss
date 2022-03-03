@@ -1,0 +1,66 @@
+@import "../common/variables.scss";
+@import "../common/mixins.scss";
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 50px;
+  .moveBackBtn {
+    @include none-button($text-color);
+    font-size: 20px;
+    font-weight: 500;
+    align-self: flex-start;
+  }
+  & > form,
+  & > .form {
+    @include white-box;
+    width: 80%;
+    margin: 40px 0 70px 0;
+    padding: 0px 80px;
+    display: grid;
+    grid-template-rows: 1fr 4fr;
+    text-align: center;
+    h2 {
+      align-self: flex-end;
+      color: $main-color;
+      font-weight: 700;
+      margin: 80px 0;
+    }
+    .contents {
+      display: grid;
+      grid-template-columns: 1fr 4fr;
+      grid-template-rows: 1fr 4fr;
+      justify-content: center;
+      align-items: flex-start;
+      margin-bottom: 70px;
+      label{
+          padding: 20px;
+      }
+      select,
+      input,
+      textarea {
+        padding: 20px;
+        border-radius: 7px;
+        background-color: $background-color;
+        border: none;
+        outline: none;
+        &:focus {
+          border: 1px solid $main-color;
+          background-color: white;
+        }
+      }
+      textarea {
+        height: 100%;
+        resize: none;
+      }
+    }
+  }
+  .submitBtn {
+    @include filled-button(250px, white, $main-color);
+    margin-bottom: 100px;
+  }
+}

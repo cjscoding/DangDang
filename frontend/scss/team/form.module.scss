@@ -1,0 +1,204 @@
+@import "../common/variables.scss";
+@import "../common/mixins.scss";
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1000px;
+  margin-top: 50px;
+  .moveBackBtn {
+    @include none-button($text-color);
+    font-size: 20px;
+    font-weight: 500;
+    align-self: flex-start;
+  }
+  & > form,
+  & > .form {
+    @include white-box;
+    width: 80%;
+    margin: 40px 0 70px 0;
+    padding: 0px 80px;
+    display: grid;
+    grid-template-rows: 1fr 4fr;
+    text-align: center;
+    h2 {
+      align-self: flex-end;
+      color: $main-color;
+      font-weight: 700;
+      margin: 80px 0;
+    }
+    .contents {
+      display: grid;
+      grid-template-columns: 1fr 4fr;
+      grid-template-rows: 1fr 5fr;
+      gap: 30px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 70px;
+      input,
+      textarea {
+        padding: 20px;
+        border-radius: 7px;
+        background-color: $background-color;
+        border: none;
+        outline: none;
+        &:focus {
+          border: 1px solid $main-color;
+          background-color: white;
+        }
+      }
+      .answerLabel {
+        align-self: flex-start;
+      }
+      textarea {
+        height: 100%;
+        resize: none;
+      }
+    }
+  }
+  .submitBtn {
+    @include filled-button(250px, white, $main-color);
+    margin-bottom: 100px;
+  }
+}
+
+//viewForm
+.viewContainer {
+  @include white-box;
+  width: 1000px;
+  min-height: 70vh;
+  margin-bottom: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .btnBox {
+    align-self: flex-end;
+    button {
+      @include none-button($text-color);
+      font-size: 18px;
+      margin-left: 20px;
+    }
+  }
+  h2,
+  p {
+    margin: 30px 0;
+    white-space: pre-wrap;
+  }
+  span {
+    opacity: 0.7;
+  }
+}
+
+//teamInfoUpdatePage
+.updateContents {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 120px;
+  & > input,
+  & > textarea,
+  .input > input {
+    padding: 15px 20px;
+    border-radius: 7px;
+    background-color: $background-color;
+    border: none;
+    outline: none;
+    resize: none;
+    &:focus {
+      border: 1px solid $main-color;
+      background-color: white;
+    }
+  }
+  .descLabel {
+    margin-top: 10px;
+    align-self: flex-start;
+  }
+  .input {
+    justify-self: flex-start;
+    input {
+      width: 70px;
+    }
+    span {
+      margin-left: 15px;
+    }
+  }
+  textarea {
+    height: 150px;
+  }
+}
+
+//tag
+.tagInput {
+  width: 50%;
+  padding: 15px 20px;
+  border-radius: 7px;
+  background-color: $background-color;
+  border: none;
+  outline: none;
+  display: flex;
+  align-items: center;
+  &:focus-within {
+    border: 1px solid $main-color;
+    background-color: white;
+    input {
+      background-color: white;
+    }
+  }
+  input {
+    width: 100%;
+    background-color: $background-color;
+    border: none;
+    outline: none;
+  }
+  button {
+    @include none-button($text-color);
+    margin-left: 10px;
+  }
+}
+
+.tagsBox {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  form {
+    width: fit-content;
+    padding: 7px 20px;
+    margin: 0 15px 15px 0;
+    color: $main-color;
+    background-color: inherit;
+    border: 1px solid $main-color;
+    border-radius: 20px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    span {
+      margin-right: 15px;
+      color: $main-color;
+    }
+    button {
+      @include none-button($main-color);
+      display: flex;
+      align-items: center;
+      font-size: 17px;
+      font-weight: 700;
+    }
+  }
+}
+
+//fileForm
+.profileContainer {
+  display: flex;
+  align-items: center;
+  span {
+    margin-right: 15px;
+  }
+  .inputFileButton {
+    @include filled-button(70px, white, $main-color);
+    font-size: 13px;
+  }
+}
